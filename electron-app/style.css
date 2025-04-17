@@ -1,0 +1,209 @@
+/* Dark mode CSS for Electron app */
+@import 'https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap';
+
+body {
+	font-family: Open Sans, sans-serif;
+	padding: 10px;
+	font-size: 14px;
+	background-color: #181a20;
+	color: #e0e0e0;
+	margin: 0;
+}
+
+h2 {
+	margin-bottom: 20px;
+	color: #e0e0e0;
+}
+
+#tabs {
+	margin-bottom: 15px;
+}
+
+.tab-button {
+	padding: 10px 20px;
+	cursor: pointer;
+	background: #23263a;
+	border: none;
+	border-radius: 4px;
+	margin-right: 5px;
+	color: #e0e0e0;
+	font-weight: 600;
+	transition: background 0.3s, box-shadow 0.3s;
+}
+
+.tab-button:hover,
+.tab-button.active {
+	background: #3a3f5c;
+	box-shadow: 0 2px 4px rgb(0 0 0 / 40%);
+}
+
+.tab-content {
+	display: none;
+}
+
+.table-section {
+	border: 1px solid #33374d;
+	background: #23263a;
+	margin-bottom: 15px;
+	border-radius: 4px;
+	box-shadow: 0 1px 3px rgb(0 0 0 / 30%);
+}
+
+.table-header {
+	font-size: 16px;
+	font-weight: 600;
+	cursor: pointer;
+	background: #23263a;
+	padding: 10px 15px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	border-radius: 4px 4px 0 0;
+	color: #e0e0e0;
+	transition: background 0.3s;
+}
+
+.table-header:hover {
+	background: #2d3147;
+}
+
+.copy-btn {
+	font-size: 12px;
+	padding: 6px 12px;
+	background: #3a3f5c;
+	color: #e0e0e0;
+	border: none;
+	border-radius: 4px;
+	cursor: pointer;
+	margin-right: 10px;
+	transition: background 0.3s;
+}
+
+.copy-btn:hover {
+	background: #2196f3;
+	color: #fff;
+}
+
+#content-summary {
+	max-width: 100vw;
+	max-height: 70vh;
+	overflow: auto;
+	margin-bottom: 16px;
+}
+
+#content-summary .copy-btn {
+	margin-bottom: 10px;
+}
+
+.table-content {
+	overflow-x: auto;
+	padding: 15px;
+}
+
+table {
+	width: 100%;
+	border-collapse: collapse;
+	font-size: 14px;
+	background: #23263a;
+	color: #e0e0e0;
+}
+
+.header-bar {
+	display: flex;
+	align-items: center;
+	gap: 16px;
+	margin-bottom: 8px;
+}
+
+th,
+td {
+	border: 1px solid #33374d;
+	padding: 8px;
+	text-align: left;
+}
+
+th {
+	background: #23263a;
+	color: #e0e0e0;
+}
+
+tr:nth-child(even) {
+	background: #23263a;
+}
+
+tr:nth-child(odd) {
+	background: #181a20;
+}
+
+tr:hover {
+	background: #2d3147 !important;
+	transition: background 0.2s;
+}
+
+#activeFileName {
+	color: #aaa;
+	font-size: 15px;
+}
+
+.dataTables_wrapper .dataTables_filter input,
+.dataTables_wrapper .dataTables_length select {
+	background: #181a20;
+	color: #e0e0e0;
+	border: 1px solid #33374d;
+}
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+	background: #23263a;
+	color: #e0e0e0 !important;
+}
+.dataTables_wrapper
+	.dataTables_paginate
+	.paginate_button.current {
+	background: #2196f3 !important;
+	color: #fff !important;
+}
+.dataTables_wrapper .dataTables_info {
+	color: #e0e0e0;
+}
+
+#chart-container {
+	width: 100%;
+	height: 400px;
+	background: #23263a;
+	color: #e0e0e0;
+}
+
+#leaflet-map {
+	filter: invert(0.92) hue-rotate(180deg) brightness(0.9)
+		contrast(1.1);
+	background: #23263a;
+	border-radius: 4px;
+}
+
+footer {
+	margin-top: 20px;
+	font-size: 12px;
+	text-align: center;
+	color: #888;
+}
+
+.themed-btn {
+	padding: 10px 24px;
+	background: #23263a;
+	color: #e0e0e0;
+	border: none;
+	border-radius: 4px;
+	font-size: 16px;
+	font-weight: 600;
+	cursor: pointer;
+	margin-bottom: 18px;
+	margin-right: 10px;
+	transition: background 0.3s, color 0.3s, box-shadow 0.3s;
+	box-shadow: 0 2px 4px rgb(0 0 0 / 20%);
+}
+
+.themed-btn:hover,
+.themed-btn:focus {
+	background: #3a3f5c;
+	color: #fff;
+	outline: none;
+}

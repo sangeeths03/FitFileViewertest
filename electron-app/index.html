@@ -1,0 +1,165 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Fit File Viewer</title>
+    <!-- Load jQuery first, then DataTables, then Arquero, then Chart.js, Vega, Vega-Lite, Vega-Embed -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.datatables.net/2.2.1/js/dataTables.min.js"></script>
+    <script src="https://unpkg.com/arquero"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.2.1/css/dataTables.dataTables.min.css">
+    <link rel="stylesheet" href="style.css">
+    <!-- Load Leaflet CSS and JS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="utils.js"></script>
+
+    <script>
+        let globalData = null; // will hold all data received from the extension
+
+        // Add this function for Electron usage
+        window.showFitData = function(data, filePath) {
+            globalData = data;
+            if (filePath) {
+                // Show just the filename, not the full path
+                const fileName = filePath.split(/[/\\]/).pop();
+                const fileSpan = document.getElementById("activeFileName");
+                fileSpan.textContent = `Active: ${fileName}`;
+                fileSpan.title = filePath; // Show full path on mouseover
+                document.title = `Fit File Viewer - ${fileName}`; // Set title bar
+            }
+            if (document.getElementById("tab-data").classList.contains("active")) {
+                window.displayTables(globalData);
+            }
+            if (document.getElementById("tab-chart").classList.contains("active")) {
+                window.renderChart();
+            }
+            if (document.getElementById("tab-map").classList.contains("active")) {
+                window.renderMap();
+            }
+            if (document.getElementById("tab-summary").classList.contains("active")) {
+                window.renderSummary(globalData);
+            }
+        };
+
+        window.onload = () => {
+            // Signal to the extension that the webview is ready (only if available)
+            if (typeof acquireVsCodeApi === 'function') {
+                const vscode = acquireVsCodeApi();
+                vscode.postMessage({ type: "ready" });
+            }
+
+            // Default: show the Data tab
+            document.getElementById("content-data").style.display = "none";
+            document.getElementById("content-chart").style.display = "none";
+            document.getElementById("content-map").style.display = "block";
+            document.getElementById("content-summary").style.display = "none";
+
+            // Tab button click handlers
+            document.getElementById("tab-data").onclick = () => {
+                document.getElementById("content-data").style.display = "block";
+                document.getElementById("content-chart").style.display = "none";
+                document.getElementById("content-map").style.display = "none";
+                document.getElementById("content-summary").style.display = "none";
+                setActiveTab("tab-data");
+                if (globalData) {
+                    window.displayTables(globalData);
+                }
+            };
+
+            document.getElementById("tab-chart").onclick = () => {
+                document.getElementById("content-data").style.display = "none";
+                document.getElementById("content-chart").style.display = "block";
+                document.getElementById("content-map").style.display = "none";
+                document.getElementById("content-summary").style.display = "none";
+                setActiveTab("tab-chart");
+                renderChart();
+            };
+
+            document.getElementById("tab-map").onclick = () => {
+                document.getElementById("content-data").style.display = "none";
+                document.getElementById("content-chart").style.display = "none";
+                document.getElementById("content-map").style.display = "block";
+                document.getElementById("content-summary").style.display = "none";
+                setActiveTab("tab-map");
+                renderMap();
+            };
+
+            document.getElementById("tab-summary").onclick = () => {
+                document.getElementById("content-data").style.display = "none";
+                document.getElementById("content-chart").style.display = "none";
+                document.getElementById("content-map").style.display = "none";
+                document.getElementById("content-summary").style.display = "block";
+                setActiveTab("tab-summary");
+                if (globalData) {
+                    renderSummary(globalData);
+                }
+            };
+
+            function setActiveTab(tabId) {
+                document.querySelectorAll(".tab-button").forEach(btn => {
+                    btn.classList.remove("active");
+                });
+                document.getElementById(tabId).classList.add("active");
+            }
+
+            // Listen for fitData message from the extension
+            window.addEventListener("message", event => {
+                const message = event.data;
+                if (message.type === "fitData") {
+                    globalData = message.data;
+                    setTimeout(() => {
+                        displayTables(globalData);
+                        if (document.getElementById("tab-chart").classList.contains("active")) {
+                            renderChart();
+                        }
+                        if (document.getElementById("tab-map").classList.contains("active")) {
+                            renderMap();
+                        }
+                        if (document.getElementById("tab-summary").classList.contains("active")) {
+                            renderSummary(globalData);
+                        }
+                    }, 0);
+                }
+            });
+        };
+    </script>
+</head>
+
+<body>
+    <div>
+        <button id="openFileBtn" class="themed-btn">Open FIT File</button>
+        <spanspan id="activeFileName"></span>
+    </div>
+    <div id="tabs">
+        <button class="tab-button active" id="tab-map">Map</button>
+        <button class="tab-button" id="tab-data">Data</button>
+        <button class="tab-button" id="tab-chart">Chart</button>
+        <button class="tab-button" id="tab-summary">Summary</button>
+    </div>
+    <div id="content-map" class="tab-content"></div>
+    <div id="content-data" class="tab-content"></div>
+    <div id="content-chart" class="tab-content">
+        <div id="chart-container"></div>
+    </div>
+    <div id="content-summary" class="tab-content"></div>
+    <!-- Credits Section -->
+    <footer>
+        <p></p>
+            Credits:&nbsp;
+            <a href="https://leafletjs.com/" target="_blank" rel="noopener">Leaflet</a>,
+            <a href="https://datatables.net/" target="_blank" rel="noopener">DataTables.js</a>,
+            <a href="https://github.com/uwdata/arquero" target="_blank" rel="noopener">arquero</a>,
+            <a href="https://github.com/garmin/fit-javascript-sdk" target="_blank" rel="noopener">Garmin FIT JavaScript SDK</a>,
+            <a href="https://vega.github.io/" target="_blank" rel="noopener">Vega</a>,
+            <a href="https://github.com/thomascamminady/fit-viewer" target="_blank" rel="noopener">this repo</a>.
+        </p>
+    </footer>
+    <script src="renderer.js"></script>
+</body>
+</html>

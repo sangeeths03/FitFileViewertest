@@ -1,0 +1,751 @@
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <!-- Load jQuery first, then DataTables, then Arquero, then Chart.js, Vega, Vega-Lite, Vega-Embed -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.datatables.net/2.2.1/js/jquery.dataTables.min.js"></script>
+    <script src="https://unpkg.com/arquero"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.2.1/css/jquery.dataTables.min.css">
+
+    <!-- Load Leaflet CSS and JS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+
+    <!-- Our unified styles -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap');
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            padding: 10px;
+            font-size: 14px;
+            background-color: #ffffff;
+            color: #333;
+            margin: 0;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        /* Tabs styling */
+        #tabs {
+            margin-bottom: 15px;
+        }
+
+        .tab-button {
+            padding: 10px 20px;
+            cursor: pointer;
+            background: #2196F3;
+            border: none;
+            border-radius: 4px;
+            margin-right: 5px;
+            color: #fff;
+            font-weight: 600;
+            transition: background 0.3s, box-shadow 0.3s;
+        }
+
+        .tab-button:hover,
+        .tab-button.active {
+            background: #1976D2;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Tab content */
+        .tab-content {
+            display: none;
+        }
+
+        /* Data Tables styling */
+        .table-section {
+            border: 1px solid #ccc;
+            background: #fff;
+            margin-bottom: 15px;
+            border-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .table-header {
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            background: #ffffff;
+            padding: 10px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 4px 4px 0 0;
+            color: #333;
+            transition: background 0.3s;
+        }
+
+        .table-header:hover {
+            background: #ddd;
+        }
+
+        .copy-btn {
+            font-size: 12px;
+            padding: 6px 12px;
+            background: #2196F3;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+            transition: background 0.3s;
+        }
+
+        .copy-btn:hover {
+            background: #1976D2;
+        }
+
+        .table-content {
+            overflow-x: auto;
+            padding: 15px;
+        }
+
+        /* Table styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background: #f0f0f0;
+        }
+
+        tr:nth-child(even) {
+            background: #fafafa;
+        }
+
+        tr:hover {
+            background: #e3f2fd !important;
+            transition: background 0.2s;
+        }
+
+        /* Chart container styling */
+        #chart-container {
+            width: 100%;
+            height: 400px;
+        }
+
+        /* Footer styling */
+        footer {
+            margin-top: 20px;
+            font-size: 12px;
+            text-align: center;
+            color: #555;
+        }
+    </style>
+
+    <script>
+        let globalData = null; // will hold all data received from the extension
+
+        window.onload = () => {
+            // Signal to the extension that the webview is ready
+            const vscode = acquireVsCodeApi();
+            vscode.postMessage({ type: "ready" });
+
+            // Default: show the Data tab
+            document.getElementById("content-data").style.display = "none";
+            document.getElementById("content-chart").style.display = "none";
+            document.getElementById("content-map").style.display = "block";
+
+            // Tab button click handlers
+            document.getElementById("tab-data").onclick = () => {
+                document.getElementById("content-data").style.display = "block";
+                document.getElementById("content-chart").style.display = "none";
+                document.getElementById("content-map").style.display = "none";
+                setActiveTab("tab-data");
+            };
+
+            document.getElementById("tab-chart").onclick = () => {
+                document.getElementById("content-data").style.display = "none";
+                document.getElementById("content-chart").style.display = "block";
+                document.getElementById("content-map").style.display = "none";
+                setActiveTab("tab-chart");
+                renderChart();
+            };
+
+            document.getElementById("tab-map").onclick = () => {
+                document.getElementById("content-data").style.display = "none";
+                document.getElementById("content-chart").style.display = "none";
+                document.getElementById("content-map").style.display = "block";
+                setActiveTab("tab-map");
+                renderMap();
+            };
+
+            function setActiveTab(tabId) {
+                document.querySelectorAll(".tab-button").forEach(btn => {
+                    btn.classList.remove("active");
+                });
+                document.getElementById(tabId).classList.add("active");
+            }
+
+            // Listen for fitData message from the extension
+            window.addEventListener("message", event => {
+                const message = event.data;
+                if (message.type === "fitData") {
+                    globalData = message.data;
+                    setTimeout(() => {
+                        displayTables(globalData);
+                        if (document.getElementById("tab-chart").classList.contains("active")) {
+                            renderChart();
+                        }
+                        if (document.getElementById("tab-map").classList.contains("active")) {
+                            renderMap();
+                        }
+                    }, 0);
+                }
+            });
+
+
+            function displayTables(dataFrames) {
+                const aq = window.aq;
+                const container = document.getElementById("content-data");
+                container.innerHTML = ""; // Clear previous content
+
+                // Ensure recordMesgs appears first
+                const keys = Object.keys(dataFrames);
+                keys.sort((a, b) => (a === "recordMesgs" ? -1 : b === "recordMesgs" ? 1 : 0));
+                keys.forEach((key, index) => {
+                    const table = aq.from(dataFrames[key]);
+                    renderTable(container, key, table, index);
+                });
+            }
+
+            function renderTable(container, title, table, index) {
+                const tableId = "datatable_" + index;
+                const section = document.createElement("div");
+                section.classList.add("table-section");
+
+                // Header with left: title; right: copy button and toggle icon
+                const header = document.createElement("div");
+                header.classList.add("table-header");
+
+                const leftSpan = document.createElement("span");
+                leftSpan.textContent = title;
+
+                const rightContainer = document.createElement("div");
+                rightContainer.style.display = "flex";
+                rightContainer.style.alignItems = "center";
+                rightContainer.style.gap = "10px";
+
+                const copyButton = document.createElement("button");
+                copyButton.textContent = "Copy as CSV";
+                copyButton.classList.add("copy-btn");
+                copyButton.onclick = (event) => {
+                    event.stopPropagation();
+                    copyTableAsCSV(table, title);
+                };
+
+                const icon = document.createElement("span");
+                icon.textContent = "➕";
+
+                rightContainer.appendChild(copyButton);
+                rightContainer.appendChild(icon);
+                header.appendChild(leftSpan);
+                header.appendChild(rightContainer);
+
+                header.onclick = () => {
+                    const content = document.getElementById(tableId + "_content");
+                    const currentDisplay = window.getComputedStyle(content).display;
+                    const isVisible = currentDisplay === "block";
+                    content.style.display = isVisible ? "none" : "block";
+                    icon.textContent = isVisible ? "➕" : "➖";
+                };
+
+                const content = document.createElement("div");
+                content.classList.add("table-content");
+                content.id = tableId + "_content";
+                content.style.display = "none";
+                icon.textContent = "➕";
+
+                const tableElement = document.createElement("table");
+                tableElement.id = tableId;
+                tableElement.classList.add("display");
+                tableElement.innerHTML = table.toHTML({ limit: Infinity });
+
+                content.appendChild(tableElement);
+                section.appendChild(header);
+                section.appendChild(content);
+                container.appendChild(section);
+
+                // Initialize DataTables.js with paging disabled (show all rows)
+                $(document).ready(function () {
+                    setTimeout(() => {
+                        $("#" + tableId).DataTable({
+                            paging: false,
+                            searching: true,
+                            ordering: true,
+                            autoWidth: true,
+                        });
+                    }, 100);
+                });
+            }
+
+            function copyTableAsCSV(table, title) {
+                const rows = table.objects().map(row => {
+                    const newRow = {};
+                    Object.keys(row).forEach(key => {
+                        const cell = row[key];
+                        newRow[key] = (typeof cell === 'object' && cell !== null) ? JSON.stringify(cell) : cell;
+                    });
+                    return newRow;
+                });
+                const flattenedTable = window.aq.from(rows);
+                const csvString = flattenedTable.toCSV({ header: true });
+                navigator.clipboard.writeText(csvString)
+                    .then(() => console.log("Copied CSV to clipboard!"))
+                    .catch(err => console.error("Failed to copy CSV:", err));
+            }
+
+            function renderChart() {
+                const chartContainer = document.getElementById("content-chart");
+                chartContainer.innerHTML = '<div id="vega-container"></div>';
+
+                if (globalData && globalData.recordMesgs) {
+                    const aq = window.aq;
+                    const recordTable = aq.from(globalData.recordMesgs);
+                    const columnsToFold = recordTable.columnNames().filter(col => col !== "timestamp");
+                    const folded = recordTable.fold(columnsToFold, { as: ["key", "value"] });
+
+                    const spec = {
+                        "config": {
+                            "text": {
+                                "color": "gray",
+                                "fontSize": 14
+                            },
+                            "title": {
+                                "anchor": "middle",
+                                "fontWeight": "normal",
+                                "titleFontWeight": "normal",
+                                "labelFontWeight": "normal",
+                                "fontSize": 30,
+                                "titleFontSize": 16,
+                                "labelFontSize": 14,
+                                "color": "gray",
+                                "titleColor": "gray",
+                                "labelColor": "gray",
+                                "tickColor": "gray",
+                                "domainColor": "gray"
+                            },
+                            "header": {
+                                "titleFontSize": 22,
+                                "labelFontSize": 18,
+                                "color": "gray",
+                                "titleColor": "gray",
+                                "labelColor": "gray",
+                                "fontWeight": "normal",
+                                "titleFontWeight": "normal",
+                                "labelFontWeight": "normal"
+                            },
+                            "view": {
+                                "height": 800,
+                                "width": 800,
+                                "strokeWidth": 0,
+                                "fill": "white"
+                            },
+                            "axis": {
+                                "domain": true,
+                                "domainColor": "gray",
+                                "domainWidth": 1,
+                                "gridWidth": 1,
+                                "labelAngle": 0,
+                                "tickSize": 5,
+                                "gridCap": "round",
+                                "gridDash": [
+                                    2,
+                                    4
+                                ],
+                                "fontWeight": "normal",
+                                "titleFontWeight": "normal",
+                                "labelFontWeight": "normal",
+                                "fontSize": 30,
+                                "titleFontSize": 16,
+                                "labelFontSize": 14,
+                                "color": "gray",
+                                "titleColor": "gray",
+                                "labelColor": "gray",
+                                "tickColor": "gray"
+                            },
+                            "axisX": {
+                                "titleAnchor": "end",
+                                "titleAlign": "center"
+                            },
+                            "axisY": {
+                                "titleAnchor": "end",
+                                "titleAngle": 0,
+                                "titleAlign": "center",
+                                "titleY": -15,
+                                "titleX": 0
+                            },
+                            "legend": {
+                                "fontWeight": "normal",
+                                "titleFontWeight": "normal",
+                                "labelFontWeight": "normal",
+                                "fontSize": 30,
+                                "titleFontSize": 16,
+                                "labelFontSize": 14,
+                                "color": "gray",
+                                "titleColor": "gray",
+                                "labelColor": "gray",
+                                "tickColor": "gray",
+                                "domainColor": "gray"
+                            }
+                        },
+                        "data": { "values": folded.objects() },
+                        "facet": {
+                            "row": {
+                                "field": "key",
+                                "header": {
+                                    "labelOrient": "right",
+                                    "labelAngle": 0
+                                },
+                                "type": "nominal"
+                            }
+                        },
+                        "spec": {
+                            "layer": [
+                                {
+                                    "mark": {
+                                        "type": "line",
+                                        "color": "#1f77b4"
+                                    },
+                                    "encoding": {
+                                        "opacity": {
+                                            "value": 0.2
+                                        },
+                                        "x": {
+                                            "field": "timestamp",
+                                            "title": "Elapsed time (seconds)",
+                                            "type": "temporal"
+                                        },
+                                        "y": {
+                                            "field": "value",
+                                            "scale": {
+                                                "zero": false
+                                            },
+                                            "title": "",
+                                            "type": "quantitative"
+                                        }
+                                    },
+                                    "name": "view_11"
+                                },
+                                {
+                                    "mark": {
+                                        "type": "line",
+                                        "color": "#1f77b4"
+                                    },
+                                    "encoding": {
+                                        "opacity": {
+                                            "value": 1
+                                        },
+                                        "x": {
+                                            "field": "timestamp",
+                                            "type": "temporal"
+                                        },
+                                        "y": {
+                                            "field": "value",
+                                            "scale": {
+                                                "zero": false
+                                            },
+                                            "type": "quantitative"
+                                        }
+                                    },
+                                    "transform": [
+                                        {
+                                            "filter": {
+                                                "param": "param_11"
+                                            }
+                                        }
+                                    ]
+                                },
+                                {
+                                    "mark": {
+                                        "type": "rule",
+                                        "color": "firebrick",
+                                        "strokeDash": [
+                                            5,
+                                            5
+                                        ]
+                                    },
+                                    "encoding": {
+                                        "x": {
+                                            "aggregate": "min",
+                                            "field": "timestamp",
+                                            "type": "temporal"
+                                        },
+                                        "x2": {
+                                            "aggregate": "max",
+                                            "field": "timestamp"
+                                        },
+                                        "y": {
+                                            "aggregate": "min",
+                                            "field": "value",
+                                            "scale": {
+                                                "zero": false
+                                            },
+                                            "type": "quantitative"
+                                        }
+                                    },
+                                    "transform": [
+                                        {
+                                            "filter": {
+                                                "param": "param_11"
+                                            }
+                                        }
+                                    ]
+                                },
+                                {
+                                    "mark": {
+                                        "type": "text",
+                                        "color": "#1f77b4",
+                                        "dx": 0,
+                                        "dy": -50,
+                                        "size": 20
+                                    },
+                                    "encoding": {
+                                        "text": {
+                                            "aggregate": "mean",
+                                            "field": "value",
+                                            "format": ".3f",
+                                            "type": "quantitative"
+                                        },
+                                        "x": {
+                                            "aggregate": "mean",
+                                            "field": "timestamp",
+                                            "type": "temporal"
+                                        },
+                                        "y": {
+                                            "aggregate": "min",
+                                            "field": "value",
+                                            "scale": {
+                                                "zero": false
+                                            },
+                                            "type": "quantitative"
+                                        }
+                                    },
+                                    "transform": [
+                                        {
+                                            "filter": {
+                                                "param": "param_11"
+                                            }
+                                        }
+                                    ]
+                                },
+                                {
+                                    "mark": {
+                                        "type": "text",
+                                        "color": "firebrick",
+                                        "dx": 0,
+                                        "dy": -10,
+                                        "size": 14
+                                    },
+                                    "encoding": {
+                                        "text": {
+                                            "aggregate": "count",
+                                            "field": "value",
+                                            "format": ".3f",
+                                            "type": "quantitative"
+                                        },
+                                        "x": {
+                                            "aggregate": "mean",
+                                            "field": "timestamp",
+                                            "type": "temporal"
+                                        },
+                                        "y": {
+                                            "aggregate": "min",
+                                            "field": "value",
+                                            "scale": {
+                                                "zero": false
+                                            },
+                                            "type": "quantitative"
+                                        }
+                                    },
+                                    "transform": [
+                                        {
+                                            "filter": {
+                                                "param": "param_11"
+                                            }
+                                        }
+                                    ]
+                                },
+                                {
+                                    "mark": {
+                                        "type": "text",
+                                        "color": "firebrick",
+                                        "dx": -20,
+                                        "dy": -10,
+                                        "size": 14
+                                    },
+                                    "encoding": {
+                                        "text": {
+                                            "aggregate": "min",
+                                            "field": "timestamp",
+                                            "formatType": "time",
+                                            "timeUnit": "hoursminutesseconds",
+                                            "type": "temporal"
+                                        },
+                                        "x": {
+                                            "aggregate": "min",
+                                            "field": "timestamp",
+                                            "type": "temporal"
+                                        },
+                                        "y": {
+                                            "aggregate": "min",
+                                            "field": "value",
+                                            "scale": {
+                                                "zero": false
+                                            },
+                                            "type": "quantitative"
+                                        }
+                                    },
+                                    "transform": [
+                                        {
+                                            "filter": {
+                                                "param": "param_11"
+                                            }
+                                        }
+                                    ]
+                                },
+                                {
+                                    "mark": {
+                                        "type": "text",
+                                        "color": "firebrick",
+                                        "dx": 20,
+                                        "dy": -10,
+                                        "size": 14
+                                    },
+                                    "encoding": {
+                                        "text": {
+                                            "aggregate": "max",
+                                            "field": "timestamp",
+                                            "formatType": "time",
+                                            "timeUnit": "hoursminutesseconds",
+                                            "type": "temporal"
+                                        },
+                                        "x": {
+                                            "aggregate": "max",
+                                            "field": "timestamp",
+                                            "type": "temporal"
+                                        },
+                                        "y": {
+                                            "aggregate": "min",
+                                            "field": "value",
+                                            "scale": {
+                                                "zero": false
+                                            },
+                                            "type": "quantitative"
+                                        }
+                                    },
+                                    "transform": [
+                                        {
+                                            "filter": {
+                                                "param": "param_11"
+                                            }
+                                        }
+                                    ]
+                                }
+                            ],
+                            "height": 200,
+                            "width": 800
+                        },
+                        "params": [
+                            {
+                                "name": "param_11",
+                                "select": {
+                                    "type": "interval",
+                                    "encodings": [
+                                        "x"
+                                    ]
+                                },
+                                "views": [
+                                    "view_11"
+                                ]
+                            }
+                        ],
+                        "resolve": {
+                            "scale": {
+                                "x": "independent",
+                                "y": "independent"
+                            }
+                        },
+                        "spacing": 25,
+                        "$schema": "https://vega.github.io/schema/vega-lite/v5.20.1.json"
+                    };
+
+                    vegaEmbed("#vega-container", spec).catch(console.error);
+                } else {
+                    chartContainer.innerHTML = "<p>No recordMesgs data available for chart.</p>";
+                }
+            }
+
+            function renderMap() {
+                const mapContainer = document.getElementById("content-map");
+                mapContainer.innerHTML = '<div id="leaflet-map" style="height: 800px;"></div>';
+
+                const map = L.map('leaflet-map').setView([0, 0], 2);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                }).addTo(map);
+
+                if (globalData && globalData.recordMesgs) {
+                    const coords = globalData.recordMesgs
+                        .filter(row => row.positionLat != null && row.positionLong != null)
+                        .map(row => [Number(row.positionLat / 2 ** 31 * 180), Number(row.positionLong / 2 ** 31 * 180)]);
+
+                    if (coords.length > 0) {
+                        const polyline = L.polyline(coords, { color: 'blue' }).addTo(map);
+                        map.fitBounds(polyline.getBounds());
+                    } else {
+                        mapContainer.innerHTML = '<p>No location data available to display map.</p>';
+                    }
+                } else {
+                    mapContainer.innerHTML = '<p>No location data available to display map.</p>';
+                }
+            }
+        };
+    </script>
+</head>
+
+<body>
+    <div id="tabs">
+        <button class="tab-button active" id="tab-map">Map</button>
+        <button class="tab-button" id="tab-data">Data</button>
+        <button class="tab-button" id="tab-chart">Chart</button>
+    </div>
+    <div id="content-map" class="tab-content"></div>
+    <div id="content-data" class="tab-content"></div>
+    <div id="content-chart" class="tab-content">
+        <div id="chart-container"></div>
+    </div>
+    <!-- Credits Section -->
+    <footer>
+        <p>
+            Credits:&nbsp;
+            <a href="https://leafletjs.com/" target="_blank">Leaflet</a>,
+            <a href="https://datatables.net/" target="_blank">DataTables.js</a>,
+            <a href="https://github.com/uwdata/arquero" target="_blank">arquero</a>,
+            <a href="https://github.com/garmin/fit-javascript-sdk" target="_blank">Garmin FIT JavaScript SDK</a>,
+            <a href="https://vega.github.io/" target="_blank">Vega</a>,
+            <a href="https://github.com/thomascamminady/fit-viewer" target="_blank">this repo</a>.
+        </p>
+    </footer>
+</body>
+
+</html>
