@@ -1,3 +1,13 @@
+import { formatDistance } from './utils/formatDistance.js';
+import { formatDuration } from './utils/formatDuration.js';
+import { patchSummaryFields } from './utils/patchSummaryFields.js';
+import { displayTables } from './utils/displayTables.js';
+import { renderTable } from './utils/renderTable.js';
+import { copyTableAsCSV } from './utils/copyTableAsCSV.js';
+import { renderChart } from './utils/renderChart.js';
+import { renderMap } from './utils/renderMap.js';
+import { renderSummary } from './utils/renderSummary.js';
+
 window.globalData = window.globalData || null; // will hold all data received from the extension
 
 // Add this function for Electron usage
