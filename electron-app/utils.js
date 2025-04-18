@@ -261,7 +261,9 @@ function patchSummaryFields(obj) {
 		obj.startTime = new Date(obj.startTime * 1000).toString();
 	// Remove excessive decimals for all numbers
 	Object.keys(obj)
-		.filter((key) => typeof obj[key] === 'number' && !Number.isInteger(obj[key]))
+		.filter(
+			(key) => typeof obj[key] === 'number' && !Number.isInteger(obj[key]),
+		)
 		.forEach((key) => {
 			obj[key] = Number(obj[key]).toFixed(2);
 		});
@@ -359,7 +361,9 @@ function renderTable(container, title, table, index) {
 			}, 100);
 		});
 	} else {
-		console.warn('[WARNING] jQuery is not available. Falling back to native DOM methods.');
+		console.warn(
+			'[WARNING] jQuery is not available. Falling back to native DOM methods.',
+		);
 		setTimeout(() => {
 			const tableElement = document.getElementById(tableId);
 			if (tableElement) {
@@ -422,81 +426,58 @@ function renderChart() {
 				background: '#181a20',
 				text: {
 					color: '#e0e0e0',
-					fontSize: 14,
+					font: 'Inter, Segoe UI, Arial, sans-serif',
+					fontSize: 15,
 				},
 				title: {
 					anchor: 'middle',
-					fontWeight: 'normal',
-					titleFontWeight: 'normal',
-					labelFontWeight: 'normal',
-					fontSize: 30,
-					titleFontSize: 16,
-					labelFontSize: 14,
+					fontWeight: 'bold',
+					font: 'Inter, Segoe UI, Arial, sans-serif',
+					fontSize: 22,
 					color: '#e0e0e0',
-					titleColor: '#e0e0e0',
-					labelColor: '#e0e0e0',
-					tickColor: '#888',
-					domainColor: '#888',
 				},
 				header: {
-					titleFontSize: 22,
-					labelFontSize: 18,
+					titleFontSize: 18,
+					labelFontSize: 15,
+					font: 'Inter, Segoe UI, Arial, sans-serif',
 					color: '#e0e0e0',
-					titleColor: '#e0e0e0',
 					labelColor: '#e0e0e0',
-					fontWeight: 'normal',
-					titleFontWeight: 'normal',
-					labelFontWeight: 'normal',
+					fontWeight: 'bold',
 				},
 				view: {
-					height: 800,
+					height: 200,
 					width: 800,
-					strokeWidth: 0,
+					stroke: 'rgba(255,255,255,0.05)',
+					cornerRadius: 16,
 					fill: '#23263a',
+					shadow: '0 4px 24px 0 rgba(0,0,0,0.18)',
 				},
 				axis: {
 					domain: true,
 					domainColor: '#888',
-					domainWidth: 1,
+					domainWidth: 1.5,
+					grid: true,
+					gridColor: '#2c2f4a',
 					gridWidth: 1,
 					labelAngle: 0,
-					tickSize: 5,
-					gridCap: 'round',
+					tickSize: 6,
 					gridDash: [2, 4],
+					font: 'Inter, Segoe UI, Arial, sans-serif',
 					fontWeight: 'normal',
-					titleFontWeight: 'normal',
-					labelFontWeight: 'normal',
-					fontSize: 30,
-					titleFontSize: 16,
-					labelFontSize: 14,
-					color: '#e0e0e0',
+					fontSize: 13,
+					color: '#b0b0b0',
 					titleColor: '#e0e0e0',
-					labelColor: '#e0e0e0',
+					labelColor: '#b0b0b0',
 					tickColor: '#888',
-				},
-				axisX: {
-					titleAnchor: 'end',
-					titleAlign: 'center',
-				},
-				axisY: {
-					titleAnchor: 'end',
-					titleAngle: 0,
-					titleAlign: 'center',
-					titleY: -15,
-					titleX: 0,
 				},
 				legend: {
-					fontWeight: 'normal',
-					titleFontWeight: 'normal',
-					labelFontWeight: 'normal',
-					fontSize: 30,
-					titleFontSize: 16,
-					labelFontSize: 14,
-					color: '#e0e0e0',
-					titleColor: '#e0e0e0',
+					font: 'Inter, Segoe UI, Arial, sans-serif',
+					fontSize: 14,
 					labelColor: '#e0e0e0',
-					tickColor: '#888',
-					domainColor: '#888',
+					titleColor: '#e0e0e0',
+					gradientLength: 120,
+					gradientThickness: 12,
+					orient: 'top',
 				},
 			},
 			data: { values: folded.objects() },
@@ -514,13 +495,14 @@ function renderChart() {
 				layer: [
 					{
 						mark: {
-							type: 'line',
-							color: '#1f77b4',
+							type: 'area',
+							interpolate: 'monotone',
+							color: { expr: "scale('modern', datum.key)" },
+							opacity: 0.18,
+							fillOpacity: 0.18,
+							strokeWidth: 0,
 						},
 						encoding: {
-							opacity: {
-								value: 0.2,
-							},
 							x: {
 								field: 'timestamp',
 								title: 'Elapsed time (seconds)',
@@ -528,43 +510,33 @@ function renderChart() {
 							},
 							y: {
 								field: 'value',
-								scale: {
-									zero: false,
-								},
+								scale: { zero: false },
 								title: '',
 								type: 'quantitative',
 							},
+							color: {
+								field: 'key',
+								scale: { scheme: 'tableau20', name: 'modern' },
+								legend: null,
+							},
 						},
-						name: 'view_11',
 					},
 					{
 						mark: {
 							type: 'line',
-							color: '#1f77b4',
+							interpolate: 'monotone',
+							strokeWidth: 2.5,
+							color: { expr: "scale('modern', datum.key)" },
 						},
 						encoding: {
-							opacity: {
-								value: 1,
-							},
-							x: {
-								field: 'timestamp',
-								type: 'temporal',
-							},
-							y: {
-								field: 'value',
-								scale: {
-									zero: false,
-								},
-								type: 'quantitative',
+							x: { field: 'timestamp', type: 'temporal' },
+							y: { field: 'value', scale: { zero: false }, type: 'quantitative' },
+							color: {
+								field: 'key',
+								scale: { scheme: 'tableau20', name: 'modern' },
+								legend: null,
 							},
 						},
-						transform: [
-							{
-								filter: {
-									param: 'param_11',
-								},
-							},
-						],
 					},
 					{
 						mark: {
@@ -774,9 +746,11 @@ function renderChart() {
 		};
 		const vegaContainer = document.getElementById('vega-container');
 		if (vegaContainer) {
-			vegaEmbed('#vega-container', spec).catch(console.error);
+			vegaEmbed('#vega-container', spec, { actions: false }).catch(console.error);
 		} else {
-			console.warn('[WARNING] #vega-container element is missing. Skipping chart rendering.');
+			console.warn(
+				'[WARNING] #vega-container element is missing. Skipping chart rendering.',
+			);
 		}
 	} else {
 		chartContainer.innerHTML =
@@ -797,7 +771,10 @@ function renderMap() {
 		const coords = window.globalData.recordMesgs
 			.filter((row) => row.positionLat != null && row.positionLong != null)
 			.map((row) => {
-				if (typeof row.positionLat === 'number' && typeof row.positionLong === 'number') {
+				if (
+					typeof row.positionLat === 'number' &&
+					typeof row.positionLong === 'number'
+				) {
 					return [
 						Number((row.positionLat / 2 ** 31) * 180),
 						Number((row.positionLong / 2 ** 31) * 180),
