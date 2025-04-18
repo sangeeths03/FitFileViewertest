@@ -1,5 +1,3 @@
-// ...existing code...
-
 // In electron-app/renderer.js
 document.getElementById('openFileBtn').addEventListener('click', async () => {
 	const filePath = await window.electronAPI.openFile();
@@ -18,5 +16,3 @@ document.getElementById('openFileBtn').addEventListener('click', async () => {
 		}
 	}
 });
-
-// ...existing code...
