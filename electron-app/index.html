@@ -40,59 +40,31 @@
 	</head>
 
 	<body>
-		<div>
-			<button
-				id="openFileBtn"
-				class="themed-btn"
-			>
-				Open FIT File
-			</button>
+		<!-- App Header -->
+		<header class="app-header">
+			<h1>Fit File Viewer</h1>
+		</header>
+		<!-- Header Bar for File Open and Filename -->
+		<div class="header-bar">
+			<button id="openFileBtn" class="themed-btn">Open FIT File</button>
 			<span id="activeFileName"></span>
 		</div>
-		<div id="tabs">
-			<button
-				class="tab-button active"
-				id="tab-map"
-			>
-				Map
-			</button>
-			<button
-				class="tab-button"
-				id="tab-data"
-			>
-				Data
-			</button>
-			<button
-				class="tab-button"
-				id="tab-chart"
-			>
-				Chart
-			</button>
-			<button
-				class="tab-button"
-				id="tab-summary"
-			>
-				Summary
-			</button>
+		<!-- Centered Tab Bar -->
+		<div id="tabs" class="tab-bar">
+			<button class="tab-button active" id="tab-map">Map</button>
+			<button class="tab-button" id="tab-data">Data</button>
+			<button class="tab-button" id="tab-chart">Chart</button>
+			<button class="tab-button" id="tab-summary">Summary</button>
 		</div>
-		<div
-			id="content-map"
-			class="tab-content"
-		></div>
-		<div
-			id="content-data"
-			class="tab-content"
-		></div>
-		<div
-			id="content-chart"
-			class="tab-content"
-		>
-			<div id="chart-container"></div>
+		<!-- Card-like Container for Tab Content -->
+		<div class="tab-card">
+			<div id="content-map" class="tab-content"></div>
+			<div id="content-data" class="tab-content"></div>
+			<div id="content-chart" class="tab-content">
+				<div id="chart-container"></div>
+			</div>
+			<div id="content-summary" class="tab-content"></div>
 		</div>
-		<div
-			id="content-summary"
-			class="tab-content"
-		></div>
 		<!-- Credits Section -->
 		<div class="credits-section">
 			<footer>
@@ -136,6 +108,9 @@
 			</footer>
 		</div>
 		<!-- Ensure utils.js and main-ui.js are loaded before renderer.js because renderer.js depends on them -->
-		<script src="renderer.js"></script>
+		<script
+			src="renderer.js"
+			type="module"
+		></script>
 	</body>
 </html>
