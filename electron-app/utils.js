@@ -426,58 +426,81 @@ function renderChart() {
 				background: '#181a20',
 				text: {
 					color: '#e0e0e0',
-					font: 'Inter, Segoe UI, Arial, sans-serif',
-					fontSize: 15,
+					fontSize: 14,
 				},
 				title: {
 					anchor: 'middle',
-					fontWeight: 'bold',
-					font: 'Inter, Segoe UI, Arial, sans-serif',
-					fontSize: 22,
+					fontWeight: 'normal',
+					titleFontWeight: 'normal',
+					labelFontWeight: 'normal',
+					fontSize: 30,
+					titleFontSize: 16,
+					labelFontSize: 14,
 					color: '#e0e0e0',
+					titleColor: '#e0e0e0',
+					labelColor: '#e0e0e0',
+					tickColor: '#888',
+					domainColor: '#888',
 				},
 				header: {
-					titleFontSize: 18,
-					labelFontSize: 15,
-					font: 'Inter, Segoe UI, Arial, sans-serif',
+					titleFontSize: 22,
+					labelFontSize: 18,
 					color: '#e0e0e0',
+					titleColor: '#e0e0e0',
 					labelColor: '#e0e0e0',
-					fontWeight: 'bold',
+					fontWeight: 'normal',
+					titleFontWeight: 'normal',
+					labelFontWeight: 'normal',
 				},
 				view: {
-					height: 200,
+					height: 800,
 					width: 800,
-					stroke: 'rgba(255,255,255,0.05)',
-					cornerRadius: 16,
+					strokeWidth: 0,
 					fill: '#23263a',
-					shadow: '0 4px 24px 0 rgba(0,0,0,0.18)',
 				},
 				axis: {
 					domain: true,
 					domainColor: '#888',
-					domainWidth: 1.5,
-					grid: true,
-					gridColor: '#2c2f4a',
+					domainWidth: 1,
 					gridWidth: 1,
 					labelAngle: 0,
-					tickSize: 6,
+					tickSize: 5,
+					gridCap: 'round',
 					gridDash: [2, 4],
-					font: 'Inter, Segoe UI, Arial, sans-serif',
 					fontWeight: 'normal',
-					fontSize: 13,
-					color: '#b0b0b0',
+					titleFontWeight: 'normal',
+					labelFontWeight: 'normal',
+					fontSize: 30,
+					titleFontSize: 16,
+					labelFontSize: 14,
+					color: '#e0e0e0',
 					titleColor: '#e0e0e0',
-					labelColor: '#b0b0b0',
+					labelColor: '#e0e0e0',
 					tickColor: '#888',
 				},
+				axisX: {
+					titleAnchor: 'end',
+					titleAlign: 'center',
+				},
+				axisY: {
+					titleAnchor: 'end',
+					titleAngle: 0,
+					titleAlign: 'center',
+					titleY: -15,
+					titleX: 0,
+				},
 				legend: {
-					font: 'Inter, Segoe UI, Arial, sans-serif',
-					fontSize: 14,
-					labelColor: '#e0e0e0',
+					fontWeight: 'normal',
+					titleFontWeight: 'normal',
+					labelFontWeight: 'normal',
+					fontSize: 30,
+					titleFontSize: 16,
+					labelFontSize: 14,
+					color: '#e0e0e0',
 					titleColor: '#e0e0e0',
-					gradientLength: 120,
-					gradientThickness: 12,
-					orient: 'top',
+					labelColor: '#e0e0e0',
+					tickColor: '#888',
+					domainColor: '#888',
 				},
 			},
 			data: { values: folded.objects() },
@@ -495,14 +518,13 @@ function renderChart() {
 				layer: [
 					{
 						mark: {
-							type: 'area',
-							interpolate: 'monotone',
-							color: { expr: "scale('modern', datum.key)" },
-							opacity: 0.18,
-							fillOpacity: 0.18,
-							strokeWidth: 0,
+							type: 'line',
+							color: '#1f77b4',
 						},
 						encoding: {
+							opacity: {
+								value: 0.2,
+							},
 							x: {
 								field: 'timestamp',
 								title: 'Elapsed time (seconds)',
@@ -510,33 +532,43 @@ function renderChart() {
 							},
 							y: {
 								field: 'value',
-								scale: { zero: false },
+								scale: {
+									zero: false,
+								},
 								title: '',
 								type: 'quantitative',
 							},
-							color: {
-								field: 'key',
-								scale: { scheme: 'tableau20', name: 'modern' },
-								legend: null,
-							},
 						},
+						name: 'view_11',
 					},
 					{
 						mark: {
 							type: 'line',
-							interpolate: 'monotone',
-							strokeWidth: 2.5,
-							color: { expr: "scale('modern', datum.key)" },
+							color: '#1f77b4',
 						},
 						encoding: {
-							x: { field: 'timestamp', type: 'temporal' },
-							y: { field: 'value', scale: { zero: false }, type: 'quantitative' },
-							color: {
-								field: 'key',
-								scale: { scheme: 'tableau20', name: 'modern' },
-								legend: null,
+							opacity: {
+								value: 1,
+							},
+							x: {
+								field: 'timestamp',
+								type: 'temporal',
+							},
+							y: {
+								field: 'value',
+								scale: {
+									zero: false,
+								},
+								type: 'quantitative',
 							},
 						},
+						transform: [
+							{
+								filter: {
+									param: 'param_11',
+								},
+							},
+						],
 					},
 					{
 						mark: {
@@ -746,7 +778,7 @@ function renderChart() {
 		};
 		const vegaContainer = document.getElementById('vega-container');
 		if (vegaContainer) {
-			vegaEmbed('#vega-container', spec, { actions: false }).catch(console.error);
+			vegaEmbed('#vega-container', spec).catch(console.error);
 		} else {
 			console.warn(
 				'[WARNING] #vega-container element is missing. Skipping chart rendering.',
