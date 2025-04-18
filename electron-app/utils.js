@@ -21,10 +21,14 @@ function patchSummaryFields(obj) {
 	// Always convert to human-readable, even if already present
 	// Support both snake_case and camelCase keys
 	// Distance
-	if (obj.total_distance != null)
-		obj.total_distance = formatDistance(Number(obj.total_distance));
-	if (obj.totalDistance != null)
-		obj.totalDistance = formatDistance(Number(obj.totalDistance));
+	if (obj.total_distance != null) {
+		const totalDistance = Number(obj.total_distance);
+		obj.total_distance = formatDistance(totalDistance);
+	}
+	if (obj.totalDistance != null) {
+		const totalDistance = Number(obj.totalDistance);
+		obj.totalDistance = formatDistance(totalDistance);
+	}
 	// Time
 	if (obj.total_timer_time != null)
 		obj.total_timer_time = formatDuration(Number(obj.total_timer_time));
@@ -256,11 +260,11 @@ function patchSummaryFields(obj) {
 	if (obj.startTime != null && typeof obj.startTime === 'number')
 		obj.startTime = new Date(obj.startTime * 1000).toString();
 	// Remove excessive decimals for all numbers
-	Object.keys(obj).forEach((key) => {
-		if (typeof obj[key] === 'number' && !Number.isInteger(obj[key])) {
+	Object.keys(obj)
+		.filter((key) => typeof obj[key] === 'number' && !Number.isInteger(obj[key]))
+		.forEach((key) => {
 			obj[key] = Number(obj[key]).toFixed(2);
-		}
-	});
+		});
 }
 
 function displayTables(dataFrames) {
@@ -270,6 +274,7 @@ function displayTables(dataFrames) {
 	container.innerHTML = '';
 	const keys = Object.keys(dataFrames);
 	console.log('[DEBUG] Table keys:', keys);
+	// Prioritize 'recordMesgs' to appear first in the sorted keys, as it is likely the main data table.
 	keys.sort((a, b) => (a === 'recordMesgs' ? -1 : b === 'recordMesgs' ? 1 : 0));
 	keys.forEach((key, index) => {
 		// Only try to render if the value is an array (table data)
@@ -333,25 +338,37 @@ function renderTable(container, title, table, index) {
 	section.appendChild(header);
 	section.appendChild(content);
 	container.appendChild(section);
-	$(document).ready(function () {
-		setTimeout(() => {
-			try {
-				if ($.fn.DataTable) {
-					console.log(`[DEBUG] Initializing DataTable for #${tableId}`);
-					$('#' + tableId).DataTable({
-						paging: false,
-						searching: true,
-						ordering: true,
-						autoWidth: true,
-					});
-				} else {
-					console.error('[ERROR] DataTables.js is not loaded');
+	if (window.jQuery) {
+		$(document).ready(function () {
+			setTimeout(() => {
+				try {
+					if ($.fn.DataTable) {
+						console.log(`[DEBUG] Initializing DataTable for #${tableId}`);
+						$('#' + tableId).DataTable({
+							paging: false,
+							searching: true,
+							ordering: true,
+							autoWidth: true,
+						});
+					} else {
+						console.error('[ERROR] DataTables.js is not loaded');
+					}
+				} catch (e) {
+					console.error(`[ERROR] DataTable init failed for #${tableId}`, e);
 				}
-			} catch (e) {
-				console.error(`[ERROR] DataTable init failed for #${tableId}`, e);
+			}, 100);
+		});
+	} else {
+		console.warn('[WARNING] jQuery is not available. Falling back to native DOM methods.');
+		setTimeout(() => {
+			const tableElement = document.getElementById(tableId);
+			if (tableElement) {
+				console.log(`[DEBUG] DataTable initialization skipped for #${tableId}`);
+			} else {
+				console.error(`[ERROR] Table element not found for #${tableId}`);
 			}
 		}, 100);
-	});
+	}
 }
 
 function copyTableAsCSV(table, title) {
@@ -366,10 +383,28 @@ function copyTableAsCSV(table, title) {
 	});
 	const flattenedTable = window.aq.from(rows);
 	const csvString = flattenedTable.toCSV({ header: true });
-	navigator.clipboard
-		.writeText(csvString)
-		.then(() => console.log('Copied CSV to clipboard!'))
-		.catch((err) => console.error('Failed to copy CSV:', err));
+	if (navigator.clipboard && navigator.clipboard.writeText) {
+		navigator.clipboard
+			.writeText(csvString)
+			.then(() => console.log('Copied CSV to clipboard!'))
+			.catch((err) => console.error('Failed to copy CSV:', err));
+	} else {
+		// Fallback mechanism
+		const textarea = document.createElement('textarea');
+		textarea.value = csvString;
+		textarea.style.position = 'fixed'; // Prevent scrolling to the bottom
+		textarea.style.opacity = '0';
+		document.body.appendChild(textarea);
+		textarea.focus();
+		textarea.select();
+		try {
+			document.execCommand('copy');
+			console.log('Copied CSV to clipboard using fallback!');
+		} catch (err) {
+			console.error('Failed to copy CSV using fallback:', err);
+		}
+		document.body.removeChild(textarea);
+	}
 }
 
 function renderChart() {
@@ -737,7 +772,12 @@ function renderChart() {
 			spacing: 25,
 			$schema: 'https://vega.github.io/schema/vega-lite/v5.20.1.json',
 		};
-		vegaEmbed('#vega-container', spec).catch(console.error);
+		const vegaContainer = document.getElementById('vega-container');
+		if (vegaContainer) {
+			vegaEmbed('#vega-container', spec).catch(console.error);
+		} else {
+			console.warn('[WARNING] #vega-container element is missing. Skipping chart rendering.');
+		}
 	} else {
 		chartContainer.innerHTML =
 			'<p>No recordMesgs data available for chart.</p>';
@@ -756,10 +796,16 @@ function renderMap() {
 	if (window.globalData && window.globalData.recordMesgs) {
 		const coords = window.globalData.recordMesgs
 			.filter((row) => row.positionLat != null && row.positionLong != null)
-			.map((row) => [
-				Number((row.positionLat / 2 ** 31) * 180),
-				Number((row.positionLong / 2 ** 31) * 180),
-			]);
+			.map((row) => {
+				if (typeof row.positionLat === 'number' && typeof row.positionLong === 'number') {
+					return [
+						Number((row.positionLat / 2 ** 31) * 180),
+						Number((row.positionLong / 2 ** 31) * 180),
+					];
+				}
+				return null;
+			})
+			.filter((coord) => coord !== null);
 		if (coords.length > 0) {
 			const polyline = L.polyline(coords, { color: 'blue' }).addTo(map);
 			map.fitBounds(polyline.getBounds());
@@ -781,7 +827,7 @@ function renderSummary(data) {
 	if (data.sessionMesgs && data.sessionMesgs.length > 0) {
 		const raw = { ...data.sessionMesgs[0] };
 		patchSummaryFields(raw);
-		if (raw.total_ascent != null) {
+		if (raw.total_ascent != null && !isNaN(raw.total_ascent)) {
 			raw.total_ascent_ft = (raw.total_ascent * 3.28084).toFixed(0) + ' ft';
 		}
 		if (raw.total_descent != null) {
@@ -852,7 +898,29 @@ function renderSummary(data) {
 					'\n' +
 					Object.values(summaryRows[0]).join(','),
 			];
-			navigator.clipboard.writeText(csv.join('\n'));
+			const csvText = csv.join('\n');
+			if (navigator.clipboard && navigator.clipboard.writeText) {
+				navigator.clipboard
+					.writeText(csvText)
+					.then(() => console.log('Copied CSV to clipboard!'))
+					.catch((err) => console.error('Failed to copy CSV:', err));
+			} else {
+				// Fallback mechanism
+				const textarea = document.createElement('textarea');
+				textarea.value = csvText;
+				textarea.style.position = 'fixed'; // Prevent scrolling to the bottom
+				textarea.style.opacity = '0';
+				document.body.appendChild(textarea);
+				textarea.focus();
+				textarea.select();
+				try {
+					document.execCommand('copy');
+					console.log('Copied CSV to clipboard using fallback!');
+				} catch (err) {
+					console.error('Failed to copy CSV using fallback:', err);
+				}
+				document.body.removeChild(textarea);
+			}
 		}
 	};
 	summaryHeaderBar.appendChild(copyBtn);

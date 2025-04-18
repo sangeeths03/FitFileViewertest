@@ -29,7 +29,8 @@
 			href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
 		/>
 		<script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
-		<!-- utils.js should be loaded after other dependencies -->
+		<!-- utils.js should be loaded after other dependencies because it relies on global objects or functions
+			 defined by libraries like jQuery, DataTables, Arquero, and Chart.js. -->
 		<script src="utils.js"></script>
 		<script src="main-ui.js"></script>
 	</head>
@@ -89,47 +90,48 @@
 			class="tab-content"
 		></div>
 		<!-- Credits Section -->
-		<footer>
-			Credits: &nbsp;
-			<a
-				href="https://leafletjs.com/"
-				target="_blank"
-				rel="noopener"
-				>Leaflet</a
-			>,
-			<a
-				href="https://datatables.net/"
-				target="_blank"
-				rel="noopener"
-				>DataTables.js</a
-			>,
-			<a
-				href="https://github.com/uwdata/arquero"
-				target="_blank"
-				rel="noopener"
-				>arquero</a
-			>,
-			<a
-				href="https://github.com/garmin/fit-javascript-sdk"
-				target="_blank"
-				rel="noopener"
-				>Garmin FIT JavaScript SDK</a
-			>,
-			<a
-				href="https://vega.github.io/"
-				target="_blank"
-				rel="noopener"
-				>Vega</a
-			>,
-			<a
-				href="https://github.com/thomascamminady/fit-viewer"
-				target="_blank"
-				rel="noopener"
-				>this repo</a
-			>.
-		</footer>
-		<!-- Ensure utils.js is loaded before renderer.js -->
-		<script src="main-ui.js"></script>
+		<div class="credits-section">
+			<footer>
+				Credits: &nbsp;
+				<a
+					href="https://leafletjs.com/"
+					target="_blank"
+					rel="noopener"
+					>Leaflet</a
+				>,
+				<a
+					href="https://datatables.net/"
+					target="_blank"
+					rel="noopener"
+					>DataTables.js</a
+				>,
+				<a
+					href="https://github.com/uwdata/arquero"
+					target="_blank"
+					rel="noopener"
+					>arquero</a
+				>,
+				<a
+					href="https://github.com/garmin/fit-javascript-sdk"
+					target="_blank"
+					rel="noopener"
+					>Garmin FIT JavaScript SDK</a
+				>,
+				<a
+					href="https://vega.github.io/"
+					target="_blank"
+					rel="noopener"
+					>Vega</a
+				>,
+				<a
+					href="https://github.com/thomascamminady/fit-viewer"
+					target="_blank"
+					rel="noopener"
+					>this repo</a
+				>.
+			</footer>
+		</div>
+		<!-- Ensure utils.js and main-ui.js are loaded before renderer.js because renderer.js depends on them -->
 		<script src="renderer.js"></script>
 	</body>
 </html>
