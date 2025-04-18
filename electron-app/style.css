@@ -173,6 +173,11 @@ tr:hover {
 }
 
 #leaflet-map {
+	/* Adjusts the map for dark mode:
+	   - invert(0.92): Inverts colors to make the map suitable for dark backgrounds.
+	   - hue-rotate(180deg): Rotates hues to correct color inversion.
+	   - brightness(0.9): Slightly dims the map for better contrast.
+	   - contrast(1.1): Enhances contrast for readability. */
 	filter: invert(0.92) hue-rotate(180deg) brightness(0.9)
 		contrast(1.1);
 	background: #23263a;

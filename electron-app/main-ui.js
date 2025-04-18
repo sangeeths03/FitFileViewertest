@@ -1,11 +1,16 @@
-let globalData = null; // will hold all data received from the extension
+window.globalData = window.globalData || null; // will hold all data received from the extension
 
 // Add this function for Electron usage
 window.showFitData = function (data, filePath) {
 	globalData = data;
 	if (filePath) {
 		// Show just the filename, not the full path
-		const fileName = filePath.split(/[/\\]/).pop();
+		let fileName = globalData.cachedFileName;
+		if (!fileName || globalData.cachedFilePath !== filePath) {
+			fileName = filePath.split(/[/\\]/).pop();
+			globalData.cachedFileName = fileName;
+			globalData.cachedFilePath = filePath;
+		}
 		const fileSpan = document.getElementById('activeFileName');
 		if (fileSpan) {
 			fileSpan.textContent = `Active: ${fileName}`;
@@ -22,50 +27,67 @@ window.showFitData = function (data, filePath) {
 		window.displayTables(globalData);
 	}
 	if (tabChart && tabChart.classList.contains('active')) {
-		window.renderChart();
+		if (globalData && Object.keys(globalData).length > 0) {
+			window.renderChart();
+		}
 	}
 	if (tabMap && tabMap.classList.contains('active')) {
-		window.renderMap();
+		if (globalData && Object.keys(globalData).length > 0) {
+			window.renderMap();
+		}
 	}
 	if (tabSummary && tabSummary.classList.contains('active')) {
 		window.renderSummary(globalData);
 	}
 };
 
-window.onload = () => {
+	// Utility function to set the active tab
+	function setActiveTab(tabId) {
+		document.querySelectorAll('.tab-button').forEach((btn) => {
+			btn.classList.remove('active');
+		});
+		document.getElementById(tabId).classList.add('active');
+	}
+
+	window.onload = () => {
 	// Signal to the extension that the webview is ready (only if available)
+	let vscode;
 	if (typeof acquireVsCodeApi === 'function') {
-		const vscode = acquireVsCodeApi();
+		vscode = acquireVsCodeApi();
 		vscode.postMessage({ type: 'ready' });
 	} else {
 		console.warn(
-			'acquireVsCodeApi is not available. Ensure this is running in a VS Code environment.',
+			'acquireVsCodeApi is not available. Messages will be logged locally.',
 		);
+		vscode = {
+			postMessage: (message) => {
+				console.log('Message logged locally:', message);
+			},
+		};
 	}
 
 	// Default: show the Map tab
-	document.getElementById('content-data').style.display = 'none';
-	document.getElementById('content-chart').style.display = 'none';
-	document.getElementById('content-map').style.display = 'block';
-	document.getElementById('content-summary').style.display = 'none';
+	toggleTabVisibility('content-map');
+
+	// Utility function to toggle tab visibility
+	function toggleTabVisibility(visibleTabId) {
+		const tabContentIds = ['content-data', 'content-chart', 'content-map', 'content-summary'];
+		tabContentIds.forEach((id) => {
+			document.getElementById(id).style.display = id === visibleTabId ? 'block' : 'none';
+		});
+	}
 
 	// Tab button click handlers
 	document.getElementById('tab-data').onclick = () => {
-		document.getElementById('content-data').style.display = 'block';
-		document.getElementById('content-chart').style.display = 'none';
-		document.getElementById('content-map').style.display = 'none';
-		document.getElementById('content-summary').style.display = 'none';
+		toggleTabVisibility('content-data');
 		setActiveTab('tab-data');
-		if (globalData) {
+		if (globalData && Object.keys(globalData).length > 0) {
 			window.displayTables(globalData);
 		}
 	};
 
 	document.getElementById('tab-chart').onclick = () => {
-		document.getElementById('content-data').style.display = 'none';
-		document.getElementById('content-chart').style.display = 'block';
-		document.getElementById('content-map').style.display = 'none';
-		document.getElementById('content-summary').style.display = 'none';
+		toggleTabVisibility('content-chart');
 		setActiveTab('tab-chart');
 		window.renderChart();
 	};
@@ -80,42 +102,28 @@ window.onload = () => {
 	};
 
 	document.getElementById('tab-summary').onclick = () => {
-		document.getElementById('content-data').style.display = 'none';
-		document.getElementById('content-chart').style.display = 'none';
-		document.getElementById('content-map').style.display = 'none';
-		document.getElementById('content-summary').style.display = 'block';
+		toggleTabVisibility('content-summary');
 		setActiveTab('tab-summary');
-		if (globalData) {
-			renderSummary(globalData);
+		if (globalData && Object.keys(globalData).length > 0) {
+			window.renderSummary(globalData);
 		}
 	};
-
-	function setActiveTab(tabId) {
-		document.querySelectorAll('.tab-button').forEach((btn) => {
-			btn.classList.remove('active');
-		});
-		document.getElementById(tabId).classList.add('active');
-	}
 
 	// Listen for fitData message from the extension
 	window.addEventListener('message', (event) => {
 		const message = event.data;
-		if (message && typeof message === 'object' && message.type === 'fitData') {
+		if (message && typeof message === 'object' && 'type' in message && message.type === 'fitData' && 'data' in message && typeof message.data === 'object') {
 			globalData = message.data;
-			setTimeout(() => {
-				displayTables(globalData);
-				if (document.getElementById('tab-chart').classList.contains('active')) {
-					renderChart();
-				}
-				if (document.getElementById('tab-map').classList.contains('active')) {
-					renderMap();
-				}
-				if (
-					document.getElementById('tab-summary').classList.contains('active')
-				) {
-					renderSummary(globalData);
-				}
-			}, 0);
+			displayTables(globalData);
+			if (document.getElementById('tab-chart').classList.contains('active')) {
+				renderChart();
+			}
+			if (document.getElementById('tab-map').classList.contains('active')) {
+				renderMap();
+			}
+			if (document.getElementById('tab-summary').classList.contains('active')) {
+				renderSummary(globalData);
+			}
 		}
 	});
 };

@@ -272,6 +272,10 @@ function displayTables(dataFrames) {
 	console.log('[DEBUG] Table keys:', keys);
 	keys.sort((a, b) => (a === 'recordMesgs' ? -1 : b === 'recordMesgs' ? 1 : 0));
 	keys.forEach((key, index) => {
+		// Only try to render if the value is an array (table data)
+		if (!Array.isArray(dataFrames[key])) {
+			return; // skip non-table keys like cachedFileName, cachedFilePath
+		}
 		try {
 			const table = aq.from(dataFrames[key]);
 			console.log(
@@ -371,9 +375,9 @@ function copyTableAsCSV(table, title) {
 function renderChart() {
 	const chartContainer = document.getElementById('content-chart');
 	chartContainer.innerHTML = '<div id="vega-container"></div>';
-	if (globalData && globalData.recordMesgs) {
+	if (window.globalData && window.globalData.recordMesgs) {
 		const aq = window.aq;
-		const recordTable = aq.from(globalData.recordMesgs);
+		const recordTable = aq.from(window.globalData.recordMesgs);
 		const columnsToFold = recordTable
 			.columnNames()
 			.filter((col) => col !== 'timestamp');
@@ -749,8 +753,8 @@ function renderMap() {
 		attribution:
 			'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
 	}).addTo(map);
-	if (globalData && globalData.recordMesgs) {
-		const coords = globalData.recordMesgs
+	if (window.globalData && window.globalData.recordMesgs) {
+		const coords = window.globalData.recordMesgs
 			.filter((row) => row.positionLat != null && row.positionLong != null)
 			.map((row) => [
 				Number((row.positionLat / 2 ** 31) * 180),
