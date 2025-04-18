@@ -1,5 +1,4 @@
 const { app, BrowserWindow, dialog, ipcMain } = require('electron');
-const path = require('path');
 const { createWindow } = require('./windowStateUtils');
 
 ipcMain.handle('dialog:openFile', async () => {

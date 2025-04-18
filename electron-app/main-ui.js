@@ -1,9 +1,5 @@
-import { formatDistance } from './utils/formatDistance.js';
-import { formatDuration } from './utils/formatDuration.js';
-import { patchSummaryFields } from './utils/patchSummaryFields.js';
+// This file is part of the Electron app that interacts with the main process and the UI.
 import { displayTables } from './utils/displayTables.js';
-import { renderTable } from './utils/renderTable.js';
-import { copyTableAsCSV } from './utils/copyTableAsCSV.js';
 import { renderChart } from './utils/renderChart.js';
 import { renderMap } from './utils/renderMap.js';
 import { renderSummary } from './utils/renderSummary.js';

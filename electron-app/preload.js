@@ -1,6 +1,5 @@
 const { contextBridge, ipcRenderer } = require('electron');
 const fs = require('fs');
-const path = require('path');
 const fitParser = require('./fitParser');
 
 contextBridge.exposeInMainWorld('electronAPI', {
