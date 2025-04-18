@@ -151,16 +151,19 @@ tr:hover {
 	color: #e0e0e0;
 	border: 1px solid #33374d;
 }
+
 .dataTables_wrapper .dataTables_paginate .paginate_button {
 	background: #23263a;
 	color: #e0e0e0 !important;
 }
+
 .dataTables_wrapper
 	.dataTables_paginate
 	.paginate_button.current {
 	background: #2196f3 !important;
 	color: #fff !important;
 }
+
 .dataTables_wrapper .dataTables_info {
 	color: #e0e0e0;
 }
