@@ -6,29 +6,27 @@
 			content="width=device-width, initial-scale=1"
 		/>
 		<title>Fit File Viewer</title>
-		<!-- Load jQuery first as it is a dependency for DataTables, followed by Arquero for data manipulation,
-         and then Chart.js, Vega, Vega-Lite, and Vega-Embed for visualization functionalities. -->
-		<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-		<script src="https://cdn.datatables.net/2.2.1/js/dataTables.min.js"></script>
-		<script src="https://unpkg.com/arquero"></script>
-		<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-		<script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
-		<script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
-		<script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+		<!-- Use local copies of JS/CSS libraries from libs/ -->
+		<script src="libs/jquery-3.7.1.min.js"></script>
+		<script src="libs/dataTables-2.2.1.min.js"></script>
+		<script src="libs/arquero-latest.js"></script>
+		<script src="libs/chartjs-latest.js"></script>
+		<script src="libs/vega-5-latest.js"></script>
+		<script src="libs/vega-lite-5-latest.js"></script>
+		<script src="libs/vega-embed-6-latest.js"></script>
 		<link
 			rel="stylesheet"
-			href="https://cdn.datatables.net/2.2.1/css/dataTables.dataTables.min.css"
+			href="libs/dataTables-2.2.1.min.css"
 		/>
+		<link
+			rel="stylesheet"
+			href="libs/leaflet.css"
+		/>
+		<script src="libs/leaflet.js"></script>
 		<link
 			rel="stylesheet"
 			href="style.css"
 		/>
-		<!-- Load Leaflet CSS and JS -->
-		<link
-			rel="stylesheet"
-			href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
-		/>
-		<script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
 		<!-- utils.js should be loaded after other dependencies because it relies on global objects or functions
 			 defined by libraries like jQuery, DataTables, Arquero, and Chart.js. -->
 		<script
