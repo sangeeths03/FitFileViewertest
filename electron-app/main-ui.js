@@ -47,15 +47,15 @@ window.showFitData = function (data, filePath) {
 	}
 };
 
-	// Utility function to set the active tab
-	function setActiveTab(tabId) {
-		document.querySelectorAll('.tab-button').forEach((btn) => {
-			btn.classList.remove('active');
-		});
-		document.getElementById(tabId).classList.add('active');
-	}
+// Utility function to set the active tab
+function setActiveTab(tabId) {
+	document.querySelectorAll('.tab-button').forEach((btn) => {
+		btn.classList.remove('active');
+	});
+	document.getElementById(tabId).classList.add('active');
+}
 
-	window.onload = () => {
+window.onload = () => {
 	// Signal to the extension that the webview is ready (only if available)
 	let vscode;
 	if (typeof acquireVsCodeApi === 'function') {
@@ -77,9 +77,15 @@ window.showFitData = function (data, filePath) {
 
 	// Utility function to toggle tab visibility
 	function toggleTabVisibility(visibleTabId) {
-		const tabContentIds = ['content-data', 'content-chart', 'content-map', 'content-summary'];
+		const tabContentIds = [
+			'content-data',
+			'content-chart',
+			'content-map',
+			'content-summary',
+		];
 		tabContentIds.forEach((id) => {
-			document.getElementById(id).style.display = id === visibleTabId ? 'block' : 'none';
+			document.getElementById(id).style.display =
+				id === visibleTabId ? 'block' : 'none';
 		});
 	}
 
@@ -118,7 +124,14 @@ window.showFitData = function (data, filePath) {
 	// Listen for fitData message from the extension
 	window.addEventListener('message', (event) => {
 		const message = event.data;
-		if (message && typeof message === 'object' && 'type' in message && message.type === 'fitData' && 'data' in message && typeof message.data === 'object') {
+		if (
+			message &&
+			typeof message === 'object' &&
+			'type' in message &&
+			message.type === 'fitData' &&
+			'data' in message &&
+			typeof message.data === 'object'
+		) {
 			globalData = message.data;
 			displayTables(globalData);
 			if (document.getElementById('tab-chart').classList.contains('active')) {
