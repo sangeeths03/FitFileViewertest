@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Fit File Viewer</title>
-    <!-- Load jQuery first, then DataTables, then Arquero, then Chart.js, Vega, Vega-Lite, Vega-Embed -->
+    <!-- Load jQuery first as it is a dependency for DataTables, followed by Arquero for data manipulation,
+         and then Chart.js, Vega, Vega-Lite, and Vega-Embed for visualization functionalities. -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.datatables.net/2.2.1/js/dataTables.min.js"></script>
     <script src="https://unpkg.com/arquero"></script>
@@ -17,6 +18,7 @@
     <!-- Load Leaflet CSS and JS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+    <!-- utils.js should be loaded after other dependencies -->
     <script src="utils.js"></script>
 
     <script>
@@ -52,9 +54,11 @@
             if (typeof acquireVsCodeApi === 'function') {
                 const vscode = acquireVsCodeApi();
                 vscode.postMessage({ type: "ready" });
+            } else {
+                console.warn("acquireVsCodeApi is not available. Ensure this is running in a VS Code environment.");
             }
 
-            // Default: show the Data tab
+            // Default: show the Map tab
             document.getElementById("content-data").style.display = "none";
             document.getElementById("content-chart").style.display = "none";
             document.getElementById("content-map").style.display = "block";
@@ -78,7 +82,7 @@
                 document.getElementById("content-map").style.display = "none";
                 document.getElementById("content-summary").style.display = "none";
                 setActiveTab("tab-chart");
-                renderChart();
+                window.renderChart();
             };
 
             document.getElementById("tab-map").onclick = () => {
@@ -134,7 +138,7 @@
 <body>
     <div>
         <button id="openFileBtn" class="themed-btn">Open FIT File</button>
-        <spanspan id="activeFileName"></span>
+        <span id="activeFileName"></span>
     </div>
     <div id="tabs">
         <button class="tab-button active" id="tab-map">Map</button>
@@ -150,16 +154,16 @@
     <div id="content-summary" class="tab-content"></div>
     <!-- Credits Section -->
     <footer>
-        <p></p>
-            Credits:&nbsp;
-            <a href="https://leafletjs.com/" target="_blank" rel="noopener">Leaflet</a>,
-            <a href="https://datatables.net/" target="_blank" rel="noopener">DataTables.js</a>,
-            <a href="https://github.com/uwdata/arquero" target="_blank" rel="noopener">arquero</a>,
-            <a href="https://github.com/garmin/fit-javascript-sdk" target="_blank" rel="noopener">Garmin FIT JavaScript SDK</a>,
-            <a href="https://vega.github.io/" target="_blank" rel="noopener">Vega</a>,
-            <a href="https://github.com/thomascamminady/fit-viewer" target="_blank" rel="noopener">this repo</a>.
-        </p>
+        Credits: &nbsp;
+        <a href="https://leafletjs.com/" target="_blank" rel="noopener">Leaflet</a>,
+        <a href="https://datatables.net/" target="_blank" rel="noopener">DataTables.js</a>,
+        <a href="https://github.com/uwdata/arquero" target="_blank" rel="noopener">arquero</a>,
+        <a href="https://github.com/garmin/fit-javascript-sdk" target="_blank" rel="noopener">Garmin FIT JavaScript SDK</a>,
+        <a href="https://vega.github.io/" target="_blank" rel="noopener">Vega</a>,
+        <a href="https://github.com/thomascamminady/fit-viewer" target="_blank" rel="noopener">this repo</a>.
     </footer>
+    <!-- Ensure utils.js is loaded before renderer.js -->
+    <script src="utils.js"></script>
     <script src="renderer.js"></script>
 </body>
 </html>
