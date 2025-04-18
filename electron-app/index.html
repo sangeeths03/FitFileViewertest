@@ -1,56 +1,134 @@
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Fit File Viewer</title>
-    <!-- Load jQuery first as it is a dependency for DataTables, followed by Arquero for data manipulation,
+	<head>
+		<meta charset="UTF-8" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1"
+		/>
+		<title>Fit File Viewer</title>
+		<!-- Load jQuery first as it is a dependency for DataTables, followed by Arquero for data manipulation,
          and then Chart.js, Vega, Vega-Lite, and Vega-Embed for visualization functionalities. -->
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <script src="https://cdn.datatables.net/2.2.1/js/dataTables.min.js"></script>
-    <script src="https://unpkg.com/arquero"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
-    <link rel="stylesheet" href="https://cdn.datatables.net/2.2.1/css/dataTables.dataTables.min.css">
-    <link rel="stylesheet" href="style.css">
-    <!-- Load Leaflet CSS and JS -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
-    <!-- utils.js should be loaded after other dependencies -->
-    <script src="main-ui.js"></script>
-</head>
+		<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+		<script src="https://cdn.datatables.net/2.2.1/js/dataTables.min.js"></script>
+		<script src="https://unpkg.com/arquero"></script>
+		<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+		<script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
+		<script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+		<link
+			rel="stylesheet"
+			href="https://cdn.datatables.net/2.2.1/css/dataTables.dataTables.min.css"
+		/>
+		<link
+			rel="stylesheet"
+			href="style.css"
+		/>
+		<!-- Load Leaflet CSS and JS -->
+		<link
+			rel="stylesheet"
+			href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
+		/>
+		<script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+		<!-- utils.js should be loaded after other dependencies -->
+		<script src="main-ui.js"></script>
+	</head>
 
-<body>
-    <div>
-        <button id="openFileBtn" class="themed-btn">Open FIT File</button>
-        <span id="activeFileName"></span>
-    </div>
-    <div id="tabs">
-        <button class="tab-button active" id="tab-map">Map</button>
-        <button class="tab-button" id="tab-data">Data</button>
-        <button class="tab-button" id="tab-chart">Chart</button>
-        <button class="tab-button" id="tab-summary">Summary</button>
-    </div>
-    <div id="content-map" class="tab-content"></div>
-    <div id="content-data" class="tab-content"></div>
-    <div id="content-chart" class="tab-content">
-        <div id="chart-container"></div>
-    </div>
-    <div id="content-summary" class="tab-content"></div>
-    <!-- Credits Section -->
-    <footer>
-        Credits: &nbsp;
-        <a href="https://leafletjs.com/" target="_blank" rel="noopener">Leaflet</a>,
-        <a href="https://datatables.net/" target="_blank" rel="noopener">DataTables.js</a>,
-        <a href="https://github.com/uwdata/arquero" target="_blank" rel="noopener">arquero</a>,
-        <a href="https://github.com/garmin/fit-javascript-sdk" target="_blank" rel="noopener">Garmin FIT JavaScript SDK</a>,
-        <a href="https://vega.github.io/" target="_blank" rel="noopener">Vega</a>,
-        <a href="https://github.com/thomascamminady/fit-viewer" target="_blank" rel="noopener">this repo</a>.
-    </footer>
-    <!-- Ensure utils.js is loaded before renderer.js -->
-    <script src="utils.js"></script>
-    <script src="renderer.js"></script>
-</body>
+	<body>
+		<div>
+			<button
+				id="openFileBtn"
+				class="themed-btn"
+			>
+				Open FIT File
+			</button>
+			<span id="activeFileName"></span>
+		</div>
+		<div id="tabs">
+			<button
+				class="tab-button active"
+				id="tab-map"
+			>
+				Map
+			</button>
+			<button
+				class="tab-button"
+				id="tab-data"
+			>
+				Data
+			</button>
+			<button
+				class="tab-button"
+				id="tab-chart"
+			>
+				Chart
+			</button>
+			<button
+				class="tab-button"
+				id="tab-summary"
+			>
+				Summary
+			</button>
+		</div>
+		<div
+			id="content-map"
+			class="tab-content"
+		></div>
+		<div
+			id="content-data"
+			class="tab-content"
+		></div>
+		<div
+			id="content-chart"
+			class="tab-content"
+		>
+			<div id="chart-container"></div>
+		</div>
+		<div
+			id="content-summary"
+			class="tab-content"
+		></div>
+		<!-- Credits Section -->
+		<footer>
+			Credits: &nbsp;
+			<a
+				href="https://leafletjs.com/"
+				target="_blank"
+				rel="noopener"
+				>Leaflet</a
+			>,
+			<a
+				href="https://datatables.net/"
+				target="_blank"
+				rel="noopener"
+				>DataTables.js</a
+			>,
+			<a
+				href="https://github.com/uwdata/arquero"
+				target="_blank"
+				rel="noopener"
+				>arquero</a
+			>,
+			<a
+				href="https://github.com/garmin/fit-javascript-sdk"
+				target="_blank"
+				rel="noopener"
+				>Garmin FIT JavaScript SDK</a
+			>,
+			<a
+				href="https://vega.github.io/"
+				target="_blank"
+				rel="noopener"
+				>Vega</a
+			>,
+			<a
+				href="https://github.com/thomascamminady/fit-viewer"
+				target="_blank"
+				rel="noopener"
+				>this repo</a
+			>.
+		</footer>
+		<!-- Ensure utils.js is loaded before renderer.js -->
+		<script src="utils.js"></script>
+		<script src="renderer.js"></script>
+	</body>
 </html>
