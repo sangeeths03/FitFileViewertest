@@ -1,19 +1,52 @@
 import { formatDistance } from './formatDistance.js';
 import { formatDuration } from './formatDuration.js';
 
+/**
+ * Updates the fields of a summary object to ensure they are in a human-readable format.
+ * Handles various metrics such as distance, time, speed, power, heart rate, and more.
+ *
+ * @param {Object} obj - The summary object containing various metrics to be patched.
+ * @returns {void} This function has side effects as it modifies the input object directly.
+ */
 export function patchSummaryFields(obj) {
-	// Always convert to human-readable, even if already present
-	// Support both snake_case and camelCase keys
-	// Distance
+	patchDistance(obj);
+	patchTime(obj);
+	patchSpeed(obj);
+	patchPower(obj);
+	patchCalories(obj);
+	patchHeartRate(obj);
+	patchCadence(obj);
+	patchRespirationRate(obj);
+	patchTemperature(obj);
+	patchGritFlow(obj);
+	patchTrainingLoad(obj);
+	patchStrokes(obj);
+	patchFractionalCadence(obj);
+	patchTorquePedal(obj);
+	patchPCO(obj);
+	patchArrays(obj);
+	patchTimestamps(obj);
+	patchDecimals(obj);
+}
+
+// --- Helper functions ---
+
+function patchDistance(obj) {
 	if (obj.total_distance != null) {
 		const totalDistance = Number(obj.total_distance);
-		obj.total_distance = formatDistance(totalDistance);
+		if (totalDistance != null && !isNaN(totalDistance)) {
+			obj.total_distance = formatDistance(totalDistance);
+		} else {
+			console.warn(`Invalid total_distance: ${obj.total_distance}`);
+		}
 	}
 	if (obj.totalDistance != null) {
 		const totalDistance = Number(obj.totalDistance);
 		obj.totalDistance = formatDistance(totalDistance);
 	}
-	// Time
+}
+
+function patchTime(obj) {
 	if (obj.total_timer_time != null)
 		obj.total_timer_time = formatDuration(Number(obj.total_timer_time));
 	if (obj.totalTimerTime != null)
@@ -23,15 +56,17 @@ export function patchSummaryFields(obj) {
 	if (obj.totalElapsedTime != null)
 		obj.totalElapsedTime = formatDuration(Number(obj.totalElapsedTime));
 	if (obj.duration != null) obj.duration = formatDuration(Number(obj.duration));
-	// Speed
-	function formatSpeed(val) {
-		return (
-			(Number(val) * 3.6).toFixed(2) +
-			' km/h / ' +
-			(Number(val) * 2.23694).toFixed(2) +
-			' mph'
-		);
-	}
+}
+
+function formatSpeed(val) {
+	return (
+		(Number(val) * 3.6).toFixed(2) +
+		' km/h / ' +
+		(Number(val) * 2.23694).toFixed(2) +
+		' mph'
+	);
+}
+function patchSpeed(obj) {
 	if (obj.avg_speed != null) obj.avg_speed = formatSpeed(obj.avg_speed);
 	if (obj.avgSpeed != null) obj.avgSpeed = formatSpeed(obj.avgSpeed);
 	if (obj.max_speed != null) obj.max_speed = formatSpeed(obj.max_speed);
@@ -44,7 +79,9 @@ export function patchSummaryFields(obj) {
 		obj.enhanced_max_speed = formatSpeed(obj.enhanced_max_speed);
 	if (obj.enhancedMaxSpeed != null)
 		obj.enhancedMaxSpeed = formatSpeed(obj.enhancedMaxSpeed);
-	// Power
+}
+
+function patchPower(obj) {
 	if (obj.avg_power != null) obj.avg_power = Math.round(Number(obj.avg_power));
 	if (obj.avgPower != null) obj.avgPower = Math.round(Number(obj.avgPower));
 	if (obj.max_power != null) obj.max_power = Math.round(Number(obj.max_power));
@@ -57,12 +94,16 @@ export function patchSummaryFields(obj) {
 		obj.threshold_power = Math.round(Number(obj.threshold_power));
 	if (obj.thresholdPower != null)
 		obj.thresholdPower = Math.round(Number(obj.thresholdPower));
-	// Calories
+}
+
+function patchCalories(obj) {
 	if (obj.total_calories != null)
 		obj.total_calories = Math.round(Number(obj.total_calories));
 	if (obj.totalCalories != null)
 		obj.totalCalories = Math.round(Number(obj.totalCalories));
-	// Heart Rate
+}
+
+function patchHeartRate(obj) {
 	if (obj.avg_heart_rate != null)
 		obj.avg_heart_rate = Math.round(Number(obj.avg_heart_rate));
 	if (obj.avgHeartRate != null)
@@ -71,7 +112,9 @@ export function patchSummaryFields(obj) {
 		obj.max_heart_rate = Math.round(Number(obj.max_heart_rate));
 	if (obj.maxHeartRate != null)
 		obj.maxHeartRate = Math.round(Number(obj.maxHeartRate));
-	// Cadence
+}
+
+function patchCadence(obj) {
 	if (obj.avg_cadence != null)
 		obj.avg_cadence = Math.round(Number(obj.avg_cadence));
 	if (obj.avgCadence != null)
@@ -80,7 +123,9 @@ export function patchSummaryFields(obj) {
 		obj.max_cadence = Math.round(Number(obj.max_cadence));
 	if (obj.maxCadence != null)
 		obj.maxCadence = Math.round(Number(obj.maxCadence));
-	// Respiration Rate
+}
+
+function patchRespirationRate(obj) {
 	if (obj.enhanced_avg_respiration_rate != null)
 		obj.enhanced_avg_respiration_rate = Number(
 			obj.enhanced_avg_respiration_rate,
@@ -105,7 +150,9 @@ export function patchSummaryFields(obj) {
 		obj.enhancedMinRespirationRate = Number(
 			obj.enhancedMinRespirationRate,
 		).toFixed(1);
-	// Temperature
+}
+
+function patchTemperature(obj) {
 	if (obj.avg_temperature != null)
 		obj.avg_temperature = Number(obj.avg_temperature).toFixed(1);
 	if (obj.avgTemperature != null)
@@ -118,13 +165,17 @@ export function patchSummaryFields(obj) {
 		obj.min_temperature = Number(obj.min_temperature).toFixed(1);
 	if (obj.minTemperature != null)
 		obj.minTemperature = Number(obj.minTemperature).toFixed(1);
-	// Grit/Flow
+}
+
+function patchGritFlow(obj) {
 	if (obj.total_grit != null)
 		obj.total_grit = Number(obj.total_grit).toFixed(2);
 	if (obj.totalGrit != null) obj.totalGrit = Number(obj.totalGrit).toFixed(2);
 	if (obj.avg_flow != null) obj.avg_flow = Number(obj.avg_flow).toFixed(2);
 	if (obj.avgFlow != null) obj.avgFlow = Number(obj.avgFlow).toFixed(2);
-	// Training Load/Stress/Effect
+}
+
+function patchTrainingLoad(obj) {
 	if (obj.training_load_peak != null)
 		obj.training_load_peak = Math.round(Number(obj.training_load_peak));
 	if (obj.trainingLoadPeak != null)
@@ -149,12 +200,16 @@ export function patchSummaryFields(obj) {
 		obj.totalAnaerobicTrainingEffect = Number(
 			obj.totalAnaerobicTrainingEffect,
 		).toFixed(1);
-	// Strokes
+}
+
+function patchStrokes(obj) {
 	if (obj.total_strokes != null)
 		obj.total_strokes = Math.round(Number(obj.total_strokes));
 	if (obj.totalStrokes != null)
 		obj.totalStrokes = Math.round(Number(obj.totalStrokes));
-	// Fractional Cadence
+}
+
+function patchFractionalCadence(obj) {
 	if (obj.avg_fractional_cadence != null)
 		obj.avg_fractional_cadence = Number(obj.avg_fractional_cadence).toFixed(2);
 	if (obj.avgFractionalCadence != null)
@@ -163,7 +218,9 @@ export function patchSummaryFields(obj) {
 		obj.max_fractional_cadence = Number(obj.max_fractional_cadence).toFixed(2);
 	if (obj.maxFractionalCadence != null)
 		obj.maxFractionalCadence = Number(obj.maxFractionalCadence).toFixed(2);
-	// Torque Effectiveness & Pedal Smoothness
+}
+
+function patchTorquePedal(obj) {
 	if (obj.avg_left_torque_effectiveness != null)
 		obj.avg_left_torque_effectiveness = Number(
 			obj.avg_left_torque_effectiveness,
@@ -194,7 +251,9 @@ export function patchSummaryFields(obj) {
 		obj.avgRightPedalSmoothness = Number(obj.avgRightPedalSmoothness).toFixed(
 			1,
 		);
-	// PCO
+}
+
+function patchPCO(obj) {
 	if (obj.avg_left_pco != null)
 		obj.avg_left_pco = Math.round(Number(obj.avg_left_pco));
 	if (obj.avgLeftPco != null)
@@ -203,17 +262,19 @@ export function patchSummaryFields(obj) {
 		obj.avg_right_pco = Math.round(Number(obj.avg_right_pco));
 	if (obj.avgRightPco != null)
 		obj.avgRightPco = Math.round(Number(obj.avgRightPco));
-	// Arrays: round and join with comma
-	function formatArray(val, digits = 2) {
-		if (Array.isArray(val))
-			return val.map((v) => Number(v).toFixed(digits)).join(', ');
-		if (typeof val === 'string' && val.includes(','))
-			return val
-				.split(',')
-				.map((v) => Number(v).toFixed(digits))
-				.join(', ');
-		return val;
-	}
+}
+
+function formatArray(val, digits = 2) {
+	if (Array.isArray(val))
+		return val.map((v) => Number(v).toFixed(digits)).join(', ');
+	if (typeof val === 'string' && val.includes(','))
+		return val
+			.split(',')
+			.map((v) => Number(v).toFixed(digits))
+			.join(', ');
+	return val;
+}
+function patchArrays(obj) {
 	if (obj.avg_left_power_phase != null)
 		obj.avg_left_power_phase = formatArray(obj.avg_left_power_phase, 2);
 	if (obj.avgLeftPowerPhase != null)
@@ -236,14 +297,18 @@ export function patchSummaryFields(obj) {
 		);
 	if (obj.avgRightPowerPhasePeak != null)
 		obj.avgRightPowerPhasePeak = formatArray(obj.avgRightPowerPhasePeak, 2);
-	// Timestamps: convert to readable date/time if not already a string
+}
+
+function patchTimestamps(obj) {
 	if (obj.timestamp != null && typeof obj.timestamp === 'number')
 		obj.timestamp = new Date(obj.timestamp * 1000).toString();
 	if (obj.start_time != null && typeof obj.start_time === 'number')
 		obj.start_time = new Date(obj.start_time * 1000).toString();
 	if (obj.startTime != null && typeof obj.startTime === 'number')
 		obj.startTime = new Date(obj.startTime * 1000).toString();
-	// Remove excessive decimals for all numbers
+}
+
+function patchDecimals(obj) {
 	Object.keys(obj)
 		.filter(
 			(key) => typeof obj[key] === 'number' && !Number.isInteger(obj[key]),

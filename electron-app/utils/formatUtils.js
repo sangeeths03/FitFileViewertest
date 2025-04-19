@@ -5,14 +5,7 @@
  * @param {number|string} val - The speed value in meters per second.
  * @returns {string} The formatted speed string in "xx.xx km/h / xx.xx mph" format.
  */
-export function formatSpeed(val) {
-	return (
-		(Number(val) * 3.6).toFixed(2) +
-		' km/h / ' +
-		(Number(val) * 2.23694).toFixed(2) +
-		' mph'
-	);
-}
+5
 
 /**
  * Formats an array or a comma-separated string of numbers to a string with each number
