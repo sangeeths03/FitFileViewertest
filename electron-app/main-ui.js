@@ -52,11 +52,6 @@ window.showFitData = function (data, filePath) {
 		if (globalData && Object.keys(globalData).length > 0) {
 			window.renderChart();
 		}
-	} else {
-		// Pre-render chart in background if not active
-		if (globalData && Object.keys(globalData).length > 0) {
-			window.renderChart('background-chart-container');
-		}
 	}
 	if (tabMap && tabMap.classList.contains('active')) {
 		if (globalData && Object.keys(globalData).length > 0) {

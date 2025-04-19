@@ -97,8 +97,11 @@ export function renderChart(targetContainer) {
 				row: {
 					field: 'key',
 					header: {
-						labelOrient: 'right',
-						labelAngle: 0,
+						labelOrient: 'top',
+						anchor: 'start',
+						fontSize: 18,
+						fontWeight: 'bold',
+						color: '#e0e0e0',
 					},
 					type: 'nominal',
 				},
@@ -344,7 +347,7 @@ export function renderChart(targetContainer) {
 					},
 				],
 				height: 200,
-				width: 800,
+				width: "container",
 			},
 			params: [
 				{
@@ -367,7 +370,23 @@ export function renderChart(targetContainer) {
 		};
 		const vegaContainer = chartContainer.querySelector('#vega-container');
 		if (vegaContainer) {
-			vegaEmbed(vegaContainer, spec).catch(console.error);
+			vegaEmbed(vegaContainer, spec).then((result) => {
+				// Trigger a resize immediately after rendering in case the container was hidden
+				if (result && result.view) {
+					setTimeout(() => {
+						result.view.resize().run();
+					}, 0);
+				}
+				// If the container was hidden, listen for a custom event to resize the chart
+				const handleTabShown = () => {
+					if (result && result.view) {
+						result.view.resize().run();
+					}
+				};
+				// Listen for a custom event 'tab-shown' on the container
+				chartContainer.addEventListener('tab-shown', handleTabShown);
+				// Optionally, clean up the event listener if needed
+			}).catch(console.error);
 		} else {
 			console.warn('[WARNING] #vega-container element is missing. Skipping chart rendering.');
 		}
