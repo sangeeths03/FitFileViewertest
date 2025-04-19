@@ -6,7 +6,11 @@ import { renderSummary } from './utils/renderSummary.js';
 
 window.globalData = window.globalData || null; // will hold all data received from the extension
 
-// Add this function for Electron usage
+/**
+ * Show FIT data in the UI. Used by Electron main process.
+ * @param {Object} data - Parsed FIT file data.
+ * @param {string} filePath - Path to the FIT file.
+ */
 window.showFitData = function (data, filePath) {
 	globalData = data;
 	if (filePath) {
@@ -47,12 +51,33 @@ window.showFitData = function (data, filePath) {
 	}
 };
 
-// Utility function to set the active tab
+/**
+ * Utility function to set the active tab.
+ * @param {string} tabId - The ID of the tab button to activate.
+ */
 function setActiveTab(tabId) {
 	document.querySelectorAll('.tab-button').forEach((btn) => {
 		btn.classList.remove('active');
 	});
-	document.getElementById(tabId).classList.add('active');
+	const tab = document.getElementById(tabId);
+	if (tab) tab.classList.add('active');
+}
+
+/**
+ * Utility function to toggle tab visibility.
+ * @param {string} visibleTabId - The ID of the tab content to show.
+ */
+function toggleTabVisibility(visibleTabId) {
+	const tabContentIds = [
+		'content-data',
+		'content-chart',
+		'content-map',
+		'content-summary',
+	];
+	tabContentIds.forEach((id) => {
+		const el = document.getElementById(id);
+		if (el) el.style.display = id === visibleTabId ? 'block' : 'none';
+	});
 }
 
 window.onload = () => {
@@ -75,51 +100,53 @@ window.onload = () => {
 	// Default: show the Map tab
 	toggleTabVisibility('content-map');
 
-	// Utility function to toggle tab visibility
-	function toggleTabVisibility(visibleTabId) {
-		const tabContentIds = [
-			'content-data',
-			'content-chart',
-			'content-map',
-			'content-summary',
-		];
-		tabContentIds.forEach((id) => {
-			document.getElementById(id).style.display =
-				id === visibleTabId ? 'block' : 'none';
-		});
-	}
-
-	// Tab button click handlers
-	document.getElementById('tab-data').onclick = () => {
-		toggleTabVisibility('content-data');
-		setActiveTab('tab-data');
-		if (globalData && Object.keys(globalData).length > 0) {
-			window.displayTables(globalData);
-		}
-	};
-
-	document.getElementById('tab-chart').onclick = () => {
-		toggleTabVisibility('content-chart');
-		setActiveTab('tab-chart');
-		window.renderChart();
-	};
-
-	document.getElementById('tab-map').onclick = () => {
-		document.getElementById('content-data').style.display = 'none';
-		document.getElementById('content-chart').style.display = 'none';
-		document.getElementById('content-map').style.display = 'block';
-		document.getElementById('content-summary').style.display = 'none';
-		setActiveTab('tab-map');
-		window.renderMap();
-	};
-
-	document.getElementById('tab-summary').onclick = () => {
-		toggleTabVisibility('content-summary');
-		setActiveTab('tab-summary');
-		if (globalData && Object.keys(globalData).length > 0) {
-			window.renderSummary(globalData);
-		}
-	};
+	// Tab button click handlers (refactored to loop)
+	const tabConfig = [
+		{
+			id: 'tab-data',
+			content: 'content-data',
+			handler: () => {
+				toggleTabVisibility('content-data');
+				setActiveTab('tab-data');
+				if (globalData && Object.keys(globalData).length > 0) {
+					window.displayTables(globalData);
+				}
+			},
+		},
+		{
+			id: 'tab-chart',
+			content: 'content-chart',
+			handler: () => {
+				toggleTabVisibility('content-chart');
+				setActiveTab('tab-chart');
+				window.renderChart();
+			},
+		},
+		{
+			id: 'tab-map',
+			content: 'content-map',
+			handler: () => {
+				toggleTabVisibility('content-map');
+				setActiveTab('tab-map');
+				window.renderMap();
+			},
+		},
+		{
+			id: 'tab-summary',
+			content: 'content-summary',
+			handler: () => {
+				toggleTabVisibility('content-summary');
+				setActiveTab('tab-summary');
+				if (globalData && Object.keys(globalData).length > 0) {
+					window.renderSummary(globalData);
+				}
+			},
+		},
+	];
+	tabConfig.forEach(({ id, handler }) => {
+		const btn = document.getElementById(id);
+		if (btn) btn.onclick = handler;
+	});
 
 	// Listen for fitData message from the extension
 	window.addEventListener('message', (event) => {
@@ -134,13 +161,16 @@ window.onload = () => {
 		) {
 			globalData = message.data;
 			displayTables(globalData);
-			if (document.getElementById('tab-chart').classList.contains('active')) {
+			const tabChart = document.getElementById('tab-chart');
+			const tabMap = document.getElementById('tab-map');
+			const tabSummary = document.getElementById('tab-summary');
+			if (tabChart && tabChart.classList.contains('active')) {
 				renderChart();
 			}
-			if (document.getElementById('tab-map').classList.contains('active')) {
+			if (tabMap && tabMap.classList.contains('active')) {
 				renderMap();
 			}
-			if (document.getElementById('tab-summary').classList.contains('active')) {
+			if (tabSummary && tabSummary.classList.contains('active')) {
 				renderSummary(globalData);
 			}
 		}
