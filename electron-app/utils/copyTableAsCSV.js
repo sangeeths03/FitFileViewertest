@@ -1,21 +1,36 @@
 export function copyTableAsCSV(table, title) {
+	if (typeof table.objects !== 'function') {
+		console.error('Invalid table object: missing objects method');
+		return;
+	}
 	const rows = table.objects().map((row) => {
 		const newRow = {};
+		const cache = new Map();
 		Object.keys(row).forEach((key) => {
 			const cell = row[key];
-			newRow[key] =
-				typeof cell === 'object' && cell !== null ? JSON.stringify(cell) : cell;
+			if (typeof cell === 'object' && cell !== null) {
+				if (cache.has(cell)) {
+					newRow[key] = cache.get(cell);
+				} else {
+					const serialized = JSON.stringify(cell);
+					cache.set(cell, serialized);
+					newRow[key] = serialized;
+				}
+			} else {
+				newRow[key] = cell;
+			}
 		});
 		return newRow;
 	});
 	const flattenedTable = window.aq.from(rows);
 	const csvString = flattenedTable.toCSV({ header: true });
-	if (navigator.clipboard && navigator.clipboard.writeText) {
+	if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
 		navigator.clipboard
 			.writeText(csvString)
 			.then(() => console.log('Copied CSV to clipboard!'))
 			.catch((err) => console.error('Failed to copy CSV:', err));
 	} else {
+		console.warn('navigator.clipboard.writeText is not supported. Using fallback.');
 		// Fallback mechanism
 		const textarea = document.createElement('textarea');
 		textarea.value = csvString;
