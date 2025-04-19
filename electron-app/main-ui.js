@@ -106,6 +106,8 @@ window.onload = () => {
 			id: 'tab-data',
 			content: 'content-data',
 			handler: () => {
+				if (document.getElementById('tab-data').classList.contains('active'))
+					return;
 				toggleTabVisibility('content-data');
 				setActiveTab('tab-data');
 				if (globalData && Object.keys(globalData).length > 0) {
@@ -117,6 +119,8 @@ window.onload = () => {
 			id: 'tab-chart',
 			content: 'content-chart',
 			handler: () => {
+				if (document.getElementById('tab-chart').classList.contains('active'))
+					return;
 				toggleTabVisibility('content-chart');
 				setActiveTab('tab-chart');
 				window.renderChart();
@@ -126,6 +130,8 @@ window.onload = () => {
 			id: 'tab-map',
 			content: 'content-map',
 			handler: () => {
+				if (document.getElementById('tab-map').classList.contains('active'))
+					return;
 				toggleTabVisibility('content-map');
 				setActiveTab('tab-map');
 				window.renderMap();
@@ -135,6 +141,8 @@ window.onload = () => {
 			id: 'tab-summary',
 			content: 'content-summary',
 			handler: () => {
+				if (document.getElementById('tab-summary').classList.contains('active'))
+					return;
 				toggleTabVisibility('content-summary');
 				setActiveTab('tab-summary');
 				if (globalData && Object.keys(globalData).length > 0) {
