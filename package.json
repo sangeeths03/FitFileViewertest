@@ -36,15 +36,29 @@
   "scripts": {
     "compile": "tsc -p ./ && npm run copy-assets",
     "copy-assets": "copyfiles -u 1 media/* out/media/",
-    "package": "vsce package"
+    "package": "vsce package",
+    "build": "electron-builder --projectDir=electron-app"
+  },
+  "build": {
+    "directories": {
+      "app": "electron-app",
+      "output": "dist"
+    },
+    "files": [
+      "**/*"
+    ],
+    "win": {
+      "target": "nsis"
+    }
   },
   "devDependencies": {
     "@types/mocha": "^10.0.10",
     "@types/node": "^20.0.0",
     "@types/vscode": "^1.96.0",
     "@vscode/vsce": "^2.19.0",
-    "typescript": "^5.7.3",
-    "copyfiles": "^2.4.1"
+    "copyfiles": "^2.4.1",
+    "electron-builder": "^26.0.12",
+    "typescript": "^5.7.3"
   },
   "dependencies": {
     "@garmin/fitsdk": "^21.161.0",
