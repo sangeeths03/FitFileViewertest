@@ -2,18 +2,33 @@ import { renderTable } from './renderTable.js';
 
 export function displayTables(dataFrames) {
 	console.log('[DEBUG] displayTables called', dataFrames);
+
 	const aq = window.aq;
+	if (!aq) {
+		console.error('[ERROR] Arquero (window.aq) is not available.');
+		return;
+	}
+
 	const container = document.getElementById('content-data');
+	if (!container) {
+		console.error('[ERROR] Container element with id "content-data" not found.');
+		return;
+	}
+
 	container.innerHTML = '';
-	const keys = Object.keys(dataFrames);
+	const keys = Object.keys(dataFrames).filter(
+		key => Array.isArray(dataFrames[key])
+	);
 	console.log('[DEBUG] Table keys:', keys);
-	// Prioritize 'recordMesgs' to appear first in the sorted keys, as it is likely the main data table.
-	keys.sort((a, b) => (a === 'recordMesgs' ? -1 : b === 'recordMesgs' ? 1 : 0));
+
+	// Sort keys so 'recordMesgs' appears first, then alphabetically
+	keys.sort((a, b) => {
+		if (a === 'recordMesgs') return -1;
+		if (b === 'recordMesgs') return 1;
+		return a.localeCompare(b);
+	});
+
 	keys.forEach((key, index) => {
-		// Only try to render if the value is an array (table data)
-		if (!Array.isArray(dataFrames[key])) {
-			return; // skip non-table keys like cachedFileName, cachedFilePath
-		}
 		try {
 			const table = aq.from(dataFrames[key]);
 			console.log(
