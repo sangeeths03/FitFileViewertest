@@ -1,5 +1,7 @@
-export function renderChart() {
-	const chartContainer = document.getElementById('content-chart');
+export function renderChart(targetContainer) {
+	const chartContainer = targetContainer
+		? (typeof targetContainer === 'string' ? document.getElementById(targetContainer) : targetContainer)
+		: document.getElementById('content-chart');
 	chartContainer.innerHTML = '<div id="vega-container"></div>';
 	if (window.globalData && window.globalData.recordMesgs) {
 		const aq = window.aq;
@@ -363,16 +365,13 @@ export function renderChart() {
 			spacing: 25,
 			$schema: 'https://vega.github.io/schema/vega-lite/v5.20.1.json',
 		};
-		const vegaContainer = document.getElementById('vega-container');
+		const vegaContainer = chartContainer.querySelector('#vega-container');
 		if (vegaContainer) {
-			vegaEmbed('#vega-container', spec).catch(console.error);
+			vegaEmbed(vegaContainer, spec).catch(console.error);
 		} else {
-			console.warn(
-				'[WARNING] #vega-container element is missing. Skipping chart rendering.',
-			);
+			console.warn('[WARNING] #vega-container element is missing. Skipping chart rendering.');
 		}
 	} else {
-		chartContainer.innerHTML =
-			'<p>No recordMesgs data available for chart.</p>';
+		chartContainer.innerHTML = '<p>No recordMesgs data available for chart.</p>';
 	}
 }

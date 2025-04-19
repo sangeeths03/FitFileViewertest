@@ -51,7 +51,9 @@ export function renderTable(container, title, table, index) {
 					if ($.fn.DataTable) {
 						console.log(`[DEBUG] Initializing DataTable for #${tableId}`);
 						$('#' + tableId).DataTable({
-							paging: false,
+							paging: true,
+							lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, 'All']],
+							pageLength: 25,
 							searching: true,
 							ordering: true,
 							autoWidth: true,

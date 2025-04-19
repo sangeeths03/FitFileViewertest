@@ -1,6 +1,6 @@
 import { renderTable } from './renderTable.js';
 
-export function displayTables(dataFrames) {
+export function displayTables(dataFrames, containerOverride) {
 	console.log('[DEBUG] displayTables called', dataFrames);
 
 	const aq = window.aq;
@@ -9,7 +9,7 @@ export function displayTables(dataFrames) {
 		return;
 	}
 
-	const container = document.getElementById('content-data');
+	const container = containerOverride || document.getElementById('content-data');
 	if (!container) {
 		console.error('[ERROR] Container element with id "content-data" not found.');
 		return;

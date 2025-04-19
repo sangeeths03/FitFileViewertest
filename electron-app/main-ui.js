@@ -35,10 +35,27 @@ window.showFitData = function (data, filePath) {
 
 	if (tabData && tabData.classList.contains('active')) {
 		window.displayTables(globalData);
+	} else {
+		// Pre-render data tables in background if not active
+		if (globalData && Object.keys(globalData).length > 0) {
+			const bgData = document.getElementById('background-data-container');
+			if (bgData) {
+				bgData.innerHTML = '';
+				// Use a temporary container to avoid ID conflicts
+				const temp = document.createElement('div');
+				window.displayTables.call(window, globalData, temp);
+				while (temp.firstChild) bgData.appendChild(temp.firstChild);
+			}
+		}
 	}
 	if (tabChart && tabChart.classList.contains('active')) {
 		if (globalData && Object.keys(globalData).length > 0) {
 			window.renderChart();
+		}
+	} else {
+		// Pre-render chart in background if not active
+		if (globalData && Object.keys(globalData).length > 0) {
+			window.renderChart('background-chart-container');
 		}
 	}
 	if (tabMap && tabMap.classList.contains('active')) {
@@ -110,8 +127,16 @@ window.onload = () => {
 					return;
 				toggleTabVisibility('content-data');
 				setActiveTab('tab-data');
-				if (globalData && Object.keys(globalData).length > 0) {
-					window.displayTables(globalData);
+				// If data is pre-rendered in background, move it to visible container
+				const bg = document.getElementById('background-data-container');
+				const visible = document.getElementById('content-data');
+				if (bg && bg.childNodes.length > 0 && visible) {
+					visible.innerHTML = '';
+					while (bg.firstChild) visible.appendChild(bg.firstChild);
+				} else {
+					if (globalData && Object.keys(globalData).length > 0) {
+						window.displayTables(globalData);
+					}
 				}
 			},
 		},
@@ -123,7 +148,19 @@ window.onload = () => {
 					return;
 				toggleTabVisibility('content-chart');
 				setActiveTab('tab-chart');
-				window.renderChart();
+				 // If chart is pre-rendered in background, move it to visible container
+				const bg = document.getElementById('background-chart-container');
+				const chartContent = bg && bg.firstChild ? bg.firstChild : null;
+				const visible = document.getElementById('content-chart');
+				if (chartContent && visible) {
+					visible.innerHTML = '';
+					visible.appendChild(chartContent);
+				} else {
+					// Fallback: render as usual
+					setTimeout(() => {
+						window.renderChart();
+					}, 0);
+				}
 			},
 		},
 		{

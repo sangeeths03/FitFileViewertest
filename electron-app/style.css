@@ -193,6 +193,28 @@ tr:hover {
 	border: 1px solid #33374d;
 }
 
+/* Improve DataTables pagination dropdown readability in night mode */
+.dataTables_wrapper .dataTables_length select {
+  background: #181a20 !important;
+  color: #f5f5f5 !important;
+  border: 1px solid #44485a !important;
+  box-shadow: 0 2px 6px #000a;
+}
+.dataTables_wrapper .dataTables_length select:focus {
+  outline: 2px solid #2196f3;
+  outline-offset: 2px;
+}
+.dataTables_wrapper .dataTables_length select option {
+  background: #23263a;
+  color: #e0e0e0;
+}
+
+/* Force style for first option in DataTables length dropdown */
+[id^="dt-length-"] > option:nth-child(n) {
+	background: #23263a !important;
+	color: #e0e0e0 !important;
+}
+
 .dataTables_wrapper .dataTables_paginate .paginate_button {
 	background: #23263a;
 	color: #e0e0e0 !important;
@@ -246,6 +268,11 @@ tr:hover {
 		contrast(1.1);
 	background: #23263a;
 	border-radius: 4px;
+}
+
+#background-chart-container,
+#background-data-container {
+	display: none;
 }
 
 footer {
