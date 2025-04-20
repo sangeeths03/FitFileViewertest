@@ -82,7 +82,7 @@ function buildAppMenu(mainWindow, currentTheme = 'dark') {
 								if (win && win.webContents) {
 									win.webContents.send('set-theme', 'dark');
 								}
-							}
+							},
 						},
 						{
 							label: 'Light',
@@ -94,12 +94,12 @@ function buildAppMenu(mainWindow, currentTheme = 'dark') {
 								if (win && win.webContents) {
 									win.webContents.send('set-theme', 'light');
 								}
-							}
-						}
-					]
-				}
-			]
-		}
+							},
+						},
+					],
+				},
+			],
+		},
 	];
 	Menu.setApplicationMenu(Menu.buildFromTemplate(template));
 }

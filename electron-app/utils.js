@@ -14,25 +14,33 @@ import { renderSummary } from './utils/renderSummary.js';
 import { setActiveTab } from './utils/setActiveTab.js';
 import { toggleTabVisibility } from './utils/toggleTabVisibility.js';
 import { showFitData } from './utils/showFitData.js';
-
+import { applyTheme, loadTheme, listenForThemeChange } from './utils/theme.js';
+import { showNotification, setLoading } from './utils/rendererUtils.js';
+import { formatArray } from './utils/formatUtils.js';
 
 // List of utilities to expose globally
 const utils = {
-  formatDistance,
-  formatDuration,
-  patchSummaryFields,
-  displayTables,
-  renderTable,
-  copyTableAsCSV,
-  renderChart,
-  renderMap,
-  renderSummary,
-  setActiveTab,
-  toggleTabVisibility,
-  showFitData,
+	formatDistance,
+	formatDuration,
+	patchSummaryFields,
+	displayTables,
+	renderTable,
+	copyTableAsCSV,
+	renderChart,
+	renderMap,
+	renderSummary,
+	setActiveTab,
+	toggleTabVisibility,
+	showFitData,
+	applyTheme,
+	loadTheme,
+	listenForThemeChange,
+	showNotification,
+	setLoading,
+	formatArray,
 };
 
 // Attach all utilities to window for global access
 for (const [key, fn] of Object.entries(utils)) {
-  window[key] = fn;
+	window[key] = fn;
 }
