@@ -1,7 +1,11 @@
 {
-  "name": "electron-app",
-  "version": "1.0.0",
+  "name": "fitfileviewer",
+  "version": "1.0.1",
   "main": "main.js",
+  "productName": "Fit File Viewer",
+  "build": {
+    "icon": "../icon.png"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "electron ."
