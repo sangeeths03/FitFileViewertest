@@ -3,7 +3,12 @@ const { createWindow } = require('./windowStateUtils');
 const path = require('path');
 const fs = require('fs');
 
-const { loadRecentFiles, saveRecentFiles, addRecentFile, getShortRecentName } = require('./utils/recentFiles');
+const {
+	loadRecentFiles,
+	saveRecentFiles,
+	addRecentFile,
+	getShortRecentName,
+} = require('./utils/recentFiles');
 const { buildAppMenu } = require('./utils/buildAppMenu');
 
 // Register IPC handlers and create the main window when the app is ready
@@ -13,8 +18,9 @@ app.whenReady().then(() => {
 
 	// Get theme from localStorage in renderer
 	mainWindow.webContents.on('did-finish-load', () => {
-		mainWindow.webContents.executeJavaScript('localStorage.getItem("ffv-theme")')
-			.then(theme => {
+		mainWindow.webContents
+			.executeJavaScript('localStorage.getItem("ffv-theme")')
+			.then((theme) => {
 				buildAppMenu(mainWindow, theme || 'dark');
 				mainWindow.webContents.send('set-theme', theme || 'dark');
 			})
@@ -28,8 +34,9 @@ app.whenReady().then(() => {
 
 	// Theme persistence: set theme on window creation
 	mainWindow.webContents.on('did-finish-load', () => {
-		mainWindow.webContents.executeJavaScript('localStorage.getItem("ffv-theme")')
-			.then(theme => {
+		mainWindow.webContents
+			.executeJavaScript('localStorage.getItem("ffv-theme")')
+			.then((theme) => {
 				mainWindow.webContents.send('set-theme', theme || 'dark');
 			})
 			.catch(() => {

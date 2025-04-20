@@ -5,6 +5,7 @@ import { renderMap } from './utils/renderMap.js';
 import { renderSummary } from './utils/renderSummary.js';
 import { setActiveTab } from './utils/setActiveTab.js';
 import { toggleTabVisibility } from './utils/toggleTabVisibility.js';
+import { applyTheme, loadTheme, listenForThemeChange } from './utils/theme.js';
 
 window.globalData = window.globalData || null; // will hold all data received from the extension
 
@@ -29,7 +30,9 @@ window.showFitData = function (data, filePath) {
 			fileSpan.title = filePath; // Show full path on mouseover
 		}
 		// Only update the title if fileName is present
-		document.title = fileName ? `Fit File Viewer - ${fileName}` : 'Fit File Viewer';
+		document.title = fileName
+			? `Fit File Viewer - ${fileName}`
+			: 'Fit File Viewer';
 	}
 	const tabData = document.getElementById('tab-data');
 	const tabChart = document.getElementById('tab-chart');
@@ -66,28 +69,8 @@ window.showFitData = function (data, filePath) {
 	}
 };
 
-// Theme switching logic
-function applyTheme(theme) {
-	document.body.classList.remove('theme-dark', 'theme-light');
-	document.body.classList.add(`theme-${theme}`);
-	try { localStorage.setItem('ffv-theme', theme); } catch {}
-}
-
-function loadTheme() {
-	try {
-		return localStorage.getItem('ffv-theme') || 'dark';
-	} catch {
-		return 'dark';
-	}
-}
-
 // Listen for theme change from main process
-if (window.electronAPI) {
-	window.electronAPI.onSetTheme((theme) => {
-		applyTheme(theme);
-		window.electronAPI.sendThemeChanged(theme);
-	});
-}
+listenForThemeChange(applyTheme);
 
 // On load, apply theme
 applyTheme(loadTheme());
@@ -143,7 +126,7 @@ window.onload = () => {
 					return;
 				toggleTabVisibility('content-chart');
 				setActiveTab('tab-chart');
-				 // If chart is pre-rendered in background, move it to visible container
+				// If chart is pre-rendered in background, move it to visible container
 				const bg = document.getElementById('background-chart-container');
 				const chartContent = bg && bg.firstChild ? bg.firstChild : null;
 				const visible = document.getElementById('content-chart');

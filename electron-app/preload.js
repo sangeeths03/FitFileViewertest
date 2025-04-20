@@ -71,11 +71,12 @@ contextBridge.exposeInMainWorld('electronAPI', {
 	 * Registers a handler for the 'set-theme' event.
 	 * @param {Function} callback
 	 */
-	onSetTheme: (callback) => ipcRenderer.on('set-theme', (event, theme) => callback(theme)),
+	onSetTheme: (callback) =>
+		ipcRenderer.on('set-theme', (event, theme) => callback(theme)),
 
 	/**
 	 * Sends a 'theme-changed' event to the main process.
 	 * @param {string} theme
 	 */
-	sendThemeChanged: (theme) => ipcRenderer.send('theme-changed', theme)
+	sendThemeChanged: (theme) => ipcRenderer.send('theme-changed', theme),
 });

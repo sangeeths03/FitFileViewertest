@@ -29,11 +29,17 @@ if (!openFileBtn) {
 
 openFileBtn.addEventListener('click', async () => {
 	// Check for electronAPI and methods
-	if (!window.electronAPI ||
+	if (
+		!window.electronAPI ||
 		!window.electronAPI.openFile ||
 		!window.electronAPI.readFile ||
-		!window.electronAPI.parseFitFile) {
-		showNotification('Electron API not available. Please restart the app.', 'error', 7000);
+		!window.electronAPI.parseFitFile
+	) {
+		showNotification(
+			'Electron API not available. Please restart the app.',
+			'error',
+			7000,
+		);
 		return;
 	}
 
@@ -68,7 +74,10 @@ openFileBtn.addEventListener('click', async () => {
 			return;
 		}
 		if (result && result.error) {
-			showNotification(`Error: ${result.error}\n${result.details || ''}`, 'error');
+			showNotification(
+				`Error: ${result.error}\n${result.details || ''}`,
+				'error',
+			);
 		} else {
 			console.log('[DEBUG] FIT parse result:', result);
 			try {
@@ -116,7 +125,12 @@ openFileBtn.addEventListener('contextmenu', async (event) => {
 
 	recentFiles.forEach((file) => {
 		const parts = file.split(/\\|\//g); // split on both \\ and /
-		const shortName = parts.length >= 2 ? `${parts[parts.length-2]}${String.fromCharCode(92)}${parts[parts.length-1]}` : parts[parts.length-1];
+		const shortName =
+			parts.length >= 2
+				? `${parts[parts.length - 2]}${String.fromCharCode(92)}${
+						parts[parts.length - 1]
+				  }`
+				: parts[parts.length - 1];
 		const item = document.createElement('div');
 		item.textContent = shortName;
 		item.title = file; // show full path on hover
@@ -124,8 +138,12 @@ openFileBtn.addEventListener('contextmenu', async (event) => {
 		item.style.whiteSpace = 'nowrap';
 		item.style.overflow = 'hidden';
 		item.style.textOverflow = 'ellipsis';
-		item.onmouseenter = () => { item.style.background = '#33374d'; };
-		item.onmouseleave = () => { item.style.background = 'transparent'; };
+		item.onmouseenter = () => {
+			item.style.background = '#33374d';
+		};
+		item.onmouseleave = () => {
+			item.style.background = 'transparent';
+		};
 		item.onclick = async () => {
 			menu.remove();
 			openFileBtn.disabled = true;
@@ -134,7 +152,10 @@ openFileBtn.addEventListener('contextmenu', async (event) => {
 				let arrayBuffer = await window.electronAPI.readFile(file);
 				let result = await window.electronAPI.parseFitFile(arrayBuffer);
 				if (result && result.error) {
-					showNotification(`Error: ${result.error}\n${result.details || ''}`, 'error');
+					showNotification(
+						`Error: ${result.error}\n${result.details || ''}`,
+						'error',
+					);
 				} else {
 					window.showFitData(result, file);
 				}
@@ -157,26 +178,33 @@ openFileBtn.addEventListener('contextmenu', async (event) => {
 });
 
 // Listen for menu events from main process using electronAPI
-if (window.electronAPI && window.electronAPI.onMenuOpenFile && window.electronAPI.onOpenRecentFile) {
-    window.electronAPI.onMenuOpenFile(() => {
-        openFileBtn.click(); // Simulate click to reuse logic
-    });
-    window.electronAPI.onOpenRecentFile(async (filePath) => {
-        openFileBtn.disabled = true;
-        setLoading(true);
-        try {
-            let arrayBuffer = await window.electronAPI.readFile(filePath);
-            let result = await window.electronAPI.parseFitFile(arrayBuffer);
-            if (result && result.error) {
-                showNotification(`Error: ${result.error}\n${result.details || ''}`, 'error');
-            } else {
-                window.showFitData(result, filePath);
-            }
-            await window.electronAPI.addRecentFile(filePath); // move to top
-        } catch (err) {
-            showNotification(`Error opening recent file: ${err}`, 'error');
-        }
-        openFileBtn.disabled = false;
-        setLoading(false);
-    });
+if (
+	window.electronAPI &&
+	window.electronAPI.onMenuOpenFile &&
+	window.electronAPI.onOpenRecentFile
+) {
+	window.electronAPI.onMenuOpenFile(() => {
+		openFileBtn.click(); // Simulate click to reuse logic
+	});
+	window.electronAPI.onOpenRecentFile(async (filePath) => {
+		openFileBtn.disabled = true;
+		setLoading(true);
+		try {
+			let arrayBuffer = await window.electronAPI.readFile(filePath);
+			let result = await window.electronAPI.parseFitFile(arrayBuffer);
+			if (result && result.error) {
+				showNotification(
+					`Error: ${result.error}\n${result.details || ''}`,
+					'error',
+				);
+			} else {
+				window.showFitData(result, filePath);
+			}
+			await window.electronAPI.addRecentFile(filePath); // move to top
+		} catch (err) {
+			showNotification(`Error opening recent file: ${err}`, 'error');
+		}
+		openFileBtn.disabled = false;
+		setLoading(false);
+	});
 }
