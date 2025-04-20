@@ -1,5 +1,15 @@
 import { renderTable } from './renderTable.js';
 
+/**
+ * Renders all data tables from the provided dataFrames object into the specified container.
+ *
+ * - Uses Arquero (window.aq) to convert arrays to tables.
+ * - Renders each table using renderTable().
+ * - 'recordMesgs' is always rendered first, then other tables alphabetically.
+ *
+ * @param {Object} dataFrames - An object where each key is a table name and the value is an array of row objects.
+ * @param {HTMLElement} [containerOverride] - Optional container element to render tables into. Defaults to element with id 'content-data'.
+ */
 export function displayTables(dataFrames, containerOverride) {
 	console.log('[DEBUG] displayTables called', dataFrames);
 
@@ -9,15 +19,18 @@ export function displayTables(dataFrames, containerOverride) {
 		return;
 	}
 
-	const container = containerOverride || document.getElementById('content-data');
+	const container =
+		containerOverride || document.getElementById('content-data');
 	if (!container) {
-		console.error('[ERROR] Container element with id "content-data" not found.');
+		console.error(
+			'[ERROR] Container element with id "content-data" not found.',
+		);
 		return;
 	}
 
 	container.innerHTML = '';
-	const keys = Object.keys(dataFrames).filter(
-		key => Array.isArray(dataFrames[key])
+	const keys = Object.keys(dataFrames).filter((key) =>
+		Array.isArray(dataFrames[key]),
 	);
 	console.log('[DEBUG] Table keys:', keys);
 

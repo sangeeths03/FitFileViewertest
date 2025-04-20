@@ -1,3 +1,15 @@
+/**
+ * Renders a Leaflet map inside the element with id 'content-map'.
+ * If `window.globalData.recordMesgs` exists and contains valid latitude and longitude data,
+ * it plots the coordinates as a polyline on the map and fits the map bounds to the polyline.
+ * If no valid location data is available, displays a message instead of the map.
+ *
+ * Assumes that `window.globalData.recordMesgs` is an array of objects with `positionLat` and `positionLong` properties,
+ * where the coordinates are encoded as signed 32-bit integers and need to be converted to degrees.
+ *
+ * Dependencies:
+ * - Leaflet.js library must be loaded and available as global `L`.
+ */
 export function renderMap() {
 	const mapContainer = document.getElementById('content-map');
 	mapContainer.innerHTML =

@@ -1,3 +1,27 @@
+/**
+ * Renders a Vega-Lite chart into the specified container using global FIT file data.
+ *
+ * This function expects `window.globalData.recordMesgs` to be available, which should be an array of record messages.
+ * It uses Arquero (`window.aq`) to transform the data and Vega-Lite to render an interactive, faceted chart.
+ * The chart is responsive to window resizing and custom 'tab-shown' events.
+ *
+ * @param {HTMLElement|string} [targetContainer] - The target container element or its ID where the chart will be rendered.
+ *   If not provided, defaults to the element with ID 'content-chart'.
+ *
+ * @example
+ * // Render chart in a specific container by ID
+ * renderChart('my-chart-container');
+ *
+ * @example
+ * // Render chart in a specific container element
+ * const container = document.getElementById('my-chart-container');
+ * renderChart(container);
+ *
+ * @global
+ * @requires window.globalData.recordMesgs - Array of FIT record messages.
+ * @requires window.aq - Arquero library for data manipulation.
+ * @requires vegaEmbed - Vega-Embed function for rendering Vega-Lite specs.
+ */
 export function renderChart(targetContainer) {
 	const chartContainer = targetContainer
 		? (typeof targetContainer === 'string' ? document.getElementById(targetContainer) : targetContainer)

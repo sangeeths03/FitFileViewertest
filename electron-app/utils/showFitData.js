@@ -1,3 +1,13 @@
+/**
+ * Displays FIT file data in the UI and updates relevant UI elements based on the active tab.
+ *
+ * - Updates the displayed file name and document title.
+ * - Renders data tables, charts, maps, or summary depending on the active tab.
+ * - Pre-renders data tables in the background if the data tab is not active.
+ *
+ * @param {Object} data - The parsed FIT file data to display.
+ * @param {string} [filePath] - The full path of the FIT file, used to extract and display the file name.
+ */
 export function showFitData(data, filePath) {
 	globalData = data;
 	if (filePath) {

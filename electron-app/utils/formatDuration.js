@@ -1,12 +1,15 @@
 /**
  * Formats a duration given in seconds into a human-readable string.
  *
- * - If the duration is less than 60 seconds, returns "X sec".
- * - If the duration is less than 1 hour, returns "Y min Z sec".
- * - If the duration is 1 hour or more, returns "H hr(s) M min".
+ * - If the input is null or undefined, returns an empty string.
+ * - If the input is not an integer, throws an error.
+ * - For durations less than 60 seconds, returns "X sec".
+ * - For durations less than 1 hour, returns "Y min Z sec".
+ * - For durations of 1 hour or more, returns "H hr(s) M min".
  *
  * @param {number} seconds - The duration in seconds.
- * @returns {string | ''} The formatted duration string, or an empty string if input is invalid.
+ * @returns {string} The formatted duration string.
+ * @throws {Error} If the input is not an integer.
  */
 export function formatDuration(seconds) {
 	// Return an empty string if the input is null or undefined.
