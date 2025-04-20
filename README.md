@@ -10,7 +10,7 @@ Open `.fit` files and visualize their data using maps, tables, and charts. This 
 
 ## How to Install
 
-1. Download the latest release from the [Releases Page](https://github.com/your-repo/releases).
+1. Download the latest release from the [Releases Page](https://github.com/Nick2bad4u/FitFileViewer/releases).
 2. Extract the downloaded archive.
 3. Run the executable file to launch the application.
 
