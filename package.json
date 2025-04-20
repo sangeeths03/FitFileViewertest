@@ -53,15 +53,15 @@
   },
   "devDependencies": {
     "@types/mocha": "^10.0.10",
-    "@types/node": "^20.0.0",
-    "@types/vscode": "^1.96.0",
-    "@vscode/vsce": "^2.19.0",
+    "@types/node": "^22.14.1",
+    "@types/vscode": "^1.99.1",
+    "@vscode/vsce": "^3.3.2",
     "copyfiles": "^2.4.1",
     "electron-builder": "^26.0.12",
-    "typescript": "^5.7.3"
+    "typescript": "^5.8.3"
   },
   "dependencies": {
-    "@garmin/fitsdk": "^21.161.0",
-    "arquero": "^7.2.0"
+    "@garmin/fitsdk": "^21.170.0",
+    "arquero": "^8.0.1"
   }
 }
