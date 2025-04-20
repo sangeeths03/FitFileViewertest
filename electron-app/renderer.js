@@ -1,26 +1,6 @@
 // In electron-app/renderer.js
 
-// Utility to show notification
-function showNotification(message, type = 'error', timeout = 5000) {
-	const notif = document.getElementById('notification');
-	if (!notif) return;
-	notif.textContent = message;
-	notif.className = `notification ${type}`;
-	notif.style.display = 'block';
-	if (timeout > 0) {
-		setTimeout(() => {
-			notif.style.display = 'none';
-		}, timeout);
-	}
-}
-
-// Utility to show/hide loading overlay
-function setLoading(isLoading) {
-	const overlay = document.getElementById('loadingOverlay');
-	if (!overlay) return;
-	overlay.style.display = isLoading ? 'flex' : 'none';
-	document.body.style.cursor = isLoading ? 'wait' : '';
-}
+import { showNotification, setLoading } from './utils/rendererUtils.js';
 
 const openFileBtn = document.getElementById('openFileBtn');
 if (!openFileBtn) {
@@ -155,3 +135,28 @@ openFileBtn.addEventListener('contextmenu', async (event) => {
 	document.addEventListener('mousedown', removeMenu);
 	document.body.appendChild(menu);
 });
+
+// Listen for menu events from main process using electronAPI
+if (window.electronAPI && window.electronAPI.onMenuOpenFile && window.electronAPI.onOpenRecentFile) {
+    window.electronAPI.onMenuOpenFile(() => {
+        openFileBtn.click(); // Simulate click to reuse logic
+    });
+    window.electronAPI.onOpenRecentFile(async (filePath) => {
+        openFileBtn.disabled = true;
+        setLoading(true);
+        try {
+            let arrayBuffer = await window.electronAPI.readFile(filePath);
+            let result = await window.electronAPI.parseFitFile(arrayBuffer);
+            if (result && result.error) {
+                showNotification(`Error: ${result.error}\n${result.details || ''}`, 'error');
+            } else {
+                window.showFitData(result, filePath);
+            }
+            await window.electronAPI.addRecentFile(filePath); // move to top
+        } catch (err) {
+            showNotification(`Error opening recent file: ${err}`, 'error');
+        }
+        openFileBtn.disabled = false;
+        setLoading(false);
+    });
+}

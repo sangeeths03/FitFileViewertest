@@ -50,4 +50,20 @@ contextBridge.exposeInMainWorld('electronAPI', {
 	 * @returns {Promise<string[]>}
 	 */
 	addRecentFile: (filePath) => ipcRenderer.invoke('recentFiles:add', filePath),
+
+	/**
+	 * Registers a handler for the 'menu-open-file' event.
+	 * @param {Function} callback
+	 */
+	onMenuOpenFile: (callback) => {
+		ipcRenderer.on('menu-open-file', callback);
+	},
+
+	/**
+	 * Registers a handler for the 'open-recent-file' event.
+	 * @param {Function} callback
+	 */
+	onOpenRecentFile: (callback) => {
+		ipcRenderer.on('open-recent-file', (event, filePath) => callback(filePath));
+	},
 });
