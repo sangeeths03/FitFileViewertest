@@ -14,8 +14,6 @@ import { renderSummary } from './utils/renderSummary.js';
 import { setActiveTab } from './utils/setActiveTab.js';
 import { toggleTabVisibility } from './utils/toggleTabVisibility.js';
 import { showFitData } from './utils/showFitData.js';
-import { showNotification } from './utils/showNotification.js';
-import { getWindowState } from './windowStateUtils.js';
 
 // List of utilities to expose globally
 const utils = {
@@ -31,8 +29,6 @@ const utils = {
   setActiveTab,
   toggleTabVisibility,
   showFitData,
-  showNotification,
-  getWindowState,
 };
 
 // Attach all utilities to window for global access
