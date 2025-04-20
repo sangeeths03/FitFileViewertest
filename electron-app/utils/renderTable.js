@@ -60,8 +60,14 @@ export function renderTable(container, title, table, index) {
 			setTimeout(() => {
 				try {
 					if ($.fn.DataTable) {
+						const tableSelector = '#' + tableId;
+						// Destroy existing DataTable instance if it exists
+						if ($.fn.DataTable.isDataTable(tableSelector)) {
+							console.log(`[DEBUG] Destroying existing DataTable for ${tableSelector}`);
+							$(tableSelector).DataTable().destroy();
+						}
 						console.log(`[DEBUG] Initializing DataTable for #${tableId}`);
-						$('#' + tableId).DataTable({
+						$(tableSelector).DataTable({
 							paging: true,
 							lengthMenu: [
 								[10, 25, 50, 100, -1],

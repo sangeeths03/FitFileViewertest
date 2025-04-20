@@ -81,6 +81,28 @@ export function renderSummary(data) {
 		container.innerHTML = '<p>No summary data available.</p>';
 		return;
 	}
+	// Remove summary columns with no data, all zero values, or NaN
+	if (summaryRows.length > 0) {
+		const keys = Object.keys(summaryRows[0]);
+		const filteredKeys = keys.filter((key) => {
+			const val = summaryRows[0][key];
+			// Remove if null, undefined, empty string, strictly 0, or NaN
+			return (
+				val !== null &&
+				val !== undefined &&
+				val !== '' &&
+				!(
+					(typeof val === 'number' && val === 0) ||
+					(typeof val === 'string' &&
+						/^(0+(\.0+)?|0*\.\d*0+)$/.test(val.trim()))
+				) &&
+				!(typeof val === 'number' && isNaN(val))
+			);
+		});
+		summaryRows[0] = Object.fromEntries(
+			filteredKeys.map((k) => [k, summaryRows[0][k]]),
+		);
+	}
 	// Render main summary as a table with a title and inline copy button
 	const summarySection = document.createElement('div');
 	summarySection.style.marginBottom = '18px';
@@ -157,14 +179,30 @@ export function renderSummary(data) {
 	if (data.lapMesgs && data.lapMesgs.length > 0) {
 		const lapSection = document.createElement('div');
 		lapSection.style.marginBottom = '18px';
-		// Use all keys from first lap for header
-		const lapKeys = Object.keys(data.lapMesgs[0]);
 		// Patch all lap rows for human readable fields
 		const patchedLaps = data.lapMesgs.map((lap) => {
 			const patched = { ...lap };
 			patchSummaryFields(patched);
 			return patched;
 		});
+		// Remove lap columns with no data (all values null/undefined/empty/0/NaN)
+		const allLapKeys = Object.keys(patchedLaps[0] || {});
+		const lapKeys = allLapKeys.filter((key) =>
+			patchedLaps.some((lap) => {
+				const val = lap[key];
+				return (
+					val !== null &&
+					val !== undefined &&
+					val !== '' &&
+					!(
+						(typeof val === 'number' && val === 0) ||
+						(typeof val === 'string' &&
+							/^(0+(\.0+)?|0*\.\d*0+)$/.test(val.trim()))
+					) &&
+					!(typeof val === 'number' && isNaN(val))
+				);
+			}),
+		);
 		// Copy as CSV for lap summary
 		const lapHeaderBar = document.createElement('div');
 		lapHeaderBar.className = 'header-bar';
