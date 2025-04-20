@@ -63,9 +63,7 @@ function buildAppMenu(mainWindow, currentTheme = 'dark') {
 				{ role: 'quit' },
 			],
 		},
-		{ role: 'editMenu' },
 		{ role: 'viewMenu' },
-		{ role: 'windowMenu' },
 		{
 			label: 'Settings',
 			submenu: [
