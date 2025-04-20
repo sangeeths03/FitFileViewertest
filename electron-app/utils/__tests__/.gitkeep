@@ -1,2 +1,6 @@
 // This directory is intended to hold Jest test files for all utility modules in the electron-app/utils directory.
 // Add your test files here.
+// For example, if you have a utility module named 'mathUtils.js', you can create a test file named 'mathUtils.test.js' in this directory.
+// This will help in organizing your tests and keeping them separate from the main application code.
+// You can also create subdirectories for different categories of utilities if needed.
+// Make sure to follow the naming convention for test files: <moduleName>.test.js
