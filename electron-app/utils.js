@@ -1,5 +1,16 @@
 // utils.js - Utility exports for FitFileViewer Electron app
-// Exposes utility functions globally for use in index.html and other scripts
+/**
+ * Exposes utility functions globally for use in index.html and other scripts.
+ *
+ * Note: Exposing utilities globally is generally discouraged in modern JavaScript development
+ * due to potential namespace pollution and security risks. In Electron apps, this can make
+ * the application vulnerable to cross-site scripting (XSS) attacks if untrusted content is
+ * loaded. This approach is used here to simplify integration with the Electron app's renderer
+ * process, where direct access to these utilities is required in inline scripts.
+ *
+ * Alternatives such as module exports or bundling with a tool like Webpack were considered,
+ * but the current approach was chosen for simplicity and compatibility with the existing setup.
+ */
 
 // Import utility functions
 import { formatDistance } from './utils/formatDistance.js';
