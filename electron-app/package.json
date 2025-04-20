@@ -23,7 +23,7 @@
   "license": "ISC",
   "description": "Fit File Viewer is a cross-platform application for parsing, visualizing, and analyzing .fit files using charts, maps, and tables.",
   "devDependencies": {
-    "electron": "^35.1.5"
+    "electron": "^35.2.0"
   },
   "dependencies": {
     "@garmin/fitsdk": "^21.170.0"
