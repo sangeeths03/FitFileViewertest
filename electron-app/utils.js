@@ -15,6 +15,7 @@ import { setActiveTab } from './utils/setActiveTab.js';
 import { toggleTabVisibility } from './utils/toggleTabVisibility.js';
 import { showFitData } from './utils/showFitData.js';
 
+
 // List of utilities to expose globally
 const utils = {
   formatDistance,
