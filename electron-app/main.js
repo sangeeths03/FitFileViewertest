@@ -10,7 +10,32 @@ const { buildAppMenu } = require('./utils/buildAppMenu');
 app.whenReady().then(() => {
 	// Register file open dialog handler
 	const mainWindow = createWindow();
+
+	// Get theme from localStorage in renderer
+	mainWindow.webContents.on('did-finish-load', () => {
+		mainWindow.webContents.executeJavaScript('localStorage.getItem("ffv-theme")')
+			.then(theme => {
+				buildAppMenu(mainWindow, theme || 'dark');
+				mainWindow.webContents.send('set-theme', theme || 'dark');
+			})
+			.catch(() => {
+				buildAppMenu(mainWindow, 'dark');
+				mainWindow.webContents.send('set-theme', 'dark');
+			});
+	});
+
 	buildAppMenu(mainWindow);
+
+	// Theme persistence: set theme on window creation
+	mainWindow.webContents.on('did-finish-load', () => {
+		mainWindow.webContents.executeJavaScript('localStorage.getItem("ffv-theme")')
+			.then(theme => {
+				mainWindow.webContents.send('set-theme', theme || 'dark');
+			})
+			.catch(() => {
+				mainWindow.webContents.send('set-theme', 'dark');
+			});
+	});
 
 	ipcMain.handle('dialog:openFile', async () => {
 		try {
@@ -38,6 +63,12 @@ app.whenReady().then(() => {
 		addRecentFile(filePath);
 		buildAppMenu(BrowserWindow.getFocusedWindow() || mainWindow);
 		return loadRecentFiles();
+	});
+
+	// Listen for theme change from renderer and update menu
+	ipcMain.on('theme-changed', (event, theme) => {
+		const win = BrowserWindow.fromWebContents(event.sender);
+		if (win) buildAppMenu(win, theme || 'dark');
 	});
 
 	app.on('activate', function () {

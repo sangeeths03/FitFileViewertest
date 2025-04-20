@@ -28,7 +28,8 @@ window.showFitData = function (data, filePath) {
 			fileSpan.textContent = `Active: ${fileName}`;
 			fileSpan.title = filePath; // Show full path on mouseover
 		}
-		document.title = `Fit File Viewer - ${fileName}`; // Set title bar
+		// Only update the title if fileName is present
+		document.title = fileName ? `Fit File Viewer - ${fileName}` : 'Fit File Viewer';
 	}
 	const tabData = document.getElementById('tab-data');
 	const tabChart = document.getElementById('tab-chart');
@@ -65,6 +66,31 @@ window.showFitData = function (data, filePath) {
 	}
 };
 
+// Theme switching logic
+function applyTheme(theme) {
+	document.body.classList.remove('theme-dark', 'theme-light');
+	document.body.classList.add(`theme-${theme}`);
+	try { localStorage.setItem('ffv-theme', theme); } catch {}
+}
+
+function loadTheme() {
+	try {
+		return localStorage.getItem('ffv-theme') || 'dark';
+	} catch {
+		return 'dark';
+	}
+}
+
+// Listen for theme change from main process
+if (window.electronAPI) {
+	window.electronAPI.onSetTheme((theme) => {
+		applyTheme(theme);
+		window.electronAPI.sendThemeChanged(theme);
+	});
+}
+
+// On load, apply theme
+applyTheme(loadTheme());
 
 window.onload = () => {
 	// Signal to the extension that the webview is ready (only if available)

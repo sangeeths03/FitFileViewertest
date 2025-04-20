@@ -66,4 +66,16 @@ contextBridge.exposeInMainWorld('electronAPI', {
 	onOpenRecentFile: (callback) => {
 		ipcRenderer.on('open-recent-file', (event, filePath) => callback(filePath));
 	},
+
+	/**
+	 * Registers a handler for the 'set-theme' event.
+	 * @param {Function} callback
+	 */
+	onSetTheme: (callback) => ipcRenderer.on('set-theme', (event, theme) => callback(theme)),
+
+	/**
+	 * Sends a 'theme-changed' event to the main process.
+	 * @param {string} theme
+	 */
+	sendThemeChanged: (theme) => ipcRenderer.send('theme-changed', theme)
 });

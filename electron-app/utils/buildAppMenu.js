@@ -1,13 +1,15 @@
 const { loadRecentFiles, getShortRecentName } = require('./recentFiles');
+const { Menu, BrowserWindow } = require('electron');
 
 /**
  * Builds and sets the application menu for the Electron app.
- * The menu includes File, Edit, View, and Window menus, with support for opening files,
+ * The menu includes File, Edit, View, Window, and Settings menus, with support for opening files,
  * displaying a list of recent files, and standard menu roles.
  *
  * @param {Electron.BrowserWindow} mainWindow - The main application window to which menu actions are dispatched.
+ * @param {string} [currentTheme='dark'] - The current theme of the application, used to set the checked state of theme radio buttons.
  */
-function buildAppMenu(mainWindow) {
+function buildAppMenu(mainWindow, currentTheme = 'dark') {
 	const recentFiles = loadRecentFiles();
 	const recentMenuItems =
 		recentFiles.length > 0
@@ -30,6 +32,7 @@ function buildAppMenu(mainWindow) {
 	 * - Edit: Standard edit menu (cut, copy, paste, etc.).
 	 * - View: Standard view menu (reload, toggle dev tools, etc.).
 	 * - Window: Standard window menu (minimize, close, etc.).
+	 * - Settings: Contains options to configure application settings, such as theme.
 	 *
 	 * @type {Array<Object>}
 	 * @property {string} label - The display label for the menu item.
@@ -63,8 +66,41 @@ function buildAppMenu(mainWindow) {
 		{ role: 'editMenu' },
 		{ role: 'viewMenu' },
 		{ role: 'windowMenu' },
+		{
+			label: 'Settings',
+			submenu: [
+				{
+					label: 'Theme',
+					submenu: [
+						{
+							label: 'Dark',
+							type: 'radio',
+							checked: currentTheme === 'dark',
+							click: () => {
+								const win = BrowserWindow.getFocusedWindow() || mainWindow;
+								console.log('[DEBUG] Theme menu clicked: dark, win:', !!win);
+								if (win && win.webContents) {
+									win.webContents.send('set-theme', 'dark');
+								}
+							}
+						},
+						{
+							label: 'Light',
+							type: 'radio',
+							checked: currentTheme === 'light',
+							click: () => {
+								const win = BrowserWindow.getFocusedWindow() || mainWindow;
+								console.log('[DEBUG] Theme menu clicked: light, win:', !!win);
+								if (win && win.webContents) {
+									win.webContents.send('set-theme', 'light');
+								}
+							}
+						}
+					]
+				}
+			]
+		}
 	];
-	const { Menu } = require('electron');
 	Menu.setApplicationMenu(Menu.buildFromTemplate(template));
 }
 

@@ -1,31 +1,72 @@
 /* Dark mode CSS for Electron app */
 @import 'https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap';
 
+/*
+  Add CSS variables for dark and light themes, and use them throughout the file.
+  Default to dark theme. Use .theme-dark and .theme-light classes on body.
+*/
+:root {
+  --color-bg: #181a20;
+  --color-bg-alt: #23263a;
+  --color-fg: #e0e0e0;
+  --color-fg-alt: #fff;
+  --color-accent: #2196f3;
+  --color-header: #23263a;
+  --color-table-header: #23263a;
+  --color-table-row-even: #23263a;
+  --color-table-row-odd: #181a20;
+  --color-table-hover: #2d3147;
+  --color-border: #33374d;
+  --color-btn-bg: #23263a;
+  --color-btn-hover: #3a3f5c;
+  --color-modal-bg: #23263a;
+  --color-modal-fg: #fff;
+  --color-credits: #888;
+}
+body.theme-light {
+  --color-bg: #f5f5f5;
+  --color-bg-alt: #fff;
+  --color-fg: #23263a;
+  --color-fg-alt: #181a20;
+  --color-accent: #1976d2;
+  --color-header: #fff;
+  --color-table-header: #f0f0f0;
+  --color-table-row-even: #fafafa;
+  --color-table-row-odd: #fff;
+  --color-table-hover: #e3f2fd;
+  --color-border: #ccc;
+  --color-btn-bg: #fff;
+  --color-btn-hover: #e3f2fd;
+  --color-modal-bg: #fff;
+  --color-modal-fg: #23263a;
+  --color-credits: #555;
+}
+
 body {
 	font-family: Open Sans, sans-serif;
 	padding: 10px;
 	font-size: 14px;
-	background-color: #181a20;
-	color: #e0e0e0;
+	background-color: var(--color-bg);
+	color: var(--color-fg);
 	margin: 0;
 }
 
 h2 {
 	margin-bottom: 20px;
-	color: #e0e0e0;
+	color: var(--color-fg);
 }
 
 /* App Header */
 .app-header {
 	text-align: center;
 	padding: 32px 0 10px;
-	background: none;
+	background: var(--color-header);
 }
 .app-header h1 {
 	font-size: 2.2rem;
 	font-weight: 700;
 	letter-spacing: 1px;
-	color: #fff;
+	color: var(--color-fg-alt);
 	margin: 0;
 	text-shadow: 0 2px 8px #000a;
 }
@@ -45,18 +86,18 @@ h2 {
 .tab-button {
 	padding: 10px 20px;
 	cursor: pointer;
-	background: #23263a;
+	background: var(--color-btn-bg);
 	border: none;
 	border-radius: 4px;
 	margin-right: 5px;
-	color: #e0e0e0;
+	color: var(--color-fg);
 	font-weight: 600;
 	transition: background 0.3s, box-shadow 0.3s;
 }
 
 .tab-button:hover,
 .tab-button.active {
-	background: #3a3f5c;
+	background: var(--color-btn-hover);
 	box-shadow: 0 2px 4px rgb(0 0 0 / 40%);
 }
 
@@ -66,7 +107,7 @@ h2 {
 
 /* Card-like Container for Tab Content */
 .tab-card {
-	background: #23263a;
+	background: var(--color-bg-alt);
 	border-radius: 10px;
 	box-shadow: 0 4px 16px rgb(0 0 0 / 30%);
 	padding: 24px 18px 18px;
@@ -76,8 +117,8 @@ h2 {
 }
 
 .table-section {
-	border: 1px solid #33374d;
-	background: #23263a;
+	border: 1px solid var(--color-border);
+	background: var(--color-bg-alt);
 	margin-bottom: 15px;
 	border-radius: 4px;
 	box-shadow: 0 1px 3px rgb(0 0 0 / 30%);
@@ -87,25 +128,25 @@ h2 {
 	font-size: 16px;
 	font-weight: 600;
 	cursor: pointer;
-	background: #23263a;
+	background: var(--color-bg-alt);
 	padding: 10px 15px;
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
 	border-radius: 4px 4px 0 0;
-	color: #e0e0e0;
+	color: var(--color-fg);
 	transition: background 0.3s;
 }
 
 .table-header:hover {
-	background: #2d3147;
+	background: var(--color-table-hover);
 }
 
 .copy-btn {
 	font-size: 12px;
 	padding: 6px 12px;
-	background: #3a3f5c;
-	color: #e0e0e0;
+	background: var(--color-btn-bg);
+	color: var(--color-fg);
 	border: none;
 	border-radius: 4px;
 	cursor: pointer;
@@ -114,8 +155,8 @@ h2 {
 }
 
 .copy-btn:hover {
-	background: #2196f3;
-	color: #fff;
+	background: var(--color-accent);
+	color: var(--color-fg-alt);
 }
 
 #content-summary {
@@ -138,8 +179,8 @@ table {
 	width: 100%;
 	border-collapse: collapse;
 	font-size: 14px;
-	background: #23263a;
-	color: #e0e0e0;
+	background: var(--color-bg-alt);
+	color: var(--color-fg);
 }
 
 /* Header Bar for File Open and Filename */
@@ -163,72 +204,72 @@ table {
 
 th,
 td {
-	border: 1px solid #33374d;
+	border: 1px solid var(--color-border);
 	padding: 8px;
 	text-align: left;
 }
 
 th {
-	background: #23263a;
-	color: #e0e0e0;
+	background: var(--color-table-header);
+	color: var(--color-fg);
 }
 
 tr:nth-child(even) {
-	background: #23263a;
+	background: var(--color-table-row-even);
 }
 
 tr:nth-child(odd) {
-	background: #181a20;
+	background: var(--color-table-row-odd);
 }
 
 tr:hover {
-	background: #2d3147 !important;
+	background: var(--color-table-hover) !important;
 	transition: background 0.2s;
 }
 
 .dataTables_wrapper .dataTables_filter input,
 .dataTables_wrapper .dataTables_length select {
-	background: #181a20;
-	color: #e0e0e0;
-	border: 1px solid #33374d;
+	background: var(--color-bg);
+	color: var(--color-fg);
+	border: 1px solid var(--color-border);
 }
 
 /* Improve DataTables pagination dropdown readability in night mode */
 .dataTables_wrapper .dataTables_length select {
-  background: #181a20 !important;
-  color: #f5f5f5 !important;
-  border: 1px solid #44485a !important;
+  background: var(--color-bg) !important;
+  color: var(--color-fg) !important;
+  border: 1px solid var(--color-border) !important;
   box-shadow: 0 2px 6px #000a;
 }
 .dataTables_wrapper .dataTables_length select:focus {
-  outline: 2px solid #2196f3;
+  outline: 2px solid var(--color-accent);
   outline-offset: 2px;
 }
 .dataTables_wrapper .dataTables_length select option {
-  background: #23263a;
-  color: #e0e0e0;
+  background: var(--color-bg-alt);
+  color: var(--color-fg);
 }
 
 /* Force style for first option in DataTables length dropdown */
 [id^="dt-length-"] > option:nth-child(n) {
-	background: #23263a !important;
-	color: #e0e0e0 !important;
+	background: var(--color-bg-alt) !important;
+	color: var(--color-fg) !important;
 }
 
 .dataTables_wrapper .dataTables_paginate .paginate_button {
-	background: #23263a;
-	color: #e0e0e0 !important;
+	background: var(--color-btn-bg);
+	color: var(--color-fg) !important;
 }
 
 .dataTables_wrapper
 	.dataTables_paginate
 	.paginate_button.current {
-	background: #2196f3 !important;
-	color: #fff !important;
+	background: var(--color-accent) !important;
+	color: var(--color-fg-alt) !important;
 }
 
 .dataTables_wrapper .dataTables_info {
-	color: #e0e0e0;
+	color: var(--color-fg);
 }
 
 #chart-container {
@@ -236,8 +277,8 @@ tr:hover {
 	max-width: 100%;
 	height: 400px;
 	max-height: 60vh;
-	background: #23263a;
-	color: #e0e0e0;
+	background: var(--color-bg-alt);
+	color: var(--color-fg);
 	overflow: auto;
 	border-radius: 6px;
 	box-sizing: border-box;
@@ -266,7 +307,7 @@ tr:hover {
 	   - contrast(1.1): Enhances contrast for readability. */
 	filter: invert(0.92) hue-rotate(180deg) brightness(0.9)
 		contrast(1.1);
-	background: #23263a;
+	background: var(--color-bg-alt);
 	border-radius: 4px;
 }
 
@@ -293,14 +334,14 @@ footer {
 .credits-section {
 	margin-top: 32px;
 	padding: 12px 0 0;
-	border-top: 1px solid #23263a;
+	border-top: 1px solid var(--color-bg-alt);
 	text-align: center;
 	font-size: 13px;
-	color: #888;
+	color: var(--color-credits);
 	background: none;
 }
 .credits-section a {
-	color: #2196f3;
+	color: var(--color-accent);
 	text-decoration: none;
 	margin: 0 2px;
 }
@@ -310,8 +351,8 @@ footer {
 
 .themed-btn {
 	padding: 10px 24px;
-	background: #23263a;
-	color: #e0e0e0;
+	background: var(--color-btn-bg);
+	color: var(--color-fg);
 	border: none;
 	border-radius: 4px;
 	font-size: 16px;
@@ -325,8 +366,8 @@ footer {
 
 .themed-btn:hover,
 .themed-btn:focus {
-	background: #3a3f5c;
-	color: #fff;
+	background: var(--color-btn-hover);
+	color: var(--color-fg-alt);
 	outline: none;
 }
 
@@ -342,8 +383,8 @@ footer {
 	border-radius: 6px;
 	font-size: 1.1rem;
 	z-index: 10001;
-	background: #23263a;
-	color: #fff;
+	background: var(--color-bg-alt);
+	color: var(--color-fg);
 	box-shadow: 0 2px 12px rgb(0 0 0 / 25%);
 	text-align: center;
 	opacity: 97%;
@@ -355,7 +396,7 @@ footer {
 	color: #fff;
 }
 .notification.success {
-	background: #2196f3;
+	background: var(--color-accent);
 	color: #fff;
 }
 
@@ -375,7 +416,7 @@ footer {
 }
 #loadingOverlay span {
 	padding: 32px 48px;
-	background: #23263a;
+	background: var(--color-bg-alt);
 	border-radius: 8px;
 	box-shadow: 0 2px 12px rgb(0 0 0 / 25%);
 }
