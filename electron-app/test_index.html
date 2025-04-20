@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>index.html Link Tag Test</title>
+    <script>
+        // Helper to check if a stylesheet link with a given href exists
+        function hasStylesheet(href) {
+            return !!Array.from(document.querySelectorAll('link[rel="stylesheet"]'))
+                .find(link => link.getAttribute('href') === href);
+        }
+
+        // Test runner
+        function runTests() {
+            const results = [];
+
+            // List of expected stylesheet hrefs from index.html
+            const expectedStylesheets = [
+                "libs/dataTables-2.2.1.min.css",
+                "libs/leaflet.css",
+                "style.css"
+            ];
+
+            expectedStylesheets.forEach(href => {
+                if (hasStylesheet(href)) {
+                    results.push(`PASS: Stylesheet "${href}" found.`);
+                } else {
+                    results.push(`FAIL: Stylesheet "${href}" NOT found.`);
+                }
+            });
+
+            // Output results
+            const output = document.getElementById('test-results');
+            output.innerHTML = results.map(r => `<div>${r}</div>`).join('');
+        }
+
+        window.onload = runTests;
+    </script>
+    <!-- Simulate the relevant <link rel="stylesheet"> tags from index.html -->
+    <link rel="stylesheet" href="libs/dataTables-2.2.1.min.css" />
+    <link rel="stylesheet" href="libs/leaflet.css" />
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+    <h2>Test Results for index.html Stylesheet Links</h2>
+    <div id="test-results"></div>
+</body>
+</html>
