@@ -16,6 +16,15 @@ app.whenReady().then(() => {
 	// Register file open dialog handler
 	const mainWindow = createWindow();
 
+	// Helper to update menu with current theme from renderer
+	async function updateMenuWithCurrentTheme(win) {
+		let theme = 'dark';
+		try {
+			theme = await win.webContents.executeJavaScript('localStorage.getItem("ffv-theme")') || 'dark';
+		} catch {}
+		buildAppMenu(win, theme);
+	}
+
 	// Get theme from localStorage in renderer
 	mainWindow.webContents.on('did-finish-load', () => {
 		mainWindow.webContents
@@ -30,7 +39,8 @@ app.whenReady().then(() => {
 			});
 	});
 
-	buildAppMenu(mainWindow);
+	// Always use the current theme for initial menu
+	updateMenuWithCurrentTheme(mainWindow);
 
 	// Theme persistence: set theme on window creation
 	mainWindow.webContents.on('did-finish-load', () => {
@@ -52,7 +62,13 @@ app.whenReady().then(() => {
 			});
 			if (canceled || filePaths.length === 0) return null;
 			addRecentFile(filePaths[0]);
-			buildAppMenu(BrowserWindow.getFocusedWindow() || mainWindow);
+			// Fetch current theme from renderer before rebuilding menu
+			const win = BrowserWindow.getFocusedWindow() || mainWindow;
+			let theme = 'dark';
+			try {
+				theme = await win.webContents.executeJavaScript('localStorage.getItem("ffv-theme")') || 'dark';
+			} catch {}
+			buildAppMenu(win, theme);
 			return filePaths[0];
 		} catch (err) {
 			console.error('Error opening file dialog:', err);
@@ -68,7 +84,13 @@ app.whenReady().then(() => {
 	// IPC: Add a file to recent files (for manual add if needed)
 	ipcMain.handle('recentFiles:add', async (event, filePath) => {
 		addRecentFile(filePath);
-		buildAppMenu(BrowserWindow.getFocusedWindow() || mainWindow);
+		// Fetch current theme from renderer before rebuilding menu
+		const win = BrowserWindow.getFocusedWindow() || mainWindow;
+		let theme = 'dark';
+		try {
+			theme = await win.webContents.executeJavaScript('localStorage.getItem("ffv-theme")') || 'dark';
+		} catch {}
+		buildAppMenu(win, theme);
 		return loadRecentFiles();
 	});
 
@@ -79,7 +101,13 @@ app.whenReady().then(() => {
 	});
 
 	app.on('activate', function () {
-		if (BrowserWindow.getAllWindows().length === 0) createWindow();
+		if (BrowserWindow.getAllWindows().length === 0) {
+			const win = createWindow();
+			updateMenuWithCurrentTheme(win);
+		} else {
+			const win = BrowserWindow.getFocusedWindow() || mainWindow;
+			if (win) updateMenuWithCurrentTheme(win);
+		}
 	});
 });
 

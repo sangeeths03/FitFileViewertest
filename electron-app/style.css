@@ -25,6 +25,7 @@
 	--color-error: #b71c1c;
 	--color-overlay-bg: #181a20b3;
 	--color-box-shadow: 0 2px 12px #00000040;
+	--color-filename: #aaa;
 }
 
 body.theme-light {
@@ -44,6 +45,7 @@ body.theme-light {
 	--color-modal-bg: #fff;
 	--color-modal-fg: #23263a;
 	--color-credits: #555;
+	--color-filename: #000000;
 }
 
 body {
@@ -200,7 +202,7 @@ table {
 }
 
 #activeFileName {
-	color: #aaa;
+	color: var(--color-filename);
 	font-size: 1rem;
 	font-style: italic;
 	max-width: 350px;
