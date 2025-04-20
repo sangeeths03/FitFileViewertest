@@ -10,10 +10,18 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "electron ."
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "fit-file",
+    "data-visualization",
+    "electron",
+    "garmin",
+    "charts",
+    "maps",
+    "tables"
+  ],
+  "author": "Nick",
   "license": "ISC",
-  "description": "",
+  "description": "Fit File Viewer is a cross-platform application for parsing, visualizing, and analyzing .fit files using charts, maps, and tables.",
   "devDependencies": {
     "electron": "^35.1.5"
   },
