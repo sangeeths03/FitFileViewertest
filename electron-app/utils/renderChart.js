@@ -376,6 +376,17 @@ export function renderChart(targetContainer) {
 					setTimeout(() => {
 						result.view.resize().run();
 					}, 0);
+
+					// --- Add window resize handler for responsive chart ---
+					// Remove any previous handler to avoid duplicates
+					if (window._vegaResizeHandler) {
+						window.removeEventListener('resize', window._vegaResizeHandler);
+					}
+					window._vegaResizeHandler = () => {
+						result.view.resize().run();
+					};
+					window.addEventListener('resize', window._vegaResizeHandler);
+					// --- End window resize handler ---
 				}
 				// If the container was hidden, listen for a custom event to resize the chart
 				const handleTabShown = () => {
