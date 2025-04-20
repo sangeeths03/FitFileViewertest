@@ -37,4 +37,17 @@ contextBridge.exposeInMainWorld('electronAPI', {
 		const buffer = Buffer.from(arrayBuffer);
 		return await fitParser.decodeFitFile(buffer);
 	},
+
+	/**
+	 * Gets the list of recent files.
+	 * @returns {Promise<string[]>}
+	 */
+	recentFiles: () => ipcRenderer.invoke('recentFiles:get'),
+
+	/**
+	 * Adds a file to the recent files list.
+	 * @param {string} filePath
+	 * @returns {Promise<string[]>}
+	 */
+	addRecentFile: (filePath) => ipcRenderer.invoke('recentFiles:add', filePath),
 });

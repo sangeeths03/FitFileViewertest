@@ -81,3 +81,77 @@ openFileBtn.addEventListener('click', async () => {
 	openFileBtn.disabled = false;
 	setLoading(false);
 });
+
+// --- Recent Files Context Menu for Open Button ---
+openFileBtn.addEventListener('contextmenu', async (event) => {
+	event.preventDefault();
+	if (!window.electronAPI || !window.electronAPI.recentFiles) return;
+	const recentFiles = await window.electronAPI.recentFiles();
+	if (!recentFiles || recentFiles.length === 0) {
+		showNotification('No recent files found.', 'info', 2000);
+		return;
+	}
+	// Remove any existing menu
+	const oldMenu = document.getElementById('recent-files-menu');
+	if (oldMenu) oldMenu.remove();
+	// Create menu
+	const menu = document.createElement('div');
+	menu.id = 'recent-files-menu';
+	menu.style.position = 'fixed';
+	menu.style.zIndex = 10010;
+	menu.style.left = `${event.clientX}px`;
+	menu.style.top = `${event.clientY}px`;
+	menu.style.background = '#23263a';
+	menu.style.color = '#fff';
+	menu.style.border = '1px solid #33374d';
+	menu.style.borderRadius = '6px';
+	menu.style.boxShadow = '0 2px 12px rgb(0 0 0 / 25%)';
+	menu.style.minWidth = '320px';
+	menu.style.maxWidth = '480px';
+	menu.style.fontSize = '1rem';
+	menu.style.padding = '4px 0';
+	menu.style.cursor = 'pointer';
+	menu.style.userSelect = 'none';
+	menu.oncontextmenu = (e) => e.preventDefault();
+
+	recentFiles.forEach((file) => {
+		const parts = file.split(/\\|\//g); // split on both \\ and /
+		const shortName = parts.length >= 2 ? `${parts[parts.length-2]}${String.fromCharCode(92)}${parts[parts.length-1]}` : parts[parts.length-1];
+		const item = document.createElement('div');
+		item.textContent = shortName;
+		item.title = file; // show full path on hover
+		item.style.padding = '8px 18px';
+		item.style.whiteSpace = 'nowrap';
+		item.style.overflow = 'hidden';
+		item.style.textOverflow = 'ellipsis';
+		item.onmouseenter = () => { item.style.background = '#33374d'; };
+		item.onmouseleave = () => { item.style.background = 'transparent'; };
+		item.onclick = async () => {
+			menu.remove();
+			openFileBtn.disabled = true;
+			setLoading(true);
+			try {
+				let arrayBuffer = await window.electronAPI.readFile(file);
+				let result = await window.electronAPI.parseFitFile(arrayBuffer);
+				if (result && result.error) {
+					showNotification(`Error: ${result.error}\n${result.details || ''}`, 'error');
+				} else {
+					window.showFitData(result, file);
+				}
+				await window.electronAPI.addRecentFile(file); // move to top
+			} catch (err) {
+				showNotification(`Error opening recent file: ${err}`, 'error');
+			}
+			openFileBtn.disabled = false;
+			setLoading(false);
+		};
+		menu.appendChild(item);
+	});
+	// Remove menu on click elsewhere
+	const removeMenu = (e) => {
+		if (!menu.contains(e.target)) menu.remove();
+		document.removeEventListener('mousedown', removeMenu);
+	};
+	document.addEventListener('mousedown', removeMenu);
+	document.body.appendChild(menu);
+});
