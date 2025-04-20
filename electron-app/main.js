@@ -3,38 +3,7 @@ const { createWindow } = require('./windowStateUtils');
 const path = require('path');
 const fs = require('fs');
 
-const RECENT_FILES_PATH = path.join(app.getPath('userData'), 'recent-files.json');
-const MAX_RECENT_FILES = 10;
-
-function loadRecentFiles() {
-	try {
-		const data = fs.readFileSync(RECENT_FILES_PATH, 'utf8');
-		return JSON.parse(data);
-	} catch {
-		return [];
-	}
-}
-
-function saveRecentFiles(list) {
-	try {
-		fs.writeFileSync(RECENT_FILES_PATH, JSON.stringify(list));
-	} catch (err) {
-		console.error('Failed to save recent files:', err);
-	}
-}
-
-function addRecentFile(filePath) {
-	let list = loadRecentFiles();
-	list = list.filter(f => f !== filePath);
-	list.unshift(filePath);
-	if (list.length > MAX_RECENT_FILES) list = list.slice(0, MAX_RECENT_FILES);
-	saveRecentFiles(list);
-}
-
-function getShortRecentName(file) {
-	const parts = file.split(/\\|\//g);
-	return parts.length >= 2 ? `${parts[parts.length-2]}${String.fromCharCode(92)}${parts[parts.length-1]}` : parts[parts.length-1];
-}
+const { loadRecentFiles, saveRecentFiles, addRecentFile, getShortRecentName } = require('./utils/recentFiles');
 
 function buildAppMenu(mainWindow) {
 	const recentFiles = loadRecentFiles();
