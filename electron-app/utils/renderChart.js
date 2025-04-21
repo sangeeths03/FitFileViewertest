@@ -39,7 +39,9 @@ export function renderChart(targetContainer) {
 	chartContainer.innerHTML = '<div id="vega-container"></div>';
 	if (window.globalData && Array.isArray(window.globalData.recordMesgs)) {
 		if (!window.aq) {
-			console.error('[ERROR] Arquero library (window.aq) is not loaded. Skipping chart rendering.');
+			console.error(
+				'[ERROR] Arquero library (window.aq) is not loaded. Skipping chart rendering.',
+			);
 			return;
 		}
 		const aq = window.aq;
@@ -57,8 +59,8 @@ export function renderChart(targetContainer) {
 			'cadence',
 			'enhancedAltitude',
 			'enhancedSpeed',
-			"resistance",
-			"tempature",
+			'resistance',
+			'tempature',
 		];
 		const columnsToFold = recordTable
 			.columnNames()
@@ -66,7 +68,7 @@ export function renderChart(targetContainer) {
 		if (columnsToFold.length === 0) {
 			console.info(
 				'[INFO] No suitable numeric data available for chart. Available columns: ' +
-				recordTable.columnNames().join(', ')
+					recordTable.columnNames().join(', '),
 			);
 			chartContainer.innerHTML =
 				'<p>No suitable numeric data available for chart.<br>Available columns: ' +
