@@ -24,7 +24,6 @@ updates:
         patterns:
           - "*"
 
-
   - package-ecosystem: npm
     directory: /
     schedule:
@@ -44,3 +43,13 @@ updates:
     directory: /electron-app
     schedule:
       interval: daily
+    allow:
+      # Allow both direct and indirect updates for all packages
+      - dependency-type: "all"
+    labels:
+      - "npm"
+    groups:
+      npm:
+        applies-to: version-updates
+        patterns:
+          - "*"
