@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 const { app, BrowserWindow, dialog, ipcMain, Menu } = require('electron');
 const { createWindow } = require('./windowStateUtils');
 const path = require('path');
@@ -20,7 +21,10 @@ app.whenReady().then(() => {
 	async function updateMenuWithCurrentTheme(win) {
 		let theme = 'dark';
 		try {
-			theme = await win.webContents.executeJavaScript('localStorage.getItem("ffv-theme")') || 'dark';
+			theme =
+				(await win.webContents.executeJavaScript(
+					'localStorage.getItem("ffv-theme")',
+				)) || 'dark';
 		} catch {}
 		buildAppMenu(win, theme);
 	}
@@ -66,7 +70,10 @@ app.whenReady().then(() => {
 			const win = BrowserWindow.getFocusedWindow() || mainWindow;
 			let theme = 'dark';
 			try {
-				theme = await win.webContents.executeJavaScript('localStorage.getItem("ffv-theme")') || 'dark';
+				theme =
+					(await win.webContents.executeJavaScript(
+						'localStorage.getItem("ffv-theme")',
+					)) || 'dark';
 			} catch {}
 			buildAppMenu(win, theme);
 			return filePaths[0];
@@ -88,7 +95,10 @@ app.whenReady().then(() => {
 		const win = BrowserWindow.getFocusedWindow() || mainWindow;
 		let theme = 'dark';
 		try {
-			theme = await win.webContents.executeJavaScript('localStorage.getItem("ffv-theme")') || 'dark';
+			theme =
+				(await win.webContents.executeJavaScript(
+					'localStorage.getItem("ffv-theme")',
+				)) || 'dark';
 		} catch {}
 		buildAppMenu(win, theme);
 		return loadRecentFiles();

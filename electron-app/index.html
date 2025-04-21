@@ -1,10 +1,7 @@
 <html lang="en">
 	<head>
 		<meta charset="UTF-8" />
-		<meta
-			name="viewport"
-			content="width=device-width, initial-scale=1"
-		/>
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<title>Fit File Viewer</title>
 		<!-- Use local copies of JS/CSS libraries from libs/ -->
 		<script src="libs/jquery-3.7.1.min.js"></script>
@@ -14,29 +11,14 @@
 		<script src="libs/vega-5-latest.js"></script>
 		<script src="libs/vega-lite-5-latest.js"></script>
 		<script src="libs/vega-embed-6-latest.js"></script>
-		<link
-			rel="stylesheet"
-			href="libs/dataTables-2.2.1.min.css"
-		/>
-		<link
-			rel="stylesheet"
-			href="libs/leaflet.css"
-		/>
+		<link rel="stylesheet" href="libs/dataTables-2.2.1.min.css" />
+		<link rel="stylesheet" href="libs/leaflet.css" />
 		<script src="libs/leaflet.js"></script>
-		<link
-			rel="stylesheet"
-			href="style.css"
-		/>
+		<link rel="stylesheet" href="style.css" />
 		<!-- utils.js should be loaded after other dependencies because it relies on global objects or functions
 			 defined by libraries like jQuery, DataTables, Arquero, and Chart.js. -->
-		<script
-			src="utils.js"
-			type="module"
-		></script>
-		<script
-			src="main-ui.js"
-			type="module"
-		></script>
+		<script src="utils.js" type="module"></script>
+		<script src="main-ui.js" type="module"></script>
 	</head>
 
 	<body>
@@ -46,64 +28,24 @@
 		</header>
 		<!-- Header Bar for File Open and Filename -->
 		<div class="header-bar">
-			<button
-				id="openFileBtn"
-				class="themed-btn"
-			>
-				Open FIT File
-			</button>
+			<button id="openFileBtn" class="themed-btn">Open FIT File</button>
 			<span id="activeFileName"></span>
 		</div>
 		<!-- Centered Tab Bar -->
-		<div
-			id="tabs"
-			class="tab-bar"
-		>
-			<button
-				class="tab-button active"
-				id="tab-map"
-			>
-				Map
-			</button>
-			<button
-				class="tab-button"
-				id="tab-data"
-			>
-				Data
-			</button>
-			<button
-				class="tab-button"
-				id="tab-chart"
-			>
-				Chart
-			</button>
-			<button
-				class="tab-button"
-				id="tab-summary"
-			>
-				Summary
-			</button>
+		<div id="tabs" class="tab-bar">
+			<button class="tab-button active" id="tab-map">Map</button>
+			<button class="tab-button" id="tab-data">Data</button>
+			<button class="tab-button" id="tab-chart">Chart</button>
+			<button class="tab-button" id="tab-summary">Summary</button>
 		</div>
 		<!-- Card-like Container for Tab Content -->
 		<div class="tab-card">
-			<div
-				id="content-map"
-				class="tab-content"
-			></div>
-			<div
-				id="content-data"
-				class="tab-content"
-			></div>
-			<div
-				id="content-chart"
-				class="tab-content"
-			>
+			<div id="content-map" class="tab-content"></div>
+			<div id="content-data" class="tab-content"></div>
+			<div id="content-chart" class="tab-content">
 				<div id="chart-container"></div>
 			</div>
-			<div
-				id="content-summary"
-				class="tab-content"
-			></div>
+			<div id="content-summary" class="tab-content"></div>
 		</div>
 		<!-- Hidden background containers for pre-rendering -->
 		<div id="background-chart-container"></div>
@@ -112,59 +54,23 @@
 		<div class="credits-section">
 			<footer>
 				Credits: &nbsp;
-				<a
-					href="https://leafletjs.com/"
-					target="_blank"
-					rel="noopener"
-					>Leaflet</a
-				>,
-				<a
-					href="https://datatables.net/"
-					target="_blank"
-					rel="noopener"
-					>DataTables.js</a
-				>,
-				<a
-					href="https://github.com/uwdata/arquero"
-					target="_blank"
-					rel="noopener"
-					>arquero</a
-				>,
-				<a
-					href="https://github.com/garmin/fit-javascript-sdk"
-					target="_blank"
-					rel="noopener"
+				<a href="https://leafletjs.com/" target="_blank" rel="noopener">Leaflet</a>,
+				<a href="https://datatables.net/" target="_blank" rel="noopener">DataTables.js</a>,
+				<a href="https://github.com/uwdata/arquero" target="_blank" rel="noopener">arquero</a>,
+				<a href="https://github.com/garmin/fit-javascript-sdk" target="_blank" rel="noopener"
 					>Garmin FIT JavaScript SDK</a
-				>,
-				<a
-					href="https://vega.github.io/"
-					target="_blank"
-					rel="noopener"
-					>Vega</a
-				>,
-				<a
-					href="https://github.com/thomascamminady/fit-viewer"
-					target="_blank"
-					rel="noopener"
-					>Thomas Camminady</a
-				>.
+				>, <a href="https://vega.github.io/" target="_blank" rel="noopener">Vega</a>,
+				<a href="https://github.com/thomascamminady/fit-viewer" target="_blank" rel="noopener">Thomas Camminady</a>.
 			</footer>
 		</div>
 
 		<!-- Notification UI -->
-		<div
-			id="notification"
-			class="notification"
-		></div>
+		<div id="notification" class="notification"></div>
 		<!-- Loading Overlay -->
 		<div id="loadingOverlay">
 			<span>Loading...</span>
 		</div>
 		<!-- Ensure utils.js and main-ui.js are loaded before renderer.js because renderer.js depends on them -->
-		<script
-			src="renderer.js"
-			type="module"
-			defer
-		></script>
+		<script src="renderer.js" type="module" defer></script>
 	</body>
 </html>
