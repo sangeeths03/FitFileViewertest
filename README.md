@@ -2,11 +2,11 @@
 
 Open `.fit` files and visualize their data using maps, tables, and charts. This standalone application provides an intuitive interface for exploring `.fit` file data.
 
-![Map](electron-app/screenshots/chart.png)
+![Map](electron-app/screenshots/map.png)
 
 ![Table](electron-app/screenshots/data.png)
 
-![Charts](electron-app/screenshots/charts.png)
+![Charts](electron-app/screenshots/chart.png)
 
 ## How to Install
 
