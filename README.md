@@ -1,3 +1,17 @@
+[![ActionLint](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/ActionLint.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/ActionLint.yml)
+[![CodeQL](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/github-code-scanning/codeql)
+[![Dependabot Updates](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/dependabot/dependabot-updates/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/dependabot/dependabot-updates)
+[![Dependency Review](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/dependency-review.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/dependency-review.yml)
+[![Deploy static content to Pages](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/static.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/static.yml)
+[![ESLint](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/eslint.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/eslint.yml)
+[![GitHub Pages - Generate XML sitemap](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/sitemap.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/sitemap.yml)
+[![Mark stale issues and pull requests](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/stale.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/stale.yml)
+[![Microsoft Defender for DevOps](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/defender.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/defender.yml)
+[![OSSAR](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/ossar.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/ossar.yml)
+[![OSV-Scanner](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/osv-scanner.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/osv-scanner.yml)
+[![pages-build-deployment](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/pages/pages-build-deployment)
+[![Scorecard supply-chain security](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/scorecards.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/scorecards.yml)
+
 # Fit File Viewer README
 
 Open `.fit` files and visualize their data using maps, tables, and charts. This standalone application provides an intuitive interface for exploring `.fit` file data.
