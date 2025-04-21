@@ -9,7 +9,9 @@ export function applyTheme(theme) {
 	document.body.classList.add(`theme-${theme}`);
 	try {
 		localStorage.setItem('ffv-theme', theme);
-	} catch {}
+	} catch (error) {
+		console.error('Failed to persist theme to localStorage:', error);
+	}
 }
 
 /**
@@ -19,7 +21,8 @@ export function applyTheme(theme) {
 export function loadTheme() {
 	try {
 		return localStorage.getItem('ffv-theme') || 'dark';
-	} catch {
+	} catch (error) {
+		console.error('Error loading theme from localStorage:', error);
 		return 'dark';
 	}
 }
@@ -29,10 +32,25 @@ export function loadTheme() {
  * @param {(theme: string) => void} onThemeChange
  */
 export function listenForThemeChange(onThemeChange) {
-	if (window.electronAPI) {
+	if (
+		window.electronAPI &&
+		typeof window.electronAPI.onSetTheme === 'function' &&
+		typeof window.electronAPI.sendThemeChanged === 'function'
+	) {
+		// The callback receives a 'theme' parameter, which is expected to be a string ('dark' or 'light').
 		window.electronAPI.onSetTheme((theme) => {
 			onThemeChange(theme);
-			window.electronAPI.sendThemeChanged(theme);
+			if (typeof window.electronAPI.sendThemeChanged === 'function') {
+				window.electronAPI.sendThemeChanged(theme);
+			} else {
+				console.warn(
+					'sendThemeChanged method is not available on electronAPI.',
+				);
+			}
 		});
+	} else {
+		console.warn(
+			'Electron API is not available. Theme change listener is not active.',
+		);
 	}
 }
