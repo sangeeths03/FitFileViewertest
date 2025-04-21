@@ -106,8 +106,15 @@ export function renderSummary(data) {
 	// Render main summary as a table with a title and inline copy button
 	const summarySection = document.createElement('div');
 	summarySection.style.marginBottom = '18px';
+	summarySection.style.display = 'flex';
+	summarySection.style.flexDirection = 'column';
+	summarySection.style.alignItems = 'center';
 	const summaryHeaderBar = document.createElement('div');
 	summaryHeaderBar.className = 'header-bar';
+	summaryHeaderBar.style.display = 'flex';
+	summaryHeaderBar.style.alignItems = 'center';
+	summaryHeaderBar.style.gap = '10px';
+	summaryHeaderBar.style.justifyContent = 'center';
 	const summaryTitle = document.createElement('h3');
 	summaryTitle.textContent = 'Activity Summary';
 	summaryTitle.style.margin = '0 12px 0 0';
@@ -148,12 +155,10 @@ export function renderSummary(data) {
 		}
 	};
 	summaryHeaderBar.appendChild(copyBtn);
-	summaryHeaderBar.style.display = 'flex';
-	summaryHeaderBar.style.alignItems = 'center';
-	summaryHeaderBar.style.gap = '10px';
 	summarySection.appendChild(summaryHeaderBar);
 	const table = document.createElement('table');
 	table.classList.add('display');
+	table.style.margin = '0 auto';
 	const thead = document.createElement('thead');
 	const tbody = document.createElement('tbody');
 	const headerRow = document.createElement('tr');
