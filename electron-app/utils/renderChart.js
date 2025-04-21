@@ -32,9 +32,33 @@ export function renderChart(targetContainer) {
 	if (window.globalData && window.globalData.recordMesgs) {
 		const aq = window.aq;
 		const recordTable = aq.from(window.globalData.recordMesgs);
+		const allowedChartFields = [
+			// Available columns: timestamp, positionLat, positionLong, distance, altitude, speed, power, compressedAccumulatedPower, heartRate, cadence, cycles, enhancedAltitude, enhancedSpeed, developerFields
+			'timestamp',
+			'positionLat',
+			'positionLong',
+			'distance',
+			'altitude',
+			'speed',
+			'power',
+			'compressedAccumulatedPower',
+			'heartRate',
+			'cadence',
+			'cycles',
+			'enhancedAltitude',
+			'enhancedSpeed',
+		];
 		const columnsToFold = recordTable
 			.columnNames()
-			.filter((col) => col !== 'timestamp');
+			.filter((col) => col !== 'timestamp' && allowedChartFields.includes(col));
+		// DEBUG: Show available columns if no chartable fields found
+		if (columnsToFold.length === 0) {
+			chartContainer.innerHTML =
+				'<p>No suitable numeric data available for chart.<br>Available columns: ' +
+				recordTable.columnNames().join(', ') +
+				'</p>';
+			return;
+		}
 		const folded = recordTable.fold(columnsToFold, { as: ['key', 'value'] });
 		const spec = {
 			config: {
