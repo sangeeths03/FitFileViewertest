@@ -1,12 +1,50 @@
-module.exports = [
-  {
-    languageOptions: {
-      ecmaVersion: 2020,
-      sourceType: "module"
-    },
-    rules: {
-      "no-console": "off",
-      eqeqeq: "error"
-    }
-  }
-];
+module.exports = {
+  root: true,
+  env: {
+    browser: true,
+    node: true,
+    es2021: true,
+  },
+  extends: [
+    'eslint:recommended',
+  ],
+  parserOptions: {
+    ecmaVersion: 12,
+    sourceType: 'module',
+  },
+  ignorePatterns: [
+    'fit-test-files/',
+    'vscode-extension/vis/',
+    'electron-app/screenshots/',
+    'vscode-extension/screenshots/',
+    'electron-app/libs/',
+    'node_modules/',
+    'dist/',
+    '*.min.js',
+    '*.png',
+    '*.fit',
+    '*.parquet',
+    '*.lock',
+    '*.css',
+    '*.svg',
+    '*.xml',
+    '*.yml',
+    '*.md',
+    '*.json',
+    '*.toml',
+    '*.jpg',
+    '*.jpeg',
+    '*.gif',
+    '*.webp',
+    '*.pdf',
+    '*.pptx',
+    '*.ipynb',
+  ],
+  rules: {
+    eqeqeq: 'error',
+    semi: ['error', 'always'],
+    quotes: ['error', 'single'],
+    'no-unused-vars': 'warn',
+    'no-console': 'off',
+  },
+};
