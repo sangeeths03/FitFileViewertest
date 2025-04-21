@@ -22,6 +22,7 @@
  * @requires window.aq - Arquero library for data manipulation.
  * @requires vegaEmbed - Vega-Embed function for rendering Vega-Lite specs.
  */
+// Import the function to generate Vega-Lite chart specifications based on the data
 import { getChartSpec } from './chartSpec.js';
 
 export function renderChart(targetContainer) {
@@ -37,15 +38,14 @@ export function renderChart(targetContainer) {
 		return;
 	}
 	chartContainer.innerHTML = '<div id="vega-container"></div>';
-	if (window.globalData && Array.isArray(window.globalData.recordMesgs)) {
+	if (window.globalData && window.globalData.recordMesgs && Array.isArray(window.globalData.recordMesgs)) {
 		if (!window.aq) {
 			console.error(
 				'[ERROR] Arquero library (window.aq) is not loaded. Skipping chart rendering.',
 			);
 			return;
 		}
-		const aq = window.aq;
-		const recordTable = aq.from(window.globalData.recordMesgs);
+		const recordTable = window.aq.from(window.globalData.recordMesgs);
 		// List of allowed chart fields
 		const allowedChartFields = [
 			'timestamp',
@@ -60,7 +60,7 @@ export function renderChart(targetContainer) {
 			'enhancedAltitude',
 			'enhancedSpeed',
 			'resistance',
-			'tempature',
+			'temperature',
 		];
 		const columnsToFold = recordTable
 			.columnNames()
@@ -77,6 +77,11 @@ export function renderChart(targetContainer) {
 			return;
 		}
 		const folded = recordTable.fold(columnsToFold, { as: ['key', 'value'] });
+		if (!folded || typeof folded.objects !== 'function') {
+			console.error('[ERROR] Folded data is invalid or malformed. Skipping chart rendering.');
+			chartContainer.innerHTML = '<p>Invalid data for chart rendering.</p>';
+			return;
+		}
 		const spec = getChartSpec(folded.objects());
 		const vegaContainer = chartContainer.querySelector('#vega-container');
 		if (vegaContainer) {
@@ -93,8 +98,12 @@ export function renderChart(targetContainer) {
 						if (window._vegaResizeHandler) {
 							window.removeEventListener('resize', window._vegaResizeHandler);
 						}
+						let resizeTimeout;
 						window._vegaResizeHandler = () => {
-							result.view.resize().run();
+							clearTimeout(resizeTimeout);
+							resizeTimeout = setTimeout(() => {
+								result.view.resize().run();
+							}, 200); // Adjust debounce delay as needed
 						};
 						window.addEventListener('resize', window._vegaResizeHandler);
 						// --- End window resize handler ---
@@ -105,11 +114,19 @@ export function renderChart(targetContainer) {
 							result.view.resize().run();
 						}
 					};
+					// Remove any previous 'tab-shown' event listener to avoid duplicates
+					if (chartContainer._tabShownHandler) {
+						chartContainer.removeEventListener('tab-shown', chartContainer._tabShownHandler);
+					}
 					// Listen for a custom event 'tab-shown' on the container
+					chartContainer._tabShownHandler = handleTabShown;
 					chartContainer.addEventListener('tab-shown', handleTabShown);
-					// Optionally, clean up the event listener if needed
 				})
-				.catch(console.error);
+				.catch((error) => {
+					console.error(error);
+					chartContainer.innerHTML =
+						'<p>Failed to render the chart. Please try again later.</p>';
+				});
 		} else {
 			console.warn(
 				'[WARNING] #vega-container element is missing. Skipping chart rendering.',
