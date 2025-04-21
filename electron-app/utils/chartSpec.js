@@ -1,6 +1,18 @@
 // chartSpec.js
 // Vega-Lite chart spec for FIT file viewer
 
+/**
+ * Generates a Vega-Lite chart specification for visualizing folded time series data.
+ *
+ * The chart supports faceting by the 'key' field, interactive interval selection on the x-axis,
+ * and overlays multiple layers including lines, rules, and summary text annotations.
+ * The configuration is styled for a dark theme and supports independent x and y scales per facet.
+ *
+ * @param {Array<Object>} foldedData - The input data array, where each object should contain at least
+ *   'timestamp', 'value', and 'key' fields. 'timestamp' should be a date/time value, 'value' a number,
+ *   and 'key' a string or category for faceting.
+ * @returns {Object} A Vega-Lite v5 chart specification object configured for the provided data.
+ */
 export function getChartSpec(foldedData) {
 	return {
 		config: {
