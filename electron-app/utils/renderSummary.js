@@ -105,12 +105,12 @@ export function renderSummary(data) {
 	}
 	// Render main summary as a table with a title and inline copy button
 	const summarySection = document.createElement('div');
-	summarySection.style.marginBottom = '18px';
+	summarySection.classList.add('summary-section');
 	const summaryHeaderBar = document.createElement('div');
 	summaryHeaderBar.className = 'header-bar';
 	const summaryTitle = document.createElement('h3');
 	summaryTitle.textContent = 'Activity Summary';
-	summaryTitle.style.margin = '0 12px 0 0';
+	summaryTitle.classList.add('summary-title');
 	summaryHeaderBar.appendChild(summaryTitle);
 	const copyBtn = document.createElement('button');
 	copyBtn.textContent = 'Copy as CSV';
@@ -178,7 +178,7 @@ export function renderSummary(data) {
 	// Lap summary table
 	if (data.lapMesgs && data.lapMesgs.length > 0) {
 		const lapSection = document.createElement('div');
-		lapSection.style.marginBottom = '18px';
+		lapSection.classList.add('lap-section');
 		// Patch all lap rows for human readable fields
 		const patchedLaps = data.lapMesgs.map((lap) => {
 			const patched = { ...lap };
@@ -208,7 +208,7 @@ export function renderSummary(data) {
 		lapHeaderBar.className = 'header-bar';
 		const lapHeading = document.createElement('h3');
 		lapHeading.textContent = 'Lap Summary';
-		lapHeading.style.margin = '0 12px 0 0';
+		lapHeading.classList.add('lap-title');
 		lapHeaderBar.appendChild(lapHeading);
 		const lapCopyBtn = document.createElement('button');
 		lapCopyBtn.textContent = 'Copy as CSV';

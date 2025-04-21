@@ -438,3 +438,17 @@ footer {
 	border-radius: 8px;
 	box-shadow: 0 2px 12px #00000040;
 }
+
+/* Summary and Lap Section Styling (moved from inline JS) */
+.summary-section {
+	margin-bottom: 18px;
+}
+.summary-title {
+	margin: 0 0 10px;
+}
+.lap-section {
+	margin-bottom: 18px;
+}
+.lap-title {
+	margin: 0 0 10px;
+}
