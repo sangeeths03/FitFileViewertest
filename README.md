@@ -1,5 +1,5 @@
 [![ActionLint](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/ActionLint.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/ActionLint.yml)
-[![CodeQL](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/github-code-scanning/codeql)
+[![CodeQL](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/codeql.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/codeql.yml)
 [![Dependabot Updates](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/dependabot/dependabot-updates/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/dependabot/dependabot-updates)
 [![Dependency Review](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/dependency-review.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/dependency-review.yml)
 [![Deploy static content to Pages](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/static.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/static.yml)
