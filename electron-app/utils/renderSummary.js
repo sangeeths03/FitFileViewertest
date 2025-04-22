@@ -263,6 +263,23 @@ export function renderSummary(data) {
 		showColModal();
 	};
 
+	// --- Sync Lap Table Column Widths ---
+	function syncLapTableColWidths(summaryTable, lapTable) {
+		const summaryCols = summaryTable.querySelectorAll('thead th');
+		let colgroup = lapTable.querySelector('colgroup');
+		if (!colgroup) {
+			colgroup = document.createElement('colgroup');
+			lapTable.insertBefore(colgroup, lapTable.firstChild);
+		}
+		colgroup.innerHTML = '';
+		summaryCols.forEach((th) => {
+			const width = th.offsetWidth;
+			const col = document.createElement('col');
+			if (width > 0) col.style.width = width + 'px';
+			colgroup.appendChild(col);
+		});
+	}
+
 	// --- Render Table with Visible Columns ---
 	function renderTable() {
 		table.innerHTML = '';
@@ -271,6 +288,13 @@ export function renderSummary(data) {
 		const headerRow = document.createElement('tr');
 		// Always use allKeys order for visibleColumns
 		const sortedVisible = allKeys.filter(k => visibleColumns.includes(k));
+		// Add colgroup for summary table
+		let colgroup = document.createElement('colgroup');
+		sortedVisible.forEach(() => {
+			const col = document.createElement('col');
+			colgroup.appendChild(col);
+		});
+		table.appendChild(colgroup);
 		sortedVisible.forEach((key) => {
 			const th = document.createElement('th');
 			th.textContent = key;
@@ -297,9 +321,7 @@ export function renderSummary(data) {
 					patchSummaryFields(patched);
 					return patched;
 				});
-				const lapKeys = sortedVisible.filter((key) =>
-					patchedLaps.some((lap) => lap.hasOwnProperty(key))
-				);
+				const lapKeys = sortedVisible.slice();
 				const lapHeaderBar = document.createElement('div');
 				lapHeaderBar.className = 'header-bar';
 				const lapHeading = document.createElement('h3');
@@ -312,7 +334,7 @@ export function renderSummary(data) {
 				lapCopyBtn.onclick = () => {
 					const csvRows = [lapKeys.join(',')];
 					patchedLaps.forEach((lap) => {
-						const row = lapKeys.map((key) => lap[key]);
+						const row = lapKeys.map((key) => lap[key] !== undefined ? lap[key] : '');
 						csvRows.push(row.join(','));
 					});
 					navigator.clipboard.writeText(csvRows.join('\n'));
@@ -324,6 +346,13 @@ export function renderSummary(data) {
 				lapSection.appendChild(lapHeaderBar);
 				const lapTable = document.createElement('table');
 				lapTable.classList.add('display');
+				// Add colgroup for lap table (will be synced after summary table renders)
+				let lapColgroup = document.createElement('colgroup');
+				lapKeys.forEach(() => {
+					const col = document.createElement('col');
+					lapColgroup.appendChild(col);
+				});
+				lapTable.appendChild(lapColgroup);
 				const lapThead = document.createElement('thead');
 				const lapTbody = document.createElement('tbody');
 				const lapHeaderRow = document.createElement('tr');
@@ -336,9 +365,15 @@ export function renderSummary(data) {
 				patchedLaps.forEach((lap) => {
 					const lapRow = document.createElement('tr');
 					lapKeys.forEach((key) => {
+						let lapVal = lap[key] !== undefined ? String(lap[key]) : '';
+						let summaryVal = summaryRows[0][key] !== undefined ? String(summaryRows[0][key]) : '';
+						// Pad lap value with spaces if summary value is longer
+						if (summaryVal.length > lapVal.length) {
+							lapVal = lapVal.padEnd(summaryVal.length, ' ');
+						}
 						lapRow.appendChild(
 							Object.assign(document.createElement('td'), {
-								textContent: lap[key] !== undefined ? lap[key] : '',
+								textContent: lapVal,
 							}),
 						);
 					});
@@ -349,6 +384,15 @@ export function renderSummary(data) {
 				lapSection.appendChild(lapTable);
 			}
 		}
+
+		// After rendering summary table, update lap table widths
+		setTimeout(() => {
+			const lapSection = container.querySelector('.lap-section');
+			if (lapSection) {
+				const lapTable = lapSection.querySelector('table');
+				if (lapTable) syncLapTableColWidths(table, lapTable);
+			}
+		}, 0);
 	}
 
 	// Render main summary as a table with a title and inline copy button
@@ -415,11 +459,9 @@ export function renderSummary(data) {
 			const patched = { ...lap };
 			patchSummaryFields(patched);
 			return patched;
-		});
-		 // Only show columns that are in visibleColumns and present in lap data
-		const lapKeys = visibleColumns.filter((key) =>
-			patchedLaps.some((lap) => lap.hasOwnProperty(key))
-		);
+		 });
+		// Always show columns that are in visibleColumns, even if not present in lap data
+		const lapKeys = visibleColumns.slice();
 		// Copy as CSV for lap summary
 		const lapHeaderBar = document.createElement('div');
 		lapHeaderBar.className = 'header-bar';
@@ -433,7 +475,7 @@ export function renderSummary(data) {
 		lapCopyBtn.onclick = () => {
 			const csvRows = [lapKeys.join(',')];
 			patchedLaps.forEach((lap) => {
-				const row = lapKeys.map((key) => lap[key]);
+				const row = lapKeys.map((key) => lap[key] !== undefined ? lap[key] : '');
 				csvRows.push(row.join(','));
 			});
 			navigator.clipboard.writeText(csvRows.join('\n'));
@@ -445,6 +487,13 @@ export function renderSummary(data) {
 		lapSection.appendChild(lapHeaderBar);
 		const lapTable = document.createElement('table');
 		lapTable.classList.add('display');
+		// Add colgroup for lap table (will be synced after summary table renders)
+		let lapColgroup = document.createElement('colgroup');
+		lapKeys.forEach(() => {
+			const col = document.createElement('col');
+			lapColgroup.appendChild(col);
+		});
+		lapTable.appendChild(lapColgroup);
 		const lapThead = document.createElement('thead');
 		const lapTbody = document.createElement('tbody');
 		const lapHeaderRow = document.createElement('tr');
@@ -458,9 +507,15 @@ export function renderSummary(data) {
 		patchedLaps.forEach((lap) => {
 			const lapRow = document.createElement('tr');
 			lapKeys.forEach((key) => {
+				let lapVal = lap[key] !== undefined ? String(lap[key]) : '';
+				let summaryVal = summaryRows[0][key] !== undefined ? String(summaryRows[0][key]) : '';
+				// Pad lap value with spaces if summary value is longer
+				if (summaryVal.length > lapVal.length) {
+					lapVal = lapVal.padEnd(summaryVal.length, ' ');
+				}
 				lapRow.appendChild(
 					Object.assign(document.createElement('td'), {
-						textContent: lap[key] !== undefined ? lap[key] : '',
+						textContent: lapVal,
 					}),
 				);
 			});
