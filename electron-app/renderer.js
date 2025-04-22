@@ -1,26 +1,6 @@
 // In electron-app/renderer.js
 
-// Utility to show notification
-function showNotification(message, type = 'error', timeout = 5000) {
-	const notif = document.getElementById('notification');
-	if (!notif) return;
-	notif.textContent = message;
-	notif.className = `notification ${type}`;
-	notif.style.display = 'block';
-	if (timeout > 0) {
-		setTimeout(() => {
-			notif.style.display = 'none';
-		}, timeout);
-	}
-}
-
-// Utility to show/hide loading overlay
-function setLoading(isLoading) {
-	const overlay = document.getElementById('loadingOverlay');
-	if (!overlay) return;
-	overlay.style.display = isLoading ? 'flex' : 'none';
-	document.body.style.cursor = isLoading ? 'wait' : '';
-}
+import { showNotification, setLoading } from './utils/rendererUtils.js';
 
 const openFileBtn = document.getElementById('openFileBtn');
 if (!openFileBtn) {
