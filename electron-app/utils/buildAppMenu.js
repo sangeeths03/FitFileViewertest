@@ -95,6 +95,15 @@ function buildAppMenu(mainWindow, currentTheme = 'dark') {
 							},
 						},
 					],
+					},
+				{
+					label: 'Summary Columns...',
+					click: () => {
+						const win = BrowserWindow.getFocusedWindow() || mainWindow;
+						if (win && win.webContents) {
+							win.webContents.send('open-summary-column-selector');
+						}
+					},
 				},
 			],
 		},

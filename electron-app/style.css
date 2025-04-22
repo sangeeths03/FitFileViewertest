@@ -452,3 +452,81 @@ footer {
 .lap-title {
 	margin: 0 0 10px;
 }
+
+/* Modal for summary column selection */
+.summary-col-modal-overlay {
+	position: fixed;
+	top: 0; left: 0; right: 0; bottom: 0;
+	background: var(--color-overlay-bg);
+	z-index: 10010;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.summary-col-modal {
+	background: var(--color-modal-bg);
+	color: var(--color-modal-fg);
+	border-radius: 10px;
+	box-shadow: var(--color-box-shadow);
+	padding: 32px 28px 24px 28px;
+	min-width: 320px;
+	max-width: 90vw;
+	max-height: 80vh;
+	overflow-y: auto;
+	display: flex;
+	flex-direction: column;
+	align-items: stretch;
+}
+.summary-col-modal h2 {
+	margin-top: 0;
+	margin-bottom: 18px;
+	font-size: 1.3rem;
+	text-align: center;
+}
+.summary-col-modal .col-list {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	margin-bottom: 18px;
+	max-height: 40vh;
+	overflow-y: auto;
+}
+.summary-col-modal label {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	font-size: 1rem;
+}
+.summary-col-modal .modal-actions {
+	display: flex;
+	justify-content: flex-end;
+	gap: 12px;
+}
+.summary-col-modal .themed-btn {
+	margin-bottom: 0;
+}
+.summary-col-modal .select-all-btn {
+	align-self: flex-end;
+	margin-bottom: 10px;
+	font-size: 0.95rem;
+}
+
+/* Gear button styling for summary header */
+.summary-gear-btn {
+	background: none;
+	border: none;
+	color: var(--color-fg);
+	padding: 0 4px 0 0;
+	margin: 0 6px 0 0;
+	font-size: 1.1em;
+	box-shadow: none;
+	outline: none;
+	vertical-align: middle;
+	opacity: 0.65;
+	transition: opacity 0.2s, color 0.2s;
+}
+.summary-gear-btn:hover, .summary-gear-btn:focus {
+	color: var(--color-accent);
+	opacity: 1;
+	background: none;
+}

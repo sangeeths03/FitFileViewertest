@@ -76,6 +76,32 @@ listenForThemeChange(applyTheme);
 // On load, apply theme
 applyTheme(loadTheme());
 
+// Listen for menu event to open summary column selector
+if (window.electronAPI && window.electronAPI.onOpenSummaryColumnSelector === undefined) {
+    window.electronAPI.onOpenSummaryColumnSelector = (callback) => {
+        if (window.electronAPI && window.electronAPI._summaryColListenerAdded !== true) {
+            window.electronAPI._summaryColListenerAdded = true;
+            window.electronAPI.onIpc('open-summary-column-selector', callback);
+        }
+    };
+}
+
+// Register handler to show summary column selector from menu
+if (window.electronAPI && window.electronAPI.onIpc) {
+    window.electronAPI.onIpc('open-summary-column-selector', () => {
+        // Switch to summary tab if not already active
+        const tabSummary = document.getElementById('tab-summary');
+        if (!tabSummary.classList.contains('active')) {
+            tabSummary.click();
+        }
+        // Wait for renderSummary to finish, then open the column selector
+        setTimeout(() => {
+            const gearBtn = document.querySelector('.summary-gear-btn');
+            if (gearBtn) gearBtn.click();
+        }, 100);
+    });
+}
+
 window.onload = () => {
 	// Signal to the extension that the webview is ready (only if available)
 	let vscode;

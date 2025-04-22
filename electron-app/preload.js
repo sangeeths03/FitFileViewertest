@@ -79,4 +79,19 @@ contextBridge.exposeInMainWorld('electronAPI', {
 	 * @param {string} theme
 	 */
 	sendThemeChanged: (theme) => ipcRenderer.send('theme-changed', theme),
+
+	/**
+	 * Registers a handler for the 'open-summary-column-selector' event.
+	 * @param {Function} callback
+	 */
+	onOpenSummaryColumnSelector: (callback) => {
+		ipcRenderer.on('open-summary-column-selector', callback);
+	},
+
+	/**
+	 * Registers a generic handler for any IPC event (for internal use).
+	 */
+	onIpc: (channel, callback) => {
+		ipcRenderer.on(channel, callback);
+	},
 });

@@ -103,11 +103,261 @@ export function renderSummary(data) {
 			filteredKeys.map((k) => [k, summaryRows[0][k]]),
 		);
 	}
+
+	// --- Column Selector State ---
+	function getStorageKey() {
+		// Use the full file path if available, fallback to file name, fallback to 'default'
+		let fpath = '';
+		if (window?.globalData?.cachedFilePath) {
+			fpath = window.globalData.cachedFilePath;
+		} else if (data?.cachedFilePath) {
+			fpath = data.cachedFilePath;
+		} else if (window?.activeFitFileName) {
+			fpath = window.activeFitFileName;
+		}
+		if (fpath) {
+			return `summaryColSel_${encodeURIComponent(fpath)}`;
+		}
+		return 'summaryColSel_default';
+	}
+	let allKeys = Object.keys(summaryRows[0]);
+	// Scan all sessionMesgs/recordMesgs for all possible keys
+	if (data.sessionMesgs && data.sessionMesgs.length > 0) {
+		data.sessionMesgs.forEach(row => {
+			Object.keys(row).forEach(k => { if (!allKeys.includes(k)) allKeys.push(k); });
+		});
+	} else if (data.recordMesgs && data.recordMesgs.length > 0) {
+		data.recordMesgs.forEach(row => {
+			Object.keys(row).forEach(k => { if (!allKeys.includes(k)) allKeys.push(k); });
+		});
+	}
+	function saveColPrefs() {
+		try {
+			localStorage.setItem(getStorageKey(), JSON.stringify(visibleColumns));
+		} catch (e) {}
+	}
+	function loadColPrefs() {
+		try {
+			const v = localStorage.getItem(getStorageKey());
+			if (v) {
+				const arr = JSON.parse(v);
+				if (Array.isArray(arr) && arr.length > 0) {
+					// Only filter out keys that are truly not present in any file ever selected by the user
+					return arr;
+				}
+			}
+		} catch (e) {}
+		return null;
+	}
+	// Always reload visibleColumns from storage for the current file
+	let visibleColumns = loadColPrefs() || allKeys.slice();
+
+	// --- Modal Popup for Column Selection ---
+	function showColModal() {
+		// Remove any existing modal
+		const old = document.querySelector('.summary-col-modal-overlay');
+		if (old) old.remove();
+		const overlay = document.createElement('div');
+		overlay.className = 'summary-col-modal-overlay';
+		const modal = document.createElement('div');
+		modal.className = 'summary-col-modal';
+		const title = document.createElement('h2');
+		title.textContent = 'Select Summary Columns';
+		modal.appendChild(title);
+		// Select/Deselect All
+		const selectAllBtn = document.createElement('button');
+		selectAllBtn.className = 'select-all-btn themed-btn';
+		selectAllBtn.textContent = visibleColumns.length === allKeys.length ? 'Deselect All' : 'Select All';
+		selectAllBtn.onclick = () => {
+			if (visibleColumns.length === allKeys.length) {
+				visibleColumns = [];
+			} else {
+				visibleColumns = allKeys.slice();
+			}
+			updateColList();
+			renderTable();
+			saveColPrefs();
+		};
+		modal.appendChild(selectAllBtn);
+		// Column list
+		const colList = document.createElement('div');
+		colList.className = 'col-list';
+		modal.appendChild(colList);
+		let lastCheckedIndex = null;
+		function updateColList() {
+			colList.innerHTML = '';
+			allKeys.forEach((key, idx) => {
+				const label = document.createElement('label');
+				const cb = document.createElement('input');
+				cb.type = 'checkbox';
+				cb.checked = visibleColumns.includes(key);
+				cb.tabIndex = 0;
+				cb.onmousedown = (e) => {
+					if (e.shiftKey && lastCheckedIndex !== null) {
+						e.preventDefault();
+						const start = Math.min(lastCheckedIndex, idx);
+						const end = Math.max(lastCheckedIndex, idx);
+						const shouldCheck = !visibleColumns.includes(key);
+						for (let i = start; i <= end; ++i) {
+							const k = allKeys[i];
+							if (shouldCheck && !visibleColumns.includes(k)) visibleColumns.push(k);
+							if (!shouldCheck && visibleColumns.includes(k)) visibleColumns = visibleColumns.filter(x => x !== k);
+						}
+						// Sort visibleColumns to match allKeys order
+						visibleColumns = allKeys.filter(k => visibleColumns.includes(k));
+						updateColList();
+						renderTable();
+						saveColPrefs();
+					}
+				};
+				cb.onchange = (e) => {
+					if (e.shiftKey && lastCheckedIndex !== null) return; // handled in onmousedown
+					lastCheckedIndex = idx;
+					if (cb.checked) {
+						if (!visibleColumns.includes(key)) visibleColumns.push(key);
+					} else {
+						visibleColumns = visibleColumns.filter((k) => k !== key);
+					}
+					// Sort visibleColumns to match allKeys order
+					visibleColumns = allKeys.filter(k => visibleColumns.includes(k));
+					selectAllBtn.textContent = visibleColumns.length === allKeys.length ? 'Deselect All' : 'Select All';
+					renderTable();
+					saveColPrefs();
+				};
+				label.appendChild(cb);
+				label.appendChild(document.createTextNode(key));
+				colList.appendChild(label);
+			});
+			selectAllBtn.textContent = visibleColumns.length === allKeys.length ? 'Deselect All' : 'Select All';
+		}
+		updateColList();
+		// Actions
+		const actions = document.createElement('div');
+		actions.className = 'modal-actions';
+		const cancelBtn = document.createElement('button');
+		cancelBtn.className = 'themed-btn';
+		cancelBtn.textContent = 'Cancel';
+		cancelBtn.onclick = () => overlay.remove();
+		const okBtn = document.createElement('button');
+		okBtn.className = 'themed-btn';
+		okBtn.textContent = 'OK';
+		okBtn.onclick = () => {
+			overlay.remove();
+			renderTable();
+			saveColPrefs();
+		};
+		actions.appendChild(cancelBtn);
+		actions.appendChild(okBtn);
+		modal.appendChild(actions);
+		overlay.appendChild(modal);
+		document.body.appendChild(overlay);
+	}
+
+	// --- Gear Icon Button ---
+	const gearBtn = document.createElement('button');
+	gearBtn.className = 'summary-gear-btn';
+	gearBtn.title = 'Select columns';
+	gearBtn.innerHTML = `<svg width="22" height="22" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M19.4 13.5c.04-.5.06-1 .06-1.5s-.02-1-.06-1.5l1.7-1.3a.5.5 0 0 0 .12-.64l-1.6-2.8a.5.5 0 0 0-.6-.22l-2 .8a7.03 7.03 0 0 0-1.3-.76l-.3-2.1A.5.5 0 0 0 14 2h-4a.5.5 0 0 0-.5.42l-.3 2.1c-.46.2-.9.46-1.3.76l-2-.8a.5.5 0 0 0-.6.22l-1.6 2.8a.5.5 0 0 0 .12.64l1.7 1.3c-.04.5-.06 1-.06 1.5s.02 1 .06 1.5l-1.7 1.3a.5.5 0 0 0-.12.64l1.6 2.8a.5.5 0 0 0 .6.22l2-.8c.4.3.84.56 1.3.76l.3 2.1A.5.5 0 0 0 10 22h4a.5.5 0 0 0 .5-.42l.3-2.1c.46-.2.9-.46 1.3-.76l2 .8a.5.5 0 0 0 .6-.22l1.6-2.8a.5.5 0 0 0-.12-.64l-1.7-1.3z" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>`;
+	gearBtn.onclick = (e) => {
+		e.stopPropagation();
+		showColModal();
+	};
+
+	// --- Render Table with Visible Columns ---
+	function renderTable() {
+		table.innerHTML = '';
+		const thead = document.createElement('thead');
+		const tbody = document.createElement('tbody');
+		const headerRow = document.createElement('tr');
+		// Always use allKeys order for visibleColumns
+		const sortedVisible = allKeys.filter(k => visibleColumns.includes(k));
+		sortedVisible.forEach((key) => {
+			const th = document.createElement('th');
+			th.textContent = key;
+			headerRow.appendChild(th);
+		});
+		thead.appendChild(headerRow);
+		const dataRow = document.createElement('tr');
+		sortedVisible.forEach((key) => {
+			const td = document.createElement('td');
+			td.textContent = summaryRows[0][key] !== undefined ? summaryRows[0][key] : '';
+			dataRow.appendChild(td);
+		});
+		tbody.appendChild(dataRow);
+		table.appendChild(thead);
+		table.appendChild(tbody);
+
+		// Update lap table live as well
+		const lapSection = container.querySelector('.lap-section');
+		if (lapSection) {
+			lapSection.innerHTML = '';
+			if (data.lapMesgs && data.lapMesgs.length > 0) {
+				const patchedLaps = data.lapMesgs.map((lap) => {
+					const patched = { ...lap };
+					patchSummaryFields(patched);
+					return patched;
+				});
+				const lapKeys = sortedVisible.filter((key) =>
+					patchedLaps.some((lap) => lap.hasOwnProperty(key))
+				);
+				const lapHeaderBar = document.createElement('div');
+				lapHeaderBar.className = 'header-bar';
+				const lapHeading = document.createElement('h3');
+				lapHeading.textContent = 'Lap Summary';
+				lapHeading.classList.add('lap-title');
+				lapHeaderBar.appendChild(lapHeading);
+				const lapCopyBtn = document.createElement('button');
+				lapCopyBtn.textContent = 'Copy as CSV';
+				lapCopyBtn.className = 'copy-btn';
+				lapCopyBtn.onclick = () => {
+					const csvRows = [lapKeys.join(',')];
+					patchedLaps.forEach((lap) => {
+						const row = lapKeys.map((key) => lap[key]);
+						csvRows.push(row.join(','));
+					});
+					navigator.clipboard.writeText(csvRows.join('\n'));
+				};
+				lapHeaderBar.appendChild(lapCopyBtn);
+				lapHeaderBar.style.display = 'flex';
+				lapHeaderBar.style.alignItems = 'center';
+				lapHeaderBar.style.gap = '10px';
+				lapSection.appendChild(lapHeaderBar);
+				const lapTable = document.createElement('table');
+				lapTable.classList.add('display');
+				const lapThead = document.createElement('thead');
+				const lapTbody = document.createElement('tbody');
+				const lapHeaderRow = document.createElement('tr');
+				lapKeys.forEach((key) => {
+					const th = document.createElement('th');
+					th.textContent = key;
+					lapHeaderRow.appendChild(th);
+				});
+				lapThead.appendChild(lapHeaderRow);
+				patchedLaps.forEach((lap) => {
+					const lapRow = document.createElement('tr');
+					lapKeys.forEach((key) => {
+						lapRow.appendChild(
+							Object.assign(document.createElement('td'), {
+								textContent: lap[key] !== undefined ? lap[key] : '',
+							}),
+						);
+					});
+					lapTbody.appendChild(lapRow);
+				});
+				lapTable.appendChild(lapThead);
+				lapTable.appendChild(lapTbody);
+				lapSection.appendChild(lapTable);
+			}
+		}
+	}
+
 	// Render main summary as a table with a title and inline copy button
 	const summarySection = document.createElement('div');
 	summarySection.classList.add('summary-section');
 	const summaryHeaderBar = document.createElement('div');
 	summaryHeaderBar.className = 'header-bar';
+	summaryHeaderBar.style.position = 'relative';
+	summaryHeaderBar.appendChild(gearBtn); // Add gear icon to left
 	const summaryTitle = document.createElement('h3');
 	summaryTitle.textContent = 'Activity Summary';
 	summaryTitle.classList.add('summary-title');
@@ -118,9 +368,7 @@ export function renderSummary(data) {
 	copyBtn.onclick = () => {
 		if (summaryRows.length > 0) {
 			const csv = [
-				Object.keys(summaryRows[0]).join(',') +
-					'\n' +
-					Object.values(summaryRows[0]).join(','),
+				visibleColumns.join(',') + '\n' + visibleColumns.map((k) => summaryRows[0][k]).join(',')
 			];
 			const csvText = csv.join('\n');
 			if (navigator.clipboard && navigator.clipboard.writeText) {
@@ -154,24 +402,7 @@ export function renderSummary(data) {
 	summarySection.appendChild(summaryHeaderBar);
 	const table = document.createElement('table');
 	table.classList.add('display');
-	const thead = document.createElement('thead');
-	const tbody = document.createElement('tbody');
-	const headerRow = document.createElement('tr');
-	Object.keys(summaryRows[0]).forEach((key) => {
-		const th = document.createElement('th');
-		th.textContent = key;
-		headerRow.appendChild(th);
-	});
-	thead.appendChild(headerRow);
-	const dataRow = document.createElement('tr');
-	Object.values(summaryRows[0]).forEach((val) => {
-		const td = document.createElement('td');
-		td.textContent = val;
-		dataRow.appendChild(td);
-	});
-	tbody.appendChild(dataRow);
-	table.appendChild(thead);
-	table.appendChild(tbody);
+	renderTable();
 	summarySection.appendChild(table);
 	container.appendChild(summarySection);
 
@@ -185,23 +416,9 @@ export function renderSummary(data) {
 			patchSummaryFields(patched);
 			return patched;
 		});
-		// Remove lap columns with no data (all values null/undefined/empty/0/NaN)
-		const allLapKeys = Object.keys(patchedLaps[0] || {});
-		const lapKeys = allLapKeys.filter((key) =>
-			patchedLaps.some((lap) => {
-				const val = lap[key];
-				return (
-					val !== null &&
-					val !== undefined &&
-					val !== '' &&
-					!(
-						(typeof val === 'number' && val === 0) ||
-						(typeof val === 'string' &&
-							/^(0+(\.0+)?|0*\.\d*0+)$/.test(val.trim()))
-					) &&
-					!(typeof val === 'number' && isNaN(val))
-				);
-			}),
+		 // Only show columns that are in visibleColumns and present in lap data
+		const lapKeys = visibleColumns.filter((key) =>
+			patchedLaps.some((lap) => lap.hasOwnProperty(key))
 		);
 		// Copy as CSV for lap summary
 		const lapHeaderBar = document.createElement('div');
@@ -243,7 +460,7 @@ export function renderSummary(data) {
 			lapKeys.forEach((key) => {
 				lapRow.appendChild(
 					Object.assign(document.createElement('td'), {
-						textContent: lap[key],
+						textContent: lap[key] !== undefined ? lap[key] : '',
 					}),
 				);
 			});
