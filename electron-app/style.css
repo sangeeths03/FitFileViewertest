@@ -456,7 +456,7 @@ footer {
 /* Modal for summary column selection */
 .summary-col-modal-overlay {
 	position: fixed;
-	top: 0; left: 0; right: 0; bottom: 0;
+	inset: 0;
 	background: var(--color-overlay-bg);
 	z-index: 10010;
 	display: flex;
@@ -468,7 +468,7 @@ footer {
 	color: var(--color-modal-fg);
 	border-radius: 10px;
 	box-shadow: var(--color-box-shadow);
-	padding: 32px 28px 24px 28px;
+	padding: 32px 28px 24px;
 	min-width: 320px;
 	max-width: 90vw;
 	max-height: 80vh;
@@ -522,11 +522,11 @@ footer {
 	box-shadow: none;
 	outline: none;
 	vertical-align: middle;
-	opacity: 0.65;
+	opacity: 65%;
 	transition: opacity 0.2s, color 0.2s;
 }
 .summary-gear-btn:hover, .summary-gear-btn:focus {
 	color: var(--color-accent);
-	opacity: 1;
+	opacity: 100%;
 	background: none;
 }
