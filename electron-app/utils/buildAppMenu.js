@@ -8,8 +8,9 @@ const { Menu, BrowserWindow } = require('electron');
  *
  * @param {Electron.BrowserWindow} mainWindow - The main application window to which menu actions are dispatched.
  * @param {string} [currentTheme='dark'] - The current theme of the application, used to set the checked state of theme radio buttons.
+ * @param {string|null} [loadedFitFilePath=null] - The path of the loaded FIT file, used to enable/disable the Summary Columns menu item.
  */
-function buildAppMenu(mainWindow, currentTheme = 'dark') {
+function buildAppMenu(mainWindow, currentTheme = 'dark', loadedFitFilePath = null) {
 	const recentFiles = loadRecentFiles();
 	const recentMenuItems =
 		recentFiles.length > 0
@@ -94,10 +95,11 @@ function buildAppMenu(mainWindow, currentTheme = 'dark') {
 								}
 							},
 						},
-					],
+						],
 					},
 				{
 					label: 'Summary Columns...',
+					enabled: !!loadedFitFilePath,
 					click: () => {
 						const win = BrowserWindow.getFocusedWindow() || mainWindow;
 						if (win && win.webContents) {

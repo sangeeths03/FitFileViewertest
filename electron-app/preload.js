@@ -94,4 +94,11 @@ contextBridge.exposeInMainWorld('electronAPI', {
 	onIpc: (channel, callback) => {
 		ipcRenderer.on(channel, callback);
 	},
+
+	/**
+	 * Send an IPC message to the main process.
+	 * @param {string} channel
+	 * @param {...any} args
+	 */
+	send: (channel, ...args) => ipcRenderer.send(channel, ...args),
 });

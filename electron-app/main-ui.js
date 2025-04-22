@@ -34,6 +34,26 @@ window.showFitData = function (data, filePath) {
 		document.title = fileName
 			? `Fit File Viewer - ${fileName}`
 			: 'Fit File Viewer';
+		// Set global.loadedFitFilePath for menu enable/disable
+		if (typeof window !== 'undefined' && window.process && window.process.type === 'renderer') {
+			window.require('electron').remote.getGlobal('loadedFitFilePath', filePath);
+		}
+		if (typeof global !== 'undefined') {
+			global.loadedFitFilePath = filePath;
+		}
+		// Notify main process to rebuild menu so Summary Columns is enabled
+		if (window.electronAPI && typeof window.electronAPI.sendThemeChanged === 'function') {
+			// Use theme change as a trigger to rebuild menu, passing current theme
+			const theme = localStorage.getItem('ffv-theme') || 'dark';
+			window.electronAPI.sendThemeChanged(theme);
+		}
+		// Notify main process of loaded file for menu enable/disable
+		if (window.electronAPI && window.electronAPI.send) {
+			window.electronAPI.send('fit-file-loaded', filePath);
+		} else if (window.require) {
+			const { ipcRenderer } = window.require('electron');
+			if (ipcRenderer) ipcRenderer.send('fit-file-loaded', filePath);
+		}
 	}
 	const tabData = document.getElementById('tab-data');
 	const tabChart = document.getElementById('tab-chart');

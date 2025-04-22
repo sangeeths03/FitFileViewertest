@@ -12,6 +12,8 @@ const {
 } = require('./utils/recentFiles');
 const { buildAppMenu } = require('./utils/buildAppMenu');
 
+let loadedFitFilePath = null;
+
 // Register IPC handlers and create the main window when the app is ready
 app.whenReady().then(() => {
 	// Register file open dialog handler
@@ -26,7 +28,7 @@ app.whenReady().then(() => {
 					'localStorage.getItem("ffv-theme")',
 				)) || 'dark';
 		} catch {}
-		buildAppMenu(win, theme);
+		buildAppMenu(win, theme, loadedFitFilePath);
 	}
 
 	// Get theme from localStorage in renderer
@@ -34,11 +36,11 @@ app.whenReady().then(() => {
 		mainWindow.webContents
 			.executeJavaScript('localStorage.getItem("ffv-theme")')
 			.then((theme) => {
-				buildAppMenu(mainWindow, theme || 'dark');
+				buildAppMenu(mainWindow, theme || 'dark', loadedFitFilePath);
 				mainWindow.webContents.send('set-theme', theme || 'dark');
 			})
 			.catch(() => {
-				buildAppMenu(mainWindow, 'dark');
+				buildAppMenu(mainWindow, 'dark', loadedFitFilePath);
 				mainWindow.webContents.send('set-theme', 'dark');
 			});
 	});
@@ -66,6 +68,7 @@ app.whenReady().then(() => {
 			});
 			if (canceled || filePaths.length === 0) return null;
 			addRecentFile(filePaths[0]);
+			loadedFitFilePath = filePaths[0];
 			// Fetch current theme from renderer before rebuilding menu
 			const win = BrowserWindow.getFocusedWindow() || mainWindow;
 			let theme = 'dark';
@@ -75,11 +78,22 @@ app.whenReady().then(() => {
 						'localStorage.getItem("ffv-theme")',
 					)) || 'dark';
 			} catch {}
-			buildAppMenu(win, theme);
+			buildAppMenu(win, theme, loadedFitFilePath);
 			return filePaths[0];
 		} catch (err) {
 			console.error('Error opening file dialog:', err);
 			return null;
+		}
+	});
+
+	ipcMain.on('fit-file-loaded', (event, filePath) => {
+		loadedFitFilePath = filePath;
+		const win = BrowserWindow.fromWebContents(event.sender);
+		let theme = 'dark';
+		if (win) {
+			win.webContents.executeJavaScript('localStorage.getItem("ffv-theme")').then((theme) => {
+				buildAppMenu(win, theme || 'dark', loadedFitFilePath);
+			});
 		}
 	});
 
@@ -100,14 +114,14 @@ app.whenReady().then(() => {
 					'localStorage.getItem("ffv-theme")',
 				)) || 'dark';
 		} catch {}
-		buildAppMenu(win, theme);
+		buildAppMenu(win, theme, loadedFitFilePath);
 		return loadRecentFiles();
 	});
 
 	// Listen for theme change from renderer and update menu
 	ipcMain.on('theme-changed', (event, theme) => {
 		const win = BrowserWindow.fromWebContents(event.sender);
-		if (win) buildAppMenu(win, theme || 'dark');
+		if (win) buildAppMenu(win, theme || 'dark', loadedFitFilePath);
 	});
 
 	app.on('activate', function () {

@@ -44,10 +44,24 @@ const path = require('path');
 const fs = require('fs');
 const { app } = require('electron');
 
-const RECENT_FILES_PATH = path.join(
-	app.getPath('userData'),
-	'recent-files.json',
-);
+let RECENT_FILES_PATH;
+if (process.env.RECENT_FILES_PATH) {
+	RECENT_FILES_PATH = process.env.RECENT_FILES_PATH;
+} else {
+	let userDataPath;
+	try {
+		// app may be undefined in test environments
+		userDataPath = app && typeof app.getPath === 'function' ? app.getPath('userData') : null;
+	} catch (e) {
+		userDataPath = null;
+	}
+	if (userDataPath) {
+		RECENT_FILES_PATH = path.join(userDataPath, 'recent-files.json');
+	} else {
+		// fallback for tests or non-Electron environments
+		RECENT_FILES_PATH = path.join(process.cwd(), 'recent-files-test.json');
+	}
+}
 const MAX_RECENT_FILES = 10;
 
 /**
