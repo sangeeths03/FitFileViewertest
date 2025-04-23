@@ -16,6 +16,7 @@
 	--color-table-row-even: #23263a;
 	--color-table-row-odd: #181a20;
 	--color-table-hover: #2d3147;
+	--color-title: #8012da;
 	--color-border: #33374d;
 	--color-btn-bg: #23263a;
 	--color-btn-hover: #3a3f5c;
@@ -39,6 +40,7 @@ body.theme-light {
 	--color-table-row-even: #fafafa;
 	--color-table-row-odd: #fff;
 	--color-table-hover: #e3f2fd;
+	--color-title: #ffffff;
 	--color-border: #ccc;
 	--color-btn-bg: #fff;
 	--color-btn-hover: #e3f2fd;
@@ -74,7 +76,7 @@ h2 {
 	font-size: 2.2rem;
 	font-weight: 700;
 	letter-spacing: 1px;
-	color: var(--color-fg-alt);
+	color: var(--color-title);
 	margin: 0;
 	text-shadow: 0 2px 8px #000a;
 }
@@ -525,7 +527,8 @@ footer {
 	opacity: 65%;
 	transition: opacity 0.2s, color 0.2s;
 }
-.summary-gear-btn:hover, .summary-gear-btn:focus {
+.summary-gear-btn:hover,
+.summary-gear-btn:focus {
 	color: var(--color-accent);
 	opacity: 100%;
 	background: none;

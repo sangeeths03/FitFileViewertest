@@ -7,88 +7,11 @@ import { renderSummary } from './utils/renderSummary.js';
 import { setActiveTab } from './utils/setActiveTab.js';
 import { toggleTabVisibility } from './utils/toggleTabVisibility.js';
 import { applyTheme, loadTheme, listenForThemeChange } from './utils/theme.js';
+import { showFitData } from './utils/showFitData.js';
 
 window.globalData = window.globalData || null; // will hold all data received from the extension
 
-/**
- * Show FIT data in the UI. Used by Electron main process.
- * @param {Object} data - Parsed FIT file data.
- * @param {string} filePath - Path to the FIT file.
- */
-window.showFitData = function (data, filePath) {
-	globalData = data;
-	if (filePath) {
-		// Show just the filename, not the full path
-		let fileName = globalData.cachedFileName;
-		if (!fileName || globalData.cachedFilePath !== filePath) {
-			fileName = filePath.split(/[/\\]/).pop();
-			globalData.cachedFileName = fileName;
-			globalData.cachedFilePath = filePath;
-		}
-		const fileSpan = document.getElementById('activeFileName');
-		if (fileSpan) {
-			fileSpan.textContent = `Active: ${fileName}`;
-			fileSpan.title = filePath; // Show full path on mouseover
-		}
-		// Only update the title if fileName is present
-		document.title = fileName
-			? `Fit File Viewer - ${fileName}`
-			: 'Fit File Viewer';
-		// Set global.loadedFitFilePath for menu enable/disable
-		if (typeof window !== 'undefined' && window.process && window.process.type === 'renderer') {
-			window.require('electron').remote.getGlobal('loadedFitFilePath', filePath);
-		}
-		if (typeof global !== 'undefined') {
-			global.loadedFitFilePath = filePath;
-		}
-		// Notify main process to rebuild menu so Summary Columns is enabled
-		if (window.electronAPI && typeof window.electronAPI.sendThemeChanged === 'function') {
-			// Use theme change as a trigger to rebuild menu, passing current theme
-			const theme = localStorage.getItem('ffv-theme') || 'dark';
-			window.electronAPI.sendThemeChanged(theme);
-		}
-		// Notify main process of loaded file for menu enable/disable
-		if (window.electronAPI && window.electronAPI.send) {
-			window.electronAPI.send('fit-file-loaded', filePath);
-		} else if (window.require) {
-			const { ipcRenderer } = window.require('electron');
-			if (ipcRenderer) ipcRenderer.send('fit-file-loaded', filePath);
-		}
-	}
-	const tabData = document.getElementById('tab-data');
-	const tabChart = document.getElementById('tab-chart');
-	const tabMap = document.getElementById('tab-map');
-	const tabSummary = document.getElementById('tab-summary');
-
-	if (tabData && tabData.classList.contains('active')) {
-		window.displayTables(globalData);
-	} else {
-		// Pre-render data tables in background if not active
-		if (globalData && Object.keys(globalData).length > 0) {
-			const bgData = document.getElementById('background-data-container');
-			if (bgData) {
-				bgData.innerHTML = '';
-				// Use a temporary container to avoid ID conflicts
-				const temp = document.createElement('div');
-				window.displayTables.call(window, globalData, temp);
-				while (temp.firstChild) bgData.appendChild(temp.firstChild);
-			}
-		}
-	}
-	if (tabChart && tabChart.classList.contains('active')) {
-		if (globalData && Object.keys(globalData).length > 0) {
-			window.renderChart();
-		}
-	}
-	if (tabMap && tabMap.classList.contains('active')) {
-		if (globalData && Object.keys(globalData).length > 0) {
-			window.renderMap();
-		}
-	}
-	if (tabSummary && tabSummary.classList.contains('active')) {
-		window.renderSummary(globalData);
-	}
-};
+window.showFitData = showFitData;
 
 // Listen for theme change from main process
 listenForThemeChange(applyTheme);
@@ -119,6 +42,31 @@ if (window.electronAPI && window.electronAPI.onIpc) {
             const gearBtn = document.querySelector('.summary-gear-btn');
             if (gearBtn) gearBtn.click();
         }, 100);
+    });
+}
+
+// Listen for unload-fit-file event from main process
+if (window.electronAPI && window.electronAPI.onIpc) {
+    window.electronAPI.onIpc('unload-fit-file', () => {
+        // Clear globalData and UI
+        window.globalData = {};
+        // Clear file name display
+        const fileSpan = document.getElementById('activeFileName');
+        if (fileSpan) {
+            fileSpan.textContent = '';
+            fileSpan.title = '';
+        }
+        // Reset all content areas
+        document.getElementById('content-map').innerHTML = '';
+        document.getElementById('content-data').innerHTML = '';
+        document.getElementById('content-chart').innerHTML = '';
+        document.getElementById('content-summary').innerHTML = '';
+        // Switch to map tab
+        setActiveTab('tab-map');
+        // Notify main process to update menu
+        if (window.electronAPI && window.electronAPI.send) {
+            window.electronAPI.send('fit-file-loaded', null);
+        }
     });
 }
 

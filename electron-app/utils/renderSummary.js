@@ -7,7 +7,7 @@ import { formatDuration } from './formatDuration.js';
  * into the DOM element with id 'content-summary'. Provides "Copy as CSV" buttons for both tables.
  *
  * The summary is generated from either `sessionMesgs` or `recordMesgs` in the input data.
- * If lap data is available (`lapMesgs`), a lap summary table is also rendered.
+ * If lap data is available (`lapMesgs`), lap rows are appended to the same table.
  *
  * @param {Object} data - The activity data object.
  * @param {Array<Object>} [data.sessionMesgs] - Array of session message objects (optional).
@@ -104,9 +104,7 @@ export function renderSummary(data) {
 		);
 	}
 
-	// --- Column Selector State ---
 	function getStorageKey() {
-		// Use the full file path if available, fallback to file name, fallback to 'default'
 		let fpath = '';
 		if (window?.globalData?.cachedFilePath) {
 			fpath = window.globalData.cachedFilePath;
@@ -121,7 +119,6 @@ export function renderSummary(data) {
 		return 'summaryColSel_default';
 	}
 	let allKeys = Object.keys(summaryRows[0]);
-	// Scan all sessionMesgs/recordMesgs for all possible keys
 	if (data.sessionMesgs && data.sessionMesgs.length > 0) {
 		data.sessionMesgs.forEach(row => {
 			Object.keys(row).forEach(k => { if (!allKeys.includes(k)) allKeys.push(k); });
@@ -142,17 +139,139 @@ export function renderSummary(data) {
 			if (v) {
 				const arr = JSON.parse(v);
 				if (Array.isArray(arr) && arr.length > 0) {
-					// Only filter out keys that are truly not present in any file ever selected by the user
 					return arr;
 				}
 			}
 		} catch (e) {}
 		return null;
 	}
-	// Always reload visibleColumns from storage for the current file
 	let visibleColumns = loadColPrefs() || allKeys.slice();
 
-	// --- Modal Popup for Column Selection ---
+	// Add label column (always visible, not user-hideable)
+	const LABEL_COL = '__row_label__';
+	function getRowLabel(rowIdx, isLap) {
+		if (isLap) return `Lap ${rowIdx + 1}`;
+		return 'Summary';
+	}
+	// Filtering state
+	let filterValue = 'All';
+
+	function renderTable() {
+		let section = container.querySelector('.summary-section');
+		if (!section) {
+			section = document.createElement('div');
+			section.classList.add('summary-section');
+			container.appendChild(section);
+		}
+		section.innerHTML = '';
+		// Filter dropdown
+		const filterBar = document.createElement('div');
+		filterBar.className = 'summary-filter-bar';
+		const filterLabel = document.createElement('label');
+		filterLabel.textContent = 'Show: ';
+		const filterSelect = document.createElement('select');
+		filterSelect.innerHTML = '<option value="All">All</option><option value="Summary">Summary</option>';
+		if (data.lapMesgs && data.lapMesgs.length > 0) {
+			for (let i = 0; i < data.lapMesgs.length; ++i) {
+				filterSelect.innerHTML += `<option value="Lap ${i+1}">Lap ${i+1}</option>`;
+			}
+		}
+		filterSelect.value = filterValue;
+		filterSelect.onchange = (e) => {
+			filterValue = filterSelect.value;
+			renderTable();
+		};
+		filterLabel.appendChild(filterSelect);
+		filterBar.appendChild(filterLabel);
+		section.appendChild(filterBar);
+
+		const headerBar = document.createElement('div');
+		headerBar.className = 'header-bar';
+		headerBar.style.position = 'relative';
+		headerBar.appendChild(gearBtn);
+		const title = document.createElement('h3');
+		title.textContent = 'Activity Summary';
+		title.classList.add('summary-title');
+		headerBar.appendChild(title);
+		const copyBtn = document.createElement('button');
+		copyBtn.textContent = 'Copy as CSV';
+		copyBtn.className = 'copy-btn';
+		copyBtn.onclick = () => {
+			const rows = [];
+			const sortedVisible = [LABEL_COL, ...allKeys.filter(k => visibleColumns.includes(k))];
+			rows.push(sortedVisible.map(k => k === LABEL_COL ? 'Type' : k).join(','));
+			// Summary row
+			if (filterValue === 'All' || filterValue === 'Summary') {
+				rows.push(sortedVisible.map(k => k === LABEL_COL ? 'Summary' : (summaryRows[0][k] !== undefined ? summaryRows[0][k] : '')).join(','));
+			}
+			// Lap rows
+			if (data.lapMesgs && data.lapMesgs.length > 0 && (filterValue === 'All' || filterValue.startsWith('Lap'))) {
+				const patchedLaps = data.lapMesgs.map((lap) => {
+					const patched = { ...lap };
+					patchSummaryFields(patched);
+					return patched;
+				});
+				patchedLaps.forEach((lap, i) => {
+					if (filterValue === 'All' || filterValue === `Lap ${i+1}`) {
+						rows.push(sortedVisible.map(k => k === LABEL_COL ? `Lap ${i+1}` : (lap[k] !== undefined ? lap[k] : '')).join(','));
+					}
+				});
+			}
+			navigator.clipboard.writeText(rows.join('\n'));
+		};
+		headerBar.appendChild(copyBtn);
+		headerBar.style.display = 'flex';
+		headerBar.style.alignItems = 'center';
+		headerBar.style.gap = '10px';
+		section.appendChild(headerBar);
+
+		const table = document.createElement('table');
+		table.classList.add('display');
+		const thead = document.createElement('thead');
+		const tbody = document.createElement('tbody');
+		const sortedVisible = [LABEL_COL, ...allKeys.filter(k => visibleColumns.includes(k))];
+		const headerRow = document.createElement('tr');
+		sortedVisible.forEach((key) => {
+			const th = document.createElement('th');
+			th.textContent = key === LABEL_COL ? 'Type' : key;
+			headerRow.appendChild(th);
+		});
+		thead.appendChild(headerRow);
+		// Summary row
+		if (filterValue === 'All' || filterValue === 'Summary') {
+			const summaryRow = document.createElement('tr');
+			sortedVisible.forEach((key, idx) => {
+				const td = document.createElement('td');
+				td.textContent = key === LABEL_COL ? 'Summary' : (summaryRows[0][key] !== undefined ? summaryRows[0][key] : '');
+				if (idx === 0) td.classList.add('summary-row');
+				summaryRow.appendChild(td);
+			});
+			tbody.appendChild(summaryRow);
+		}
+		// Lap rows
+		if (data.lapMesgs && data.lapMesgs.length > 0 && (filterValue === 'All' || filterValue.startsWith('Lap'))) {
+			const patchedLaps = data.lapMesgs.map((lap) => {
+				const patched = { ...lap };
+				patchSummaryFields(patched);
+				return patched;
+			});
+			patchedLaps.forEach((lap, i) => {
+				if (filterValue === 'All' || filterValue === `Lap ${i+1}`) {
+					const lapRow = document.createElement('tr');
+					sortedVisible.forEach((key, idx) => {
+						const td = document.createElement('td');
+						td.textContent = key === LABEL_COL ? `Lap ${i+1}` : (lap[key] !== undefined ? lap[key] : '');
+						lapRow.appendChild(td);
+					});
+					tbody.appendChild(lapRow);
+				}
+			});
+		}
+		table.appendChild(thead);
+		table.appendChild(tbody);
+		section.appendChild(table);
+	}
+
 	function showColModal() {
 		// Remove any existing modal
 		const old = document.querySelector('.summary-col-modal-overlay');
@@ -186,6 +305,15 @@ export function renderSummary(data) {
 		let lastCheckedIndex = null;
 		function updateColList() {
 			colList.innerHTML = '';
+			// Always show label column as checked and disabled
+			const label = document.createElement('label');
+			const cb = document.createElement('input');
+			cb.type = 'checkbox';
+			cb.checked = true;
+			cb.disabled = true;
+			label.appendChild(cb);
+			label.appendChild(document.createTextNode('Type'));
+			colList.appendChild(label);
 			allKeys.forEach((key, idx) => {
 				const label = document.createElement('label');
 				const cb = document.createElement('input');
@@ -253,277 +381,14 @@ export function renderSummary(data) {
 		document.body.appendChild(overlay);
 	}
 
-	// --- Gear Icon Button ---
 	const gearBtn = document.createElement('button');
 	gearBtn.className = 'summary-gear-btn';
 	gearBtn.title = 'Select columns';
-	gearBtn.innerHTML = `<svg width="22" height="22" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M19.4 13.5c.04-.5.06-1 .06-1.5s-.02-1-.06-1.5l1.7-1.3a.5.5 0 0 0 .12-.64l-1.6-2.8a.5.5 0 0 0-.6-.22l-2 .8a7.03 7.03 0 0 0-1.3-.76l-.3-2.1A.5.5 0 0 0 14 2h-4a.5.5 0 0 0-.5.42l-.3 2.1c-.46.2-.9.46-1.3.76l-2-.8a.5.5 0 0 0-.6.22l-1.6 2.8a.5.5 0 0 0 .12.64l1.7 1.3c-.04.5-.06 1-.06 1.5s.02 1 .06 1.5l-1.7 1.3a.5.5 0 0 0-.12.64l1.6 2.8a.5.5 0 0 0 .6.22l2-.8c.4.3.84.56 1.3.76l.3 2.1A.5.5 0 0 0 10 22h4a.5.5 0 0 0 .5-.42l.3-2.1c.46-.2.9-.46 1.3-.76l2 .8a.5.5 0 0 0 .6-.22l1.6-2.8a.5.5 0 0 0-.12-.64l-1.7-1.3z" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>`;
+	gearBtn.innerHTML = `<svg width="22" height="22" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M19.4 13.5c.04-.5.06-1 .06-1.5s-.02-1-.06-1.5l1.7-1.3a.5.5 0 0 0 .12-.64l-1.6-2.8a.5.5 0 0 0-.6-.22l-2 .8a7.03 7.03 0 0 0-1.3-.76l-.3-2.1A.5.5 0 0 0 14 2h-4a.5.5 0 0 0-.5.42l-.3 2.1c-.46.2-.9.46-1.3.76l-2-.8a.5.5 0 0 0-.6.22l-1.6 2.8a.5.5 0 0 0 .12.64l1.7 1.3c-.04.5-.06 1-.06 1.5s.02 1 .06 1.5l-1.7 1.3a.5.5 0 0 0-.12.64l-1.6 2.8a.5.5 0 0 0 .6.22l2-.8c.4.3.84.56 1.3.76l.3 2.1A.5.5 0 0 0 10 22h4a.5.5 0 0 0 .5-.42l.3-2.1c.46-.2.9-.46 1.3-.76l2 .8a.5.5 0 0 0 .6-.22l1.6-2.8a.5.5 0 0 0-.12-.64l-1.7-1.3z" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>`;
 	gearBtn.onclick = (e) => {
 		e.stopPropagation();
 		showColModal();
 	};
 
-	// --- Sync Lap Table Column Widths ---
-	function syncLapTableColWidths(summaryTable, lapTable) {
-		const summaryCols = summaryTable.querySelectorAll('thead th');
-		let colgroup = lapTable.querySelector('colgroup');
-		if (!colgroup) {
-			colgroup = document.createElement('colgroup');
-			lapTable.insertBefore(colgroup, lapTable.firstChild);
-		}
-		colgroup.innerHTML = '';
-		summaryCols.forEach((th) => {
-			const width = th.offsetWidth;
-			const col = document.createElement('col');
-			if (width > 0) col.style.width = width + 'px';
-			colgroup.appendChild(col);
-		});
-	}
-
-	// --- Render Table with Visible Columns ---
-	function renderTable() {
-		table.innerHTML = '';
-		const thead = document.createElement('thead');
-		const tbody = document.createElement('tbody');
-		const headerRow = document.createElement('tr');
-		// Always use allKeys order for visibleColumns
-		const sortedVisible = allKeys.filter(k => visibleColumns.includes(k));
-		// Add colgroup for summary table
-		let colgroup = document.createElement('colgroup');
-		sortedVisible.forEach(() => {
-			const col = document.createElement('col');
-			colgroup.appendChild(col);
-		});
-		table.appendChild(colgroup);
-		sortedVisible.forEach((key) => {
-			const th = document.createElement('th');
-			th.textContent = key;
-			headerRow.appendChild(th);
-		});
-		thead.appendChild(headerRow);
-		const dataRow = document.createElement('tr');
-		sortedVisible.forEach((key) => {
-			const td = document.createElement('td');
-			td.textContent = summaryRows[0][key] !== undefined ? summaryRows[0][key] : '';
-			dataRow.appendChild(td);
-		});
-		tbody.appendChild(dataRow);
-		table.appendChild(thead);
-		table.appendChild(tbody);
-
-		// Update lap table live as well
-		const lapSection = container.querySelector('.lap-section');
-		if (lapSection) {
-			lapSection.innerHTML = '';
-			if (data.lapMesgs && data.lapMesgs.length > 0) {
-				const patchedLaps = data.lapMesgs.map((lap) => {
-					const patched = { ...lap };
-					patchSummaryFields(patched);
-					return patched;
-				});
-				const lapKeys = sortedVisible.slice();
-				const lapHeaderBar = document.createElement('div');
-				lapHeaderBar.className = 'header-bar';
-				const lapHeading = document.createElement('h3');
-				lapHeading.textContent = 'Lap Summary';
-				lapHeading.classList.add('lap-title');
-				lapHeaderBar.appendChild(lapHeading);
-				const lapCopyBtn = document.createElement('button');
-				lapCopyBtn.textContent = 'Copy as CSV';
-				lapCopyBtn.className = 'copy-btn';
-				lapCopyBtn.onclick = () => {
-					const csvRows = [lapKeys.join(',')];
-					patchedLaps.forEach((lap) => {
-						const row = lapKeys.map((key) => lap[key] !== undefined ? lap[key] : '');
-						csvRows.push(row.join(','));
-					});
-					navigator.clipboard.writeText(csvRows.join('\n'));
-				};
-				lapHeaderBar.appendChild(lapCopyBtn);
-				lapHeaderBar.style.display = 'flex';
-				lapHeaderBar.style.alignItems = 'center';
-				lapHeaderBar.style.gap = '10px';
-				lapSection.appendChild(lapHeaderBar);
-				const lapTable = document.createElement('table');
-				lapTable.classList.add('display');
-				// Add colgroup for lap table (will be synced after summary table renders)
-				let lapColgroup = document.createElement('colgroup');
-				lapKeys.forEach(() => {
-					const col = document.createElement('col');
-					lapColgroup.appendChild(col);
-				});
-				lapTable.appendChild(lapColgroup);
-				const lapThead = document.createElement('thead');
-				const lapTbody = document.createElement('tbody');
-				const lapHeaderRow = document.createElement('tr');
-				lapKeys.forEach((key) => {
-					const th = document.createElement('th');
-					th.textContent = key;
-					lapHeaderRow.appendChild(th);
-				});
-				lapThead.appendChild(lapHeaderRow);
-				patchedLaps.forEach((lap) => {
-					const lapRow = document.createElement('tr');
-					lapKeys.forEach((key) => {
-						let lapVal = lap[key] !== undefined ? String(lap[key]) : '';
-						let summaryVal = summaryRows[0][key] !== undefined ? String(summaryRows[0][key]) : '';
-						// Pad lap value with spaces if summary value is longer
-						if (summaryVal.length > lapVal.length) {
-							lapVal = lapVal.padEnd(summaryVal.length, ' ');
-						}
-						lapRow.appendChild(
-							Object.assign(document.createElement('td'), {
-								textContent: lapVal,
-							}),
-						);
-					});
-					lapTbody.appendChild(lapRow);
-				});
-				lapTable.appendChild(lapThead);
-				lapTable.appendChild(lapTbody);
-				lapSection.appendChild(lapTable);
-			}
-		}
-
-		// After rendering summary table, update lap table widths
-		setTimeout(() => {
-			const lapSection = container.querySelector('.lap-section');
-			if (lapSection) {
-				const lapTable = lapSection.querySelector('table');
-				if (lapTable) syncLapTableColWidths(table, lapTable);
-			}
-		}, 0);
-	}
-
-	// Render main summary as a table with a title and inline copy button
-	const summarySection = document.createElement('div');
-	summarySection.classList.add('summary-section');
-	const summaryHeaderBar = document.createElement('div');
-	summaryHeaderBar.className = 'header-bar';
-	summaryHeaderBar.style.position = 'relative';
-	summaryHeaderBar.appendChild(gearBtn); // Add gear icon to left
-	const summaryTitle = document.createElement('h3');
-	summaryTitle.textContent = 'Activity Summary';
-	summaryTitle.classList.add('summary-title');
-	summaryHeaderBar.appendChild(summaryTitle);
-	const copyBtn = document.createElement('button');
-	copyBtn.textContent = 'Copy as CSV';
-	copyBtn.className = 'copy-btn';
-	copyBtn.onclick = () => {
-		if (summaryRows.length > 0) {
-			const csv = [
-				visibleColumns.join(',') + '\n' + visibleColumns.map((k) => summaryRows[0][k]).join(',')
-			];
-			const csvText = csv.join('\n');
-			if (navigator.clipboard && navigator.clipboard.writeText) {
-				navigator.clipboard
-					.writeText(csvText)
-					.then(() => console.log('Copied CSV to clipboard!'))
-					.catch((err) => console.error('Failed to copy CSV:', err));
-			} else {
-				// Fallback mechanism
-				const textarea = document.createElement('textarea');
-				textarea.value = csvText;
-				textarea.style.position = 'fixed'; // Prevent scrolling to the bottom
-				textarea.style.opacity = '0';
-				document.body.appendChild(textarea);
-				textarea.focus();
-				textarea.select();
-				try {
-					document.execCommand('copy');
-					console.log('Copied CSV to clipboard using fallback!');
-				} catch (err) {
-					console.error('Failed to copy CSV using fallback:', err);
-				}
-				document.body.removeChild(textarea);
-			}
-		}
-	};
-	summaryHeaderBar.appendChild(copyBtn);
-	summaryHeaderBar.style.display = 'flex';
-	summaryHeaderBar.style.alignItems = 'center';
-	summaryHeaderBar.style.gap = '10px';
-	summarySection.appendChild(summaryHeaderBar);
-	const table = document.createElement('table');
-	table.classList.add('display');
 	renderTable();
-	summarySection.appendChild(table);
-	container.appendChild(summarySection);
-
-	// Lap summary table
-	if (data.lapMesgs && data.lapMesgs.length > 0) {
-		const lapSection = document.createElement('div');
-		lapSection.classList.add('lap-section');
-		// Patch all lap rows for human readable fields
-		const patchedLaps = data.lapMesgs.map((lap) => {
-			const patched = { ...lap };
-			patchSummaryFields(patched);
-			return patched;
-		 });
-		// Always show columns that are in visibleColumns, even if not present in lap data
-		const lapKeys = visibleColumns.slice();
-		// Copy as CSV for lap summary
-		const lapHeaderBar = document.createElement('div');
-		lapHeaderBar.className = 'header-bar';
-		const lapHeading = document.createElement('h3');
-		lapHeading.textContent = 'Lap Summary';
-		lapHeading.classList.add('lap-title');
-		lapHeaderBar.appendChild(lapHeading);
-		const lapCopyBtn = document.createElement('button');
-		lapCopyBtn.textContent = 'Copy as CSV';
-		lapCopyBtn.className = 'copy-btn';
-		lapCopyBtn.onclick = () => {
-			const csvRows = [lapKeys.join(',')];
-			patchedLaps.forEach((lap) => {
-				const row = lapKeys.map((key) => lap[key] !== undefined ? lap[key] : '');
-				csvRows.push(row.join(','));
-			});
-			navigator.clipboard.writeText(csvRows.join('\n'));
-		};
-		lapHeaderBar.appendChild(lapCopyBtn);
-		lapHeaderBar.style.display = 'flex';
-		lapHeaderBar.style.alignItems = 'center';
-		lapHeaderBar.style.gap = '10px';
-		lapSection.appendChild(lapHeaderBar);
-		const lapTable = document.createElement('table');
-		lapTable.classList.add('display');
-		// Add colgroup for lap table (will be synced after summary table renders)
-		let lapColgroup = document.createElement('colgroup');
-		lapKeys.forEach(() => {
-			const col = document.createElement('col');
-			lapColgroup.appendChild(col);
-		});
-		lapTable.appendChild(lapColgroup);
-		const lapThead = document.createElement('thead');
-		const lapTbody = document.createElement('tbody');
-		const lapHeaderRow = document.createElement('tr');
-		lapKeys.forEach((key) => {
-			const th = document.createElement('th');
-			th.textContent = key;
-			lapHeaderRow.appendChild(th);
-		});
-		lapThead.appendChild(lapHeaderRow);
-		// Data rows
-		patchedLaps.forEach((lap) => {
-			const lapRow = document.createElement('tr');
-			lapKeys.forEach((key) => {
-				let lapVal = lap[key] !== undefined ? String(lap[key]) : '';
-				let summaryVal = summaryRows[0][key] !== undefined ? String(summaryRows[0][key]) : '';
-				// Pad lap value with spaces if summary value is longer
-				if (summaryVal.length > lapVal.length) {
-					lapVal = lapVal.padEnd(summaryVal.length, ' ');
-				}
-				lapRow.appendChild(
-					Object.assign(document.createElement('td'), {
-						textContent: lapVal,
-					}),
-				);
-			});
-			lapTbody.appendChild(lapRow);
-		});
-		lapTable.appendChild(lapThead);
-		lapTable.appendChild(lapTbody);
-		lapSection.appendChild(lapTable);
-		container.appendChild(lapSection);
-	}
 }

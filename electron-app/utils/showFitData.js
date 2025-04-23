@@ -1,29 +1,49 @@
+// utils/showFitData.js
+
 /**
- * Displays FIT file data in the UI and updates relevant UI elements based on the active tab.
- *
- * - Updates the displayed file name and document title.
- * - Renders data tables, charts, maps, or summary depending on the active tab.
- * - Pre-renders data tables in the background if the data tab is not active.
- *
- * @param {Object} data - The parsed FIT file data to display.
- * @param {string} [filePath] - The full path of the FIT file, used to extract and display the file name.
+ * Show FIT data in the UI. Used by Electron main process.
+ * @param {Object} data - Parsed FIT file data.
+ * @param {string} filePath - Path to the FIT file.
  */
 export function showFitData(data, filePath) {
-	globalData = data;
+	window.globalData = data;
 	if (filePath) {
 		// Show just the filename, not the full path
-		let fileName = globalData.cachedFileName;
-		if (!fileName || globalData.cachedFilePath !== filePath) {
+		let fileName = window.globalData.cachedFileName;
+		if (!fileName || window.globalData.cachedFilePath !== filePath) {
 			fileName = filePath.split(/[/\\]/).pop();
-			globalData.cachedFileName = fileName;
-			globalData.cachedFilePath = filePath;
+			window.globalData.cachedFileName = fileName;
+			window.globalData.cachedFilePath = filePath;
 		}
 		const fileSpan = document.getElementById('activeFileName');
 		if (fileSpan) {
 			fileSpan.textContent = `Active: ${fileName}`;
 			fileSpan.title = filePath; // Show full path on mouseover
 		}
-		document.title = `Fit File Viewer - ${fileName}`; // Set title bar
+		// Only update the title if fileName is present
+		document.title = fileName
+			? `Fit File Viewer - ${fileName}`
+			: 'Fit File Viewer';
+		// Set global.loadedFitFilePath for menu enable/disable
+		if (typeof window !== 'undefined' && window.process && window.process.type === 'renderer') {
+			window.require('electron').remote.getGlobal('loadedFitFilePath', filePath);
+		}
+		if (typeof global !== 'undefined') {
+			global.loadedFitFilePath = filePath;
+		}
+		// Notify main process to rebuild menu so Summary Columns is enabled
+		if (window.electronAPI && typeof window.electronAPI.sendThemeChanged === 'function') {
+			// Use theme change as a trigger to rebuild menu, passing current theme
+			const theme = localStorage.getItem('ffv-theme') || 'dark';
+			window.electronAPI.sendThemeChanged(theme);
+		}
+		// Notify main process of loaded file for menu enable/disable
+		if (window.electronAPI && window.electronAPI.send) {
+			window.electronAPI.send('fit-file-loaded', filePath);
+		} else if (window.require) {
+			const { ipcRenderer } = window.require('electron');
+			if (ipcRenderer) ipcRenderer.send('fit-file-loaded', filePath);
+		}
 	}
 	const tabData = document.getElementById('tab-data');
 	const tabChart = document.getElementById('tab-chart');
@@ -31,31 +51,31 @@ export function showFitData(data, filePath) {
 	const tabSummary = document.getElementById('tab-summary');
 
 	if (tabData && tabData.classList.contains('active')) {
-		window.displayTables(globalData);
+		window.displayTables(window.globalData);
 	} else {
 		// Pre-render data tables in background if not active
-		if (globalData && Object.keys(globalData).length > 0) {
+		if (window.globalData && Object.keys(window.globalData).length > 0) {
 			const bgData = document.getElementById('background-data-container');
 			if (bgData) {
 				bgData.innerHTML = '';
 				// Use a temporary container to avoid ID conflicts
 				const temp = document.createElement('div');
-				window.displayTables.call(window, globalData, temp);
+				window.displayTables.call(window, window.globalData, temp);
 				while (temp.firstChild) bgData.appendChild(temp.firstChild);
 			}
 		}
 	}
 	if (tabChart && tabChart.classList.contains('active')) {
-		if (globalData && Object.keys(globalData).length > 0) {
+		if (window.globalData && Object.keys(window.globalData).length > 0) {
 			window.renderChart();
 		}
 	}
 	if (tabMap && tabMap.classList.contains('active')) {
-		if (globalData && Object.keys(globalData).length > 0) {
+		if (window.globalData && Object.keys(window.globalData).length > 0) {
 			window.renderMap();
 		}
 	}
 	if (tabSummary && tabSummary.classList.contains('active')) {
-		window.renderSummary(globalData);
+		window.renderSummary(window.globalData);
 	}
 }

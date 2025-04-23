@@ -61,6 +61,17 @@ function buildAppMenu(mainWindow, currentTheme = 'dark', loadedFitFilePath = nul
 					submenu: recentMenuItems,
 				},
 				{ type: 'separator' },
+				{
+					label: 'Unload File',
+					enabled: !!loadedFitFilePath,
+					click: () => {
+						const win = BrowserWindow.getFocusedWindow() || mainWindow;
+						if (win && win.webContents) {
+							win.webContents.send('unload-fit-file');
+						}
+					},
+				},
+				{ type: 'separator' },
 				{ role: 'quit' },
 			],
 		},
