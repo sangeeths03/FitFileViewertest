@@ -6,19 +6,41 @@
  *
  * The chart supports faceting by the 'key' field, interactive interval selection on the x-axis,
  * and overlays multiple layers including lines, rules, and summary text annotations.
- * The configuration is styled for a dark theme and supports independent x and y scales per facet.
+ * The configuration is styled for a dark or light theme and supports independent x and y scales per facet.
  *
  * @param {Array<Object>} foldedData - The input data array, where each object should contain at least
  *   'timestamp', 'value', and 'key' fields. 'timestamp' should be a date/time value, 'value' a number,
  *   and 'key' a string or category for faceting.
+ * @param {string} theme - 'dark' or 'light' (default: 'dark')
  * @returns {Object} A Vega-Lite v5 chart specification object configured for the provided data.
  */
-export function getChartSpec(foldedData) {
+export function getChartSpec(foldedData, theme = 'dark') {
+	const isDark = theme === 'dark';
+	const colors = isDark
+		? {
+			background: '#181a20',
+			text: '#e0e0e0',
+			fill: '#23263a',
+			axis: '#e0e0e0',
+			axisDomain: '#888',
+			legend: '#e0e0e0',
+			line: '#1f77b4',
+			firebrick: 'firebrick',
+		} : {
+			background: '#fff',
+			text: '#23263a',
+			fill: '#f0f0f0',
+			axis: '#23263a',
+			axisDomain: '#888',
+			legend: '#23263a',
+			line: '#1976d2',
+			firebrick: '#b71c1c',
+		};
 	return {
 		config: {
-			background: '#181a20',
+			background: colors.background,
 			text: {
-				color: '#e0e0e0',
+				color: colors.text,
 				fontSize: 14,
 			},
 			title: {
@@ -29,18 +51,18 @@ export function getChartSpec(foldedData) {
 				fontSize: 30,
 				titleFontSize: 16,
 				labelFontSize: 14,
-				color: '#e0e0e0',
-				titleColor: '#e0e0e0',
-				labelColor: '#e0e0e0',
-				tickColor: '#888',
-				domainColor: '#888',
+				color: colors.text,
+				titleColor: colors.text,
+				labelColor: colors.text,
+				tickColor: colors.axisDomain,
+				domainColor: colors.axisDomain,
 			},
 			header: {
 				titleFontSize: 22,
 				labelFontSize: 18,
-				color: '#e0e0e0',
-				titleColor: '#e0e0e0',
-				labelColor: '#e0e0e0',
+				color: colors.text,
+				titleColor: colors.text,
+				labelColor: colors.text,
 				fontWeight: 'normal',
 				titleFontWeight: 'normal',
 				labelFontWeight: 'normal',
@@ -49,11 +71,11 @@ export function getChartSpec(foldedData) {
 				height: 800,
 				width: 800,
 				strokeWidth: 0,
-				fill: '#23263a',
+				fill: colors.fill,
 			},
 			axis: {
 				domain: true,
-				domainColor: '#888',
+				domainColor: colors.axisDomain,
 				domainWidth: 1,
 				gridWidth: 1,
 				labelAngle: 0,
@@ -66,10 +88,10 @@ export function getChartSpec(foldedData) {
 				fontSize: 30,
 				titleFontSize: 16,
 				labelFontSize: 14,
-				color: '#e0e0e0',
-				titleColor: '#e0e0e0',
-				labelColor: '#e0e0e0',
-				tickColor: '#888',
+				color: colors.axis,
+				titleColor: colors.axis,
+				labelColor: colors.axis,
+				tickColor: colors.axisDomain,
 			},
 			axisX: {
 				titleAnchor: 'end',
@@ -89,11 +111,11 @@ export function getChartSpec(foldedData) {
 				fontSize: 30,
 				titleFontSize: 16,
 				labelFontSize: 14,
-				color: '#e0e0e0',
-				titleColor: '#e0e0e0',
-				labelColor: '#e0e0e0',
-				tickColor: '#888',
-				domainColor: '#888',
+				color: colors.legend,
+				titleColor: colors.legend,
+				labelColor: colors.legend,
+				tickColor: colors.axisDomain,
+				domainColor: colors.axisDomain,
 			},
 		},
 		data: { values: foldedData },
@@ -105,7 +127,7 @@ export function getChartSpec(foldedData) {
 					anchor: 'start',
 					fontSize: 18,
 					fontWeight: 'bold',
-					color: '#e0e0e0',
+					color: colors.text,
 				},
 				type: 'nominal',
 			},
@@ -115,7 +137,7 @@ export function getChartSpec(foldedData) {
 				{
 					mark: {
 						type: 'line',
-						color: '#1f77b4',
+						color: colors.line,
 					},
 					encoding: {
 						opacity: {
@@ -140,7 +162,7 @@ export function getChartSpec(foldedData) {
 				{
 					mark: {
 						type: 'line',
-						color: '#1f77b4',
+						color: colors.line,
 					},
 					encoding: {
 						opacity: {
@@ -169,7 +191,7 @@ export function getChartSpec(foldedData) {
 				{
 					mark: {
 						type: 'rule',
-						color: 'firebrick',
+						color: colors.firebrick,
 						strokeDash: [5, 5],
 					},
 					encoding: {
@@ -202,7 +224,7 @@ export function getChartSpec(foldedData) {
 				{
 					mark: {
 						type: 'text',
-						color: '#1f77b4',
+						color: colors.line,
 						dx: 0,
 						dy: -50,
 						size: 20,
@@ -239,7 +261,7 @@ export function getChartSpec(foldedData) {
 				{
 					mark: {
 						type: 'text',
-						color: 'firebrick',
+						color: colors.firebrick,
 						dx: 0,
 						dy: -10,
 						size: 14,
@@ -276,7 +298,7 @@ export function getChartSpec(foldedData) {
 				{
 					mark: {
 						type: 'text',
-						color: 'firebrick',
+						color: colors.firebrick,
 						dx: -20,
 						dy: -10,
 						size: 14,
@@ -314,7 +336,7 @@ export function getChartSpec(foldedData) {
 				{
 					mark: {
 						type: 'text',
-						color: 'firebrick',
+						color: colors.firebrick,
 						dx: 20,
 						dy: -10,
 						size: 14,

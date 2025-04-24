@@ -82,7 +82,18 @@ export function renderChart(targetContainer) {
 			chartContainer.innerHTML = '<p>Invalid data for chart rendering.</p>';
 			return;
 		}
-		const spec = getChartSpec(folded.objects());
+
+		// Detect current theme from localStorage or document.body
+		let theme = 'dark';
+		try {
+			if (localStorage.getItem('ffv-theme')) {
+				theme = localStorage.getItem('ffv-theme');
+			} else if (document.body.classList.contains('theme-light')) {
+				theme = 'light';
+			}
+		} catch (e) {}
+
+		const spec = getChartSpec(folded.objects(), theme);
 		const vegaContainer = chartContainer.querySelector('#vega-container');
 		if (vegaContainer) {
 			vegaEmbed(vegaContainer, spec)

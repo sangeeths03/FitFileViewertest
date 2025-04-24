@@ -14,7 +14,14 @@ window.globalData = window.globalData || null; // will hold all data received fr
 window.showFitData = showFitData;
 
 // Listen for theme change from main process
-listenForThemeChange(applyTheme);
+listenForThemeChange((theme) => {
+	applyTheme(theme);
+	// If chart tab is active, re-render chart to update theme
+	const tabChart = document.getElementById('tab-chart');
+	if (tabChart && tabChart.classList.contains('active')) {
+		renderChart();
+	}
+});
 
 // On load, apply theme
 applyTheme(loadTheme());
