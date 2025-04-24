@@ -64,10 +64,11 @@ export function renderTable({ container, data, allKeys, visibleColumns, setVisib
 			filterSelect.innerHTML += `<option value="Lap ${i+1}">Lap ${i+1}</option>`;
 		}
 	}
-	let filterValue = 'All';
+	// --- Persist filter value on container ---
+	let filterValue = container._summaryFilterValue || 'All';
 	filterSelect.value = filterValue;
 	filterSelect.onchange = (e) => {
-		filterValue = filterSelect.value;
+		container._summaryFilterValue = filterSelect.value;
 		renderTable({ container, data, allKeys, visibleColumns, setVisibleColumns, gearBtn });
 	};
 	filterLabel.appendChild(filterSelect);
