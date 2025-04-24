@@ -17,7 +17,7 @@
   },
   "scripts": {
     "test": "jest",
-    "start": "electron .",
+    "start": "electron . --inspect=9229",
     "build": "electron-builder",
     "package": "electron-builder --dir",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
