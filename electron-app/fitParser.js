@@ -1,10 +1,10 @@
-const { Buffer } = require('buffer');
-const fs = require('fs');
+import { Buffer } from 'buffer';
+import fs from 'fs';
 
 /**
  * Custom error for FIT file decoding issues.
  */
-class FitDecodeError extends Error {
+export class FitDecodeError extends Error {
 	constructor(message, details) {
 		super(message);
 		this.name = 'FitDecodeError';
@@ -19,7 +19,7 @@ class FitDecodeError extends Error {
  * @param {Object} [fitsdk] - Optional fitsdk dependency for testing/mocking.
  * @returns {Promise<Object>} Decoded messages or error object.
  */
-async function decodeFitFile(fileBuffer, options = {}, fitsdk = null) {
+export async function decodeFitFile(fileBuffer, options = {}, fitsdk = null) {
 	// Input validation
 	if (
 		!fileBuffer ||
@@ -30,7 +30,7 @@ async function decodeFitFile(fileBuffer, options = {}, fitsdk = null) {
 		throw new FitDecodeError(msg);
 	}
 	try {
-		const sdk = fitsdk || require('@garmin/fitsdk');
+		const sdk = fitsdk || await import('@garmin/fitsdk');
 		const { Decoder, Stream } = sdk;
 		const buffer = Buffer.from(fileBuffer);
 		const stream = Stream.fromBuffer(buffer);
@@ -72,5 +72,3 @@ async function decodeFitFile(fileBuffer, options = {}, fitsdk = null) {
 		return { error: 'Failed to decode file', details: error.toString() };
 	}
 }
-
-module.exports = { decodeFitFile, FitDecodeError };
