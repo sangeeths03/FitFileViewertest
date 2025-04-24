@@ -71,6 +71,22 @@ export function renderTable({ container, data, allKeys, visibleColumns, setVisib
 		container._summaryFilterValue = filterSelect.value;
 		renderTable({ container, data, allKeys, visibleColumns, setVisibleColumns, gearBtn });
 	};
+	// Add scroll wheel support for changing selection
+	filterSelect.addEventListener('wheel', (e) => {
+		e.preventDefault();
+		const options = Array.from(filterSelect.options);
+		let idx = options.findIndex(opt => opt.value === filterSelect.value);
+		if (e.deltaY > 0 && idx < options.length - 1) {
+			idx++;
+		} else if (e.deltaY < 0 && idx > 0) {
+			idx--;
+		}
+		if (options[idx]) {
+			filterSelect.value = options[idx].value;
+			container._summaryFilterValue = filterSelect.value;
+			renderTable({ container, data, allKeys, visibleColumns, setVisibleColumns, gearBtn });
+		}
+	}, { passive: false });
 	filterLabel.appendChild(filterSelect);
 	filterBar.appendChild(filterLabel);
 	section.appendChild(filterBar);
