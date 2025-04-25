@@ -1,3 +1,4 @@
+'use strict';
 // In electron-app/renderer.js
 
 import { showNotification, setLoading } from './utils/rendererUtils.js';
@@ -92,9 +93,9 @@ openFileBtn.addEventListener('contextmenu', async (event) => {
 	menu.style.top = `${event.clientY}px`;
 	menu.style.background = '#23263a';
 	menu.style.color = '#fff';
-	menu.style.border = '1px solid #33374d';
+	menu.style.border = '2px solid #fff'; // improved contrast
 	menu.style.borderRadius = '6px';
-	menu.style.boxShadow = '0 2px 12px rgb(0 0 0 / 25%)';
+	menu.style.boxShadow = '0 2px 12px rgb(0 0 0 / 40%)'; // improved shadow
 	menu.style.minWidth = '320px';
 	menu.style.maxWidth = '480px';
 	menu.style.fontSize = '1rem';
@@ -102,27 +103,32 @@ openFileBtn.addEventListener('contextmenu', async (event) => {
 	menu.style.cursor = 'pointer';
 	menu.style.userSelect = 'none';
 	menu.oncontextmenu = (e) => e.preventDefault();
+	menu.setAttribute('role', 'menu');
+	menu.setAttribute('aria-label', 'Recent files');
 
-	recentFiles.forEach((file) => {
-		const parts = file.split(/\\|\//g); // split on both \\ and /
+	let focusedIndex = 0;
+	const items = [];
+	recentFiles.forEach((file, idx) => {
+		const parts = file.split(/\\|\//g);
 		const shortName =
 			parts.length >= 2
-				? `${parts[parts.length - 2]}${String.fromCharCode(92)}${
-						parts[parts.length - 1]
-				  }`
+				? `${parts[parts.length - 2]}${String.fromCharCode(92)}${parts[parts.length - 1]}`
 				: parts[parts.length - 1];
 		const item = document.createElement('div');
 		item.textContent = shortName;
-		item.title = file; // show full path on hover
+		item.title = file;
 		item.style.padding = '8px 18px';
 		item.style.whiteSpace = 'nowrap';
 		item.style.overflow = 'hidden';
 		item.style.textOverflow = 'ellipsis';
+		item.setAttribute('role', 'menuitem');
+		item.setAttribute('tabindex', '-1');
+		item.style.background = idx === 0 ? '#444b6e' : 'transparent';
 		item.onmouseenter = () => {
-			item.style.background = '#33374d';
+			item.style.background = '#444b6e';
 		};
 		item.onmouseleave = () => {
-			item.style.background = 'transparent';
+			item.style.background = focusedIndex === idx ? '#444b6e' : 'transparent';
 		};
 		item.onclick = async () => {
 			menu.remove();
@@ -132,22 +138,44 @@ openFileBtn.addEventListener('contextmenu', async (event) => {
 				let arrayBuffer = await window.electronAPI.readFile(file);
 				let result = await window.electronAPI.parseFitFile(arrayBuffer);
 				if (result && result.error) {
-					showNotification(
-						`Error: ${result.error}\n${result.details || ''}`,
-						'error',
-					);
+					showNotification(`Error: ${result.error}\n${result.details || ''}`, 'error');
 				} else {
 					window.showFitData(result, file);
 				}
-				await window.electronAPI.addRecentFile(file); // move to top
+				await window.electronAPI.addRecentFile(file);
 			} catch (err) {
 				showNotification(`Error opening recent file: ${err}`, 'error');
 			}
 			openFileBtn.disabled = false;
 			setLoading(false);
 		};
+		items.push(item);
 		menu.appendChild(item);
 	});
+	// Keyboard navigation for menu
+	function focusItem(idx) {
+		items.forEach((el, i) => {
+			el.style.background = i === idx ? '#444b6e' : 'transparent';
+			if (i === idx) el.focus();
+		});
+		focusedIndex = idx;
+	}
+	menu.addEventListener('keydown', (e) => {
+		if (e.key === 'ArrowDown') {
+			e.preventDefault();
+			focusItem((focusedIndex + 1) % items.length);
+		} else if (e.key === 'ArrowUp') {
+			e.preventDefault();
+			focusItem((focusedIndex - 1 + items.length) % items.length);
+		} else if (e.key === 'Enter') {
+			e.preventDefault();
+			items[focusedIndex].click();
+		} else if (e.key === 'Escape') {
+			e.preventDefault();
+			menu.remove();
+		}
+	});
+	setTimeout(() => focusItem(0), 0);
 	// Remove menu on click elsewhere
 	const removeMenu = (e) => {
 		if (!menu.contains(e.target)) menu.remove();
@@ -155,6 +183,7 @@ openFileBtn.addEventListener('contextmenu', async (event) => {
 	};
 	document.addEventListener('mousedown', removeMenu);
 	document.body.appendChild(menu);
+	menu.focus();
 });
 
 // Listen for menu events from main process using electronAPI
@@ -188,3 +217,14 @@ if (
 		setLoading(false);
 	});
 }
+
+// Debounce chart rendering on window resize for performance
+let chartRenderTimeout;
+window.addEventListener('resize', () => {
+	if (document.getElementById('tab-chart')?.classList.contains('active')) {
+		clearTimeout(chartRenderTimeout);
+		chartRenderTimeout = setTimeout(() => {
+			if (window.renderChart) window.renderChart();
+		}, 200);
+	}
+});

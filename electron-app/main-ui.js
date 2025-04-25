@@ -1,3 +1,4 @@
+'use strict';
 /* eslint-disable no-console */
 // This file is part of the Electron app that interacts with the main process and the UI.
 import { displayTables } from './utils/displayTables.js';
@@ -168,10 +169,13 @@ window.onload = () => {
 			},
 		},
 	];
-	tabConfig.forEach(({ id, handler }) => {
+
+	// Refactor tabConfig.forEach to use a reusable function
+	function setupTabButton(id, handler) {
 		const btn = document.getElementById(id);
 		if (btn) btn.onclick = handler;
-	});
+	}
+	tabConfig.forEach(({ id, handler }) => setupTabButton(id, handler));
 
 	// Listen for fitData message from the extension
 	window.addEventListener('message', (event) => {

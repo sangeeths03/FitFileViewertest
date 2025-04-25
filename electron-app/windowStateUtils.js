@@ -1,3 +1,4 @@
+'use strict';
 const path = require('path');
 const fs = require('fs');
 const { app, BrowserWindow } = require('electron');
@@ -30,7 +31,7 @@ function createWindow() {
 			preload: path.join(__dirname, 'preload.js'),
 			nodeIntegration: false,
 			contextIsolation: true,
-			sandbox: false,
+			sandbox: true,
 		},
 	});
 	win.loadFile('index.html');

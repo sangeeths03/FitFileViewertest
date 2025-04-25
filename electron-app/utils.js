@@ -1,3 +1,5 @@
+'use strict';
+
 // utils.js - Utility exports for FitFileViewer Electron app
 /**
  * Exposes utility functions globally for use in index.html and other scripts.
@@ -8,8 +10,8 @@
  * loaded. This approach is used here to simplify integration with the Electron app's renderer
  * process, where direct access to these utilities is required in inline scripts.
  *
- * Alternatives such as module exports or bundling with a tool like Webpack were considered,
- * but the current approach was chosen for simplicity and compatibility with the existing setup.
+ * @global
+ * @namespace utils
  */
 
 // Import utility functions

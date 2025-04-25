@@ -28,15 +28,15 @@
 		</header>
 		<!-- Header Bar for File Open and Filename -->
 		<div class="header-bar">
-			<button id="openFileBtn" class="themed-btn">Open FIT File</button>
+			<button id="openFileBtn" class="themed-btn" aria-label="Open FIT File" role="button" tabindex="0">Open FIT File</button>
 			<span id="activeFileName"></span>
 		</div>
 		<!-- Centered Tab Bar -->
-		<div id="tabs" class="tab-bar">
-			<button class="tab-button active" id="tab-map">Map</button>
-			<button class="tab-button" id="tab-data">Data</button>
-			<button class="tab-button" id="tab-chart">Chart</button>
-			<button class="tab-button" id="tab-summary">Summary</button>
+		<div id="tabs" class="tab-bar" role="tablist" aria-label="Main Tabs">
+			<button class="tab-button active" id="tab-map" role="tab" aria-selected="true" tabindex="0">Map</button>
+			<button class="tab-button" id="tab-data" role="tab" aria-selected="false" tabindex="0">Data</button>
+			<button class="tab-button" id="tab-chart" role="tab" aria-selected="false" tabindex="0">Chart</button>
+			<button class="tab-button" id="tab-summary" role="tab" aria-selected="false" tabindex="0">Summary</button>
 		</div>
 		<!-- Card-like Container for Tab Content -->
 		<div class="tab-card">
