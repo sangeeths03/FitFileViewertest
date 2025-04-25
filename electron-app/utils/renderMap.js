@@ -19,26 +19,38 @@ export function renderMap() {
 
 	// --- Base layers ---
 	const baseLayers = {
-		"OpenStreetMap": L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-			attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+		OpenStreetMap: L.tileLayer(
+			'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+			{
+				attribution:
+					'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+			},
+		),
+		Satellite: L.tileLayer(
+			'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+			{
+				attribution: 'Tiles &copy; Esri',
+			},
+		),
+		Topo: L.tileLayer('https://tile.opentopomap.org/{z}/{x}/{y}.png', {
+			attribution:
+				'Map data: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (CC-BY-SA)',
 		}),
-		"Satellite": L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-			attribution: 'Tiles &copy; Esri',
-		}),
-		"Topo": L.tileLayer('https://tile.opentopomap.org/{z}/{x}/{y}.png', {
-			attribution: 'Map data: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (CC-BY-SA)',
-		})
 	};
 
 	const map = L.map('leaflet-map', {
 		center: [0, 0],
 		zoom: 2,
-		layers: [baseLayers["OpenStreetMap"]],
+		layers: [baseLayers['OpenStreetMap']],
 		fullscreenControl: true,
 	});
 
-	L.control.layers(baseLayers, null, { position: 'topright', collapsed: false }).addTo(map);
-	L.control.scale({ position: 'bottomleft', metric: true, imperial: true }).addTo(map);
+	L.control
+		.layers(baseLayers, null, { position: 'topright', collapsed: false })
+		.addTo(map);
+	L.control
+		.scale({ position: 'bottomleft', metric: true, imperial: true })
+		.addTo(map);
 
 	// --- Fullscreen control (if plugin loaded) ---
 	if (L.control.fullscreen) {
@@ -47,7 +59,9 @@ export function renderMap() {
 
 	// --- Locate user button ---
 	if (L.control.locate) {
-		L.control.locate({ position: 'topleft', flyTo: true, keepCurrentZoomLevel: true }).addTo(map);
+		L.control
+			.locate({ position: 'topleft', flyTo: true, keepCurrentZoomLevel: true })
+			.addTo(map);
 	}
 
 	// --- Print/export button ---
@@ -82,8 +96,12 @@ export function renderMap() {
 
 	// --- Minimap (if plugin available) ---
 	if (window.L && L.Control && L.Control.MiniMap) {
-		const miniMapLayer = baseLayers["OpenStreetMap"].clone ? baseLayers["OpenStreetMap"].clone() : baseLayers["OpenStreetMap"];
-		const miniMap = new L.Control.MiniMap(miniMapLayer, { toggleDisplay: true }).addTo(map);
+		const miniMapLayer = baseLayers['OpenStreetMap'].clone
+			? baseLayers['OpenStreetMap'].clone()
+			: baseLayers['OpenStreetMap'];
+		const miniMap = new L.Control.MiniMap(miniMapLayer, {
+			toggleDisplay: true,
+		}).addTo(map);
 	}
 
 	// --- Measurement tool (if plugin available) ---
@@ -102,8 +120,8 @@ export function renderMap() {
 				polyline: true,
 				rectangle: true,
 				circle: true,
-				marker: true
-			}
+				marker: true,
+			},
 		});
 		map.addControl(drawControl);
 		map.on(L.Draw.Event.CREATED, function (e) {
@@ -120,10 +138,10 @@ export function renderMap() {
 			.filter((row) => row.positionLat != null && row.positionLong != null)
 			.map((row) => [
 				Number((row.positionLat / 2 ** 31) * 180),
-				Number((row.positionLong / 2 ** 31) * 180)
+				Number((row.positionLong / 2 ** 31) * 180),
 			]);
 		let gpx = `<?xml version="1.0" encoding="UTF-8"?>\n<gpx version="1.1" creator="FitFileViewer">\n<trk><name>Exported Track</name><trkseg>`;
-		coords.forEach(c => {
+		coords.forEach((c) => {
 			gpx += `\n<trkpt lat=\"${c[0]}\" lon=\"${c[1]}\"/>`;
 		});
 		gpx += '\n</trkseg></trk></gpx>';
@@ -138,26 +156,56 @@ export function renderMap() {
 	controlsDiv.appendChild(exportBtn);
 
 	// --- Elevation profile (if altitude data) ---
-	const hasAltitude = window.globalData && window.globalData.recordMesgs && window.globalData.recordMesgs.some(r => r.altitude != null);
+	const hasAltitude =
+		window.globalData &&
+		window.globalData.recordMesgs &&
+		window.globalData.recordMesgs.some((r) => r.altitude != null);
 	if (hasAltitude) {
 		const elevationBtn = document.createElement('button');
 		elevationBtn.textContent = 'Show Elevation Profile';
 		elevationBtn.onclick = () => {
 			const altitudes = window.globalData.recordMesgs
-				.filter(r => r.positionLat != null && r.positionLong != null && r.altitude != null)
+				.filter(
+					(r) =>
+						r.positionLat != null &&
+						r.positionLong != null &&
+						r.altitude != null,
+				)
 				.map((r, i) => ({ x: i, y: r.altitude }));
-			const chartWin = window.open('', 'Elevation Profile', 'width=600,height=400');
+			const isDark = document.body.classList.contains('theme-dark');
+			const chartWin = window.open(
+				'',
+				'Elevation Profile',
+				'width=600,height=400',
+			);
 			chartWin.document.write(`
 				<html><head><title>Elevation Profile</title>
 				<script src="./libs/chartjs-latest.js"></script>
-				</head><body><canvas id="elevChart"></canvas>
+				<link rel="stylesheet" href="./elevProfile.css">
+				</head><body class="${
+					isDark ? 'theme-dark' : 'theme-light'
+				}"><canvas id="elevChart"></canvas>
 				<script>
 				window.onload = function() {
 					const ctx = document.getElementById('elevChart').getContext('2d');
 					new Chart(ctx, {
 						type: 'line',
-						data: { labels: ${JSON.stringify(altitudes.map(a => a.x))}, datasets: [{ label: 'Altitude', data: ${JSON.stringify(altitudes.map(a => a.y))}, borderColor: 'blue', fill: false }] },
-						options: { responsive: true, scales: { x: { title: { display: true, text: 'Point Index' } }, y: { title: { display: true, text: 'Altitude (m)' } } } }
+						data: { labels: ${JSON.stringify(
+							altitudes.map((a) => a.x),
+						)}, datasets: [{ label: 'Altitude', data: ${JSON.stringify(
+				altitudes.map((a) => a.y),
+			)}, borderColor: '${
+				isDark ? '#4fc3f7' : 'blue'
+			}', backgroundColor: 'transparent', fill: false }] },
+						options: { responsive: true, plugins: { legend: { labels: { color: '${
+							isDark ? '#eee' : '#222'
+						}' } } }, scales: { x: { title: { display: true, text: 'Point Index', color: '${
+				isDark ? '#eee' : '#222'
+			}' }, ticks: { color: '${
+				isDark ? '#eee' : '#222'
+			}' } }, y: { title: { display: true, text: 'Altitude (m)', color: '${
+				isDark ? '#eee' : '#222'
+			}' }, ticks: { color: '${isDark ? '#eee' : '#222'}' } } } }
 					});
 				}
 				</script></body></html>
@@ -191,12 +239,15 @@ export function renderMap() {
 
 		if (coords.length > 0) {
 			// Polyline with custom style
-			const polyline = L.polyline(coords.map(c => [c[0], c[1]]), {
-				color: 'blue',
-				weight: 4,
-				opacity: 0.8,
-				dashArray: '6, 8',
-			}).addTo(map);
+			const polyline = L.polyline(
+				coords.map((c) => [c[0], c[1]]),
+				{
+					color: 'blue',
+					weight: 4,
+					opacity: 0.8,
+					dashArray: '6, 8',
+				},
+			).addTo(map);
 			map.fitBounds(polyline.getBounds(), { padding: [20, 20] });
 
 			// Start/End markers with custom icons
@@ -210,7 +261,11 @@ export function renderMap() {
 				.bindPopup('End');
 
 			// Markers with tooltips for every Nth point (reduce clutter)
-			for (let i = 0; i < coords.length; i += Math.max(1, Math.floor(coords.length / 50))) {
+			for (
+				let i = 0;
+				i < coords.length;
+				i += Math.max(1, Math.floor(coords.length / 50))
+			) {
 				const c = coords[i];
 				const marker = L.circleMarker([c[0], c[1]], {
 					radius: 4,
@@ -226,18 +281,20 @@ export function renderMap() {
 				}
 				marker.bindTooltip(
 					`<b>Index:</b> ${i}<br>` +
-					(c[2] ? `<b>Time:</b> ${c[2]}<br>` : '') +
-					(c[3] ? `<b>Alt:</b> ${c[3]}<br>` : '') +
-					(c[4] ? `<b>HR:</b> ${c[4]}<br>` : '') +
-					(c[5] ? `<b>Speed:</b> ${c[5]}` : ''),
-					{ direction: 'top', sticky: true }
+						(c[2] ? `<b>Time:</b> ${c[2]}<br>` : '') +
+						(c[3] ? `<b>Alt:</b> ${c[3]}<br>` : '') +
+						(c[4] ? `<b>HR:</b> ${c[4]}<br>` : '') +
+						(c[5] ? `<b>Speed:</b> ${c[5]}` : ''),
+					{ direction: 'top', sticky: true },
 				);
 			}
 		} else {
-			mapContainer.innerHTML = '<p>No location data available to display map.</p>';
+			mapContainer.innerHTML =
+				'<p>No location data available to display map.</p>';
 		}
 	} else {
-		mapContainer.innerHTML = '<p>No location data available to display map.</p>';
+		mapContainer.innerHTML =
+			'<p>No location data available to display map.</p>';
 	}
 
 	// --- Theme support (dark/light) ---
@@ -245,7 +302,9 @@ export function renderMap() {
 		const isDark = document.body.classList.contains('theme-dark');
 		const leafletMap = document.getElementById('leaflet-map');
 		if (leafletMap) {
-			leafletMap.style.filter = isDark ? 'invert(0.92) hue-rotate(180deg) brightness(0.9) contrast(1.1)' : 'none';
+			leafletMap.style.filter = isDark
+				? 'invert(0.92) hue-rotate(180deg) brightness(0.9) contrast(1.1)'
+				: 'none';
 		}
 	};
 	updateMapTheme();
