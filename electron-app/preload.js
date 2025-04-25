@@ -1,6 +1,4 @@
 const { contextBridge, ipcRenderer } = require('electron');
-const fs = require('fs');
-const fitParser = require('./fitParser');
 
 contextBridge.exposeInMainWorld('electronAPI', {
 	/**
@@ -14,29 +12,14 @@ contextBridge.exposeInMainWorld('electronAPI', {
 	 * @param {string} filePath
 	 * @returns {Promise<ArrayBuffer>}
 	 */
-	readFile: (filePath) => {
-		return new Promise((resolve, reject) => {
-			fs.readFile(filePath, (err, data) => {
-				if (err) {
-					console.error('Error reading file:', err); // Log error for debugging
-					reject(err);
-				} else {
-					resolve(data.buffer);
-				}
-			});
-		});
-	},
+	readFile: (filePath) => ipcRenderer.invoke('file:read', filePath),
 
 	/**
 	 * Parses a FIT file from an ArrayBuffer and returns the decoded data.
 	 * @param {ArrayBuffer} arrayBuffer
 	 * @returns {Promise<any>}
 	 */
-	parseFitFile: async (arrayBuffer) => {
-		// Convert ArrayBuffer to Buffer
-		const buffer = Buffer.from(arrayBuffer);
-		return await fitParser.decodeFitFile(buffer);
-	},
+	parseFitFile: (arrayBuffer) => ipcRenderer.invoke('fit:parse', arrayBuffer),
 
 	/**
 	 * Gets the list of recent files.

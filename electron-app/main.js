@@ -119,6 +119,27 @@ app.whenReady().then(() => {
 		return loadRecentFiles();
 	});
 
+	// Add IPC handler for reading files
+	ipcMain.handle('file:read', async (event, filePath) => {
+		return new Promise((resolve, reject) => {
+			fs.readFile(filePath, (err, data) => {
+				if (err) {
+					console.error('Error reading file:', err);
+					reject(err);
+				} else {
+					resolve(data.buffer);
+				}
+			});
+		});
+	});
+
+	// Add IPC handler for parsing FIT files
+	ipcMain.handle('fit:parse', async (event, arrayBuffer) => {
+		const fitParser = require('./fitParser');
+		const buffer = Buffer.from(arrayBuffer);
+		return await fitParser.decodeFitFile(buffer);
+	});
+
 	// Listen for theme change from renderer and update menu
 	ipcMain.on('theme-changed', (event, theme) => {
 		const win = BrowserWindow.fromWebContents(event.sender);
