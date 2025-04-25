@@ -1,0 +1,8 @@
+extension-chrome.zip
+extension-firefox.zip
+
+source-chrome.zip
+source-firefox.zip
+
+dist
+node_modules
