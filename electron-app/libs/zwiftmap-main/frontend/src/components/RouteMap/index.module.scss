@@ -1,0 +1,16 @@
+.Container {
+  grid-area: map;
+  position: relative;
+}
+
+.MapContainer {
+  height: 100%;
+  width: 100%;
+}
+
+.navigationControl {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 10;
+}

@@ -1,0 +1,87 @@
+@import "../../mixins.scss";
+
+$drag-handle-height: 25px;
+
+.Container {
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+
+  @include isDesktop {
+    grid-area: sidebar;
+  }
+
+  @include isMobile {
+    z-index: 5000;
+
+    position: absolute;
+
+    top: 0;
+    bottom: 0;
+
+    left: 0;
+    right: 0;
+    background-color: var(--rmd-theme-background);
+
+    min-height: 100%;
+
+    &:not(.BottomSheetOpen) {
+      display: none;
+    }
+  }
+}
+
+.SearchBox {
+  flex-grow: 0;
+  padding-bottom: 0;
+}
+
+.BottomMenu {
+  flex-grow: 0;
+  --rmd-list-vertical-padding: 0;
+}
+
+.NoGapDivider {
+  --rmd-divider-spacing: 0;
+}
+
+.DragHandle {
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background-color: transparent;
+  border: 0;
+  outline: none;
+  height: 30px;
+
+  @include isDesktop {
+    display: none;
+  }
+}
+
+.DragHandleBottom {
+  z-index: 5000;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background-color: var(--rmd-theme-background);
+
+  &.BottomSheetOpen {
+    display: none;
+  }
+
+  @include isDesktop {
+    display: none;
+  }
+}
+
+.Content {
+  flex: 1;
+  overflow-y: auto;
+  padding-top: 0;
+  padding-bottom: 0;
+}

@@ -1,0 +1,7 @@
+.env
+.env.yaml
+.DS_Store
+google-credentials.json
+
+/build
+/node_modules

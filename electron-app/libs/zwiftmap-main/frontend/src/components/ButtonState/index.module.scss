@@ -1,0 +1,9 @@
+@use "~@react-md/button/dist/mixins" as *;
+
+.Link {
+  &,
+  &:visited,
+  &:hover {
+    color: var(--rmd-button-color) !important;
+  }
+}

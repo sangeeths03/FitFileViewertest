@@ -1,0 +1,83 @@
+$rmd-dialog-z-index: 1000; // leaflet is around z-index 400
+$rmd-menu-z-index: 6000; // sidebar is z-index 5000
+$rmd-snackbar-z-index: 7000;
+
+@import "@react-md/alert/dist/mixins";
+@import "@react-md/avatar/dist/mixins";
+@import "@react-md/button/dist/mixins";
+@import "@react-md/chip/dist/mixins";
+@import "@react-md/dialog/dist/mixins";
+@import "@react-md/divider/dist/mixins";
+@import "@react-md/expansion-panel/dist/mixins";
+@import "@react-md/form/dist/mixins";
+@import "@react-md/icon/dist/mixins";
+@import "@react-md/link/dist/mixins";
+@import "@react-md/list/dist/mixins";
+@import "@react-md/menu/dist/mixins";
+@import "@react-md/progress/dist/mixins";
+@import "@react-md/typography/dist/mixins";
+
+@import "./fonts";
+
+@include react-md-theme;
+@include react-md-utils;
+
+body {
+  margin: 0;
+  overflow: hidden;
+}
+
+#root {
+  height: 100%;
+  width: 100%;
+}
+
+.theme-system {
+  @media (prefers-color-scheme: dark) {
+    @include rmd-theme-dark;
+  }
+
+  @media (prefers-color-scheme: light) {
+    @include rmd-theme-light;
+  }
+}
+
+.theme-dark {
+  @include rmd-theme-dark;
+}
+
+.theme-light {
+  @include rmd-theme-light;
+}
+
+.leaflet-control-zoom,
+.leaflet-control-layers {
+  border-color: var(--rmd-form-text-border-color);
+  border-radius: 0.25rem;
+  border-style: solid;
+  border-width: 1px;
+  background-color: var(--rmd-theme-background);
+  color: var(--rmd-theme-text-primary-on-background);
+}
+
+.leaflet-control-zoom.leaflet-bar {
+  a {
+    background-color: transparent;
+    color: var(--rmd-theme-text-primary-on-background);
+
+    &:first-child {
+      border-bottom-color: var(--rmd-divider-background-color);
+      border-top-left-radius: 0.25rem;
+      border-top-right-radius: 0.25rem;
+    }
+
+    &:last-child {
+      border-bottom-right-radius: 0.25rem;
+      border-bottom-left-radius: 0.25rem;
+    }
+  }
+}
+
+.rmd-select {
+  cursor: pointer !important;
+}
