@@ -149,7 +149,7 @@ export function renderMap() {
 			const chartWin = window.open('', 'Elevation Profile', 'width=600,height=400');
 			chartWin.document.write(`
 				<html><head><title>Elevation Profile</title>
-				<script src="./electron-app/libs/chartjs-latest.js"></script>
+				<script src="./libs/chartjs-latest.js"></script>
 				</head><body><canvas id="elevChart"></canvas>
 				<script>
 				window.onload = function() {
