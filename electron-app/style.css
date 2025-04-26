@@ -409,6 +409,26 @@ body.theme-light #leaflet-map {
 	filter: none;
 }
 
+body .leaflet-control-layers,
+body .leaflet-control-layers-expanded {
+	background: #f5f5f5 !important;
+	color: #222 !important;
+	border: 1px solid #888 !important;
+}
+body .leaflet-control-layers label {
+	color: #222 !important;
+}
+body .leaflet-control-layers-toggle {
+	background-image: url('libs/images/layers-2x.png') !important;
+	background-size: 26px 26px !important;
+	filter: invert(1) !important;
+}
+body .custom-maptype-btn {
+	background: #f5f5f5 !important;
+	color: #222 !important;
+	border: 1px solid #888 !important;
+}
+
 #vega-container {
 	width: 80%;
 	height: 100%;
@@ -419,6 +439,55 @@ body.theme-light #leaflet-map {
 #background-chart-container,
 #background-data-container {
 	display: none;
+}
+
+/* =====================================================
+   Custom Zoom Slider Bar
+   ===================================================== */
+.custom-zoom-slider-bar {
+	position: absolute;
+	right: 24px;
+	bottom: 24px;
+	z-index: 1100;
+	background: #fff;
+	border-radius: 8px;
+	box-shadow: 0 1px 5px rgba(0, 0, 0, 0.4);
+	padding: 10px 18px 14px 18px;
+	font-size: 15px;
+	font-weight: bold;
+	color: #222;
+	user-select: none;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	min-width: 160px;
+}
+.custom-zoom-slider-label {
+	font-size: 13px;
+	font-weight: normal;
+	margin-bottom: 2px;
+}
+.custom-zoom-slider-bar input[type='range'] {
+	width: 120px;
+	margin: 0 0 2px 0;
+	accent-color: #2196f3;
+	cursor: pointer;
+}
+.custom-zoom-slider-values {
+	font-size: 12px;
+	font-weight: normal;
+	margin-top: 2px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+body .custom-zoom-slider-bar {
+	background: #f1f1f1;
+	color: #000000;
+	border: 1px solid #888;
+}
+body .custom-zoom-slider-bar input[type='range'] {
+	accent-color: #4fc3f7;
 }
 
 /* =====================================================

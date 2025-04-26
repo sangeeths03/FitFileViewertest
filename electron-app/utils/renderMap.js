@@ -132,9 +132,90 @@ export function renderMap() {
 		fullscreenControl: true,
 	});
 
-	L.control
-		.layers(baseLayers, null, { position: 'topright', collapsed: false })
-		.addTo(map);
+	const layersControl = L.control.layers(baseLayers, null, { position: 'topright', collapsed: true }).addTo(map);
+
+	// Add a custom floating label/button to indicate map type selection
+	const mapTypeBtn = document.createElement('div');
+	mapTypeBtn.className = 'custom-maptype-btn leaflet-bar';
+	mapTypeBtn.style.position = 'absolute';
+	mapTypeBtn.style.top = '16px';
+	mapTypeBtn.style.right = '60px';
+	mapTypeBtn.style.zIndex = 900; // ensure above layers control
+	mapTypeBtn.innerHTML = '🗺️ Change Map Type';
+	mapTypeBtn.title = 'Click to change the map type';
+	mapTypeBtn.onclick = (e) => {
+		e.stopPropagation();
+		const layersControlEl = document.querySelector('.leaflet-control-layers');
+		if (layersControlEl) {
+			layersControlEl.classList.add('leaflet-control-layers-expanded');
+			layersControlEl.style.zIndex = 1201; // just below the button
+			// Focus the first input for accessibility
+			const firstInput = layersControlEl.querySelector('input[type="radio"]');
+			if (firstInput) firstInput.focus();
+		}
+	};
+	document.getElementById('leaflet-map').appendChild(mapTypeBtn);
+
+	// When the user clicks outside the control, collapse it
+	document.addEventListener('mousedown', (e) => {
+		const layersControlEl = document.querySelector('.leaflet-control-layers');
+		if (layersControlEl && layersControlEl.classList.contains('leaflet-control-layers-expanded')) {
+			if (!layersControlEl.contains(e.target) && !mapTypeBtn.contains(e.target)) {
+				layersControlEl.classList.remove('leaflet-control-layers-expanded');
+				layersControlEl.style.zIndex = '';
+			}
+		}
+	});
+
+	// --- Add a custom zoom slider bar (normalized 0-100%) ---
+	const zoomSliderBar = document.createElement('div');
+	zoomSliderBar.className = 'custom-zoom-slider-bar';
+	const minZoom = map.getMinZoom();
+	const maxZoom = map.getMaxZoom();
+	const zoomToPercent = (zoom) => ((zoom - minZoom) / (maxZoom - minZoom)) * 100;
+	const percentToZoom = (percent) => minZoom + ((maxZoom - minZoom) * percent / 100);
+	zoomSliderBar.innerHTML = `
+		<div class="custom-zoom-slider-label">Zoom</div>
+		<input type="range" min="0" max="100" value="${zoomToPercent(map.getZoom())}" step="1" id="zoom-slider-input">
+		<div class="custom-zoom-slider-values">
+			<span id="zoom-slider-min">0%</span>
+			<span style="margin:0 8px;">|</span>
+			<span id="zoom-slider-current">${Math.round(zoomToPercent(map.getZoom()))}%</span>
+			<span style="margin:0 8px;">|</span>
+			<span id="zoom-slider-max">100%</span>
+		</div>
+	`;
+	const zoomSlider = zoomSliderBar.querySelector('#zoom-slider-input');
+	const zoomSliderCurrent = zoomSliderBar.querySelector('#zoom-slider-current');
+	zoomSliderBar.style.pointerEvents = 'auto';
+	zoomSlider.style.pointerEvents = 'auto';
+	zoomSlider.addEventListener('mousedown', (e) => e.stopPropagation());
+	zoomSlider.addEventListener('touchstart', (e) => e.stopPropagation());
+
+	// Fix jank: Only update map zoom on change, and update slider on zoomend
+	let isDragging = false;
+	zoomSlider.addEventListener('input', (e) => {
+		isDragging = true;
+		const percent = Number(e.target.value);
+		zoomSliderCurrent.textContent = `${percent}%`;
+	});
+	zoomSlider.addEventListener('change', (e) => {
+		const percent = Number(e.target.value);
+		const newZoom = percentToZoom(percent);
+		map.setZoom(Math.round(newZoom));
+		isDragging = false;
+	});
+	const updateZoomSlider = () => {
+		if (!isDragging) {
+			const percent = Math.round(zoomToPercent(map.getZoom()));
+			zoomSlider.value = percent;
+			zoomSliderCurrent.textContent = `${percent}%`;
+		}
+	};
+	map.on('zoomend zoomlevelschange', updateZoomSlider);
+	updateZoomSlider();
+	document.getElementById('leaflet-map').appendChild(zoomSliderBar);
+
 	L.control
 		.scale({ position: 'bottomleft', metric: true, imperial: true })
 		.addTo(map);
