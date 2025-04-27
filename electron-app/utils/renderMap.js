@@ -36,69 +36,153 @@ export function renderMap() {
 			attribution:
 				'Map data: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (CC-BY-SA)',
 		}),
-		CartoDB_Positron: L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-			attribution: '&copy; <a href="https://carto.com/attributions">CARTO</a>',
-		}),
-		CartoDB_DarkMatter: L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-			attribution: '&copy; <a href="https://carto.com/attributions">CARTO</a>',
-		}),
-		Esri_Topo: L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
-			attribution: 'Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012',
-		}),
-		Esri_WorldStreetMap: L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
-			attribution: 'Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012',
-		}),
-		Esri_WorldImagery: L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-			attribution: 'Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012',
-		}),
-		Esri_WorldTerrain: L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Terrain_Base/MapServer/tile/{z}/{y}/{x}', {
-			attribution: 'Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012',
-		}),
-		Esri_WorldPhysical: L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Physical_Map/MapServer/tile/{z}/{y}/{x}', {
-			attribution: 'Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012',
-		}),
-		Esri_WorldShadedRelief: L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Shaded_Relief/MapServer/tile/{z}/{y}/{x}', {
-			attribution: 'Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012',
-		}),
-		Esri_WorldGrayCanvas: L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
-			attribution: 'Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012',
-		}),
-		Esri_WorldImagery_Labels: L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-			attribution: 'Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012',
-		}),
-		Esri_WorldStreetMap_Labels: L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
-			attribution: 'Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012',
-		}),
-		Esri_WorldTopo_Labels: L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
-			attribution: 'Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012',
-		}),
-		Esri_NatGeo: L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/NatGeo_World_Map/MapServer/tile/{z}/{y}/{x}', {
-			attribution: 'Tiles &copy; Esri &mdash; National Geographic, Esri, DeLorme, NAVTEQ',
-		}),
-		CyclOSM: L.tileLayer('https://{s}.tile-cyclosm.openstreetmap.fr/cyclosm/{z}/{x}/{y}.png', {
-			attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="https://www.cyclosm.org/">CyclOSM</a>',
-		}),
-		Thunderforest_Cycle: L.tileLayer('https://tile.thunderforest.com/cycle/{z}/{x}/{y}.png', {
-			attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="https://www.thunderforest.com/">Thunderforest</a>',
-		}),
-		Thunderforest_Transport: L.tileLayer('https://tile.thunderforest.com/transport/{z}/{x}/{y}.png', {
-			attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="https://www.thunderforest.com/">Thunderforest</a>',
-		}),
-		OpenRailwayMap: L.tileLayer('https://{s}.tiles.openrailwaymap.org/standard/{z}/{x}/{y}.png', {
-			attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="https://www.openrailwaymap.org/">OpenRailwayMap</a>',
-		}),
-		OpenSeaMap: L.tileLayer('https://tiles.openseamap.org/seamark/{z}/{x}/{y}.png', {
-			attribution: 'Map data &copy; <a href="https://www.openseamap.org">OpenSeaMap</a> contributors',
-		}),
-		WaymarkedTrails_Cycling: L.tileLayer('https://tile.waymarkedtrails.org/cycling/{z}/{x}/{y}.png', {
-			attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="https://cycling.waymarkedtrails.org/">Waymarked Trails Cycling</a>',
-		}),
-		WaymarkedTrails_Hiking: L.tileLayer('https://tile.waymarkedtrails.org/hiking/{z}/{x}/{y}.png', {
-			attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="https://hiking.waymarkedtrails.org/">Waymarked Trails Hiking</a>',
-		}),
-		WaymarkedTrails_Slopes: L.tileLayer('https://tile.waymarkedtrails.org/slopes/{z}/{x}/{y}.png', {
-			attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="https://slopes.waymarkedtrails.org/">Waymarked Trails Riding</a>',
-		}),
+		CartoDB_Positron: L.tileLayer(
+			'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
+			{
+				attribution:
+					'&copy; <a href="https://carto.com/attributions">CARTO</a>',
+			},
+		),
+		CartoDB_DarkMatter: L.tileLayer(
+			'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
+			{
+				attribution:
+					'&copy; <a href="https://carto.com/attributions">CARTO</a>',
+			},
+		),
+		Esri_Topo: L.tileLayer(
+			'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}',
+			{
+				attribution:
+					'Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012',
+			},
+		),
+		Esri_WorldStreetMap: L.tileLayer(
+			'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',
+			{
+				attribution:
+					'Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012',
+			},
+		),
+		Esri_WorldImagery: L.tileLayer(
+			'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+			{
+				attribution:
+					'Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012',
+			},
+		),
+		Esri_WorldTerrain: L.tileLayer(
+			'https://server.arcgisonline.com/ArcGIS/rest/services/World_Terrain_Base/MapServer/tile/{z}/{y}/{x}',
+			{
+				attribution:
+					'Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012',
+			},
+		),
+		Esri_WorldPhysical: L.tileLayer(
+			'https://server.arcgisonline.com/ArcGIS/rest/services/World_Physical_Map/MapServer/tile/{z}/{y}/{x}',
+			{
+				attribution:
+					'Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012',
+			},
+		),
+		Esri_WorldShadedRelief: L.tileLayer(
+			'https://server.arcgisonline.com/ArcGIS/rest/services/World_Shaded_Relief/MapServer/tile/{z}/{y}/{x}',
+			{
+				attribution:
+					'Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012',
+			},
+		),
+		Esri_WorldGrayCanvas: L.tileLayer(
+			'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}',
+			{
+				attribution:
+					'Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012',
+			},
+		),
+		Esri_WorldImagery_Labels: L.tileLayer(
+			'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+			{
+				attribution:
+					'Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012',
+			},
+		),
+		Esri_WorldStreetMap_Labels: L.tileLayer(
+			'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',
+			{
+				attribution:
+					'Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012',
+			},
+		),
+		Esri_WorldTopo_Labels: L.tileLayer(
+			'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}',
+			{
+				attribution:
+					'Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012',
+			},
+		),
+		Esri_NatGeo: L.tileLayer(
+			'https://server.arcgisonline.com/ArcGIS/rest/services/NatGeo_World_Map/MapServer/tile/{z}/{y}/{x}',
+			{
+				attribution:
+					'Tiles &copy; Esri &mdash; National Geographic, Esri, DeLorme, NAVTEQ',
+			},
+		),
+		CyclOSM: L.tileLayer(
+			'https://{s}.tile-cyclosm.openstreetmap.fr/cyclosm/{z}/{x}/{y}.png',
+			{
+				attribution:
+					'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="https://www.cyclosm.org/">CyclOSM</a>',
+			},
+		),
+		Thunderforest_Cycle: L.tileLayer(
+			'https://tile.thunderforest.com/cycle/{z}/{x}/{y}.png',
+			{
+				attribution:
+					'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="https://www.thunderforest.com/">Thunderforest</a>',
+			},
+		),
+		Thunderforest_Transport: L.tileLayer(
+			'https://tile.thunderforest.com/transport/{z}/{x}/{y}.png',
+			{
+				attribution:
+					'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="https://www.thunderforest.com/">Thunderforest</a>',
+			},
+		),
+		OpenRailwayMap: L.tileLayer(
+			'https://{s}.tiles.openrailwaymap.org/standard/{z}/{x}/{y}.png',
+			{
+				attribution:
+					'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="https://www.openrailwaymap.org/">OpenRailwayMap</a>',
+			},
+		),
+		OpenSeaMap: L.tileLayer(
+			'https://tiles.openseamap.org/seamark/{z}/{x}/{y}.png',
+			{
+				attribution:
+					'Map data &copy; <a href="https://www.openseamap.org">OpenSeaMap</a> contributors',
+			},
+		),
+		WaymarkedTrails_Cycling: L.tileLayer(
+			'https://tile.waymarkedtrails.org/cycling/{z}/{x}/{y}.png',
+			{
+				attribution:
+					'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="https://cycling.waymarkedtrails.org/">Waymarked Trails Cycling</a>',
+			},
+		),
+		WaymarkedTrails_Hiking: L.tileLayer(
+			'https://tile.waymarkedtrails.org/hiking/{z}/{x}/{y}.png',
+			{
+				attribution:
+					'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="https://hiking.waymarkedtrails.org/">Waymarked Trails Hiking</a>',
+			},
+		),
+		WaymarkedTrails_Slopes: L.tileLayer(
+			'https://tile.waymarkedtrails.org/slopes/{z}/{x}/{y}.png',
+			{
+				attribution:
+					'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="https://slopes.waymarkedtrails.org/">Waymarked Trails Riding</a>',
+			},
+		),
 		OpenFreeMap_Liberty: L.maplibreGL({
 			style: 'https://tiles.openfreemap.org/styles/liberty',
 		}),
@@ -114,15 +198,22 @@ export function renderMap() {
 		OpenFreeMap_Fiord: L.maplibreGL({
 			style: 'https://tiles.openfreemap.org/styles/fiord',
 		}),
-		Humanitarian: L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
-			attribution: 'Tiles &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="https://www.openstreetmap.fr/fonds-de-carte/">Humanitarian OSM</a>',
-			subdomains: 'ab',
-		}),
-		OSM_France: L.tileLayer('https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png', {
-			attribution: 'Tiles &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="https://www.openstreetmap.fr/fonds-de-carte/">OSM France</a>',
-			subdomains: 'abc',
-		}),
-
+		Humanitarian: L.tileLayer(
+			'https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png',
+			{
+				attribution:
+					'Tiles &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="https://www.openstreetmap.fr/fonds-de-carte/">Humanitarian OSM</a>',
+				subdomains: 'ab',
+			},
+		),
+		OSM_France: L.tileLayer(
+			'https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png',
+			{
+				attribution:
+					'Tiles &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="https://www.openstreetmap.fr/fonds-de-carte/">OSM France</a>',
+				subdomains: 'abc',
+			},
+		),
 	};
 
 	const map = L.map('leaflet-map', {
@@ -132,7 +223,9 @@ export function renderMap() {
 		fullscreenControl: true,
 	});
 
-	const layersControl = L.control.layers(baseLayers, null, { position: 'topright', collapsed: true }).addTo(map);
+	const layersControl = L.control
+		.layers(baseLayers, null, { position: 'topright', collapsed: true })
+		.addTo(map);
 
 	// Add a custom floating label/button to indicate map type selection
 	const mapTypeBtn = document.createElement('div');
@@ -159,8 +252,14 @@ export function renderMap() {
 	// When the user clicks outside the control, collapse it
 	document.addEventListener('mousedown', (e) => {
 		const layersControlEl = document.querySelector('.leaflet-control-layers');
-		if (layersControlEl && layersControlEl.classList.contains('leaflet-control-layers-expanded')) {
-			if (!layersControlEl.contains(e.target) && !mapTypeBtn.contains(e.target)) {
+		if (
+			layersControlEl &&
+			layersControlEl.classList.contains('leaflet-control-layers-expanded')
+		) {
+			if (
+				!layersControlEl.contains(e.target) &&
+				!mapTypeBtn.contains(e.target)
+			) {
 				layersControlEl.classList.remove('leaflet-control-layers-expanded');
 				layersControlEl.style.zIndex = '';
 			}
@@ -172,15 +271,21 @@ export function renderMap() {
 	zoomSliderBar.className = 'custom-zoom-slider-bar';
 	const minZoom = map.getMinZoom();
 	const maxZoom = map.getMaxZoom();
-	const zoomToPercent = (zoom) => ((zoom - minZoom) / (maxZoom - minZoom)) * 100;
-	const percentToZoom = (percent) => minZoom + ((maxZoom - minZoom) * percent / 100);
+	const zoomToPercent = (zoom) =>
+		((zoom - minZoom) / (maxZoom - minZoom)) * 100;
+	const percentToZoom = (percent) =>
+		minZoom + ((maxZoom - minZoom) * percent) / 100;
 	zoomSliderBar.innerHTML = `
 		<div class="custom-zoom-slider-label">Zoom</div>
-		<input type="range" min="0" max="100" value="${zoomToPercent(map.getZoom())}" step="1" id="zoom-slider-input">
+		<input type="range" min="0" max="100" value="${zoomToPercent(
+			map.getZoom(),
+		)}" step="1" id="zoom-slider-input">
 		<div class="custom-zoom-slider-values">
 			<span id="zoom-slider-min">0%</span>
 			<span style="margin:0 8px;">|</span>
-			<span id="zoom-slider-current">${Math.round(zoomToPercent(map.getZoom()))}%</span>
+			<span id="zoom-slider-current">${Math.round(
+				zoomToPercent(map.getZoom()),
+			)}%</span>
 			<span style="margin:0 8px;">|</span>
 			<span id="zoom-slider-max">100%</span>
 		</div>
@@ -240,6 +345,36 @@ export function renderMap() {
 	};
 	const controlsDiv = document.getElementById('map-controls');
 	controlsDiv.appendChild(printBtn);
+
+	// --- Lap selection UI (bottom left, styled like zoom UI, fix pointer events) ---
+	if (
+		window.globalData &&
+		Array.isArray(window.globalData.lapMesgs) &&
+		window.globalData.lapMesgs.length > 0
+	) {
+		const lapControl = document.createElement('div');
+		lapControl.className =
+			'custom-lap-control-container leaflet-bottom leaflet-left';
+		lapControl.innerHTML = `
+			<div class="custom-lap-control leaflet-bar">
+				<label for="lap-select">Lap:</label>
+				<select id="lap-select">
+					<option value="all">All</option>
+					${window.globalData.lapMesgs
+						.map((lap, i) => `<option value="${i}">Lap ${i + 1}</option>`)
+						.join('')}
+				</select>
+			</div>
+		`;
+		lapControl.addEventListener('mousedown', (e) => e.stopPropagation());
+		lapControl.addEventListener('touchstart', (e) => e.stopPropagation());
+		document.getElementById('leaflet-map').appendChild(lapControl);
+
+		const lapSelect = lapControl.querySelector('#lap-select');
+		lapSelect.addEventListener('change', () => {
+			drawMapForLap(lapSelect.value);
+		});
+	}
 
 	// --- Custom icons for start/end ---
 	const startIcon = L.icon({
@@ -383,12 +518,138 @@ export function renderMap() {
 		controlsDiv.appendChild(elevationBtn);
 	}
 
-	// --- Main polyline and markers ---
-	if (window.globalData && window.globalData.recordMesgs) {
-		const coords = window.globalData.recordMesgs
-			.filter((row) => row.positionLat != null && row.positionLong != null)
-			.map((row) => {
+	// --- Main polyline and markers, refactored for lap selection ---
+	function getLapColor(lapIdx) {
+		const palette = [
+			'#ff5722',
+			'#2196f3',
+			'#4caf50',
+			'#e91e63',
+			'#ff9800',
+			'#9c27b0',
+			'#00bcd4',
+			'#8bc34a',
+			'#ffc107',
+			'#3f51b5',
+			'#f44336',
+			'#009688',
+			'#cddc39',
+			'#607d8b',
+			'#795548',
+			'#673ab7',
+			'#b71c1c',
+			'#1b5e20',
+			'#0d47a1',
+			'#fbc02d',
+		];
+		if (lapIdx === 'all') return 'blue';
+		return palette[Number(lapIdx) % palette.length];
+	}
+
+	function formatTooltipData(idx, row, lapNum) {
+		const dateStr = row.timestamp
+			? new Date(row.timestamp).toLocaleString()
+			: '';
+		let alt = '';
+		if (row.altitude != null) {
+			const altMeters = Number(row.altitude);
+			const altFeet = altMeters * 3.28084;
+			alt = `${altMeters.toFixed(1)} m / ${altFeet.toFixed(0)} ft`;
+		}
+		const hr =
+			row.heartRate != null ? `${Number(row.heartRate).toFixed(1)} bpm` : '';
+		let speedKmh = '',
+			speedMph = '',
+			speed = '';
+		if (row.speed != null) {
+			const s = Number(row.speed);
+			speedKmh = `${(s * 3.6).toFixed(1)} km/h`;
+			speedMph = `${(s * 2.23694).toFixed(1)} mph`;
+			speed = `${speedKmh} / ${speedMph}`;
+		}
+		const power = row.power != null ? `${Number(row.power).toFixed(1)} W` : '';
+		const cadence =
+			row.cadence != null ? `${Number(row.cadence).toFixed(1)} rpm` : '';
+
+		// Calculate total ride time since start in human readable format
+		let rideTime = '';
+		if (
+			window.globalData &&
+			window.globalData.recordMesgs &&
+			window.globalData.recordMesgs.length > 0 &&
+			row.timestamp
+		) {
+			const first = window.globalData.recordMesgs.find(
+				(r) => r.timestamp != null,
+			);
+			if (first && first.timestamp) {
+				const firstTime = new Date(first.timestamp).getTime();
+				const currTime = new Date(row.timestamp).getTime();
+				const diff = Math.max(0, Math.floor((currTime - firstTime) / 1000));
+				const h = Math.floor(diff / 3600);
+				const m = Math.floor((diff % 3600) / 60);
+				const s = Math.floor(diff % 60);
+				const parts = [];
+				if (h > 0) parts.push(`${h} hour${h !== 1 ? 's' : ''}`);
+				if (m > 0) parts.push(`${m} minute${m !== 1 ? 's' : ''}`);
+				if (s > 0 || parts.length === 0)
+					parts.push(`${s} second${s !== 1 ? 's' : ''}`);
+				rideTime = parts.join(', ');
+			}
+		}
+
+		// Add distance at this point (convert meters to km/mi)
+		let distanceStr = '';
+		if (row.distance != null && !isNaN(row.distance)) {
+			const meters = Number(row.distance);
+			const km = meters / 1000;
+			const mi = km * 0.621371;
+			distanceStr = `${km.toFixed(2)} km / ${mi.toFixed(2)} mi<br>`;
+		}
+
+		return (
+			`<b>Lap:</b> ${lapNum}<br>` +
+			`<b>Index:</b> ${idx}<br>` +
+			(dateStr ? `<b>Time:</b> ${dateStr}<br>` : '') +
+			(rideTime ? `<b>Ride Time:</b> ${rideTime}<br>` : '') +
+			(distanceStr ? `<b>Distance:</b> ${distanceStr} </b>` : '') +
+			(alt ? `<b>Alt:</b> ${alt}<br>` : '') +
+			(hr ? `<b>HR:</b> ${hr}<br>` : '') +
+			(speed ? `<b>Speed:</b> ${speed}<br>` : '') +
+			(power ? `<b>Power:</b> ${power}<br>` : '') +
+			(cadence ? `<b>Cadence:</b> ${cadence}` : '')
+		);
+	}
+
+	function drawMapForLap(lapIdx) {
+		// Remove all layers except base layers and controls
+		map.eachLayer((layer) => {
+			if (!Object.values(baseLayers).includes(layer)) {
+				map.removeLayer(layer);
+			}
+		});
+		if (markerClusterGroup) markerClusterGroup.clearLayers();
+
+		let coords = [];
+		let startIdx = 0,
+			endIdx = window.globalData.recordMesgs.length - 1;
+		if (
+			lapIdx !== undefined &&
+			lapIdx !== 'all' &&
+			window.globalData.lapMesgs
+		) {
+			const lap = window.globalData.lapMesgs[Number(lapIdx)];
+			if (lap && lap.start_index != null && lap.end_index != null) {
+				startIdx = lap.start_index;
+				endIdx = lap.end_index;
+			}
+		}
+		let lapNum = lapIdx === 'all' ? null : Number(lapIdx) + 1;
+		coords = window.globalData.recordMesgs
+			.map((row, idx) => {
 				if (
+					idx >= startIdx &&
+					idx <= endIdx &&
 					typeof row.positionLat === 'number' &&
 					typeof row.positionLong === 'number'
 				) {
@@ -399,6 +660,8 @@ export function renderMap() {
 						row.altitude || null,
 						row.heartRate || null,
 						row.speed || null,
+						idx,
+						row,
 					];
 				}
 				return null;
@@ -406,19 +669,18 @@ export function renderMap() {
 			.filter((coord) => coord !== null);
 
 		if (coords.length > 0) {
-			// Polyline with custom style
+			const polyColor = getLapColor(lapIdx);
 			const polyline = L.polyline(
 				coords.map((c) => [c[0], c[1]]),
 				{
-					color: 'blue',
+					color: polyColor,
 					weight: 4,
-					opacity: 0.8,
-					dashArray: '6, 8',
+					opacity: 0.9,
+					dashArray: lapIdx === 'all' ? '6, 8' : null,
 				},
 			).addTo(map);
 			map.fitBounds(polyline.getBounds(), { padding: [20, 20] });
 
-			// Start/End markers with custom icons
 			const start = coords[0];
 			const end = coords[coords.length - 1];
 			L.marker([start[0], start[1]], { title: 'Start', icon: startIcon })
@@ -428,7 +690,6 @@ export function renderMap() {
 				.addTo(map)
 				.bindPopup('End');
 
-			// Markers with tooltips for every Nth point (reduce clutter)
 			for (
 				let i = 0;
 				i < coords.length;
@@ -437,32 +698,37 @@ export function renderMap() {
 				const c = coords[i];
 				const marker = L.circleMarker([c[0], c[1]], {
 					radius: 4,
-					color: '#333',
+					color: polyColor,
 					fillColor: '#fff',
-					fillOpacity: 0.7,
-					weight: 1,
+					fillOpacity: 0.85,
+					weight: 2,
 				});
 				if (markerClusterGroup) {
 					markerClusterGroup.addLayer(marker);
 				} else {
 					marker.addTo(map);
 				}
-				marker.bindTooltip(
-					`<b>Index:</b> ${i}<br>` +
-						(c[2] ? `<b>Time:</b> ${c[2]}<br>` : '') +
-						(c[3] ? `<b>Alt:</b> ${c[3]}<br>` : '') +
-						(c[4] ? `<b>HR:</b> ${c[4]}<br>` : '') +
-						(c[5] ? `<b>Speed:</b> ${c[5]}` : ''),
-					{ direction: 'top', sticky: true },
-				);
+				const lapDisplay =
+					lapNum ||
+					(window.globalData.lapMesgs &&
+						window.globalData.lapMesgs.findIndex(
+							(lap) => c[6] >= lap.start_index && c[6] <= lap.end_index,
+						) + 1) ||
+					1;
+				marker.bindTooltip(formatTooltipData(c[6], c[7], lapDisplay), {
+					direction: 'top',
+					sticky: true,
+				});
 			}
 		} else {
 			mapContainer.innerHTML =
 				'<p>No location data available to display map.</p>';
 		}
-	} else {
-		mapContainer.innerHTML =
-			'<p>No location data available to display map.</p>';
+	}
+
+	// Draw all by default
+	if (window.globalData && window.globalData.recordMesgs) {
+		drawMapForLap('all');
 	}
 
 	// --- Theme support (dark/light) ---
