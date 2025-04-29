@@ -13,8 +13,8 @@
 export function renderMap() {
 	const mapContainer = document.getElementById('content-map');
 	mapContainer.innerHTML = `
-		<div id="leaflet-map" style="height: 800px;"></div>
-		<div id="map-controls" style="margin-top: 8px;"></div>
+		<div id="leaflet-map"></div>
+		<div id="map-controls"></div>
 	`;
 
 	// --- Base layers ---
@@ -346,6 +346,53 @@ export function renderMap() {
 	const controlsDiv = document.getElementById('map-controls');
 	controlsDiv.appendChild(printBtn);
 
+	// --- Fullscreen button (custom, styled, top left) ---
+	const fullscreenControl = document.createElement('div');
+	fullscreenControl.className =
+		'custom-fullscreen-control leaflet-top leaflet-left';
+	const fullscreenEnterSVG = `<svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="3" width="5" height="2" rx="1" fill="currentColor"/><rect x="3" y="3" width="2" height="5" rx="1" fill="currentColor"/><rect x="14" y="3" width="5" height="2" rx="1" fill="currentColor"/><rect x="17" y="3" width="2" height="5" rx="1" fill="currentColor"/><rect x="3" y="17" width="5" height="2" rx="1" fill="currentColor"/><rect x="3" y="14" width="2" height="5" rx="1" fill="currentColor"/><rect x="14" y="17" width="5" height="2" rx="1" fill="currentColor"/><rect x="17" y="14" width="2" height="5" rx="1" fill="currentColor"/></svg>`;
+	const fullscreenExitSVG = `<svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="7" y="3" width="2" height="5" rx="1" fill="currentColor"/><rect x="3" y="7" width="5" height="2" rx="1" fill="currentColor"/><rect x="14" y="3" width="2" height="5" rx="1" fill="currentColor"/><rect x="15" y="7" width="5" height="2" rx="1" fill="currentColor"/><rect x="3" y="14" width="5" height="2" rx="1" fill="currentColor"/><rect x="7" y="15" width="2" height="5" rx="1" fill="currentColor"/><rect x="15" y="15" width="2" height="5" rx="1" fill="currentColor"/><rect x="15" y="15" width="5" height="2" rx="1" fill="currentColor"/></svg>`;
+	fullscreenControl.innerHTML = `
+		<div class="leaflet-bar custom-fullscreen-bar">
+			<button id="fullscreen-btn" title="Toggle Fullscreen" aria-label="Toggle Fullscreen">${fullscreenEnterSVG}</button>
+		</div>
+	`;
+	const mapDiv = document.getElementById('leaflet-map');
+	mapDiv.appendChild(fullscreenControl);
+
+	const fullscreenBtn = fullscreenControl.querySelector('#fullscreen-btn');
+	fullscreenBtn.onclick = () => {
+		if (!mapDiv) return;
+		const isFullscreen = mapDiv.classList.toggle('fullscreen');
+		fullscreenBtn.title = isFullscreen ? 'Exit Fullscreen' : 'Enter Fullscreen';
+		fullscreenBtn.innerHTML = isFullscreen
+			? fullscreenExitSVG
+			: fullscreenEnterSVG;
+		if (isFullscreen) {
+			mapDiv.requestFullscreen && mapDiv.requestFullscreen();
+		} else {
+			document.exitFullscreen && document.exitFullscreen();
+		}
+		setTimeout(() => map.invalidateSize(), 300);
+	};
+
+	// --- Listen for fullscreen changes (Escape key or other exit) ---
+	document.addEventListener('fullscreenchange', () => {
+		const isNowFullscreen = document.fullscreenElement === mapDiv;
+		if (!isNowFullscreen) {
+			mapDiv.classList.remove('fullscreen');
+			fullscreenBtn.title = 'Enter Fullscreen';
+			fullscreenBtn.innerHTML = fullscreenEnterSVG;
+			setTimeout(() => map.invalidateSize(), 300);
+		}
+	});
+
+	// Remove old fullscreen button from map-controls if present
+	const oldFullscreenBtn = document.querySelector(
+		'#map-controls #fullscreen-btn',
+	);
+	if (oldFullscreenBtn) oldFullscreenBtn.remove();
+
 	// --- Lap selection UI (bottom left, styled like zoom UI, fix pointer events) ---
 	if (
 		window.globalData &&
@@ -413,11 +460,12 @@ export function renderMap() {
 
 	// --- Minimap (if plugin available) ---
 	if (window.L && L.Control && L.Control.MiniMap) {
-		const miniMapLayer = baseLayers['OpenStreetMap'].clone
-			? baseLayers['OpenStreetMap'].clone()
-			: baseLayers['OpenStreetMap'];
+		// Always use a standard tile layer for the minimap
+		const miniMapLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+			attribution: ''
+		});
 		const miniMap = new L.Control.MiniMap(miniMapLayer, {
-			toggleDisplay: true,
+			toggleDisplay: true
 		}).addTo(map);
 	}
 
@@ -555,6 +603,17 @@ export function renderMap() {
 			'#1b5e20',
 			'#0d47a1',
 			'#fbc02d',
+			'#8d6e63',
+			'#c2185b',
+			'#1976d2',
+			'#388e3c',
+			'#f57c00',
+			'#7b1fa2',
+			'#0288d1',
+			'#2c6c6d',
+			'#d32f2f',
+			'#388e3c',
+			'#f57c00',
 		];
 		if (lapIdx === 'all') return 'blue';
 		return palette[Number(lapIdx) % palette.length];
