@@ -53,3 +53,18 @@ updates:
         applies-to: version-updates
         patterns:
           - "*"
+
+  - package-ecosystem: npm
+    directory: /electron-app/libs/zwiftmap-main/backend
+    schedule:
+      interval: daily
+
+  - package-ecosystem: npm
+    directory: /electron-app/libs/zwiftmap-main/browser-extension
+    schedule:
+      interval: daily
+
+  - package-ecosystem: npm
+    directory: /electron-app/libs/zwiftmap-main/frontend
+    schedule:
+      interval: daily
