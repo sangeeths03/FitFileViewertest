@@ -45,6 +45,49 @@ export function showFitData(data, filePath) {
 			if (ipcRenderer) ipcRenderer.send('fit-file-loaded', filePath);
 		}
 	}
+
+	// After window.globalData is set and contains lapMesgs and recordMesgs
+	if (window.globalData && window.globalData.lapMesgs && window.globalData.recordMesgs) {
+		const records = window.globalData.recordMesgs;
+		const laps = window.globalData.lapMesgs;
+		for (let i = 0; i < laps.length; ++i) {
+			const lap = laps[i];
+			const startTime = lap.startTime || lap.start_time;
+			const nextLap = laps[i + 1];
+			const endTime = nextLap ? (nextLap.startTime || nextLap.start_time) : null;
+			// Find first record with timestamp >= lap start
+			let startIdx = records.findIndex(r => r.timestamp && startTime && new Date(r.timestamp).getTime() >= new Date(startTime).getTime());
+			if (startIdx === -1 && startTime) {
+				let minDiff = Infinity;
+				for (let j = 0; j < records.length; ++j) {
+					if (records[j].timestamp) {
+						const diff = Math.abs(new Date(records[j].timestamp).getTime() - new Date(startTime).getTime());
+						if (diff < minDiff) {
+							minDiff = diff;
+							startIdx = j;
+						}
+					}
+				}
+			}
+			// Find last record before next lap's start (or end of file)
+			let endIdx = records.length - 1;
+			if (endTime) {
+				for (let j = startIdx; j < records.length; ++j) {
+					if (records[j].timestamp && new Date(records[j].timestamp).getTime() >= new Date(endTime).getTime()) {
+						endIdx = j - 1;
+						break;
+					}
+				}
+			}
+			// Clamp
+			if (startIdx < 0) startIdx = 0;
+			if (endIdx < startIdx) endIdx = startIdx;
+			if (endIdx >= records.length) endIdx = records.length - 1;
+			lap.start_index = startIdx;
+			lap.end_index = endIdx;
+		}
+	}
+
 	const tabData = document.getElementById('tab-data');
 	const tabChart = document.getElementById('tab-chart');
 	const tabMap = document.getElementById('tab-map');

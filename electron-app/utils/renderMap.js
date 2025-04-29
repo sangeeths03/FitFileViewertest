@@ -374,6 +374,20 @@ export function renderMap() {
 		lapSelect.addEventListener('change', () => {
 			drawMapForLap(lapSelect.value);
 		});
+		// Add scroll wheel support for changing lap selection
+		lapSelect.addEventListener('wheel', (e) => {
+			e.preventDefault();
+			e.stopPropagation(); // Prevent map zoom when scrolling lap select
+			const options = Array.from(lapSelect.options);
+			let idx = options.findIndex((opt) => opt.value === lapSelect.value);
+			if (e.deltaY > 0 && idx < options.length - 1) {
+				idx++;
+			} else if (e.deltaY < 0 && idx > 0) {
+				idx--;
+			}
+			lapSelect.value = options[idx].value;
+			lapSelect.dispatchEvent(new Event('change'));
+		});
 	}
 
 	// --- Custom icons for start/end ---
@@ -631,42 +645,92 @@ export function renderMap() {
 		if (markerClusterGroup) markerClusterGroup.clearLayers();
 
 		let coords = [];
-		let startIdx = 0,
-			endIdx = window.globalData.recordMesgs.length - 1;
-		if (
-			lapIdx !== undefined &&
-			lapIdx !== 'all' &&
-			window.globalData.lapMesgs
-		) {
-			const lap = window.globalData.lapMesgs[Number(lapIdx)];
-			if (lap && lap.start_index != null && lap.end_index != null) {
-				startIdx = lap.start_index;
-				endIdx = lap.end_index;
-			}
-		}
-		let lapNum = lapIdx === 'all' ? null : Number(lapIdx) + 1;
-		coords = window.globalData.recordMesgs
-			.map((row, idx) => {
+		const lapMesgs = window.globalData.lapMesgs || [];
+		const recordMesgs = window.globalData.recordMesgs || [];
+
+		// Helper: find lap number for a given point index
+		function getLapNumForIdx(idx) {
+			for (let i = 0; i < lapMesgs.length; i++) {
+				const lap = lapMesgs[i];
 				if (
-					idx >= startIdx &&
-					idx <= endIdx &&
-					typeof row.positionLat === 'number' &&
-					typeof row.positionLong === 'number'
+					lap.start_index != null &&
+					lap.end_index != null &&
+					idx >= lap.start_index &&
+					idx <= lap.end_index
 				) {
-					return [
-						Number((row.positionLat / 2 ** 31) * 180),
-						Number((row.positionLong / 2 ** 31) * 180),
-						row.timestamp || null,
-						row.altitude || null,
-						row.heartRate || null,
-						row.speed || null,
-						idx,
-						row,
-					];
+					return i + 1;
 				}
-				return null;
-			})
-			.filter((coord) => coord !== null);
+			}
+			return null;
+		}
+
+		if (lapIdx !== undefined && lapIdx !== 'all' && lapMesgs.length > 0) {
+			const lap = lapMesgs[Number(lapIdx)];
+			if (
+				lap &&
+				lap.start_index != null &&
+				lap.end_index != null &&
+				lap.start_index <= lap.end_index &&
+				lap.start_index >= 0 &&
+				lap.end_index < recordMesgs.length
+			) {
+				const lapRecords = recordMesgs.slice(
+					lap.start_index,
+					lap.end_index + 1,
+				);
+				coords = lapRecords
+					.map((row, idx) => {
+						if (
+							typeof row.positionLat === 'number' &&
+							typeof row.positionLong === 'number'
+						) {
+							return [
+								Number((row.positionLat / 2 ** 31) * 180),
+								Number((row.positionLong / 2 ** 31) * 180),
+								row.timestamp || null,
+								row.altitude || null,
+								row.heartRate || null,
+								row.speed || null,
+								lap.start_index + idx, // global index
+								row,
+								Number(lapIdx) + 1,
+							];
+						}
+						return null;
+					})
+					.filter((coord) => coord !== null);
+			} else {
+				mapContainer.innerHTML = `<p>Lap index out of bounds or invalid.<br>Lap: ${lapIdx}<br>start_index: ${
+					lap && lap.start_index
+				}<br>end_index: ${lap && lap.end_index}<br>recordMesgs: ${
+					recordMesgs.length
+				}<br>lapMesgs: ${lapMesgs.length}</p>`;
+				return;
+			}
+		} else {
+			// Show all points, but compute actual lap for each
+			coords = recordMesgs
+				.map((row, idx) => {
+					if (
+						typeof row.positionLat === 'number' &&
+						typeof row.positionLong === 'number'
+					) {
+						return [
+							Number((row.positionLat / 2 ** 31) * 180),
+							Number((row.positionLong / 2 ** 31) * 180),
+							row.timestamp || null,
+							row.altitude || null,
+							row.heartRate || null,
+							row.speed || null,
+							idx,
+							row,
+							getLapNumForIdx(idx),
+						];
+					}
+					return null;
+				})
+				.filter((coord) => coord !== null);
+		}
 
 		if (coords.length > 0) {
 			const polyColor = getLapColor(lapIdx);
@@ -708,21 +772,14 @@ export function renderMap() {
 				} else {
 					marker.addTo(map);
 				}
-				const lapDisplay =
-					lapNum ||
-					(window.globalData.lapMesgs &&
-						window.globalData.lapMesgs.findIndex(
-							(lap) => c[6] >= lap.start_index && c[6] <= lap.end_index,
-						) + 1) ||
-					1;
+				const lapDisplay = c[8] || 1;
 				marker.bindTooltip(formatTooltipData(c[6], c[7], lapDisplay), {
 					direction: 'top',
 					sticky: true,
 				});
 			}
 		} else {
-			mapContainer.innerHTML =
-				'<p>No location data available to display map.</p>';
+			mapContainer.innerHTML = `<p>No location data available to display map.<br>Lap: ${lapIdx}<br>recordMesgs: ${recordMesgs.length}<br>lapMesgs: ${lapMesgs.length}</p>`;
 		}
 	}
 
