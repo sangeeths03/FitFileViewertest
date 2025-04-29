@@ -58,13 +58,43 @@ updates:
     directory: /electron-app/libs/zwiftmap-main/backend
     schedule:
       interval: daily
+   allow:
+      # Allow both direct and indirect updates for all packages
+      - dependency-type: "all"
+    labels:
+      - "npm"
+    groups:
+      npm:
+        applies-to: version-updates
+        patterns:
+          - "*"
 
   - package-ecosystem: npm
     directory: /electron-app/libs/zwiftmap-main/browser-extension
     schedule:
       interval: daily
+   allow:
+      # Allow both direct and indirect updates for all packages
+      - dependency-type: "all"
+    labels:
+      - "npm"
+    groups:
+      npm:
+        applies-to: version-updates
+        patterns:
+          - "*"
 
   - package-ecosystem: npm
     directory: /electron-app/libs/zwiftmap-main/frontend
     schedule:
       interval: daily
+   allow:
+      # Allow both direct and indirect updates for all packages
+      - dependency-type: "all"
+    labels:
+      - "npm"
+    groups:
+      npm:
+        applies-to: version-updates
+        patterns:
+          - "*"
