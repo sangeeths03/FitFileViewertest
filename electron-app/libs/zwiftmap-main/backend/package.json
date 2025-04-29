@@ -43,7 +43,7 @@
     "@turf/difference": "6.5.0",
     "@turf/distance": "6.5.0",
     "@turf/helpers": "6.5.0",
-    "@turf/length": "6.5.0",
+    "@turf/length": "7.2.0",
     "@turf/nearest-point-on-line": "7.2.0",
     "@turf/point-to-line-distance": "6.5.0",
     "axios": "1.8.2",
