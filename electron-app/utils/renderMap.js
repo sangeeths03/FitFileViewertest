@@ -11,6 +11,7 @@
  * - Leaflet.js library must be loaded and available as global `L`.
  */
 import { addSimpleMeasureTool } from './mapMeasureTool.js';
+import { addLapSelector } from './mapLapSelector.js';
 
 export function renderMap() {
 	const mapContainer = document.getElementById('content-map');
@@ -395,123 +396,8 @@ export function renderMap() {
 	);
 	if (oldFullscreenBtn) oldFullscreenBtn.remove();
 
-	// --- Lap selection UI (bottom left, styled like zoom UI, fix pointer events) ---
-	if (
-		window.globalData &&
-		Array.isArray(window.globalData.lapMesgs) &&
-		window.globalData.lapMesgs.length > 0
-	) {
-		const lapControl = document.createElement('div');
-		lapControl.className =
-			'custom-lap-control-container leaflet-bottom leaflet-left';
-		lapControl.innerHTML = `
-			<div class="custom-lap-control leaflet-bar">
-				<label for="lap-select">Lap:</label>
-				<select id="lap-select">
-					<option value="all">All</option>
-					${window.globalData.lapMesgs
-						.map((lap, i) => `<option value="${i}">Lap ${i + 1}</option>`)
-						.join('')}
-				</select>
-			</div>
-		`;
-		lapControl.addEventListener('mousedown', (e) => e.stopPropagation());
-		lapControl.addEventListener('touchstart', (e) => e.stopPropagation());
-		document.getElementById('leaflet-map').appendChild(lapControl);
-
-		const lapSelect = lapControl.querySelector('#lap-select');
-		let multiSelectMode = false;
-
-		// Shift-click anywhere on the container toggles multi-select mode
-		lapControl.addEventListener('click', (e) => {
-			if (e.shiftKey) {
-				multiSelectMode = !multiSelectMode;
-				if (multiSelectMode) {
-					lapSelect.multiple = true;
-					lapSelect.size = Math.min(window.globalData.lapMesgs.length + 1, 6);
-					lapControl.classList.add('multi-select-active');
-				} else {
-					lapSelect.multiple = false;
-					lapSelect.size = 1;
-					lapControl.classList.remove('multi-select-active');
-					// If more than one selected, reset to 'all'
-					if (
-						lapSelect.selectedOptions.length > 1 ||
-						(lapSelect.selectedOptions.length === 1 &&
-							lapSelect.selectedOptions[0].value !== 'all')
-					) {
-						lapSelect.selectedIndex = 0;
-						lapSelect.dispatchEvent(new Event('change'));
-					}
-				}
-			}
-		});
-
-		// Only allow multi-select in multiSelectMode
-		lapSelect.addEventListener('mousedown', (e) => {
-			if (!multiSelectMode) {
-				lapSelect.multiple = false;
-				lapSelect.size = 1;
-			}
-		});
-		lapSelect.addEventListener('focus', () => {
-			if (!multiSelectMode) {
-				lapSelect.multiple = false;
-				lapSelect.size = 1;
-			}
-		});
-		lapSelect.addEventListener('blur', () => {
-			if (!multiSelectMode) {
-				lapSelect.multiple = false;
-				lapSelect.size = 1;
-			}
-		});
-
-		lapSelect.addEventListener('change', () => {
-			let selected = Array.from(lapSelect.selectedOptions).map(
-				(opt) => opt.value,
-			);
-			// If 'all' is selected and another lap is selected, unselect 'all'
-			if (selected.includes('all') && selected.length > 1) {
-				// Unselect 'all'
-				for (let opt of lapSelect.options) {
-					if (opt.value === 'all') opt.selected = false;
-				}
-				selected = selected.filter((v) => v !== 'all');
-			}
-			// If a lap is selected while 'all' is selected, unselect 'all'
-			if (!multiSelectMode && selected[0] !== 'all') {
-				for (let opt of lapSelect.options) {
-					if (opt.value === 'all') opt.selected = false;
-				}
-			}
-			if (!multiSelectMode || selected.length === 1) {
-				if (selected[0] === 'all') {
-					drawMapForLap('all');
-				} else {
-					drawMapForLap([selected[0]]);
-				}
-			} else {
-				drawMapForLap(selected);
-			}
-		});
-		// Add scroll wheel support for changing lap selection (single mode only)
-		lapSelect.addEventListener('wheel', (e) => {
-			if (!multiSelectMode) {
-				e.preventDefault();
-				e.stopPropagation();
-				const options = Array.from(lapSelect.options);
-				let idx = lapSelect.selectedIndex;
-				if (idx === -1) idx = 0;
-				if (e.deltaY > 0 && idx < options.length - 1) {
-					lapSelect.selectedIndex = idx + 1;
-				} else if (e.deltaY < 0 && idx > 0) {
-					lapSelect.selectedIndex = idx - 1;
-				}
-				lapSelect.dispatchEvent(new Event('change'));
-			}
-		});
-	}
+	// --- Lap selection UI (moved to mapLapSelector.js) ---
+	addLapSelector(map, document.getElementById('leaflet-map'), drawMapForLap);
 
 	// --- Simple point-to-point measurement tool ---
 	addSimpleMeasureTool(map, controlsDiv);

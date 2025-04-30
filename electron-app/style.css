@@ -595,7 +595,7 @@ body.theme-light .custom-lap-control select {
 	padding: 2px 8px;
 	border-radius: 4px;
 	cursor: pointer;
-	transition: background 0.2s, color 0.2s;
+	transition: background 0.2s, color 0.2s, border 0.2s;
 	outline: none;
 	box-shadow: none;
 	display: flex;
@@ -608,22 +608,22 @@ body.theme-light .custom-lap-control select {
 	color: #fff;
 }
 body.theme-dark .custom-fullscreen-bar.leaflet-bar {
-    background: #f1f1f1;
-    color: #000000;
-    border: 1px solid #888;
+	background: #f1f1f1;
+	color: #000000;
+	border: 1px solid #888;
 	position: absolute;
 	top: 60px;
 	left: -6px;
 }
 body.theme-dark .custom-fullscreen-bar button {
-    font-size: 14px;
-    pointer-events: auto;
-    background: var(--color-bg-alt);
-    color: var(--color-fg);
-    border: 1px solid var(--color-border);
-    border-radius: 4px;
-    padding: 4px 10px;
-    filter: invert(1) hue-rotate(180deg);
+	font-size: 14px;
+	pointer-events: auto;
+	background: var(--color-bg-alt);
+	color: var(--color-fg);
+	border: 1px solid var(--color-border);
+	border-radius: 4px;
+	padding: 4px 10px;
+	filter: invert(1) hue-rotate(180deg);
 }
 body.theme-dark .custom-fullscreen-bar button:hover,
 body.theme-dark .custom-fullscreen-bar button:focus {
@@ -940,4 +940,59 @@ footer {
 	box-shadow: 0 2px 6px #0002;
 	display: inline-block;
 	text-align: center;
+}
+
+/* =====================================================
+   Multi-Lap Toggle Button
+   ===================================================== */
+.exit-multilap-btn,
+.deselect-all-btn,
+.multi-lap-toggle {
+	background: none;
+	border: none;
+	padding: 0 4px;
+	margin: 0 4px 0 0;
+	cursor: pointer;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 28px;
+	height: 28px;
+	border-radius: 4px;
+	transition: background 0.2s, color 0.2s;
+}
+.exit-multilap-btn:hover,
+.deselect-all-btn:hover,
+.multi-lap-toggle:hover {
+	background: #e3f2fd;
+}
+.exit-multilap-btn {
+	position: absolute;
+	left: 2px;
+	top: 2px;
+	z-index: 2;
+}
+.deselect-all-btn {
+	position: absolute;
+	left: 60px;
+	top: 10px;
+	z-index: 2;
+}
+.multi-lap-toggle {
+	margin-left: 0;
+	margin-right: 6px;
+	background: none;
+	color: #222;
+}
+.multi-lap-toggle.active {
+	background: #2196f3;
+	color: #fff;
+}
+.multi-lap-toggle .icon,
+.exit-multilap-btn .icon,
+.deselect-all-btn .icon {
+	width: 16px;
+	height: 16px;
+	display: inline-block;
+	vertical-align: middle;
 }
