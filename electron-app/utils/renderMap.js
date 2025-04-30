@@ -342,12 +342,42 @@ export function renderMap() {
 
 	// --- Print/export button ---
 	const printBtn = document.createElement('button');
-	printBtn.textContent = 'Print/Export Map';
+	printBtn.className = 'map-action-btn';
+	printBtn.innerHTML = '<svg class="icon" viewBox="0 0 20 20" width="18" height="18"><rect x="4" y="12" width="12" height="5" rx="1" fill="#1976d2"/><rect x="4" y="3" width="12" height="7" rx="1" fill="#90caf9"/><rect x="7" y="15" width="6" height="2" rx="1" fill="#fff"/></svg> <span>Print/Export</span>';
+	printBtn.title = 'Print or export the current map view';
 	printBtn.onclick = () => {
 		window.print();
 	};
 	const controlsDiv = document.getElementById('map-controls');
 	controlsDiv.appendChild(printBtn);
+
+	// --- GPX/KML export button ---
+	const exportBtn = document.createElement('button');
+	exportBtn.className = 'map-action-btn';
+	exportBtn.innerHTML = '<svg class="icon" viewBox="0 0 20 20" width="18" height="18"><path d="M10 2v12M10 14l-4-4m4 4l4-4" stroke="#1976d2" stroke-width="2" fill="none"/><rect x="4" y="16" width="12" height="2" rx="1" fill="#1976d2"/></svg> <span>Export GPX</span>';
+	exportBtn.title = 'Export the current track as a GPX file';
+	exportBtn.onclick = () => {
+		if (!window.globalData || !window.globalData.recordMesgs) return;
+		const coords = window.globalData.recordMesgs
+			.filter((row) => row.positionLat != null && row.positionLong != null)
+			.map((row) => [
+				Number((row.positionLat / 2 ** 31) * 180),
+				Number((row.positionLong / 2 ** 31) * 180),
+			]);
+		let gpx = `<?xml version="1.0" encoding="UTF-8"?>\n<gpx version="1.1" creator="FitFileViewer">\n<trk><name>Exported Track</name><trkseg>`;
+		coords.forEach((c) => {
+			gpx += `\n<trkpt lat=\"${c[0]}\" lon=\"${c[1]}\"/>`;
+		});
+		gpx += '\n</trkseg></trk></gpx>';
+		const blob = new Blob([gpx], { type: 'application/gpx+xml' });
+		const url = URL.createObjectURL(blob);
+		const a = document.createElement('a');
+		a.href = url;
+		a.download = 'track.gpx';
+		a.click();
+		URL.revokeObjectURL(url);
+	};
+	controlsDiv.appendChild(exportBtn);
 
 	// --- Fullscreen button (custom, styled, top left) ---
 	const fullscreenControl = document.createElement('div');
@@ -461,32 +491,6 @@ export function renderMap() {
 			drawnItems.addLayer(e.layer);
 		});
 	}
-
-	// --- GPX/KML export button ---
-	const exportBtn = document.createElement('button');
-	exportBtn.textContent = 'Export GPX';
-	exportBtn.onclick = () => {
-		if (!window.globalData || !window.globalData.recordMesgs) return;
-		const coords = window.globalData.recordMesgs
-			.filter((row) => row.positionLat != null && row.positionLong != null)
-			.map((row) => [
-				Number((row.positionLat / 2 ** 31) * 180),
-				Number((row.positionLong / 2 ** 31) * 180),
-			]);
-		let gpx = `<?xml version="1.0" encoding="UTF-8"?>\n<gpx version="1.1" creator="FitFileViewer">\n<trk><name>Exported Track</name><trkseg>`;
-		coords.forEach((c) => {
-			gpx += `\n<trkpt lat=\"${c[0]}\" lon=\"${c[1]}\"/>`;
-		});
-		gpx += '\n</trkseg></trk></gpx>';
-		const blob = new Blob([gpx], { type: 'application/gpx+xml' });
-		const url = URL.createObjectURL(blob);
-		const a = document.createElement('a');
-		a.href = url;
-		a.download = 'track.gpx';
-		a.click();
-		URL.revokeObjectURL(url);
-	};
-	controlsDiv.appendChild(exportBtn);
 
 	// --- Elevation profile (if altitude data) ---
 	const hasAltitude =
