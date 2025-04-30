@@ -418,24 +418,144 @@ export function renderMap() {
 		document.getElementById('leaflet-map').appendChild(lapControl);
 
 		const lapSelect = lapControl.querySelector('#lap-select');
-		lapSelect.addEventListener('change', () => {
-			drawMapForLap(lapSelect.value);
-		});
-		// Add scroll wheel support for changing lap selection
-		lapSelect.addEventListener('wheel', (e) => {
-			e.preventDefault();
-			e.stopPropagation(); // Prevent map zoom when scrolling lap select
-			const options = Array.from(lapSelect.options);
-			let idx = options.findIndex((opt) => opt.value === lapSelect.value);
-			if (e.deltaY > 0 && idx < options.length - 1) {
-				idx++;
-			} else if (e.deltaY < 0 && idx > 0) {
-				idx--;
+		let multiSelectMode = false;
+
+		// Shift-click anywhere on the container toggles multi-select mode
+		lapControl.addEventListener('click', (e) => {
+			if (e.shiftKey) {
+				multiSelectMode = !multiSelectMode;
+				if (multiSelectMode) {
+					lapSelect.multiple = true;
+					lapSelect.size = Math.min(window.globalData.lapMesgs.length + 1, 6);
+					lapControl.classList.add('multi-select-active');
+				} else {
+					lapSelect.multiple = false;
+					lapSelect.size = 1;
+					lapControl.classList.remove('multi-select-active');
+					// If more than one selected, reset to 'all'
+					if (lapSelect.selectedOptions.length > 1 || (lapSelect.selectedOptions.length === 1 && lapSelect.selectedOptions[0].value !== 'all')) {
+						lapSelect.selectedIndex = 0;
+						lapSelect.dispatchEvent(new Event('change'));
+					}
+				}
 			}
-			lapSelect.value = options[idx].value;
-			lapSelect.dispatchEvent(new Event('change'));
+		});
+
+		// Only allow multi-select in multiSelectMode
+		lapSelect.addEventListener('mousedown', (e) => {
+			if (!multiSelectMode) {
+				lapSelect.multiple = false;
+				lapSelect.size = 1;
+			}
+		});
+		lapSelect.addEventListener('focus', () => {
+			if (!multiSelectMode) {
+				lapSelect.multiple = false;
+				lapSelect.size = 1;
+			}
+		});
+		lapSelect.addEventListener('blur', () => {
+			if (!multiSelectMode) {
+				lapSelect.multiple = false;
+				lapSelect.size = 1;
+			}
+		});
+
+		lapSelect.addEventListener('change', () => {
+			let selected = Array.from(lapSelect.selectedOptions).map(opt => opt.value);
+			// If 'all' is selected and another lap is selected, unselect 'all'
+			if (selected.includes('all') && selected.length > 1) {
+				// Unselect 'all'
+				for (let opt of lapSelect.options) {
+					if (opt.value === 'all') opt.selected = false;
+				}
+				selected = selected.filter(v => v !== 'all');
+			}
+			// If a lap is selected while 'all' is selected, unselect 'all'
+			if (!multiSelectMode && selected[0] !== 'all') {
+				for (let opt of lapSelect.options) {
+					if (opt.value === 'all') opt.selected = false;
+				}
+			}
+			if (!multiSelectMode || selected.length === 1) {
+				if (selected[0] === 'all') {
+					drawMapForLap('all');
+				} else {
+					drawMapForLap([selected[0]]);
+				}
+			} else {
+				drawMapForLap(selected);
+			}
+		});
+		// Add scroll wheel support for changing lap selection (single mode only)
+		lapSelect.addEventListener('wheel', (e) => {
+			if (!multiSelectMode) {
+				e.preventDefault();
+				e.stopPropagation();
+				const options = Array.from(lapSelect.options);
+				let idx = lapSelect.selectedIndex;
+				if (idx === -1) idx = 0;
+				if (e.deltaY > 0 && idx < options.length - 1) {
+					lapSelect.selectedIndex = idx + 1;
+				} else if (e.deltaY < 0 && idx > 0) {
+					lapSelect.selectedIndex = idx - 1;
+				}
+				lapSelect.dispatchEvent(new Event('change'));
+			}
 		});
 	}
+
+	// --- Simple point-to-point measurement tool ---
+	let measurePoints = [];
+	let measureLine = null;
+	let measureMarkers = [];
+	let measureLabel = null;
+	const enableSimpleMeasure = () => {
+		map.on('click', onMapClickMeasure);
+	};
+	const onMapClickMeasure = (e) => {
+		if (measurePoints.length >= 2) {
+			measurePoints = [];
+			if (measureLine) { map.removeLayer(measureLine); measureLine = null; }
+			measureMarkers.forEach(m => map.removeLayer(m));
+			measureMarkers = [];
+			if (measureLabel) { map.removeLayer(measureLabel); measureLabel = null; }
+		}
+		measurePoints.push(e.latlng);
+		const marker = L.marker(e.latlng, { draggable: false });
+		marker.addTo(map);
+		measureMarkers.push(marker);
+		if (measurePoints.length === 2) {
+			measureLine = L.polyline(measurePoints, { color: '#222', dashArray: '4,6', weight: 3 }).addTo(map);
+			const dist = map.distance(measurePoints[0], measurePoints[1]);
+			const mid = L.latLng(
+				(measurePoints[0].lat + measurePoints[1].lat) / 2,
+				(measurePoints[0].lng + measurePoints[1].lng) / 2
+			);
+			measureLabel = L.marker(mid, {
+				icon: L.divIcon({
+					className: 'measure-label',
+					html: `<div style="background:#fff;padding:2px 6px;border-radius:4px;border:1px solid #888;font-size:13px;">${dist >= 1000 ? (dist/1000).toFixed(2) + ' km' : dist.toFixed(1) + ' m'}</div>`
+				}),
+				interactive: false
+			}).addTo(map);
+		}
+	};
+	// Add a button to enable the simple measurement tool
+	const measureBtn = document.createElement('button');
+	measureBtn.textContent = 'Measure';
+	measureBtn.title = 'Click, then click two points on the map to measure distance';
+	measureBtn.onclick = () => {
+		measurePoints = [];
+		if (measureLine) { map.removeLayer(measureLine); measureLine = null; }
+		measureMarkers.forEach(m => map.removeLayer(m));
+		measureMarkers = [];
+		if (measureLabel) { map.removeLayer(measureLabel); measureLabel = null; }
+		enableSimpleMeasure();
+		measureBtn.disabled = true;
+		setTimeout(() => { measureBtn.disabled = false; }, 2000);
+	};
+	controlsDiv.appendChild(measureBtn);
 
 	// --- Custom icons for start/end ---
 	const startIcon = L.icon({
@@ -721,6 +841,97 @@ export function renderMap() {
 				}
 			}
 			return null;
+		}
+
+		if (Array.isArray(lapIdx)) {
+			// Multi-lap: draw each lap in a different color
+			let bounds = null;
+			lapIdx.forEach((lapVal, i) => {
+				if (lapVal === 'all') return; // skip 'all' if present
+				const lap = lapMesgs[Number(lapVal)];
+				if (
+					lap &&
+					lap.start_index != null &&
+					lap.end_index != null &&
+					lap.start_index <= lap.end_index &&
+					lap.start_index >= 0 &&
+					lap.end_index < recordMesgs.length
+				) {
+					const lapRecords = recordMesgs.slice(
+						lap.start_index,
+						lap.end_index + 1,
+					);
+					const coords = lapRecords
+						.map((row, idx) => {
+							if (
+								typeof row.positionLat === 'number' &&
+								typeof row.positionLong === 'number'
+							) {
+								return [
+									Number((row.positionLat / 2 ** 31) * 180),
+									Number((row.positionLong / 2 ** 31) * 180),
+									row.timestamp || null,
+									row.altitude || null,
+									row.heartRate || null,
+									row.speed || null,
+									lap.start_index + idx, // global index
+									row,
+									Number(lapVal) + 1,
+								];
+							}
+							return null;
+						})
+						.filter((coord) => coord !== null);
+					if (coords.length > 0) {
+						const polyColor = getLapColor(lapVal);
+						const polyline = L.polyline(
+							coords.map((c) => [c[0], c[1]]),
+							{
+								color: polyColor,
+								weight: 4,
+								opacity: 0.9,
+								dashArray: null,
+							},
+						).addTo(map);
+						if (!bounds) bounds = polyline.getBounds();
+						else bounds.extend(polyline.getBounds());
+						const start = coords[0];
+						const end = coords[coords.length - 1];
+						L.marker([start[0], start[1]], { title: 'Start', icon: startIcon })
+							.addTo(map)
+							.bindPopup('Start');
+						L.marker([end[0], end[1]], { title: 'End', icon: endIcon })
+							.addTo(map)
+							.bindPopup('End');
+						for (
+							let j = 0;
+							j < coords.length;
+							j += Math.max(1, Math.floor(coords.length / 50))
+						) {
+							const c = coords[j];
+							const marker = L.circleMarker([c[0], c[1]], {
+								radius: 4,
+								color: polyColor,
+								fillColor: '#fff',
+								fillOpacity: 0.85,
+								weight: 2,
+							});
+							if (markerClusterGroup) {
+								markerClusterGroup.addLayer(marker);
+							} else {
+								marker.addTo(map);
+							}
+							const lapDisplay = c[8] || 1;
+							marker.bindTooltip(formatTooltipData(c[6], c[7], lapDisplay), {
+								direction: 'top',
+								sticky: true,
+							});
+						}
+					}
+				}
+			});
+			if (bounds) map.fitBounds(bounds, { padding: [20, 20] });
+			return;
 		}
 
 		if (lapIdx !== undefined && lapIdx !== 'all' && lapMesgs.length > 0) {
