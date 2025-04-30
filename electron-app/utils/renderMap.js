@@ -10,6 +10,8 @@
  * Dependencies:
  * - Leaflet.js library must be loaded and available as global `L`.
  */
+import { addSimpleMeasureTool } from './mapMeasureTool.js';
+
 export function renderMap() {
 	const mapContainer = document.getElementById('content-map');
 	mapContainer.innerHTML = `
@@ -433,7 +435,11 @@ export function renderMap() {
 					lapSelect.size = 1;
 					lapControl.classList.remove('multi-select-active');
 					// If more than one selected, reset to 'all'
-					if (lapSelect.selectedOptions.length > 1 || (lapSelect.selectedOptions.length === 1 && lapSelect.selectedOptions[0].value !== 'all')) {
+					if (
+						lapSelect.selectedOptions.length > 1 ||
+						(lapSelect.selectedOptions.length === 1 &&
+							lapSelect.selectedOptions[0].value !== 'all')
+					) {
 						lapSelect.selectedIndex = 0;
 						lapSelect.dispatchEvent(new Event('change'));
 					}
@@ -462,14 +468,16 @@ export function renderMap() {
 		});
 
 		lapSelect.addEventListener('change', () => {
-			let selected = Array.from(lapSelect.selectedOptions).map(opt => opt.value);
+			let selected = Array.from(lapSelect.selectedOptions).map(
+				(opt) => opt.value,
+			);
 			// If 'all' is selected and another lap is selected, unselect 'all'
 			if (selected.includes('all') && selected.length > 1) {
 				// Unselect 'all'
 				for (let opt of lapSelect.options) {
 					if (opt.value === 'all') opt.selected = false;
 				}
-				selected = selected.filter(v => v !== 'all');
+				selected = selected.filter((v) => v !== 'all');
 			}
 			// If a lap is selected while 'all' is selected, unselect 'all'
 			if (!multiSelectMode && selected[0] !== 'all') {
@@ -506,56 +514,7 @@ export function renderMap() {
 	}
 
 	// --- Simple point-to-point measurement tool ---
-	let measurePoints = [];
-	let measureLine = null;
-	let measureMarkers = [];
-	let measureLabel = null;
-	const enableSimpleMeasure = () => {
-		map.on('click', onMapClickMeasure);
-	};
-	const onMapClickMeasure = (e) => {
-		if (measurePoints.length >= 2) {
-			measurePoints = [];
-			if (measureLine) { map.removeLayer(measureLine); measureLine = null; }
-			measureMarkers.forEach(m => map.removeLayer(m));
-			measureMarkers = [];
-			if (measureLabel) { map.removeLayer(measureLabel); measureLabel = null; }
-		}
-		measurePoints.push(e.latlng);
-		const marker = L.marker(e.latlng, { draggable: false });
-		marker.addTo(map);
-		measureMarkers.push(marker);
-		if (measurePoints.length === 2) {
-			measureLine = L.polyline(measurePoints, { color: '#222', dashArray: '4,6', weight: 3 }).addTo(map);
-			const dist = map.distance(measurePoints[0], measurePoints[1]);
-			const mid = L.latLng(
-				(measurePoints[0].lat + measurePoints[1].lat) / 2,
-				(measurePoints[0].lng + measurePoints[1].lng) / 2
-			);
-			measureLabel = L.marker(mid, {
-				icon: L.divIcon({
-					className: 'measure-label',
-					html: `<div style="background:#fff;padding:2px 6px;border-radius:4px;border:1px solid #888;font-size:13px;">${dist >= 1000 ? (dist/1000).toFixed(2) + ' km' : dist.toFixed(1) + ' m'}</div>`
-				}),
-				interactive: false
-			}).addTo(map);
-		}
-	};
-	// Add a button to enable the simple measurement tool
-	const measureBtn = document.createElement('button');
-	measureBtn.textContent = 'Measure';
-	measureBtn.title = 'Click, then click two points on the map to measure distance';
-	measureBtn.onclick = () => {
-		measurePoints = [];
-		if (measureLine) { map.removeLayer(measureLine); measureLine = null; }
-		measureMarkers.forEach(m => map.removeLayer(m));
-		measureMarkers = [];
-		if (measureLabel) { map.removeLayer(measureLabel); measureLabel = null; }
-		enableSimpleMeasure();
-		measureBtn.disabled = true;
-		setTimeout(() => { measureBtn.disabled = false; }, 2000);
-	};
-	controlsDiv.appendChild(measureBtn);
+	addSimpleMeasureTool(map, controlsDiv);
 
 	// --- Custom icons for start/end ---
 	const startIcon = L.icon({
@@ -581,11 +540,14 @@ export function renderMap() {
 	// --- Minimap (if plugin available) ---
 	if (window.L && L.Control && L.Control.MiniMap) {
 		// Always use a standard tile layer for the minimap
-		const miniMapLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-			attribution: ''
-		});
+		const miniMapLayer = L.tileLayer(
+			'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+			{
+				attribution: '',
+			},
+		);
 		const miniMap = new L.Control.MiniMap(miniMapLayer, {
-			toggleDisplay: true
+			toggleDisplay: true,
 		}).addTo(map);
 	}
 
