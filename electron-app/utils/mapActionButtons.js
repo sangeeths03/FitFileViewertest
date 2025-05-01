@@ -76,3 +76,65 @@ export function createElevationProfileButton() {
 	};
 	return btn;
 }
+
+export function createMarkerCountSelector(onChange) {
+	const container = document.createElement('div');
+	container.className = 'map-action-btn marker-count-container';
+
+	const label = document.createElement('label');
+	label.textContent = 'Data Points:';
+	label.setAttribute('for', 'marker-count-select');
+	label.className = 'marker-count-label';
+
+	const select = document.createElement('select');
+	select.id = 'marker-count-select';
+	select.className = 'marker-count-select';
+
+	const options = [10, 25, 50, 100, 200, 500, 1000, 'All'];
+	options.forEach(val => {
+		const opt = document.createElement('option');
+		opt.value = val === 'All' ? 'all' : val;
+		opt.textContent = val;
+		select.appendChild(opt);
+	});
+
+	// Set initial value from global or default
+	let initial;
+	if (window.mapMarkerCount === undefined) {
+		window.mapMarkerCount = 50;
+		initial = 50;
+	} else if (window.mapMarkerCount === 0) {
+		initial = 'all';
+	} else {
+		initial = window.mapMarkerCount;
+	}
+	select.value = initial;
+
+	select.onchange = function() {
+		let val = select.value;
+		if (val === 'all') {
+			window.mapMarkerCount = 0;
+		} else {
+			window.mapMarkerCount = parseInt(val, 10);
+		}
+		if (typeof onChange === 'function') onChange(window.mapMarkerCount);
+	};
+
+	// Add mouse wheel support for changing marker count
+	select.addEventListener('wheel', (e) => {
+		e.preventDefault();
+		e.stopPropagation();
+		const options = Array.from(select.options);
+		let idx = select.selectedIndex;
+		if (e.deltaY > 0 && idx < options.length - 1) {
+			select.selectedIndex = idx + 1;
+		} else if (e.deltaY < 0 && idx > 0) {
+			select.selectedIndex = idx - 1;
+		}
+		select.dispatchEvent(new Event('change'));
+	});
+
+	container.appendChild(label);
+	container.appendChild(select);
+	return container;
+}

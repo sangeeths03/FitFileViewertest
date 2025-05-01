@@ -19,7 +19,7 @@ import { drawMapForLap } from './drawMapForLap.js';
 import { updateMapTheme } from './updateMapTheme.js';
 import { createStartIcon, createEndIcon } from './mapIcons.js';
 import { baseLayers } from './mapBaseLayers.js';
-import { createPrintButton, createExportGPXButton, createElevationProfileButton } from './mapActionButtons.js';
+import { createPrintButton, createExportGPXButton, createElevationProfileButton, createMarkerCountSelector } from './mapActionButtons.js';
 import { addFullscreenControl } from './mapFullscreenControl.js';
 
 export function renderMap() {
@@ -165,6 +165,13 @@ export function renderMap() {
 	controlsDiv.appendChild(createPrintButton());
 	controlsDiv.appendChild(createExportGPXButton());
 	controlsDiv.appendChild(createElevationProfileButton());
+	// Add marker count selector
+	controlsDiv.appendChild(createMarkerCountSelector(() => {
+		// Redraw map with new marker count
+		if (window.globalData && window.globalData.recordMesgs) {
+			drawMapForLapWrapper('all');
+		}
+	}));
 
 	// --- Fullscreen button (custom, styled, top left) ---
 	addFullscreenControl(map);

@@ -88,7 +88,9 @@ export function drawMapForLap(lapIdx, {
 					for (
 						let j = 0;
 						j < coords.length;
-						j += Math.max(1, Math.floor(coords.length / 50))
+						j += (window.mapMarkerCount === 0 || !window.mapMarkerCount)
+							? 1
+							: Math.max(1, Math.floor(coords.length / window.mapMarkerCount))
 					) {
 						const c = coords[j];
 						const marker = L.circleMarker([c[0], c[1]], {
@@ -210,7 +212,9 @@ export function drawMapForLap(lapIdx, {
 		for (
 			let i = 0;
 			i < coords.length;
-			i += Math.max(1, Math.floor(coords.length / 50))
+			i += (window.mapMarkerCount === 0 || !window.mapMarkerCount)
+				? 1
+				: Math.max(1, Math.floor(coords.length / window.mapMarkerCount))
 		) {
 			const c = coords[i];
 			const marker = L.circleMarker([c[0], c[1]], {

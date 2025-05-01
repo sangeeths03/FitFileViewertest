@@ -646,6 +646,29 @@ body.theme-dark .custom-fullscreen-bar button:focus {
 }
 
 /* =====================================================
+   Marker Count Selector Styles
+   ===================================================== */
+.marker-count-container {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+}
+.marker-count-label {
+	font-weight: normal;
+	font-size: 14px;
+	margin-right: 4px;
+}
+.marker-count-select {
+	margin-left: 2px;
+	font-size: 14px;
+	padding: 2px 6px;
+	border-radius: 4px;
+	border: 1px solid #888;
+	background: inherit;
+	color: inherit;
+}
+
+/* =====================================================
    Modal & Overlay Styles
    ===================================================== */
 #loadingOverlay {
