@@ -34,6 +34,14 @@ export function displayTables(dataFrames, containerOverride) {
 	);
 	console.log('[DEBUG] Table keys:', keys);
 
+	// Debug: print first row of each table
+	keys.forEach((key) => {
+		const rows = dataFrames[key];
+		if (rows && rows.length > 0) {
+			console.log(`[DEBUG] First row for ${key}:`, rows[0], 'Type:', typeof rows[0]);
+		}
+	});
+
 	// Sort keys so 'recordMesgs' appears first, then alphabetically
 	keys.sort((a, b) => {
 		if (a === 'recordMesgs') return -1;
