@@ -23,6 +23,25 @@ export function addSimpleMeasureTool(map, controlsDiv) {
 		}
 	}
 
+	// Add Escape key handler to clear measurement
+	document.addEventListener('keydown', function escHandler(e) {
+		if (e.key === 'Escape') {
+			clearMeasure();
+			// Also disable measurement mode if active
+			if (measuring) disableMeasure(measureBtnRef);
+		}
+	});
+
+	function createExitButton() {
+		return `<button class="measure-exit-btn" title="Remove measurement" style="position:absolute;top:2px;right:2px;background:none;border:none;color:#b71c1c;font-size:16px;line-height:1;cursor:pointer;z-index:10;">&times;</button>`;
+	}
+
+	function onLabelExitClick(e) {
+		if (e.target.classList.contains('measure-exit-btn')) {
+			clearMeasure();
+		}
+	}
+
 	function onMapClickMeasure(e) {
 		if (measurePoints.length >= 2) {
 			clearMeasure();
@@ -43,12 +62,17 @@ export function addSimpleMeasureTool(map, controlsDiv) {
 			measureLabel = L.marker(mid, {
 				icon: L.divIcon({
 					className: 'measure-label',
-					html: `<div class="measure-label-content">${dist >= 1000 ? distKm.toFixed(2) + ' km' : dist.toFixed(1) + ' m'}<br>${distMi.toFixed(2)} mi</div>`
+					html: `<div class="measure-label-content" style="position:relative;padding-right:20px;">${createExitButton()}${dist >= 1000 ? distKm.toFixed(2) + ' km' : dist.toFixed(1) + ' m'}<br>${distMi.toFixed(2)} mi</div>`
 				}),
-				iconSize: [100, 34],
-				iconAnchor: [50, 17],
-				interactive: false
+				iconSize: [120, 38],
+				iconAnchor: [60, 19],
+				interactive: true
 			}).addTo(map);
+			// Add click handler for exit button
+			const labelEl = measureLabel.getElement();
+			if (labelEl) {
+				labelEl.addEventListener('click', onLabelExitClick);
+			}
 			// Auto-disable after measurement
 			disableMeasure(measureBtnRef);
 		}

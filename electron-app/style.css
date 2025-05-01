@@ -408,6 +408,10 @@ table.dataTable.display > tbody > tr:hover td {
 }
 
 #map-controls {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0;
 	margin-top: 8px;
 }
 
@@ -995,4 +999,80 @@ footer {
 	height: 16px;
 	display: inline-block;
 	vertical-align: middle;
+}
+
+#deselect-all-btn:hover > svg > circle,
+#deselect-all-btn:hover > svg > line {
+	stroke: red !important;
+}
+
+/* =====================================================
+   Map Action Buttons
+   ===================================================== */
+.map-action-btn {
+	background: var(--leaflet-control-bg, #fff);
+	color: #222;
+	border: 1px solid #888;
+	border-radius: 4px;
+	padding: 6px 14px 6px 10px;
+	font-size: 15px;
+	font-weight: 600;
+	box-shadow: 0 1px 5px rgb(0 0 0 / 40%);
+	margin: 0 8px 8px 0;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	transition: background 0.2s, color 0.2s, border 0.2s;
+	outline: none;
+	min-width: 0;
+	user-select: none;
+}
+.map-action-btn .icon {
+	display: inline-block;
+	vertical-align: middle;
+	width: 18px;
+	height: 18px;
+	margin-right: 6px;
+}
+.map-action-btn span {
+	display: inline-block;
+	vertical-align: middle;
+	line-height: 1.2;
+	font-size: 15px;
+	font-weight: 600;
+}
+.map-action-btn:hover,
+.map-action-btn:focus {
+	background: var(--color-accent);
+	color: #fff;
+	border-color: var(--color-accent);
+}
+body.theme-dark .map-action-btn {
+	background: #23263a;
+	color: #e0e0e0;
+	border: 1px solid #33374d;
+}
+body.theme-dark .map-action-btn:hover,
+body.theme-dark .map-action-btn:focus {
+	background: var(--color-accent);
+	color: #fff;
+	border-color: var(--color-accent);
+}
+.map-action-btn:disabled,
+.map-action-btn.disabled {
+	background: #e0e0e0 !important;
+	color: #888 !important;
+	border-color: #ccc !important;
+	cursor: not-allowed !important;
+	opacity: 70%;
+	box-shadow: none;
+}
+body.theme-dark .map-action-btn:disabled,
+body.theme-dark .map-action-btn.disabled {
+	background: #23263a !important;
+	color: #555 !important;
+	border-color: #33374d !important;
+	cursor: not-allowed !important;
+	opacity: 60%;
 }
