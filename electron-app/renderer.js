@@ -1,4 +1,3 @@
-'use strict';
 // In electron-app/renderer.js
 
 import { showNotification, setLoading } from './utils/rendererUtils.js';

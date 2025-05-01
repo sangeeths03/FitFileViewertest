@@ -1,4 +1,3 @@
-'use strict';
 /* eslint-disable no-console */
 const { app, BrowserWindow, dialog, ipcMain, Menu } = require('electron');
 const { createWindow } = require('./windowStateUtils');

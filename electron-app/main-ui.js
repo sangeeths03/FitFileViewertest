@@ -1,4 +1,3 @@
-'use strict';
 /* eslint-disable no-console */
 // This file is part of the Electron app that interacts with the main process and the UI.
 import { displayTables } from './utils/displayTables.js';

@@ -47,7 +47,7 @@ async function decodeFitFile(fileBuffer, options = {}, fitsdk = null) {
 			expandComponents: true,
 			convertTypesToStrings: true,
 			convertDateTimesToDates: true,
-			includeUnknownData: false,
+			includeUnknownData: true,
 			mergeHeartRates: true,
 		};
 		const readOptions = { ...defaultOptions, ...options };
