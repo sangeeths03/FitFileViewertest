@@ -163,7 +163,13 @@ export function renderTable({ container, data, allKeys, visibleColumns, setVisib
 				const lapRow = document.createElement('tr');
 				sortedVisible.forEach((key, idx) => {
 					const td = document.createElement('td');
-					td.textContent = key === LABEL_COL ? `Lap ${i+1}` : (lap[key] !== undefined ? lap[key] : '');
+					if (key === LABEL_COL) {
+						td.textContent = `Lap ${i+1}`;
+					} else if (key === 'timestamp' && lap.startTime) {
+						td.textContent = lap.startTime;
+					} else {
+						td.textContent = lap[key] !== undefined ? lap[key] : '';
+					}
 					lapRow.appendChild(td);
 				});
 				tbody.appendChild(lapRow);
