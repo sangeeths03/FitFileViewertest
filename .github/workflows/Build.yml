@@ -90,6 +90,7 @@ jobs:
 
       - name: Overwrite package.json with bumped version
         run: mv ./electron-app/package.json ./electron-app/package.json
+        continue-on-error: true
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
