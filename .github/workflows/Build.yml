@@ -25,7 +25,7 @@ jobs:
         run: npm ci
 
       - name: Install dependencies 2
-        run: npm install electron-builder
+        run: npm install -D
 
       - name: Build Electron app
         run: npm run build
