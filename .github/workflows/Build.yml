@@ -99,7 +99,7 @@ jobs:
           path: ./electron-app
 
       - name: List files after download
-        run: ls -l ./electron-app/package.json
+        run: ls -l
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
