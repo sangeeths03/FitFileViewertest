@@ -89,7 +89,7 @@ jobs:
           path: ./electron-app
 
       - name: Overwrite package.json with bumped version
-        run: mv ./electron-app/package.json ./electron-app/package.json
+        run: mv ./electron-app/bumped-package-json/package.json ./electron-app/package.json
         continue-on-error: true
 
       - name: Setup Node.js
@@ -119,7 +119,6 @@ jobs:
             electron-app/dist/*.AppImage
             electron-app/dist/*.snap
             electron-app/dist/*.zip
-            electron-app/dist/*.blockmap
 
   release:
     needs: [build, bump-version]
@@ -148,8 +147,9 @@ jobs:
       - name: Generate release notes
         id: release_notes
         run: |
-          if [ -n "${{ steps.get_prev_tag.outputs.prev_tag }}" ]; then
-            NOTES=$(git log ${{ steps.get_prev_tag.outputs.prev_tag }}..HEAD --pretty=format:'* %s (%an)')
+          PREV_TAG="${{ steps.get_prev_tag.outputs.prev_tag }}"
+          if [ -n "$PREV_TAG" ]; then
+            NOTES=$(git log "$PREV_TAG"..HEAD --pretty=format:'* %s (%an)')
           else
             NOTES=$(git log --pretty=format:'* %s (%an)')
           fi
@@ -163,7 +163,7 @@ jobs:
       - name: Deduplicate and validate distributable files
         run: |
           mkdir -p release-dist
-          find ./artifacts -type f \( -name "*.exe" -o -name "*.dmg" -o -name "*.AppImage" -o -name "*.snap" -o -name "*.zip" -o -name "*.blockmap" \) -exec sh -c '
+          find ./artifacts -type f \( -name "*.exe" -o -name "*.dmg" -o -name "*.AppImage" -o -name "*.snap" -o -name "*.zip" \) -exec sh -c '
             for filepath; do
               filename=$(basename "$filepath")
               if [ ! -e "release-dist/$filename" ]; then
