@@ -1,0 +1,72 @@
+name: Build and Release Electron App
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-release:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: electron-app
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Electron app
+        run: npm run build
+
+      - name: Bump version
+        id: bump
+        run: |
+          VERSION=$(jq -r .version package.json)
+          MAJOR=$(echo $VERSION | cut -d. -f1)
+          MINOR=$(echo $VERSION | cut -d. -f2)
+          PATCH=$(echo $VERSION | cut -d. -f3)
+          # Only bump minor, cycling from .1 to .9 then next major
+          if [ "$MINOR" -lt 9 ]; then
+            NEW_MINOR=$(($MINOR + 1))
+            NEW_VERSION="$MAJOR.$NEW_MINOR.$PATCH"
+          else
+            NEW_MAJOR=$(($MAJOR + 1))
+            NEW_VERSION="$NEW_MAJOR.0.$PATCH"
+          fi
+          jq --arg v "$NEW_VERSION" '.version = $v' package.json > tmp.json && mv tmp.json package.json
+          echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
+
+      - name: Commit and push version bump
+        uses: EndBug/add-and-commit@v9
+        with:
+          message: "Bump version to ${{ steps.bump.outputs.new_version }}"
+          add: 'package.json'
+          cwd: electron-app
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Archive build output
+        run: |
+          cd dist
+          zip -r ../build.zip .
+        working-directory: electron-app
+
+      - name: Create or update release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.bump.outputs.new_version }}
+          name: Release v${{ steps.bump.outputs.new_version }}
+          files: electron-app/build.zip
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
