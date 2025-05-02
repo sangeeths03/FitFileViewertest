@@ -124,7 +124,7 @@ jobs:
           tag_name: v${{ needs.bump-version.outputs.new_version }}
           name: Release v${{ needs.bump-version.outputs.new_version }}
           body: ${{ steps.release_notes.outputs.notes }}
-          files: ./artifacts/**/dist/**/*
+          files: ./artifacts/**/*.*
           draft: false
           prerelease: false
         env:
