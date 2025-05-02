@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
 
 jobs:
   bump-version:
@@ -20,6 +21,14 @@ jobs:
       - name: Bump version
         id: bump
         run: |
+          if [ ! -f package.json ]; then
+            echo "Error: package.json not found" >&2
+            exit 1
+          fi
+          if ! jq empty package.json >/dev/null 2>&1; then
+            echo "Error: package.json is not valid JSON" >&2
+            exit 1
+          fi
           VERSION=$(jq -r .version package.json)
           MAJOR=$(echo $VERSION | cut -d. -f1)
           MINOR=$(echo $VERSION | cut -d. -f2)
@@ -34,6 +43,7 @@ jobs:
           fi
           jq --arg v "$NEW_VERSION" '.version = $v' package.json > tmp.json && mv tmp.json package.json
           echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
+          echo "::set-output name=new_version::$NEW_VERSION"
 
       - name: Commit and push version bump
         uses: EndBug/add-and-commit@v9
@@ -44,6 +54,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Upload bumped package.json
+        uses: actions/upload-artifact@v4
+        with:
+          name: bumped-package-json
+          path: electron-app/package.json
+
   build:
     needs: bump-version
     runs-on: ${{ matrix.os }}
@@ -52,8 +68,10 @@ jobs:
         os: [ubuntu-latest, windows-latest, macos-latest]
         arch: [x64, ia32]
         exclude:
+          # Exclude macOS with ia32 architecture as it is not supported by Electron
           - os: macos-latest
             arch: ia32
+          # Exclude Ubuntu with ia32 architecture as it is not commonly used and not officially supported
           - os: ubuntu-latest
             arch: ia32
     defaults:
@@ -63,6 +81,15 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Download bumped package.json
+        uses: actions/download-artifact@v4
+        with:
+          name: bumped-package-json
+          path: ./electron-app
+
+      - name: Overwrite package.json with bumped version
+        run: mv ./electron-app/package.json ./electron-app/package.json
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -109,7 +136,12 @@ jobs:
         id: get_prev_tag
         run: |
           git fetch --tags
-          PREV_TAG=$(git tag --sort=-creatordate | tail -2 | head -1)
+          TAG_COUNT=$(git tag --sort=-creatordate | wc -l)
+          if [ "$TAG_COUNT" -ge 2 ]; then
+            PREV_TAG=$(git tag --sort=-creatordate | tail -2 | head -1)
+          else
+            PREV_TAG=""
+          fi
           echo "prev_tag=$PREV_TAG" >> $GITHUB_OUTPUT
 
       - name: Generate release notes
@@ -127,15 +159,26 @@ jobs:
       - name: List artifacts
         run: ls -R ./artifacts
 
-      - name: Deduplicate distributable files
+      - name: Deduplicate and validate distributable files
         run: |
           mkdir -p release-dist
-          find ./artifacts -type f \( -name "*.exe" -o -name "*.dmg" -o -name "*.AppImage" -o -name "*.snap" -o -name "*.zip" -o -name "*.blockmap" \) | \
-          awk -F/ '{print $NF}' | sort -u | while read fname; do
-            fpath=$(find ./artifacts -type f -name "$fname" | head -n 1)
-            cp "$fpath" release-dist/
-          done
+          find ./artifacts -type f \( -name "*.exe" -o -name "*.dmg" -o -name "*.AppImage" -o -name "*.snap" -o -name "*.zip" -o -name "*.blockmap" \) -exec sh -c '
+            for filepath; do
+              filename=$(basename "$filepath")
+              if [ ! -e "release-dist/$filename" ]; then
+                # Validate file (e.g., check size or content if needed)
+                if [ -s "$filepath" ]; then
+                  cp "$filepath" "release-dist/$filename"
+                else
+                  echo "Skipping invalid or empty file: $filepath"
+                fi
+              fi
+            done
+          ' sh {} +
 
+      # This step uses the softprops/action-gh-release action to create or update a GitHub release.
+      # It uploads the distributable files generated during the build process and associates them with the release.
+      # The release is tagged with the new version and includes release notes generated from the commit history.
       - name: Create or update release with distributable builds
         uses: softprops/action-gh-release@v2
         with:
