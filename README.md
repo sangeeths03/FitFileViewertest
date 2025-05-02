@@ -2,7 +2,7 @@
 [![CodeQL](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/codeql.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/codeql.yml)
 [![Dependabot Updates](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/dependabot/dependabot-updates/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/dependabot/dependabot-updates)
 [![Dependency Review](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/dependency-review.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/dependency-review.yml)
-[![Deploy static content to Pages](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/static.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/static.yml)
+[![Build and Release Electron App](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/Build.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/Build.yml)
 [![ESLint](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/eslint.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/eslint.yml)
 [![GitHub Pages - Generate XML sitemap](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/sitemap.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/sitemap.yml)
 [![Mark stale issues and pull requests](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/stale.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/stale.yml)

@@ -81,11 +81,17 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Upload dist folder as artifact
+      - name: Upload distributable files as artifact
         uses: actions/upload-artifact@v4
         with:
           name: dist-${{ matrix.os }}-${{ matrix.arch }}
-          path: electron-app/dist/
+          path: |
+            electron-app/dist/*.exe
+            electron-app/dist/*.dmg
+            electron-app/dist/*.AppImage
+            electron-app/dist/*.snap
+            electron-app/dist/*.zip
+            electron-app/dist/*.blockmap
 
   release:
     needs: [build, bump-version]
@@ -118,13 +124,13 @@ jobs:
           echo "$NOTES" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
 
-      - name: Create or update release with unzipped builds
+      - name: Create or update release with distributable builds
         uses: softprops/action-gh-release@v2
         with:
           tag_name: v${{ needs.bump-version.outputs.new_version }}
           name: Release v${{ needs.bump-version.outputs.new_version }}
           body: ${{ steps.release_notes.outputs.notes }}
-          files: ./artifacts/**/*.*
+          files: ./artifacts/**/*.{exe,dmg,AppImage,snap,zip,blockmap}
           draft: false
           prerelease: false
         env:
