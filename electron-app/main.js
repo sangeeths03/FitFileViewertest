@@ -139,6 +139,14 @@ app.whenReady().then(() => {
 		return await fitParser.decodeFitFile(buffer);
 	});
 
+	// Add IPC handler for getting the current theme
+	ipcMain.handle('theme:get', async () => {
+		// Use the same logic as buildAppMenu to get the theme from electron-store
+		const Store = require('electron-store');
+		const store = new Store.default({ name: 'settings' });
+		return store.get('theme', 'dark');
+	});
+
 	// Listen for theme change from renderer and update menu
 	ipcMain.on('theme-changed', (event, theme) => {
 		const win = BrowserWindow.fromWebContents(event.sender);

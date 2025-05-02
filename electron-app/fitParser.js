@@ -1,5 +1,7 @@
 /* eslint-env node */
 const { Buffer } = require('buffer');
+const Store = require('electron-store');
+const store = new Store.default({ name: 'settings' });
 
 /**
  * Custom error for FIT file decoding issues.
@@ -74,6 +76,23 @@ function applyUnknownMessageLabels(messages) {
 }
 
 /**
+ * Retrieves persisted decoder options from the store.
+ * @returns {Object} Persisted decoder options.
+ */
+function getPersistedDecoderOptions() {
+	const defaults = {
+		applyScaleAndOffset: true,
+		expandSubFields: true,
+		expandComponents: true,
+		convertTypesToStrings: true,
+		convertDateTimesToDates: true,
+		includeUnknownData: true,
+		mergeHeartRates: true,
+	};
+	return store.get('decoderOptions', defaults);
+}
+
+/**
  * Decodes a FIT file buffer using the Garmin FIT SDK.
  * @param {Buffer|Uint8Array} fileBuffer - The FIT file buffer to decode.
  * @param {Object} [options] - Optional decoder.read options.
@@ -102,17 +121,9 @@ async function decodeFitFile(fileBuffer, options = {}, fitsdk = null) {
 			console.error(msg);
 			throw new FitDecodeError(msg, integrityErrors);
 		}
-		// Default decoder options
-		const defaultOptions = {
-			applyScaleAndOffset: true,
-			expandSubFields: true,
-			expandComponents: true,
-			convertTypesToStrings: true,
-			convertDateTimesToDates: true,
-			includeUnknownData: true,
-			mergeHeartRates: true,
-		};
-		const readOptions = Object.assign({}, defaultOptions, options);
+		// Default decoder options from persistent store
+		const persistedOptions = getPersistedDecoderOptions();
+		const readOptions = Object.assign({}, persistedOptions, options);
 		const { messages, errors } = decoder.read(readOptions);
 		if (errors && errors.length > 0) {
 			const msg = 'Decoding errors occurred';

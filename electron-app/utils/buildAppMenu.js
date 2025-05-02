@@ -1,5 +1,36 @@
 const { loadRecentFiles, getShortRecentName } = require('./recentFiles');
 const { Menu, BrowserWindow } = require('electron');
+const Store = require('electron-store');
+const store = new Store.default({ name: 'settings' });
+
+const decoderOptionDefaults = {
+	applyScaleAndOffset: true,
+	expandSubFields: true,
+	expandComponents: true,
+	convertTypesToStrings: true,
+	convertDateTimesToDates: true,
+	includeUnknownData: true,
+	mergeHeartRates: true,
+};
+
+function getDecoderOptions() {
+	return store.get('decoderOptions', decoderOptionDefaults);
+}
+
+function setDecoderOption(key, value) {
+	const options = getDecoderOptions();
+	options[key] = value;
+	store.set('decoderOptions', options);
+	return options;
+}
+
+function getTheme() {
+	return store.get('theme', 'dark');
+}
+
+function setTheme(theme) {
+	store.set('theme', theme);
+}
 
 /**
  * Builds and sets the application menu for the Electron app.
@@ -7,10 +38,11 @@ const { Menu, BrowserWindow } = require('electron');
  * displaying a list of recent files, and standard menu roles.
  *
  * @param {Electron.BrowserWindow} mainWindow - The main application window to which menu actions are dispatched.
- * @param {string} [currentTheme='dark'] - The current theme of the application, used to set the checked state of theme radio buttons.
+ * @param {string} [currentTheme=null] - The current theme of the application, used to set the checked state of theme radio buttons.
  * @param {string|null} [loadedFitFilePath=null] - The path of the loaded FIT file, used to enable/disable the Summary Columns menu item.
  */
-function buildAppMenu(mainWindow, currentTheme = 'dark', loadedFitFilePath = null) {
+function buildAppMenu(mainWindow, currentTheme = null, loadedFitFilePath = null) {
+	const theme = currentTheme || getTheme();
 	const recentFiles = loadRecentFiles();
 	const recentMenuItems =
 		recentFiles.length > 0
@@ -24,6 +56,23 @@ function buildAppMenu(mainWindow, currentTheme = 'dark', loadedFitFilePath = nul
 					},
 			  }))
 			: [{ label: 'No Recent Files', enabled: false }];
+
+	const decoderOptions = getDecoderOptions();
+	const decoderOptionsMenu = {
+		label: 'Decoder Options',
+		submenu: Object.keys(decoderOptionDefaults).map((key) => ({
+			label: key,
+			type: 'checkbox',
+			checked: !!decoderOptions[key],
+			click: (menuItem) => {
+				const newOptions = setDecoderOption(key, menuItem.checked);
+				const win = BrowserWindow.getFocusedWindow() || mainWindow;
+				if (win && win.webContents) {
+					win.webContents.send('decoder-options-changed', newOptions);
+				}
+			},
+		})),
+	};
 
 	/**
 	 * Defines the application menu template for the Electron app.
@@ -85,10 +134,10 @@ function buildAppMenu(mainWindow, currentTheme = 'dark', loadedFitFilePath = nul
 						{
 							label: 'Dark',
 							type: 'radio',
-							checked: currentTheme === 'dark',
+							checked: theme === 'dark',
 							click: () => {
+								setTheme('dark');
 								const win = BrowserWindow.getFocusedWindow() || mainWindow;
-								console.log('[DEBUG] Theme menu clicked: dark, win:', !!win);
 								if (win && win.webContents) {
 									win.webContents.send('set-theme', 'dark');
 								}
@@ -97,17 +146,18 @@ function buildAppMenu(mainWindow, currentTheme = 'dark', loadedFitFilePath = nul
 						{
 							label: 'Light',
 							type: 'radio',
-							checked: currentTheme === 'light',
+							checked: theme === 'light',
 							click: () => {
+								setTheme('light');
 								const win = BrowserWindow.getFocusedWindow() || mainWindow;
-								console.log('[DEBUG] Theme menu clicked: light, win:', !!win);
 								if (win && win.webContents) {
 									win.webContents.send('set-theme', 'light');
 								}
 							},
 						},
-						],
-					},
+					],
+				},
+				decoderOptionsMenu,
 				{
 					label: 'Summary Columns...',
 					enabled: !!loadedFitFilePath,

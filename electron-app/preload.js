@@ -35,6 +35,12 @@ contextBridge.exposeInMainWorld('electronAPI', {
 	addRecentFile: (filePath) => ipcRenderer.invoke('recentFiles:add', filePath),
 
 	/**
+	 * Gets the current theme from the main process.
+	 * @returns {Promise<string>}
+	 */
+	getTheme: () => ipcRenderer.invoke('theme:get'),
+
+	/**
 	 * Registers a handler for the 'menu-open-file' event.
 	 * @param {Function} callback
 	 */

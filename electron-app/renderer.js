@@ -1,6 +1,7 @@
 // In electron-app/renderer.js
 
 import { showNotification, setLoading } from './utils/rendererUtils.js';
+import { applyTheme, listenForThemeChange } from './utils/theme.js';
 
 const openFileBtn = document.getElementById('openFileBtn');
 if (!openFileBtn) {
@@ -227,3 +228,17 @@ window.addEventListener('resize', () => {
 		}, 200);
 	}
 });
+
+// --- Theme wiring ---
+(async function setupTheme() {
+	let theme = 'dark';
+	if (window.electronAPI && typeof window.electronAPI.getTheme === 'function') {
+		try {
+			theme = await window.electronAPI.getTheme();
+		} catch (e) {
+			console.warn('Could not get theme from main process, defaulting to dark.');
+		}
+	}
+	applyTheme(theme);
+	listenForThemeChange(applyTheme);
+})();
