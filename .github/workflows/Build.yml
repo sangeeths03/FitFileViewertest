@@ -6,8 +6,12 @@ on:
       - main
 
 jobs:
-  build-release:
-    runs-on: ubuntu-latest
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        arch: [x64, ia32]
     defaults:
       run:
         working-directory: electron-app
@@ -21,59 +25,64 @@ jobs:
         with:
           node-version: 20
 
-      - name: Install predependencies
-        run: npm install
-
       - name: Install dependencies
         run: npm ci
 
-      - name: Install dev dependencies
+      - name: Install electron-builder
         run: npm install -D electron-builder
 
       - name: Build Electron app
-        run: npm run build
+        run: |
+          npx electron-builder --${{ matrix.os == 'windows-latest' && 'win' || matrix.os == 'macos-latest' && 'mac' || 'linux' }} --${{ matrix.arch }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Bump version
-        id: bump
-        run: |
-          VERSION=$(jq -r .version package.json)
-          MAJOR=$(echo $VERSION | cut -d. -f1)
-          MINOR=$(echo $VERSION | cut -d. -f2)
-          PATCH=$(echo $VERSION | cut -d. -f3)
-          # Only bump minor, cycling from .1 to .9 then next major
-          if [ "$MINOR" -lt 9 ]; then
-            NEW_MINOR=$(($MINOR + 1))
-            NEW_VERSION="$MAJOR.$NEW_MINOR.$PATCH"
-          else
-            NEW_MAJOR=$(($MAJOR + 1))
-            NEW_VERSION="$NEW_MAJOR.0.$PATCH"
-          fi
-          jq --arg v "$NEW_VERSION" '.version = $v' package.json > tmp.json && mv tmp.json package.json
-          echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
-
-      - name: Commit and push version bump
-        uses: EndBug/add-and-commit@v9
+      - name: Upload dist folder as artifact
+        uses: actions/upload-artifact@v4
         with:
-          message: "Bump version to ${{ steps.bump.outputs.new_version }}"
-          add: 'package.json'
-          cwd: electron-app
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          name: dist-${{ matrix.os }}-${{ matrix.arch }}
+          path: electron-app/dist/
 
-      - name: Archive build output
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download all build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: ./artifacts
+
+      - name: Get latest and previous tag
+        id: get_tags
         run: |
-          cd dist
-          zip -r ../build.zip .
-        working-directory: electron-app
+          git fetch --tags
+          LATEST_TAG=$(git describe --tags --abbrev=0)
+          PREV_TAG=$(git tag --sort=-creatordate | sed -n 2p)
+          echo "latest_tag=$LATEST_TAG" >> $GITHUB_OUTPUT
+          echo "prev_tag=$PREV_TAG" >> $GITHUB_OUTPUT
 
-      - name: Create or update release
+      - name: Generate release notes
+        id: release_notes
+        run: |
+          if [ -n "${{ steps.get_tags.outputs.prev_tag }}" ]; then
+            NOTES=$(git log ${{ steps.get_tags.outputs.prev_tag }}..${{ steps.get_tags.outputs.latest_tag }} --pretty=format:'* %s (%an)')
+          else
+            NOTES=$(git log --pretty=format:'* %s (%an)')
+          fi
+          echo "notes<<EOF" >> $GITHUB_OUTPUT
+          echo "$NOTES" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Create or update release with unzipped builds
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: v${{ steps.bump.outputs.new_version }}
-          name: Release v${{ steps.bump.outputs.new_version }}
-          files: electron-app/build.zip
+          tag_name: ${{ steps.get_tags.outputs.latest_tag }}
+          name: Release ${{ steps.get_tags.outputs.latest_tag }}
+          body: ${{ steps.release_notes.outputs.notes }}
+          files: ./artifacts/**/dist/**/*
           draft: false
           prerelease: false
         env:
