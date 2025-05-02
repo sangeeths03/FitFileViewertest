@@ -127,13 +127,22 @@ jobs:
       - name: List artifacts
         run: ls -R ./artifacts
 
+      - name: Deduplicate distributable files
+        run: |
+          mkdir -p release-dist
+          find ./artifacts -type f \( -name "*.exe" -o -name "*.dmg" -o -name "*.AppImage" -o -name "*.snap" -o -name "*.zip" -o -name "*.blockmap" \) | \
+          awk -F/ '{print $NF}' | sort -u | while read fname; do
+            fpath=$(find ./artifacts -type f -name "$fname" | head -n 1)
+            cp "$fpath" release-dist/
+          done
+
       - name: Create or update release with distributable builds
         uses: softprops/action-gh-release@v2
         with:
           tag_name: v${{ needs.bump-version.outputs.new_version }}
           name: Release v${{ needs.bump-version.outputs.new_version }}
           body: ${{ steps.release_notes.outputs.notes }}
-          files: ./artifacts/**/*.*
+          files: release-dist/*
           draft: false
           prerelease: false
         env:
