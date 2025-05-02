@@ -29,8 +29,8 @@ jobs:
             echo "Error: package.json is not valid JSON" >&2
             exit 1
           fi
-          # Find last commit or tag
-          LAST_REF=$(git describe --tags --abbrev=0 2>/dev/null || git rev-list --max-parents=0 HEAD)
+          # Find last tag (always with v prefix) or initial commit
+          LAST_REF=$(git describe --tags --match "v*" --abbrev=0 2>/dev/null || git rev-list --max-parents=0 HEAD)
           # Check for changes in electron-app dir since last ref
           if git diff --quiet "$LAST_REF" -- electron-app/; then
             BUMP_TYPE=patch
@@ -46,14 +46,23 @@ jobs:
           else
             if [ "$MINOR" -lt 9 ]; then
               NEW_MINOR=$(($MINOR + 1))
-              NEW_VERSION="$MAJOR.$NEW_MINOR.$PATCH"
+              NEW_VERSION="$MAJOR.$NEW_MINOR.0"
             else
               NEW_MAJOR=$(($MAJOR + 1))
-              NEW_VERSION="$NEW_MAJOR.0.$PATCH"
+              NEW_VERSION="$NEW_MAJOR.0.0"
             fi
           fi
           jq --arg v "$NEW_VERSION" '.version = $v' package.json > tmp.json && mv tmp.json package.json
           echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
+
+      - name: Tag new version
+        if: steps.bump.outputs.new_version != ''
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git tag -a "v${{ steps.bump.outputs.new_version }}" -m "Release v${{ steps.bump.outputs.new_version }}"
+          git push origin "v${{ steps.bump.outputs.new_version }}"
+        working-directory: electron-app
 
       - name: Commit and push version bump
         uses: EndBug/add-and-commit@v9
@@ -97,9 +106,6 @@ jobs:
         with:
           name: bumped-package-json
           path: ./electron-app
-
-      - name: List files after download
-        run: ls -l
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
