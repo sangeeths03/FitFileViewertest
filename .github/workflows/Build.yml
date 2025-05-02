@@ -124,13 +124,16 @@ jobs:
           echo "$NOTES" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
 
+      - name: List artifacts
+        run: ls -R ./artifacts
+
       - name: Create or update release with distributable builds
         uses: softprops/action-gh-release@v2
         with:
           tag_name: v${{ needs.bump-version.outputs.new_version }}
           name: Release v${{ needs.bump-version.outputs.new_version }}
           body: ${{ steps.release_notes.outputs.notes }}
-          files: ./artifacts/**/*.{exe,dmg,AppImage,snap,zip,blockmap}
+          files: ./artifacts/**/*.*
           draft: false
           prerelease: false
         env:
