@@ -14200,7 +14200,8 @@ function Lp(e) {
 	});
 }
 Lp.propTypes = { children: B.node };
-en(() => import('./sentry-CLraKjXM.js'), [], import.meta.url);
+// en(() => import('./sentry-CLraKjXM.js'), [], import.meta.url);
+// Removed Sentry integration
 const l1 = w.lazy(() =>
 	en(
 		() => import('./Results-H2VOSWW7.js'),

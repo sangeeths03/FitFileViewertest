@@ -237,6 +237,34 @@ if (
 	});
 }
 
+// Listen for decoder options changes from main process
+if (window.electronAPI && window.electronAPI.onIpc) {
+	window.electronAPI.onIpc('decoder-options-changed', (event, newOptions) => {
+		console.log('[DEBUG] Decoder options changed:', newOptions);
+		import('./utils/rendererUtils.js').then(({ showNotification, setLoading }) => {
+			showNotification('Decoder options updated.', 'info', 2000);
+			// If a file is loaded, re-parse and update the data table
+			if (window.globalData && window.globalData.cachedFilePath) {
+				const filePath = window.globalData.cachedFilePath;
+				setLoading(true);
+				window.electronAPI.readFile(filePath)
+					.then(arrayBuffer => window.electronAPI.parseFitFile(arrayBuffer))
+					.then(result => {
+						if (result && result.error) {
+							showNotification(`Error: ${result.error}\n${result.details || ''}`, 'error');
+						} else {
+							window.showFitData(result, filePath);
+						}
+					})
+					.catch(err => {
+						showNotification(`Error reloading file: ${err}`, 'error');
+					})
+					.finally(() => setLoading(false));
+			}
+		});
+	});
+}
+
 // Debounce chart rendering on window resize for performance
 let chartRenderTimeout;
 window.addEventListener('resize', () => {
