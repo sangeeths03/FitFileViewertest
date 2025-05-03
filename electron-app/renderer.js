@@ -8,69 +8,82 @@ if (!openFileBtn) {
 	showNotification('Open File button not found!', 'error', 7000);
 }
 
-openFileBtn.addEventListener('click', async () => {
-	// Check for electronAPI and methods
-	if (
-		!window.electronAPI ||
-		!window.electronAPI.openFile ||
-		!window.electronAPI.readFile ||
-		!window.electronAPI.parseFitFile
-	) {
-		showNotification(
-			'Electron API not available. Please restart the app.',
-			'error',
-			7000,
-		);
-		return;
-	}
+let isOpeningFile = false;
 
-	openFileBtn.disabled = true;
-	setLoading(true);
-	let filePath;
+async function handleOpenFile() {
+	if (isOpeningFile) return;
+	isOpeningFile = true;
 	try {
-		filePath = await window.electronAPI.openFile();
-	} catch (err) {
-		showNotification(`Failed to open file dialog: ${err}`, 'error');
-		openFileBtn.disabled = false;
-		setLoading(false);
-		return;
-	}
-	if (filePath) {
-		let arrayBuffer;
-		try {
-			arrayBuffer = await window.electronAPI.readFile(filePath);
-		} catch (err) {
-			showNotification(`Error reading file: ${err}`, 'error');
-			openFileBtn.disabled = false;
-			setLoading(false);
-			return;
-		}
-		let result;
-		try {
-			result = await window.electronAPI.parseFitFile(arrayBuffer);
-		} catch (err) {
-			showNotification(`Error parsing FIT file: ${err}`, 'error');
-			openFileBtn.disabled = false;
-			setLoading(false);
-			return;
-		}
-		if (result && result.error) {
+		// Check for electronAPI and methods
+		if (
+			!window.electronAPI ||
+			!window.electronAPI.openFile ||
+			!window.electronAPI.readFile ||
+			!window.electronAPI.parseFitFile
+		) {
 			showNotification(
-				`Error: ${result.error}\n${result.details || ''}`,
+				'Electron API not available. Please restart the app.',
 				'error',
+				7000,
 			);
-		} else {
-			console.log('[DEBUG] FIT parse result:', result);
+			return;
+		}
+
+		openFileBtn.disabled = true;
+		setLoading(true);
+		let filePath;
+		try {
+			filePath = await window.electronAPI.openFile();
+		} catch (err) {
+			showNotification(`Failed to open file dialog: ${err}`, 'error');
+			openFileBtn.disabled = false;
+			setLoading(false);
+			return;
+		}
+		if (filePath) {
+			let arrayBuffer;
 			try {
-				window.showFitData(result, filePath);
+				arrayBuffer = await window.electronAPI.readFile(filePath);
 			} catch (err) {
-				showNotification(`Error displaying FIT data: ${err}`, 'error');
+				showNotification(`Error reading file: ${err}`, 'error');
+				openFileBtn.disabled = false;
+				setLoading(false);
+				return;
+			}
+			let result;
+			try {
+				result = await window.electronAPI.parseFitFile(arrayBuffer);
+			} catch (err) {
+				showNotification(`Error parsing FIT file: ${err}`, 'error');
+				openFileBtn.disabled = false;
+				setLoading(false);
+				return;
+			}
+			if (result && result.error) {
+				showNotification(
+					`Error: ${result.error}\n${result.details || ''}`,
+					'error',
+				);
+			} else {
+				console.log('[DEBUG] FIT parse result:', result);
+				try {
+					window.showFitData(result, filePath);
+					if (window.sendFitFileToAltFitReader) {
+						window.sendFitFileToAltFitReader(arrayBuffer);
+					}
+				} catch (err) {
+					showNotification(`Error displaying FIT data: ${err}`, 'error');
+				}
 			}
 		}
+		openFileBtn.disabled = false;
+		setLoading(false);
+	} finally {
+		isOpeningFile = false;
 	}
-	openFileBtn.disabled = false;
-	setLoading(false);
-});
+}
+
+openFileBtn.addEventListener('click', handleOpenFile);
 
 // --- Recent Files Context Menu for Open Button ---
 openFileBtn.addEventListener('contextmenu', async (event) => {
@@ -141,6 +154,9 @@ openFileBtn.addEventListener('contextmenu', async (event) => {
 					showNotification(`Error: ${result.error}\n${result.details || ''}`, 'error');
 				} else {
 					window.showFitData(result, file);
+					if (window.sendFitFileToAltFitReader) {
+						window.sendFitFileToAltFitReader(arrayBuffer);
+					}
 				}
 				await window.electronAPI.addRecentFile(file);
 			} catch (err) {
@@ -193,7 +209,7 @@ if (
 	window.electronAPI.onOpenRecentFile
 ) {
 	window.electronAPI.onMenuOpenFile(() => {
-		openFileBtn.click(); // Simulate click to reuse logic
+		handleOpenFile(); // Ensure no event argument is passed
 	});
 	window.electronAPI.onOpenRecentFile(async (filePath) => {
 		openFileBtn.disabled = true;
@@ -208,6 +224,9 @@ if (
 				);
 			} else {
 				window.showFitData(result, filePath);
+				if (window.sendFitFileToAltFitReader) {
+					window.sendFitFileToAltFitReader(arrayBuffer);
+				}
 			}
 			await window.electronAPI.addRecentFile(filePath); // move to top
 		} catch (err) {

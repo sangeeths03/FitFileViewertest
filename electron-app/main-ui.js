@@ -13,6 +13,38 @@ window.globalData = window.globalData || null; // will hold all data received fr
 
 window.showFitData = showFitData;
 
+// Helper to convert ArrayBuffer to base64
+function arrayBufferToBase64(buffer) {
+  let binary = '';
+  const bytes = new Uint8Array(buffer);
+  for (let i = 0; i < bytes.length; i++) {
+    binary += String.fromCharCode(bytes[i]);
+  }
+  return window.btoa(binary);
+}
+
+// When a FIT file is opened, always send it to the iframe (even if not active)
+window.sendFitFileToAltFitReader = async function(arrayBuffer) {
+  const iframe = document.getElementById('altfit-iframe');
+  if (iframe) {
+    // If iframe is not loaded yet, wait for it to load before posting message
+    const postToIframe = () => {
+      if (iframe.contentWindow) {
+        const base64 = arrayBufferToBase64(arrayBuffer);
+        iframe.contentWindow.postMessage({ type: 'fit-file', base64 }, '*');
+      }
+    };
+    if (iframe.src && !iframe.src.includes('libs/ffv/index.html')) {
+      iframe.src = 'libs/ffv/index.html';
+      iframe.onload = postToIframe;
+    } else if (iframe.contentWindow && iframe.src) {
+      postToIframe();
+    } else {
+      iframe.onload = postToIframe;
+    }
+  }
+};
+
 // Listen for theme change from main process
 listenForThemeChange((theme) => {
 	applyTheme(theme);
@@ -167,6 +199,20 @@ window.onload = () => {
 				}
 			},
 		},
+		{
+			id: 'tab-altfit',
+			content: 'content-altfit',
+			handler: () => {
+				if (document.getElementById('tab-altfit').classList.contains('active')) return;
+				toggleTabVisibility('content-altfit');
+				setActiveTab('tab-altfit');
+				// Dynamically set iframe src when tab is activated
+				const iframe = document.getElementById('altfit-iframe');
+				if (iframe && !iframe.src.includes('libs/ffv/index.html')) {
+					iframe.src = 'libs/ffv/index.html';
+				}
+			},
+		},
 	];
 
 	// Refactor tabConfig.forEach to use a reusable function
@@ -175,6 +221,53 @@ window.onload = () => {
 		if (btn) btn.onclick = handler;
 	}
 	tabConfig.forEach(({ id, handler }) => setupTabButton(id, handler));
+
+	// After tabConfig.forEach
+	// Ensure iframe src is cleared when switching away from altfit tab
+	const allTabButtons = document.querySelectorAll('.tab-button');
+	allTabButtons.forEach((btn) => {
+		btn.addEventListener('click', () => {
+			if (btn.id !== 'tab-altfit') {
+				const iframe = document.getElementById('altfit-iframe');
+				if (iframe) iframe.src = '';
+			}
+		});
+	});
+
+	// Alt FIT Reader logic
+	const altFitBtn = document.getElementById('altfit-open-btn');
+	if (altFitBtn) {
+		altFitBtn.onclick = async () => {
+			const lib = document.getElementById('fit-lib-select').value;
+			const decrypt = document.getElementById('fit-decrypt-select').value;
+			const resultDiv = document.getElementById('altfit-result');
+			resultDiv.innerHTML = '';
+			try {
+				// Placeholder: open file dialog and parse using selected lib/method
+				if (!window.electronAPI || !window.electronAPI.openFileDialog) {
+					resultDiv.innerHTML = '<span style="color:red">Electron API not available.</span>';
+					return;
+				}
+				const file = await window.electronAPI.openFileDialog();
+				if (!file) return;
+				let arrayBuffer = await window.electronAPI.readFile(file);
+				let result;
+				if (lib === 'default') {
+					result = await window.electronAPI.parseFitFile(arrayBuffer, { decrypt });
+				} else {
+					// Placeholder for alternative library logic
+					result = { error: 'Alternative FIT library not implemented yet.' };
+				}
+				if (result && result.error) {
+					resultDiv.innerHTML = `<span style='color:red'>Error: ${result.error}</span>`;
+				} else {
+					resultDiv.innerHTML = `<pre>${JSON.stringify(result, null, 2)}</pre>`;
+				}
+			} catch (err) {
+				resultDiv.innerHTML = `<span style='color:red'>Error: ${err}</span>`;
+			}
+		};
+	}
 
 	// Listen for fitData message from the extension
 	window.addEventListener('message', (event) => {

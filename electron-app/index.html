@@ -44,6 +44,7 @@
 			<button class="tab-button" id="tab-data" role="tab" aria-selected="false" tabindex="0">Data</button>
 			<button class="tab-button" id="tab-chart" role="tab" aria-selected="false" tabindex="0">Chart</button>
 			<button class="tab-button" id="tab-summary" role="tab" aria-selected="false" tabindex="0">Summary</button>
+			<button class="tab-button" id="tab-altfit" role="tab" aria-selected="false" tabindex="0">Alt FIT Reader</button>
 		</div>
 		<!-- Card-like Container for Tab Content -->
 		<div class="tab-card">
@@ -53,6 +54,9 @@
 				<div id="chart-container"></div>
 			</div>
 			<div id="content-summary" class="tab-content"></div>
+			<div id="content-altfit" class="tab-content">
+				<iframe id="altfit-iframe" style="width:100%;height:600px;border:none;"></iframe>
+			</div>
 		</div>
 		<!-- Hidden background containers for pre-rendering -->
 		<div id="background-chart-container"></div>

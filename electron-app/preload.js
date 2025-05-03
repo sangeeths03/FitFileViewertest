@@ -8,6 +8,13 @@ contextBridge.exposeInMainWorld('electronAPI', {
 	openFile: () => ipcRenderer.invoke('dialog:openFile'),
 
 	/**
+	 * Opens a file dialog and returns the selected file path(s).
+	 * Alias for openFile for compatibility.
+	 * @returns {Promise<string[]>}
+	 */
+	openFileDialog: () => ipcRenderer.invoke('dialog:openFile'),
+
+	/**
 	 * Reads a file from the given file path and returns its contents as an ArrayBuffer.
 	 * @param {string} filePath
 	 * @returns {Promise<ArrayBuffer>}

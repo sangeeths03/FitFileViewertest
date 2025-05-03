@@ -10,6 +10,7 @@ export function toggleTabVisibility(visibleTabId) {
 		'content-chart',
 		'content-map',
 		'content-summary',
+		'content-altfit', // Added altfit tab content
 	];
 	tabContentIds.forEach((id) => {
 		const el = document.getElementById(id);
