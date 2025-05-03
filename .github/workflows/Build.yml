@@ -115,7 +115,8 @@ jobs:
       - name: Cache node modules
         uses: actions/cache@v4
         with:
-          path: ~/.npm
+          path: |
+            ${{ runner.os == 'Windows' && 'C:\\Users\\runneradmin\\AppData\\Local\\npm-cache' || '~/.npm' }}
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
@@ -172,9 +173,9 @@ jobs:
         run: |
           PREV_TAG="${{ steps.get_prev_tag.outputs.prev_tag }}"
           if [ -n "$PREV_TAG" ]; then
-            NOTES=$(git log "$PREV_TAG"..HEAD --pretty=format:'- %s%n  - Author: %an <%ae>%n  - Commit: [`%h`](https://github.com/${{ github.repository }}/commit/%H)%n  - Date: %ad%n  - Files Changed:%n%b%n' --date=short --name-status)
+            NOTES=$(git log "$PREV_TAG"..HEAD --pretty=format:'- %s%n  - Author: %an <%ae>%n  - Commit: [`%h`](https://github.com/${{ github.repository }}/commit/%H)%n  - Date: %ad%n' --date=short)
           else
-            NOTES=$(git log --pretty=format:'- %s%n  - Author: %an <%ae>%n  - Commit: [`%h`](https://github.com/${{ github.repository }}/commit/%H)%n  - Date: %ad%n  - Files Changed:%n%b%n' --date=short --name-status)
+            NOTES=$(git log --pretty=format:'- %s%n  - Author: %an <%ae>%n  - Commit: [`%h`](https://github.com/${{ github.repository }}/commit/%H)%n  - Date: %ad%n' --date=short)
           fi
           echo "notes<<EOF" >> $GITHUB_OUTPUT
           echo -e "$NOTES" >> $GITHUB_OUTPUT
@@ -207,7 +208,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: v${{ needs.bump-version.outputs.new_version }}
-          name: Release v${{ needs.bump-version.outputs.new_version }}
+          name: FitFileViewer v${{ needs.bump-version.outputs.new_version }}
           body: ${{ steps.release_notes.outputs.notes }}
           files: release-dist/*
           draft: false
