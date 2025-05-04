@@ -1,7 +1,7 @@
 const { loadRecentFiles, getShortRecentName } = require('./recentFiles');
 const { Menu, BrowserWindow } = require('electron');
-const Store = require('electron-store');
-const store = new Store.default({ name: 'settings' });
+const Store = require('electron-store').default;
+const store = new Store({ name: 'settings' });
 
 const decoderOptionDefaults = {
 	applyScaleAndOffset: true,
@@ -108,6 +108,16 @@ function buildAppMenu(mainWindow, currentTheme = null, loadedFitFilePath = null)
 				{
 					label: 'Open Recent',
 					submenu: recentMenuItems,
+				},
+				{ type: 'separator' },
+				{
+					label: 'Check for Updates...',
+					click: () => {
+						const win = BrowserWindow.getFocusedWindow() || mainWindow;
+						if (win && win.webContents) {
+							win.webContents.send('menu-check-for-updates');
+						}
+					},
 				},
 				{ type: 'separator' },
 				{

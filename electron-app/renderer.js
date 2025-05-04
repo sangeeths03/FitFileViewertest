@@ -265,6 +265,14 @@ if (window.electronAPI && window.electronAPI.onIpc) {
 	});
 }
 
+// Listen for menu-triggered update check
+if (window.electronAPI && window.electronAPI.onIpc) {
+	window.electronAPI.onIpc('menu-check-for-updates', () => {
+		const { ipcRenderer } = window.require ? window.require('electron') : {};
+		if (ipcRenderer) ipcRenderer.send('menu-check-for-updates');
+	});
+}
+
 // Debounce chart rendering on window resize for performance
 let chartRenderTimeout;
 window.addEventListener('resize', () => {
@@ -289,3 +297,53 @@ window.addEventListener('resize', () => {
 	applyTheme(theme);
 	listenForThemeChange(applyTheme);
 })();
+
+// --- Auto-Updater Event Listeners ---
+const { ipcRenderer } = window.require ? window.require('electron') : {};
+
+function showUpdateNotification(message, type = 'info', duration = 6000, withAction = false) {
+	const notification = document.getElementById('notification');
+	if (!notification) return;
+	notification.textContent = message;
+	notification.className = `notification ${type}`;
+	notification.style.display = 'block';
+	if (withAction) {
+		const btn = document.createElement('button');
+		btn.textContent = 'Restart & Update';
+		btn.className = 'themed-btn';
+		btn.onclick = () => {
+			if (window.electronAPI && window.electronAPI.installUpdate) {
+				window.electronAPI.installUpdate();
+			} else if (ipcRenderer) {
+				ipcRenderer.send('install-update');
+			}
+		};
+		notification.appendChild(btn);
+	}
+	if (!withAction) {
+		setTimeout(() => {
+			notification.style.display = 'none';
+		}, duration);
+	}
+}
+
+if (ipcRenderer) {
+	ipcRenderer.on('update-checking', () => {
+		showUpdateNotification('Checking for updates...', 'info', 3000);
+	});
+	ipcRenderer.on('update-available', (event, info) => {
+		showUpdateNotification('Update available! Downloading...', 'info', 4000);
+	});
+	ipcRenderer.on('update-not-available', () => {
+		showUpdateNotification('You are using the latest version.', 'success', 4000);
+	});
+	ipcRenderer.on('update-error', (event, err) => {
+		showUpdateNotification('Update error: ' + err, 'error', 7000);
+	});
+	ipcRenderer.on('update-download-progress', (event, progress) => {
+		showUpdateNotification(`Downloading update: ${Math.round(progress.percent)}%`, 'info', 2000);
+	});
+	ipcRenderer.on('update-downloaded', () => {
+		showUpdateNotification('Update downloaded! Restart to install.', 'success', 0, true);
+	});
+}

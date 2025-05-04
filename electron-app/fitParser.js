@@ -2,7 +2,6 @@
 const { Buffer } = require('buffer');
 const Store = require('electron-store');
 const store = new Store.default({ name: 'settings' });
-
 /**
  * Custom error for FIT file decoding issues.
  */

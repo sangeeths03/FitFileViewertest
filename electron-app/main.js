@@ -3,6 +3,7 @@ const { app, BrowserWindow, dialog, ipcMain, Menu } = require('electron');
 const { createWindow } = require('./windowStateUtils');
 const path = require('path');
 const fs = require('fs');
+const { autoUpdater } = require('electron-updater');
 
 const {
 	loadRecentFiles,
@@ -14,10 +15,44 @@ const { buildAppMenu } = require('./utils/buildAppMenu');
 
 let loadedFitFilePath = null;
 
+// --- Auto-Updater Setup ---
+function setupAutoUpdater(mainWindow) {
+	// Set feed URL if needed (autoUpdater will use GitHub by default if configured in package.json)
+	autoUpdater.autoDownload = true;
+	autoUpdater.logger = require('electron-log');
+	autoUpdater.logger.transports.file.level = 'info';
+
+	autoUpdater.on('checking-for-update', () => {
+		mainWindow.webContents.send('update-checking');
+	});
+	autoUpdater.on('update-available', (info) => {
+		mainWindow.webContents.send('update-available', info);
+	});
+	autoUpdater.on('update-not-available', (info) => {
+		mainWindow.webContents.send('update-not-available', info);
+	});
+	autoUpdater.on('error', (err) => {
+		mainWindow.webContents.send(
+			'update-error',
+			err == null ? 'unknown' : err.message || err.toString(),
+		);
+	});
+	autoUpdater.on('download-progress', (progressObj) => {
+		mainWindow.webContents.send('update-download-progress', progressObj);
+	});
+	autoUpdater.on('update-downloaded', (info) => {
+		mainWindow.webContents.send('update-downloaded', info);
+	});
+}
+
 // Register IPC handlers and create the main window when the app is ready
 app.whenReady().then(() => {
 	// Register file open dialog handler
 	const mainWindow = createWindow();
+
+	// --- Auto-Updater ---
+	setupAutoUpdater(mainWindow);
+	autoUpdater.checkForUpdatesAndNotify();
 
 	// Helper to update menu with current theme from renderer
 	async function updateMenuWithCurrentTheme(win) {
@@ -142,8 +177,8 @@ app.whenReady().then(() => {
 	// Add IPC handler for getting the current theme
 	ipcMain.handle('theme:get', async () => {
 		// Use the same logic as buildAppMenu to get the theme from electron-store
-		const Store = require('electron-store');
-		const store = new Store.default({ name: 'settings' });
+		const Store = require('electron-store').default;
+		const store = new Store({ name: 'settings' });
 		return store.get('theme', 'dark');
 	});
 
@@ -151,6 +186,16 @@ app.whenReady().then(() => {
 	ipcMain.on('theme-changed', (event, theme) => {
 		const win = BrowserWindow.fromWebContents(event.sender);
 		if (win) buildAppMenu(win, theme || 'dark', loadedFitFilePath);
+	});
+
+	// Listen for menu-triggered update check from renderer
+	ipcMain.on('menu-check-for-updates', () => {
+		autoUpdater.checkForUpdates();
+	});
+
+	// Optionally, allow renderer to trigger update install
+	ipcMain.on('install-update', () => {
+		autoUpdater.quitAndInstall();
 	});
 
 	app.on('activate', function () {

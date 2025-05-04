@@ -33,7 +33,7 @@
     ]
   },
   "main": "./out/extension.js",
-  "type": "module",
+  "type": "commonjs",
   "scripts": {
     "compile": "tsc -p ./ && npm run copy-assets",
     "copy-assets": "copyfiles -u 1 media/* out/media/",
@@ -43,13 +43,22 @@
   "build": {
     "directories": {
       "app": "electron-app",
-      "output": "dist"
-    },
-    "files": [
-      "**/*"
-    ],
-    "win": {
-      "target": "nsis"
+      "output": "dist",
+      "icon": "icon.png",
+      "appId": "com.example.fitfileviewer",
+      "publish": [
+        {
+          "provider": "github",
+          "owner": "Nick2bad4u",
+          "repo": "FitFileViewer"
+        }
+      ],
+      "files": [
+        "**/*"
+      ],
+      "win": {
+        "target": "nsis"
+      }
     }
   },
   "devDependencies": {
