@@ -332,3 +332,28 @@ if (window.electronAPI && window.electronAPI.onUpdateEvent) {
 		}, 2000);
 	});
 }
+
+// --- Update Notification Function ---
+function showUpdateNotification(message, type = 'info', duration = 6000, withAction = false) {
+	const notification = document.getElementById('notification');
+	if (!notification) return;
+	notification.textContent = message;
+	notification.className = `notification ${type}`;
+	notification.style.display = 'block';
+	if (withAction) {
+		const btn = document.createElement('button');
+		btn.textContent = 'Restart & Update';
+		btn.className = 'themed-btn';
+		btn.onclick = () => {
+			if (window.electronAPI && window.electronAPI.installUpdate) {
+				window.electronAPI.installUpdate();
+			}
+		};
+		notification.appendChild(btn);
+	}
+	if (!withAction) {
+		setTimeout(() => {
+			notification.style.display = 'none';
+		}, duration);
+	}
+}
