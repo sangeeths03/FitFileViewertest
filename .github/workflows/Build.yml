@@ -136,8 +136,8 @@ jobs:
             electron-app/dist/**/*.AppImage
             electron-app/dist/**/*.snap
             electron-app/dist/**/*.zip
-            electron-app/dist/**/latest.yml
-            electron-app/dist/**/*.blockmap
+            electron-app/dist/latest.yml
+            electron-app/dist/*.blockmap
 
   release:
     needs: [build, bump-version]
