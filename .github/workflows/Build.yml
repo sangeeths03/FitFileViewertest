@@ -137,7 +137,6 @@ jobs:
             electron-app/dist/**/*.snap
             electron-app/dist/**/*.zip
             electron-app/dist/**/*.yml
-            electron-app/dist/*.yml
             electron-app/dist/**/*.blockmap
           include-hidden-files: true
 
@@ -184,7 +183,7 @@ jobs:
       - name: Deduplicate and validate distributable files
         run: |
           mkdir -p release-dist
-          find ./artifacts -type f \( -name "*.exe" -o -name "*.dmg" -o -name "*.AppImage" -o -name "*.snap" -o -name "*.zip" \) -exec sh -c '
+          find ./artifacts -type f \( -name "*.exe" -o -name "*.dmg" -o -name "*.AppImage" -o -name "*.snap" -o -name "*.zip" -o -name "*.yml" -o -name "*.blockmap" \) -exec sh -c '
             for filepath; do
               filename=$(basename "$filepath")
               if [ ! -e "release-dist/$filename" ]; then
