@@ -86,6 +86,9 @@ jobs:
           # Exclude Ubuntu with ia32 architecture as it is not commonly used and not officially supported
           - os: ubuntu-latest
             arch: ia32
+          # Exclude Windows with ia32 architecture (32-bit Windows)
+          - os: windows-latest
+            arch: ia32
     defaults:
       run:
         working-directory: electron-app

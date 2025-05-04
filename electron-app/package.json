@@ -1,6 +1,6 @@
 {
   "name": "fitfileviewer",
-  "version": "3.9.0",
+  "version": "3.7.0",
   "main": "main.js",
   "appid": "com.example.fitfileviewer",
   "displayName": "Fit File Viewer",
@@ -26,16 +26,7 @@
         "msi"
       ],
       "legalTrademarks": "Fit File Viewer™",
-      "requestedExecutionLevel": "asInvoker",
-      "artifactName": "Fit-File-Viewer-${os}-${arch}-${version}${ext === 'exe' && /portable/i.test(target) ? '-portable' : ''}.${ext}",
-      "extraFiles": [],
-      "publish": [
-        {
-          "provider": "github",
-          "owner": "Nick2bad4u",
-          "repo": "FitFileViewer"
-        }
-      ]
+      "requestedExecutionLevel": "asInvoker"
     },
     "mac": {
       "icon": "icons/favicon-512x512.icns",
@@ -73,10 +64,7 @@
         "description": ".fit activity file",
         "role": "Viewer"
       }
-    ],
-    "extraMetadata": {
-      "latestFilename": "latest-${os}-${arch}.yml"
-    }
+    ]
   },
   "scripts": {
     "test": "jest",
