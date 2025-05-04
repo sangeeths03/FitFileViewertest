@@ -135,6 +135,14 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Rename latest.yml for arch
+        if: runner.os == 'Windows'
+        run: |
+          cd electron-app/dist
+          if [ -f latest.yml ]; then
+            mv latest.yml latest-${{ matrix.arch }}.yml
+          fi
+
       - name: Upload distributable files as artifact
         uses: actions/upload-artifact@v4
         with:
