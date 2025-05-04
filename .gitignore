@@ -342,3 +342,4 @@ node_modules
 src/test/*.fit
 .DS_Store
 vis
+vscode-extension/*

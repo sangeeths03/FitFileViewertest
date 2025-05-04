@@ -26,6 +26,7 @@ function createWindow() {
 		height: state.height,
 		x: typeof state.x === 'number' ? state.x : undefined,
 		y: typeof state.y === 'number' ? state.y : undefined,
+		icon: path.join(__dirname, 'icons/favicon.ico'), // Set proper app icon for Windows
 		webPreferences: {
 			preload: path.join(__dirname, 'preload.js'),
 			nodeIntegration: false,

@@ -6,8 +6,9 @@
   "displayName": "Fit File Viewer",
   "productName": "Fit File Viewer",
   "build": {
-    "icon": "../icon.png",
+    "icon": "icons/favicon.ico",
     "appId": "com.example.fitfileviewer",
+    "artifactName": "Fit-File-Viewer-Setup-${version}.${ext}",
     "publish": [
       {
         "provider": "github",
