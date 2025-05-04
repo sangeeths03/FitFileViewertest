@@ -136,8 +136,10 @@ jobs:
             electron-app/dist/**/*.AppImage
             electron-app/dist/**/*.snap
             electron-app/dist/**/*.zip
-            electron-app/dist/latest.yml
-            electron-app/dist/*.blockmap
+            electron-app/dist/**/*.yml
+            electron-app/dist/*.yml
+            electron-app/dist/**/*.blockmap
+          include-hidden-files: true
 
   release:
     needs: [build, bump-version]
