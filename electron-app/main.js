@@ -22,6 +22,13 @@ function setupAutoUpdater(mainWindow) {
 	autoUpdater.logger = require('electron-log');
 	autoUpdater.logger.transports.file.level = 'info';
 
+	// --- Patch autoUpdater to use arch-specific latest.yml on Windows ---
+	if (process.platform === 'win32') {
+		const arch = process.arch === 'ia32' ? 'ia32' : 'x64';
+		const feedURL = `https://github.com/Nick2bad4u/FitFileViewer/releases/latest/download/latest-${arch}.yml`;
+		autoUpdater.setFeedURL({ provider: 'generic', url: feedURL });
+	}
+
 	autoUpdater.on('checking-for-update', () => {
 		mainWindow.webContents.send('update-checking');
 	});
