@@ -17,7 +17,7 @@
       }
     ],
     "win": {
-      "icon": "icons/favicon.ico"
+      "icon": "icons/favicon-256x256.ico"
     },
     "mac": {
       "icon": "icons/favicon-512x512.icns"
