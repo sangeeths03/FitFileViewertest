@@ -105,11 +105,20 @@ jobs:
         with:
           node-version: 20
 
-      - name: Cache node modules
+      - name: Cache node modules (Windows)
+        if: runner.os == 'Windows'
         uses: actions/cache@v4
         with:
-          path: |
-            ~/.npm
+          path: C:\Users\runneradmin\AppData\Roaming\npm-cache
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Cache node modules (non-Windows)
+        if: runner.os != 'Windows'
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
@@ -186,11 +195,21 @@ jobs:
       - name: Deduplicate and validate distributable files
         run: |
           mkdir -p release-dist
-          find ./artifacts -type f \( -name "*.exe" -o -name "*.dmg" -o -name "*.AppImage" -o -name "*.snap" -o -name "*.zip" -o -name "*.yml" -o -name "*.blockmap" \) -exec sh -c '
+          find ./artifacts -type f \( \
+            -name "Fit-File-Viewer-*.exe" \
+            -o -name "Fit-File-Viewer-*.msi" \
+            -o -name "Fit-File-Viewer-*.zip" \
+            -o -name "Fit-File-Viewer-*.dmg" \
+            -o -name "Fit-File-Viewer-*.AppImage" \
+            -o -name "Fit-File-Viewer-*.deb" \
+            -o -name "Fit-File-Viewer-*.rpm" \
+            -o -name "Fit-File-Viewer-*.snap" \
+            -o -name "Fit-File-Viewer-*.blockmap" \
+            -o -name "latest*.yml" \
+          \) -exec sh -c '
             for filepath; do
               filename=$(basename "$filepath")
               if [ ! -e "release-dist/$filename" ]; then
-                # Validate file (e.g., check size or content if needed)
                 if [ -s "$filepath" ]; then
                   cp "$filepath" "release-dist/$filename"
                 else
