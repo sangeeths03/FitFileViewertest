@@ -1,7 +1,12 @@
 // In electron-app/renderer.js
 
-import { showNotification, setLoading } from './utils/rendererUtils.js';
-import { applyTheme, listenForThemeChange } from './utils/theme.js';
+// Use window.utils if available, fallback to global
+const rendererUtils = window.rendererUtils || {};
+const showNotification = rendererUtils.showNotification || function(msg, type, timeout) { alert(msg); };
+const setLoading = rendererUtils.setLoading || function(){};
+const themeUtils = window.theme || {};
+const applyTheme = themeUtils.applyTheme || function(){};
+const listenForThemeChange = themeUtils.listenForThemeChange || function(){};
 
 const openFileBtn = document.getElementById('openFileBtn');
 if (!openFileBtn) {
@@ -241,27 +246,25 @@ if (
 if (window.electronAPI && window.electronAPI.onIpc) {
 	window.electronAPI.onIpc('decoder-options-changed', (event, newOptions) => {
 		console.log('[DEBUG] Decoder options changed:', newOptions);
-		import('./utils/rendererUtils.js').then(({ showNotification, setLoading }) => {
-			showNotification('Decoder options updated.', 'info', 2000);
-			// If a file is loaded, re-parse and update the data table
-			if (window.globalData && window.globalData.cachedFilePath) {
-				const filePath = window.globalData.cachedFilePath;
-				setLoading(true);
-				window.electronAPI.readFile(filePath)
-					.then(arrayBuffer => window.electronAPI.parseFitFile(arrayBuffer))
-					.then(result => {
-						if (result && result.error) {
-							showNotification(`Error: ${result.error}\n${result.details || ''}`, 'error');
-						} else {
-							window.showFitData(result, filePath);
-						}
-					})
-					.catch(err => {
-						showNotification(`Error reloading file: ${err}`, 'error');
-					})
-					.finally(() => setLoading(false));
-			}
-		});
+		showNotification('Decoder options updated.', 'info', 2000);
+		// If a file is loaded, re-parse and update the data table
+		if (window.globalData && window.globalData.cachedFilePath) {
+			const filePath = window.globalData.cachedFilePath;
+			setLoading(true);
+			window.electronAPI.readFile(filePath)
+				.then(arrayBuffer => window.electronAPI.parseFitFile(arrayBuffer))
+				.then(result => {
+					if (result && result.error) {
+						showNotification(`Error: ${result.error}\n${result.details || ''}`, 'error');
+					} else {
+						window.showFitData(result, filePath);
+					}
+				})
+				.catch(err => {
+					showNotification(`Error reloading file: ${err}`, 'error');
+				})
+				.finally(() => setLoading(false));
+		}
 	});
 }
 
@@ -329,21 +332,27 @@ function showUpdateNotification(message, type = 'info', duration = 6000, withAct
 
 if (ipcRenderer) {
 	ipcRenderer.on('update-checking', () => {
+		console.log('[AutoUpdater] Checking for updates...');
 		showUpdateNotification('Checking for updates...', 'info', 3000);
 	});
 	ipcRenderer.on('update-available', (event, info) => {
+		console.log('[AutoUpdater] Update available:', info);
 		showUpdateNotification('Update available! Downloading...', 'info', 4000);
 	});
 	ipcRenderer.on('update-not-available', () => {
+		console.log('[AutoUpdater] No update available.');
 		showUpdateNotification('You are using the latest version.', 'success', 4000);
 	});
 	ipcRenderer.on('update-error', (event, err) => {
+		console.error('[AutoUpdater] Update error:', err);
 		showUpdateNotification('Update error: ' + err, 'error', 7000);
 	});
 	ipcRenderer.on('update-download-progress', (event, progress) => {
+		console.log(`[AutoUpdater] Download progress: ${Math.round(progress.percent)}%`);
 		showUpdateNotification(`Downloading update: ${Math.round(progress.percent)}%`, 'info', 2000);
 	});
 	ipcRenderer.on('update-downloaded', () => {
+		console.log('[AutoUpdater] Update downloaded!');
 		showUpdateNotification('Update downloaded! Restart to install.', 'success', 0, true);
 	});
 }

@@ -36,26 +36,14 @@ jobs:
             echo "Error: package.json is not valid JSON" >&2
             exit 1
           fi
-          # Find last tag (always with v prefix) or initial commit
-          LAST_REF=$(git describe --tags --match "v*" --abbrev=0 2>/dev/null || git rev-list --max-parents=0 HEAD)
-          # Check for changes in electron-app dir since last ref
-          if git diff --quiet "$LAST_REF" -- electron-app/; then
-            BUMP_TYPE=patch
-          else
-            BUMP_TYPE=minor_or_major
-          fi
           VERSION=$(jq -r .version package.json)
           MAJOR=$(echo $VERSION | cut -d. -f1)
           MINOR=$(echo $VERSION | cut -d. -f2)
           PATCH=$(echo $VERSION | cut -d. -f3)
-          if [ "$BUMP_TYPE" = "patch" ]; then
-            NEW_VERSION="$MAJOR.$MINOR.$(($PATCH + 1))"
+          if [ "$MINOR" -lt 9 ]; then
+            NEW_VERSION="$MAJOR.$(($MINOR + 1)).0"
           else
-            if [ "$MINOR" -lt 9 ]; then
-              NEW_VERSION="$MAJOR.$(($MINOR + 1)).0"
-            else
-              NEW_VERSION="$(($MAJOR + 1)).0.0"
-            fi
+            NEW_VERSION="$(($MAJOR + 1)).0.0"
           fi
           jq --arg v "$NEW_VERSION" '.version = $v' package.json > tmp.json && mv tmp.json package.json
           echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
@@ -148,6 +136,8 @@ jobs:
             electron-app/dist/**/*.AppImage
             electron-app/dist/**/*.snap
             electron-app/dist/**/*.zip
+            electron-app/dist/**/latest.yml
+            electron-app/dist/**/*.blockmap
 
   release:
     needs: [build, bump-version]
