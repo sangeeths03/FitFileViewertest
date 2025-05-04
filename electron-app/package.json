@@ -26,8 +26,7 @@
         "msi"
       ],
       "legalTrademarks": "Fit File Viewer™",
-      "requestedExecutionLevel": "asInvoker",
-      "disableWebInstaller": true
+      "requestedExecutionLevel": "asInvoker"
     },
     "mac": {
       "icon": "icons/favicon-512x512.icns",
