@@ -15,7 +15,16 @@
         "owner": "Nick2bad4u",
         "repo": "FitFileViewer"
       }
-    ]
+    ],
+    "win": {
+      "icon": "icons/favicon.ico"
+    },
+    "mac": {
+      "icon": "icons/favicon-512x512.icns"
+    },
+    "linux": {
+      "icon": "icons/favicon-256x256.png"
+    }
   },
   "scripts": {
     "test": "jest",
