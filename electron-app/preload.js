@@ -97,4 +97,25 @@ contextBridge.exposeInMainWorld('electronAPI', {
 	 * @param {...any} args
 	 */
 	send: (channel, ...args) => ipcRenderer.send(channel, ...args),
+
+	// --- Auto-Updater: Expose update-related IPC ---
+
+	/**
+	 * Listen for update events from the main process (auto-updater).
+	 * @param {string} eventName
+	 * @param {Function} callback
+	 */
+	onUpdateEvent: (eventName, callback) => {
+		ipcRenderer.on(eventName, (event, ...args) => callback(...args));
+	},
+
+	/**
+	 * Trigger a check for updates (menu or manual).
+	 */
+	checkForUpdates: () => ipcRenderer.send('menu-check-for-updates'),
+
+	/**
+	 * Trigger install of a downloaded update.
+	 */
+	installUpdate: () => ipcRenderer.send('install-update'),
 });

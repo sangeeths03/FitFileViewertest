@@ -302,61 +302,33 @@ window.addEventListener('resize', () => {
 })();
 
 // --- Auto-Updater Event Listeners ---
-const { ipcRenderer } = window.require ? window.require('electron') : {};
-
-function showUpdateNotification(message, type = 'info', duration = 6000, withAction = false) {
-	const notification = document.getElementById('notification');
-	if (!notification) return;
-	notification.textContent = message;
-	notification.className = `notification ${type}`;
-	notification.style.display = 'block';
-	if (withAction) {
-		const btn = document.createElement('button');
-		btn.textContent = 'Restart & Update';
-		btn.className = 'themed-btn';
-		btn.onclick = () => {
-			if (window.electronAPI && window.electronAPI.installUpdate) {
-				window.electronAPI.installUpdate();
-			} else if (ipcRenderer) {
-				ipcRenderer.send('install-update');
-			}
-		};
-		notification.appendChild(btn);
-	}
-	if (!withAction) {
-		setTimeout(() => {
-			notification.style.display = 'none';
-		}, duration);
-	}
-}
-
-if (ipcRenderer) {
-	console.log('[AutoUpdater] Listening for update events...');
-	ipcRenderer.on('update-checking', () => {
+if (window.electronAPI && window.electronAPI.onUpdateEvent) {
+	console.log('[AutoUpdater] Listening for update events via electronAPI...');
+	window.electronAPI.onUpdateEvent('update-checking', () => {
 		console.log('[AutoUpdater] Checking for updates...');
 		showUpdateNotification('Checking for updates...', 'info', 3000);
 	});
-	ipcRenderer.on('update-available', (event, info) => {
+	window.electronAPI.onUpdateEvent('update-available', (info) => {
 		console.log('[AutoUpdater] Update available:', info);
 		showUpdateNotification('Update available! Downloading...', 'info', 4000);
 	});
-	ipcRenderer.on('update-not-available', () => {
+	window.electronAPI.onUpdateEvent('update-not-available', () => {
 		console.log('[AutoUpdater] No update available.');
 		showUpdateNotification('You are using the latest version.', 'success', 4000);
 	});
-	ipcRenderer.on('update-error', (event, err) => {
+	window.electronAPI.onUpdateEvent('update-error', (err) => {
 		console.error('[AutoUpdater] Update error:', err);
 		showUpdateNotification('Update error: ' + err, 'error', 7000);
 	});
-	ipcRenderer.on('update-download-progress', (event, progress) => {
+	window.electronAPI.onUpdateEvent('update-download-progress', (progress) => {
 		console.log(`[AutoUpdater] Download progress: ${Math.round(progress.percent)}%`, progress);
 		showUpdateNotification(`Downloading update: ${Math.round(progress.percent)}%`, 'info', 2000);
 	});
-	ipcRenderer.on('update-downloaded', () => {
+	window.electronAPI.onUpdateEvent('update-downloaded', () => {
 		console.log('[AutoUpdater] Update downloaded. Restarting to install...');
 		showUpdateNotification('Update downloaded! Restarting to install...', 'success', 2000);
 		setTimeout(() => {
-			ipcRenderer.send('install-update');
+			window.electronAPI.installUpdate();
 		}, 2000);
 	});
 }
