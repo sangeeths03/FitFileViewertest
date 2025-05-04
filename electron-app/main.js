@@ -22,6 +22,15 @@ function setupAutoUpdater(mainWindow) {
 	autoUpdater.logger = require('electron-log');
 	autoUpdater.logger.transports.file.level = 'info';
 
+	// Debug: Log the update feed URL
+	if (autoUpdater.feedURL) {
+		autoUpdater.logger.info(`AutoUpdater feed URL: ${autoUpdater.feedURL}`);
+		console.log(`AutoUpdater feed URL: ${autoUpdater.feedURL}`);
+	} else {
+		autoUpdater.logger.info('AutoUpdater using default feed (likely GitHub releases)');
+		console.log('AutoUpdater using default feed (likely GitHub releases)');
+	}
+
 	autoUpdater.on('checking-for-update', () => {
 		mainWindow.webContents.send('update-checking');
 	});
