@@ -9,6 +9,7 @@
     "icon": "icons/favicon.ico",
     "appId": "com.example.fitfileviewer",
     "artifactName": "Fit-File-Viewer-Setup-${version}.${ext}",
+    "asar": true,
     "publish": [
       {
         "provider": "github",
@@ -17,14 +18,53 @@
       }
     ],
     "win": {
-      "icon": "icons/favicon-256x256.ico"
+      "icon": "icons/favicon-256x256.ico",
+      "target": [
+        "nsis",
+        "portable",
+        "zip",
+        "msi"
+      ],
+      "publisherName": "Nick2bad4u",
+      "legalTrademarks": "Fit File Viewer™",
+      "requestedExecutionLevel": "asInvoker",
+      "shortcutName": "Fit File Viewer"
     },
     "mac": {
-      "icon": "icons/favicon-512x512.icns"
+      "icon": "icons/favicon-512x512.icns",
+      "target": [
+        "dmg",
+        "zip"
+      ],
+      "category": "public.app-category.productivity",
+      "hardenedRuntime": true,
+      "gatekeeperAssess": true
     },
     "linux": {
-      "icon": "icons/favicon-256x256.png"
-    }
+      "icon": "icons/favicon-256x256.png",
+      "target": [
+        "AppImage",
+        "deb",
+        "rpm",
+        "snap"
+      ],
+      "category": "Utility",
+      "synopsis": "A cross-platform viewer for .fit activity files.",
+      "maintainer": "Nick2bad4u <nick2bad4u@users.noreply.github.com>",
+      "desktop": {
+        "Name": "Fit File Viewer",
+        "Comment": "View and analyze .fit activity files",
+        "Categories": "Utility;Sports;"
+      }
+    },
+    "fileAssociations": [
+      {
+        "ext": "fit",
+        "name": "Flexible and Interoperable Data Transfer File",
+        "description": ".fit activity file",
+        "role": "Viewer"
+      }
+    ]
   },
   "scripts": {
     "test": "jest",
@@ -55,6 +95,12 @@
     "tables"
   ],
   "author": "Nick2bad4u",
+  "contributors": [
+    {
+      "name": "Nick2bad4u",
+      "email": "nick2bad4u@users.noreply.github.com"
+    }
+  ],
   "homepage": "https://github.com/Nick2bad4u/FitFileViewer",
   "repository": {
     "type": "git",

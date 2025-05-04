@@ -331,6 +331,7 @@ function showUpdateNotification(message, type = 'info', duration = 6000, withAct
 }
 
 if (ipcRenderer) {
+	console.log('[AutoUpdater] Listening for update events...');
 	ipcRenderer.on('update-checking', () => {
 		console.log('[AutoUpdater] Checking for updates...');
 		showUpdateNotification('Checking for updates...', 'info', 3000);
@@ -348,11 +349,14 @@ if (ipcRenderer) {
 		showUpdateNotification('Update error: ' + err, 'error', 7000);
 	});
 	ipcRenderer.on('update-download-progress', (event, progress) => {
-		console.log(`[AutoUpdater] Download progress: ${Math.round(progress.percent)}%`);
+		console.log(`[AutoUpdater] Download progress: ${Math.round(progress.percent)}%`, progress);
 		showUpdateNotification(`Downloading update: ${Math.round(progress.percent)}%`, 'info', 2000);
 	});
 	ipcRenderer.on('update-downloaded', () => {
-		console.log('[AutoUpdater] Update downloaded!');
-		showUpdateNotification('Update downloaded! Restart to install.', 'success', 0, true);
+		console.log('[AutoUpdater] Update downloaded. Restarting to install...');
+		showUpdateNotification('Update downloaded! Restarting to install...', 'success', 2000);
+		setTimeout(() => {
+			ipcRenderer.send('install-update');
+		}, 2000);
 	});
 }
