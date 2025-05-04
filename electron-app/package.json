@@ -8,7 +8,7 @@
   "build": {
     "icon": "icons/favicon.ico",
     "appId": "com.example.fitfileviewer",
-    "artifactName": "Fit-File-Viewer-Setup-${version}.${ext}",
+    "artifactName": "Fit-File-Viewer-${version}.${ext}",
     "asar": true,
     "publish": [
       {

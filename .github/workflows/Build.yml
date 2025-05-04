@@ -138,6 +138,9 @@ jobs:
             electron-app/dist/**/*.zip
             electron-app/dist/**/*.yml
             electron-app/dist/**/*.blockmap
+            electron-app/dist/**/*.msi
+            electron-app/dist/**/*.deb
+            electron-app/dist/**/*.rpm
           include-hidden-files: true
 
   release:
