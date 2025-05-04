@@ -25,10 +25,8 @@
         "zip",
         "msi"
       ],
-      "publisherName": "Nick2bad4u",
       "legalTrademarks": "Fit File Viewer™",
-      "requestedExecutionLevel": "asInvoker",
-      "shortcutName": "Fit File Viewer"
+      "requestedExecutionLevel": "asInvoker"
     },
     "mac": {
       "icon": "icons/favicon-512x512.icns",
@@ -52,9 +50,11 @@
       "synopsis": "A cross-platform viewer for .fit activity files.",
       "maintainer": "Nick2bad4u <nick2bad4u@users.noreply.github.com>",
       "desktop": {
-        "Name": "Fit File Viewer",
-        "Comment": "View and analyze .fit activity files",
-        "Categories": "Utility;Sports;"
+        "entry": {
+          "Name": "Fit File Viewer",
+          "Comment": "View and analyze .fit activity files",
+          "Categories": "Utility;Sports;"
+        }
       }
     },
     "fileAssociations": [
