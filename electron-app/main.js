@@ -207,6 +207,42 @@ app.whenReady().then(() => {
 		autoUpdater.quitAndInstall();
 	});
 
+	// --- IPC handlers for File menu actions ---
+	ipcMain.on('menu-save-as', async (event) => {
+		const win = BrowserWindow.fromWebContents(event.sender);
+		if (!loadedFitFilePath) return;
+		const { canceled, filePath } = await dialog.showSaveDialog(win, {
+			title: 'Save As',
+			defaultPath: loadedFitFilePath,
+			filters: [{ name: 'FIT Files', extensions: ['fit'] }, { name: 'All Files', extensions: ['*'] }],
+		});
+		if (!canceled && filePath) {
+			try {
+				fs.copyFileSync(loadedFitFilePath, filePath);
+				win.webContents.send('show-notification', 'File saved successfully.', 'success');
+			} catch (err) {
+				win.webContents.send('show-notification', `Save failed: ${err}`, 'error');
+			}
+		}
+	});
+
+	ipcMain.on('menu-export', async (event) => {
+		const win = BrowserWindow.fromWebContents(event.sender);
+		if (!loadedFitFilePath) return;
+		const { canceled, filePath } = await dialog.showSaveDialog(win, {
+			title: 'Export As',
+			defaultPath: loadedFitFilePath.replace(/\.fit$/i, '.csv'),
+			filters: [
+				{ name: 'CSV (Summary Table)', extensions: ['csv'] },
+				{ name: 'GPX (Track)', extensions: ['gpx'] },
+				{ name: 'All Files', extensions: ['*'] },
+			],
+		});
+		if (!canceled && filePath) {
+			win.webContents.send('export-file', filePath);
+		}
+	});
+
 	app.on('activate', function () {
 		if (BrowserWindow.getAllWindows().length === 0) {
 			const win = createWindow();

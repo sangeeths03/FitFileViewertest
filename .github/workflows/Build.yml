@@ -281,86 +281,59 @@ jobs:
             # Create a temporary file for the modified content
             tmp_file="${yml}.tmp"
 
-            # Initialize variables to track state while reading the file
+            # Process the file line by line
             in_files_section=0
             current_url=""
-            prev_line=""
             file_count=0
             updated_count=0
             missing_count=0
-
-            # Process the file line by line
             while IFS= read -r line; do
-              echo "[DEBUG] Read line: $line"
-              # Check if we're in the files section
+              # Detect start of files section
               if [[ $line =~ ^[[:space:]]*files: ]]; then
                 in_files_section=1
                 echo "$line" >> "$tmp_file"
                 continue
               fi
 
-              # If in files section, track URL and update SHA512
+              # Only indent url, sha512, size under files
               if [[ $in_files_section -eq 1 ]]; then
                 if [[ $line =~ ^[[:space:]]*-[[:space:]]url:[[:space:]](.*) ]]; then
                   current_url="${BASH_REMATCH[1]}"
-                  echo "[DEBUG] Found file URL: $current_url"
                   echo "  - url: $current_url" >> "$tmp_file"
                   file_count=$((file_count+1))
                 elif [[ $line =~ ^[[:space:]]*sha512:[[:space:]].* && -n $current_url ]]; then
                   file_path="$dir/$current_url"
-                  echo "[DEBUG] Checking file: $file_path"
                   if [ -f "$file_path" ]; then
                     hash=$(sha512sum "$file_path" | awk '{print $1}')
                     b64=$(echo "$hash" | xxd -r -p | base64 | tr -d '\n')
-                    echo "[DEBUG] Computed hash: $hash"
-                    echo "[DEBUG] Computed base64: $b64"
                     echo "    sha512: $b64" >> "$tmp_file"
                     updated_count=$((updated_count+1))
-                    current_url=""
                   else
-                    echo "  - WARNING: File not found: $file_path"
-                    echo "[DEBUG] File not found: $file_path" >&2
                     echo "    sha512: MISSING" >> "$tmp_file"
                     missing_count=$((missing_count+1))
                   fi
+                  current_url=""
                 elif [[ $line =~ ^[[:space:]]*size:[[:space:]].* ]]; then
-                  # Ensure size is also indented
                   echo "    $line" >> "$tmp_file"
+                elif [[ $line =~ ^[[:space:]]*path:[[:space:]].* || $line =~ ^[[:space:]]*sha512:[[:space:]].* || $line =~ ^[[:space:]]*releaseDate:[[:space:]].* ]]; then
+                  in_files_section=0
+                  echo "$line" >> "$tmp_file"
                 else
-                  # Copy any other lines as-is, but with correct indentation
-                  if [[ $line =~ ^[[:space:]]*-[[:space:]] ]]; then
-                    echo "  $line" >> "$tmp_file"
-                  else
-                    echo "    $line" >> "$tmp_file"
-                  fi
+                  echo "$line" >> "$tmp_file"
                 fi
               else
-                # Handle root-level SHA512 if we find a path
-                if [[ $line =~ ^[[:space:]]*path:[[:space:]](.*) ]]; then
+                # Handle root-level path, sha512, releaseDate
+                if [[ $line =~ ^path:[[:space:]](.*) ]]; then
                   root_path="${BASH_REMATCH[1]}"
-                  echo "[DEBUG] Found root path: $root_path"
                   echo "$line" >> "$tmp_file"
-                  # The next line might be sha512
-                  read -r next_line
-                  echo "[DEBUG] Next line after path: $next_line"
-                  if [[ $next_line =~ ^[[:space:]]*sha512:[[:space:]].* ]]; then
-                    file_path="$dir/$root_path"
-                    echo "[DEBUG] Checking root file: $file_path"
-                    if [ -f "$file_path" ]; then
-                      hash=$(sha512sum "$file_path" | awk '{print $1}')
-                      b64=$(echo "$hash" | xxd -r -p | base64 | tr -d '\n')
-                      echo "[DEBUG] Computed root hash: $hash"
-                      echo "[DEBUG] Computed root base64: $b64"
-                      echo "sha512: $b64" >> "$tmp_file"
-                      updated_count=$((updated_count+1))
-                    else
-                      echo "  - WARNING: Root file not found: $file_path"
-                      echo "[DEBUG] Root file not found: $file_path" >&2
-                      echo "$next_line" >> "$tmp_file"
-                      missing_count=$((missing_count+1))
-                    fi
+                elif [[ $line =~ ^sha512:[[:space:]].* ]]; then
+                  file_path="$dir/$root_path"
+                  if [ -f "$file_path" ]; then
+                    hash=$(sha512sum "$file_path" | awk '{print $1}')
+                    b64=$(echo "$hash" | xxd -r -p | base64 | tr -d '\n')
+                    echo "sha512: $b64" >> "$tmp_file"
                   else
-                    echo "$next_line" >> "$tmp_file"
+                    echo "sha512: MISSING" >> "$tmp_file"
                   fi
                 else
                   echo "$line" >> "$tmp_file"

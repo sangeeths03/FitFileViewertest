@@ -8,6 +8,32 @@ const themeUtils = window.theme || {};
 const applyTheme = themeUtils.applyTheme || function(){};
 const listenForThemeChange = themeUtils.listenForThemeChange || function(){};
 
+// --- Ensure copyTableAsCSV is available globally for export ---
+import { copyTableAsCSV as copyTableAsCSVUtil } from './utils/copyTableAsCSV.js';
+window.copyTableAsCSV = function({ container, data }) {
+	// Find the first table in the container
+	const tableEl = container && container.querySelector('table');
+	if (!tableEl) return '';
+	// Use Arquero to extract data if available, else fallback to DOM parsing
+	if (window.aq && data && data.summaryTable) {
+		// summaryTable is expected to be an Arquero table
+		return copyTableAsCSVUtil(data.summaryTable);
+	} else {
+		// Fallback: parse table rows
+		let csv = '';
+		const rows = Array.from(tableEl.rows);
+		rows.forEach(row => {
+			const cells = Array.from(row.cells).map(cell => '"' + cell.innerText.replace(/"/g, '""') + '"');
+			csv += cells.join(',') + '\n';
+		});
+		return csv;
+	}
+};
+
+// --- Optionally expose createExportGPXButton globally ---
+import { createExportGPXButton } from './utils/mapActionButtons.js';
+window.createExportGPXButton = createExportGPXButton;
+
 const openFileBtn = document.getElementById('openFileBtn');
 if (!openFileBtn) {
 	showNotification('Open File button not found!', 'error', 7000);
@@ -265,6 +291,70 @@ if (window.electronAPI && window.electronAPI.onIpc) {
 				})
 				.finally(() => setLoading(false));
 		}
+	});
+}
+
+// Listen for export-file event from main process
+if (window.electronAPI && window.electronAPI.onIpc) {
+	window.electronAPI.onIpc('export-file', async (event, filePath) => {
+		if (!window.globalData) return;
+		const ext = filePath.split('.').pop().toLowerCase();
+		if (ext === 'csv') {
+			// Export summary table as CSV
+			const container = document.getElementById('content-summary');
+			if (window.copyTableAsCSV && container) {
+				const csv = window.copyTableAsCSV({
+					container,
+					data: window.globalData,
+				});
+				const blob = new Blob([csv], { type: 'text/csv' });
+				const a = document.createElement('a');
+				a.href = URL.createObjectURL(blob);
+				a.download = filePath.split(/[\\/]/).pop();
+				document.body.appendChild(a);
+				a.click();
+				setTimeout(() => {
+					URL.revokeObjectURL(a.href);
+					document.body.removeChild(a);
+				}, 100);
+			}
+		} else if (ext === 'gpx') {
+			// Export GPX (track)
+			if (window.createExportGPXButton && window.globalData.recordMesgs) {
+				// Use the same logic as the map export button
+				const coords = window.globalData.recordMesgs
+					.filter((row) => row.positionLat != null && row.positionLong != null)
+					.map((row) => [
+						Number((row.positionLat / 2 ** 31) * 180),
+						Number((row.positionLong / 2 ** 31) * 180),
+					]);
+				let gpx = `<?xml version="1.0" encoding="UTF-8"?>\n<gpx version="1.1" creator="FitFileViewer">\n<trk><name>Exported Track</name><trkseg>`;
+				coords.forEach((c) => {
+					gpx += `\n<trkpt lat=\"${c[0]}\" lon=\"${c[1]}\"/>`;
+				});
+				gpx += '\n</trkseg></trk></gpx>';
+				const blob = new Blob([gpx], { type: 'application/gpx+xml' });
+				const a = document.createElement('a');
+				a.href = URL.createObjectURL(blob);
+				a.download = filePath.split(/[\\/]/).pop();
+				document.body.appendChild(a);
+				a.click();
+				setTimeout(() => {
+					URL.revokeObjectURL(a.href);
+					document.body.removeChild(a);
+				}, 100);
+			}
+		}
+	});
+	window.electronAPI.onIpc('show-notification', (event, msg, type) => {
+		if (typeof showNotification === 'function') showNotification(msg, type || 'info', 3000);
+	});
+}
+
+// Listen for menu-print event from main process
+if (window.electronAPI && window.electronAPI.onIpc) {
+	window.electronAPI.onIpc('menu-print', () => {
+		window.print();
 	});
 }
 

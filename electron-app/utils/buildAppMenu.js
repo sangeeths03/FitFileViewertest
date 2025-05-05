@@ -115,22 +115,55 @@ function buildAppMenu(
 				},
 				{ type: 'separator' },
 				{
-					label: 'Check for Updates...',
-					click: () => {
-						const win = BrowserWindow.getFocusedWindow() || mainWindow;
-						if (win && win.webContents) {
-							win.webContents.send('menu-check-for-updates');
-						}
-					},
-				},
-				{ type: 'separator' },
-				{
 					label: 'Unload File',
 					enabled: !!loadedFitFilePath,
 					click: () => {
 						const win = BrowserWindow.getFocusedWindow() || mainWindow;
 						if (win && win.webContents) {
 							win.webContents.send('unload-fit-file');
+						}
+					},
+				},
+				{
+					label: 'Save As...',
+					enabled: !!loadedFitFilePath,
+					accelerator: 'CmdOrCtrl+S',
+					click: () => {
+						const win = BrowserWindow.getFocusedWindow() || mainWindow;
+						if (win && win.webContents) {
+							win.webContents.send('menu-save-as');
+						}
+					},
+				},
+				{
+					label: 'Export...',
+					enabled: !!loadedFitFilePath,
+					click: () => {
+						const win = BrowserWindow.getFocusedWindow() || mainWindow;
+						if (win && win.webContents) {
+							win.webContents.send('menu-export');
+						}
+					},
+				},
+				{
+					label: 'Print...',
+					enabled: !!loadedFitFilePath,
+					accelerator: 'CmdOrCtrl+P',
+					click: () => {
+						const win = BrowserWindow.getFocusedWindow() || mainWindow;
+						if (win && win.webContents) {
+							win.webContents.send('menu-print');
+						}
+					},
+				},
+				{ type: 'separator' },
+				{
+					label: 'Close Window',
+					accelerator: 'CmdOrCtrl+W',
+					click: () => {
+						const win = BrowserWindow.getFocusedWindow();
+						if (win) {
+							win.close();
 						}
 					},
 				},
@@ -170,6 +203,15 @@ function buildAppMenu(
 							},
 						},
 					],
+				},
+				{
+					label: 'Check for Updates...',
+					click: () => {
+						const win = BrowserWindow.getFocusedWindow() || mainWindow;
+						if (win && win.webContents) {
+							win.webContents.send('menu-check-for-updates');
+						}
+					},
 				},
 				decoderOptionsMenu,
 				{
