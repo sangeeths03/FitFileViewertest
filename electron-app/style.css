@@ -645,6 +645,48 @@ body.theme-dark .custom-fullscreen-bar button:focus {
 	border-radius: 0 !important;
 }
 
+/* Improved Fullscreen Button */
+.fullscreen-btn-wrapper {
+  pointer-events: none;
+}
+
+.fullscreen-btn.improved {
+  pointer-events: auto;
+  background: rgba(30, 34, 54, 0.92);
+  border: none;
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.18);
+  color: #fff;
+  font-size: 1.6rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, box-shadow 0.2s, transform 0.2s;
+  cursor: pointer;
+  outline: none;
+}
+
+.fullscreen-btn.improved:hover,
+.fullscreen-btn.improved:focus {
+  background: #1976d2;
+  color: #fff;
+  box-shadow: 0 4px 18px rgba(25, 118, 210, 0.25);
+  transform: scale(1.08);
+}
+
+.fullscreen-btn.improved:active {
+  background: #1565c0;
+  transform: scale(0.98);
+}
+
+.fullscreen-btn .fullscreen-icon {
+  pointer-events: none;
+  font-size: 1.4em;
+  transition: color 0.2s;
+}
+
 /* =====================================================
    Marker Count Selector Styles
    ===================================================== */

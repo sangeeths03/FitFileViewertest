@@ -366,6 +366,16 @@ if (window.electronAPI && window.electronAPI.onIpc) {
 	});
 }
 
+// Listen for menu-save-as and menu-export from main process and send IPC to main
+if (window.electronAPI && window.electronAPI.onIpc) {
+	window.electronAPI.onIpc('menu-save-as', () => {
+		if (window.electronAPI.send) window.electronAPI.send('menu-save-as');
+	});
+	window.electronAPI.onIpc('menu-export', () => {
+		if (window.electronAPI.send) window.electronAPI.send('menu-export');
+	});
+}
+
 // Debounce chart rendering on window resize for performance
 let chartRenderTimeout;
 window.addEventListener('resize', () => {

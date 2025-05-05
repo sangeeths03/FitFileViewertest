@@ -109,6 +109,64 @@ if (window.electronAPI && window.electronAPI.onIpc) {
     });
 }
 
+// --- Improved Full Screen Button for Each Tab ---
+function addFullScreenButton(tabContentId) {
+	const container = document.getElementById(tabContentId);
+	if (!container) return;
+	// Prevent duplicate
+	if (document.getElementById(tabContentId + '-fullscreen-btn')) return;
+
+	// Create a wrapper for the button in the margin area
+	const wrapper = document.createElement('div');
+	wrapper.className = 'fullscreen-btn-wrapper';
+	wrapper.style.position = 'absolute';
+	wrapper.style.right = '24px';
+	wrapper.style.bottom = '24px';
+	wrapper.style.zIndex = 1001;
+	wrapper.style.pointerEvents = 'none';
+
+	// Button itself
+	const btn = document.createElement('button');
+	btn.id = tabContentId + '-fullscreen-btn';
+	btn.className = 'fullscreen-btn improved';
+	btn.title = 'Toggle Full Screen';
+	btn.innerHTML = '<span class="fullscreen-icon">⛶</span>';
+	btn.style.pointerEvents = 'auto';
+
+	btn.onclick = (e) => {
+		e.stopPropagation();
+		if (!document.fullscreenElement) {
+			container.requestFullscreen();
+			btn.title = 'Exit Full Screen';
+			btn.querySelector('.fullscreen-icon').textContent = '🗗';
+		} else {
+			document.exitFullscreen();
+			btn.title = 'Toggle Full Screen';
+			btn.querySelector('.fullscreen-icon').textContent = '⛶';
+		}
+	};
+
+	// Listen for fullscreen change to update button
+	document.addEventListener('fullscreenchange', () => {
+		if (!document.fullscreenElement) {
+			btn.title = 'Toggle Full Screen';
+			btn.querySelector('.fullscreen-icon').textContent = '⛶';
+		}
+	});
+
+	wrapper.appendChild(btn);
+	// Place wrapper in the parent of the tab content (so it's in the margin, not inside content)
+	const parent = container.parentElement;
+	if (parent) {
+		parent.style.position = 'relative';
+		parent.appendChild(wrapper);
+	}
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+	['content-data', 'content-chart', 'content-map', 'content-summary', 'content-altfit'].forEach(addFullScreenButton);
+});
+
 window.onload = () => {
 	// Signal to the extension that the webview is ready (only if available)
 	let vscode;
