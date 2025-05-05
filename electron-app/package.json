@@ -1,6 +1,6 @@
 {
   "name": "fitfileviewer",
-  "version": "4.5.0",
+  "version": "4.6.0",
   "main": "main.js",
   "appid": "com.example.fitfileviewer",
   "displayName": "Fit File Viewer",
@@ -8,7 +8,7 @@
   "build": {
     "icon": "icons/favicon.ico",
     "appId": "com.example.fitfileviewer",
-    "artifactName": "Fit-File-Viewer-${version}.${ext}",
+    "artifactName": "Fit-File-Viewer-${platform}-${version}.${ext}",
     "asar": true,
     "publish": [
       {

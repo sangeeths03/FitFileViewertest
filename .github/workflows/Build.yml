@@ -181,16 +181,7 @@ jobs:
         with:
           name: dist-${{ matrix.os }}-${{ matrix.arch }}
           path: |
-            electron-app/dist/**/*.exe
-            electron-app/dist/**/*.dmg
-            electron-app/dist/**/*.AppImage
-            electron-app/dist/**/*.snap
-            electron-app/dist/**/*.zip
-            electron-app/dist/**/*.yml
-            electron-app/dist/**/*.blockmap
-            electron-app/dist/**/*.msi
-            electron-app/dist/**/*.deb
-            electron-app/dist/**/*.rpm
+            electron-app/dist/Fit-File-Viewer-*
           include-hidden-files: true
 
   release:
@@ -271,11 +262,44 @@ jobs:
         run: |
           mkdir -p release-dist
           for artifact_dir in ./artifacts/*; do
-            # Extract platform and arch from artifact name (dist-os-arch)
             artifact_name=$(basename "$artifact_dir")
             platform_arch=${artifact_name#dist-}
             mkdir -p "release-dist/$platform_arch"
-            cp -vr $artifact_dir/* "release-dist/$platform_arch/"
+            cp -v $artifact_dir/Fit-File-Viewer-* "release-dist/$platform_arch/"
+          done
+
+      - name: Print artifact hash (debug, Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $patterns = @('*.exe','*.dmg','*.AppImage','*.snap','*.zip','*.yml','*.blockmap','*.msi','*.deb','*.rpm')
+          $files = @()
+          foreach ($pattern in $patterns) {
+            $files += Get-ChildItem -Path artifacts -Recurse -Include $pattern -ErrorAction SilentlyContinue
+          }
+          foreach ($file in $files | Sort-Object FullName -Unique) {
+            $hash = Get-FileHash $file.FullName -Algorithm SHA512
+            $bytes = for ($i = 0; $i -lt $hash.Hash.Length; $i += 2) { [Convert]::ToByte($hash.Hash.Substring($i, 2), 16) }
+            $b64 = [Convert]::ToBase64String($bytes)
+            Write-Host "$($file.FullName): $b64"
+          }
+      - name: Print artifact hash (debug, Linux)
+        if: runner.os == 'Linux'
+        shell: bash
+        run: |
+          find artifacts -type f \( -name '*.exe' -o -name '*.dmg' -o -name '*.AppImage' -o -name '*.snap' -o -name '*.zip' -o -name '*.yml' -o -name '*.blockmap' -o -name '*.msi' -o -name '*.deb' -o -name '*.rpm' \) | sort | while read file; do
+            hash=$(sha512sum "$file" | awk '{print $1}')
+            b64=$(echo "$hash" | xxd -r -p | base64)
+            echo "$file: $b64"
+          done
+      - name: Print artifact hash (debug, macOS)
+        if: runner.os == 'macOS'
+        shell: bash
+        run: |
+          find artifacts -type f \( -name '*.exe' -o -name '*.dmg' -o -name '*.AppImage' -o -name '*.snap' -o -name '*.zip' -o -name '*.yml' -o -name '*.blockmap' -o -name '*.msi' -o -name '*.deb' -o -name '*.rpm' \) | sort | while read file; do
+            hash=$(shasum -a 512 "$file" | awk '{print $1}')
+            b64=$(echo "$hash" | xxd -r -p | base64)
+            echo "$file: $b64"
           done
 
       - name: Create or update release with distributable builds
