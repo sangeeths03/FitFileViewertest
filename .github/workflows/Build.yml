@@ -285,11 +285,15 @@ jobs:
             in_files_section=0
             current_url=""
             prev_line=""
+            file_count=0
+            updated_count=0
+            missing_count=0
 
             # Process the file line by line
             while IFS= read -r line; do
+              echo "[DEBUG] Read line: $line"
               # Check if we're in the files section
-              if [[ $line == "files:" ]]; then
+              if [[ $line =~ ^[[:space:]]*files: ]]; then
                 in_files_section=1
                 echo "$line" >> "$tmp_file"
                 continue
@@ -297,44 +301,57 @@ jobs:
 
               # If in files section, track URL and update SHA512
               if [[ $in_files_section -eq 1 ]]; then
-                if [[ $line =~ ^-\ url:\ (.*) ]]; then
+                if [[ $line =~ ^[[:space:]]*-[[:space:]]url:[[:space:]](.*) ]]; then
                   current_url="${BASH_REMATCH[1]}"
+                  echo "[DEBUG] Found file URL: $current_url"
                   echo "$line" >> "$tmp_file"
-                elif [[ $line =~ ^\ \ sha512:\ .* && -n $current_url ]]; then
-                  # Found SHA512 line after URL line - update it
+                  file_count=$((file_count+1))
+                elif [[ $line =~ ^[[:space:]]*sha512:[[:space:]].* && -n $current_url ]]; then
                   file_path="$dir/$current_url"
+                  echo "[DEBUG] Checking file: $file_path"
                   if [ -f "$file_path" ]; then
                     hash=$(sha512sum "$file_path" | awk '{print $1}')
                     b64=$(echo "$hash" | xxd -r -p | base64)
+                    echo "[DEBUG] Computed hash: $hash"
+                    echo "[DEBUG] Computed base64: $b64"
                     echo "  sha512: $b64" >> "$tmp_file"
-
-                    echo "  - Updated SHA512 for $current_url"
+                    echo "  - Updated SHA512 for $current_url ($b64)"
+                    updated_count=$((updated_count+1))
                     current_url=""
                   else
                     echo "  - WARNING: File not found: $file_path"
+                    echo "[DEBUG] File not found: $file_path" >&2
                     echo "$line" >> "$tmp_file"
+                    missing_count=$((missing_count+1))
                   fi
                 else
                   echo "$line" >> "$tmp_file"
                 fi
               else
                 # Handle root-level SHA512 if we find a path
-                if [[ $line =~ ^path:\ (.*) ]]; then
+                if [[ $line =~ ^[[:space:]]*path:[[:space:]](.*) ]]; then
                   root_path="${BASH_REMATCH[1]}"
+                  echo "[DEBUG] Found root path: $root_path"
                   echo "$line" >> "$tmp_file"
-
                   # The next line might be sha512
                   read -r next_line
-                  if [[ $next_line =~ ^sha512:\ .* ]]; then
+                  echo "[DEBUG] Next line after path: $next_line"
+                  if [[ $next_line =~ ^[[:space:]]*sha512:[[:space:]].* ]]; then
                     file_path="$dir/$root_path"
+                    echo "[DEBUG] Checking root file: $file_path"
                     if [ -f "$file_path" ]; then
                       hash=$(sha512sum "$file_path" | awk '{print $1}')
                       b64=$(echo "$hash" | xxd -r -p | base64)
+                      echo "[DEBUG] Computed root hash: $hash"
+                      echo "[DEBUG] Computed root base64: $b64"
                       echo "sha512: $b64" >> "$tmp_file"
-                      echo "  - Updated root SHA512 for $root_path"
+                      echo "  - Updated root SHA512 for $root_path ($b64)"
+                      updated_count=$((updated_count+1))
                     else
                       echo "  - WARNING: Root file not found: $file_path"
+                      echo "[DEBUG] Root file not found: $file_path" >&2
                       echo "$next_line" >> "$tmp_file"
+                      missing_count=$((missing_count+1))
                     fi
                   else
                     echo "$next_line" >> "$tmp_file"
@@ -344,6 +361,8 @@ jobs:
                 fi
               fi
             done < "$yml"
+
+            echo "[DEBUG] Summary for $yml: $file_count files, $updated_count updated, $missing_count missing"
 
             # Replace original file with updated content
             mv "$tmp_file" "$yml"
