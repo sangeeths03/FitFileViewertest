@@ -182,6 +182,7 @@ jobs:
           name: dist-${{ matrix.os }}-${{ matrix.arch }}
           path: |
             electron-app/dist/Fit-File-Viewer-*
+            electron-app/dist/*.yml
           include-hidden-files: true
 
   release:
@@ -266,7 +267,7 @@ jobs:
             artifact_name=$(basename "$artifact_dir")
             platform_arch=${artifact_name#dist-}
             mkdir -p "release-dist/$platform_arch"
-            cp -avr $artifact_dir/Fit-File-Viewer-* "release-dist/$platform_arch/"
+            cp -v $artifact_dir/Fit-File-Viewer-* $artifact_dir/*.yml "release-dist/$platform_arch/" 2>/dev/null || true
           done
 
       - name: Print artifact hash (debug, Windows)
