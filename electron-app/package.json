@@ -1,6 +1,6 @@
 {
   "name": "fitfileviewer",
-  "version": "5.6.0",
+  "version": "5.7.0",
   "main": "main.js",
   "appid": "com.example.fitfileviewer",
   "displayName": "Fit File Viewer",
