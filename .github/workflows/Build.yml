@@ -199,43 +199,24 @@ jobs:
       - name: List artifacts
         run: ls -R ./artifacts
 
-      # - name: Deduplicate and validate distributable files
-      #   run: |
-      #     mkdir -p release-dist
-      #     find ./artifacts -type f \( \
-      #       -name "Fit-File-Viewer-*.exe" \
-      #       -o -name "Fit-File-Viewer-*.msi" \
-      #       -o -name "Fit-File-Viewer-*.zip" \
-      #       -o -name "Fit-File-Viewer-*.dmg" \
-      #       -o -name "Fit-File-Viewer-*.AppImage" \
-      #       -o -name "Fit-File-Viewer-*.deb" \
-      #       -o -name "Fit-File-Viewer-*.rpm" \
-      #       -o -name "Fit-File-Viewer-*.snap" \
-      #       -o -name "Fit-File-Viewer-*.blockmap" \
-      #       -o -name "latest*.yml" \
-      #     \) -exec sh -c '
-      #       for filepath; do
-      #         filename=$(basename "$filepath")
-      #         if [ ! -e "release-dist/$filename" ]; then
-      #           if [ -s "$filepath" ]; then
-      #             cp "$filepath" "release-dist/$filename"
-      #           else
-      #             echo "Skipping invalid or empty file: $filepath"
-      #           fi
-      #         fi
-      #       done
-      #     ' sh {} +
+      - name: Organize distributables by platform and arch
+        run: |
+          mkdir -p release-dist
+          for artifact_dir in ./artifacts/*; do
+            # Extract platform and arch from artifact name (dist-os-arch)
+            artifact_name=$(basename "$artifact_dir")
+            platform_arch=${artifact_name#dist-}
+            mkdir -p "release-dist/$platform_arch"
+            cp -v $artifact_dir/* "release-dist/$platform_arch/"
+          done
 
-      # This step uses the softprops/action-gh-release action to create or update a GitHub release.
-      # It uploads the distributable files generated during the build process and associates them with the release.
-      # The release is tagged with the new version and includes release notes generated from the commit history.
       - name: Create or update release with distributable builds
         uses: softprops/action-gh-release@v2
         with:
           tag_name: v${{ needs.bump-version.outputs.new_version }}
           name: FitFileViewer v${{ needs.bump-version.outputs.new_version }}
           body: ${{ steps.release_notes.outputs.notes }}
-          files: release-dist/*
+          files: release-dist/**/*
           draft: false
           prerelease: false
           make_latest: true
