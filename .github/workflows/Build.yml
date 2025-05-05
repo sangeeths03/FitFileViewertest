@@ -304,28 +304,35 @@ jobs:
                 if [[ $line =~ ^[[:space:]]*-[[:space:]]url:[[:space:]](.*) ]]; then
                   current_url="${BASH_REMATCH[1]}"
                   echo "[DEBUG] Found file URL: $current_url"
-                  echo "$line" >> "$tmp_file"
+                  echo "  - url: $current_url" >> "$tmp_file"
                   file_count=$((file_count+1))
                 elif [[ $line =~ ^[[:space:]]*sha512:[[:space:]].* && -n $current_url ]]; then
                   file_path="$dir/$current_url"
                   echo "[DEBUG] Checking file: $file_path"
                   if [ -f "$file_path" ]; then
                     hash=$(sha512sum "$file_path" | awk '{print $1}')
-                    b64=$(echo "$hash" | xxd -r -p | base64)
+                    b64=$(echo "$hash" | xxd -r -p | base64 | tr -d '\n')
                     echo "[DEBUG] Computed hash: $hash"
                     echo "[DEBUG] Computed base64: $b64"
-                    echo "  sha512: $b64" >> "$tmp_file"
-                    echo "  - Updated SHA512 for $current_url ($b64)"
+                    echo "    sha512: $b64" >> "$tmp_file"
                     updated_count=$((updated_count+1))
                     current_url=""
                   else
                     echo "  - WARNING: File not found: $file_path"
                     echo "[DEBUG] File not found: $file_path" >&2
-                    echo "$line" >> "$tmp_file"
+                    echo "    sha512: MISSING" >> "$tmp_file"
                     missing_count=$((missing_count+1))
                   fi
+                elif [[ $line =~ ^[[:space:]]*size:[[:space:]].* ]]; then
+                  # Ensure size is also indented
+                  echo "    $line" >> "$tmp_file"
                 else
-                  echo "$line" >> "$tmp_file"
+                  # Copy any other lines as-is, but with correct indentation
+                  if [[ $line =~ ^[[:space:]]*-[[:space:]] ]]; then
+                    echo "  $line" >> "$tmp_file"
+                  else
+                    echo "    $line" >> "$tmp_file"
+                  fi
                 fi
               else
                 # Handle root-level SHA512 if we find a path
@@ -341,11 +348,10 @@ jobs:
                     echo "[DEBUG] Checking root file: $file_path"
                     if [ -f "$file_path" ]; then
                       hash=$(sha512sum "$file_path" | awk '{print $1}')
-                      b64=$(echo "$hash" | xxd -r -p | base64)
+                      b64=$(echo "$hash" | xxd -r -p | base64 | tr -d '\n')
                       echo "[DEBUG] Computed root hash: $hash"
                       echo "[DEBUG] Computed root base64: $b64"
                       echo "sha512: $b64" >> "$tmp_file"
-                      echo "  - Updated root SHA512 for $root_path ($b64)"
                       updated_count=$((updated_count+1))
                     else
                       echo "  - WARNING: Root file not found: $file_path"
