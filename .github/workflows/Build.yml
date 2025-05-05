@@ -86,7 +86,7 @@ jobs:
           # Exclude Ubuntu with ia32 architecture as it is not commonly used and not officially supported
           - os: ubuntu-latest
             arch: ia32
-          # Exclude Windows with ia32 architecture (32-bit Windows)
+          # Exclude Windows
           - os: windows-latest
             arch: ia32
     defaults:
@@ -142,6 +142,31 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Print distributable hash (debug, Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $patterns = @('*.exe','*.dmg','*.AppImage','*.snap','*.zip','*.yml','*.blockmap','*.msi','*.deb','*.rpm')
+          $files = @()
+          foreach ($pattern in $patterns) {
+            $files += Get-ChildItem -Path dist -Recurse -Include $pattern -ErrorAction SilentlyContinue
+          }
+          foreach ($file in $files | Sort-Object FullName -Unique) {
+            $hash = Get-FileHash $file.FullName -Algorithm SHA512
+            $bytes = for ($i = 0; $i -lt $hash.Hash.Length; $i += 2) { [Convert]::ToByte($hash.Hash.Substring($i, 2), 16) }
+            $b64 = [Convert]::ToBase64String($bytes)
+            Write-Host "$($file.FullName): $b64"
+          }
+      - name: Print distributable hash (debug, Linux/macOS)
+        if: runner.os != 'Windows'
+        shell: bash
+        run: |
+          find dist -type f \( -name '*.exe' -o -name '*.dmg' -o -name '*.AppImage' -o -name '*.snap' -o -name '*.zip' -o -name '*.yml' -o -name '*.blockmap' -o -name '*.msi' -o -name '*.deb' -o -name '*.rpm' \) | sort | while read file; do
+            hash=$(sha512sum "$file" | awk '{print $1}')
+            b64=$(echo "$hash" | xxd -r -p | base64)
+            echo "$file: $b64"
+          done
+
       - name: Upload distributable files as artifact
         uses: actions/upload-artifact@v4
         with:
@@ -170,6 +195,31 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           path: ./artifacts
+
+      - name: Print artifact hash (debug, Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $patterns = @('*.exe','*.dmg','*.AppImage','*.snap','*.zip','*.yml','*.blockmap','*.msi','*.deb','*.rpm')
+          $files = @()
+          foreach ($pattern in $patterns) {
+            $files += Get-ChildItem -Path artifacts -Recurse -Include $pattern -ErrorAction SilentlyContinue
+          }
+          foreach ($file in $files | Sort-Object FullName -Unique) {
+            $hash = Get-FileHash $file.FullName -Algorithm SHA512
+            $bytes = for ($i = 0; $i -lt $hash.Hash.Length; $i += 2) { [Convert]::ToByte($hash.Hash.Substring($i, 2), 16) }
+            $b64 = [Convert]::ToBase64String($bytes)
+            Write-Host "$($file.FullName): $b64"
+          }
+      - name: Print artifact hash (debug, Linux/macOS)
+        if: runner.os != 'Windows'
+        shell: bash
+        run: |
+          find artifacts -type f \( -name '*.exe' -o -name '*.dmg' -o -name '*.AppImage' -o -name '*.snap' -o -name '*.zip' -o -name '*.yml' -o -name '*.blockmap' -o -name '*.msi' -o -name '*.deb' -o -name '*.rpm' \) | sort | while read file; do
+            hash=$(sha512sum "$file" | awk '{print $1}')
+            b64=$(echo "$hash" | xxd -r -p | base64)
+            echo "$file: $b64"
+          done
 
       - name: Get previous tag
         id: get_prev_tag
