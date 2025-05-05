@@ -1,6 +1,6 @@
 {
   "name": "fitfileviewer",
-  "version": "4.7.0",
+  "version": "4.8.0",
   "main": "main.js",
   "appid": "com.example.fitfileviewer",
   "displayName": "Fit File Viewer",
@@ -83,7 +83,6 @@
     "test:integration": "jest --testPathPattern=integration",
     "test:e2e": "jest --testPathPattern=e2e",
     "build:prod": "cross-env NODE_ENV=production electron-builder"
-
   },
   "keywords": [
     "fit-file",
