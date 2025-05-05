@@ -270,6 +270,62 @@ jobs:
             cp -v $artifact_dir/Fit-File-Viewer-* $artifact_dir/*.yml "release-dist/$platform_arch/" 2>/dev/null || true
           done
 
+      - name: Fix sha512 in latest.yml files
+        shell: bash
+        run: |
+          set -e
+          for yml in $(find release-dist -type f -name 'latest*.yml'); do
+            # Find the file referenced in the yml (assumes 'path:' or 'url:' or 'file:' key)
+            file=$(awk -F': ' '/^path:|^url:|^file:/ {print $2; exit}' "$yml" | tr -d '\r')
+            if [ -z "$file" ]; then
+              # Try to guess from yml location
+              file=$(basename "$yml" | sed 's/latest.*\.yml//;s/-$//')
+              file=$(ls "$(dirname "$yml")"/Fit-File-Viewer-* 2>/dev/null | head -n1)
+            else
+              file="$(dirname "$yml")/$file"
+            fi
+            if [ ! -f "$file" ]; then
+              echo "WARN: Could not find distributable for $yml"
+              continue
+            fi
+            hash=$(sha512sum "$file" | awk '{print $1}')
+            b64=$(echo "$hash" | xxd -r -p | base64)
+            # Replace sha512 line
+            sed -i.bak -E "s|^sha512:.*|sha512: $b64|" "$yml"
+            echo "Updated $yml with sha512 for $file"
+          done
+
+      - name: Fix all sha512 in latest*.yml files
+        shell: bash
+        run: |
+          set -e
+          for yml in $(find release-dist -type f -name 'latest*.yml'); do
+            dir=$(dirname "$yml")
+            # Update sha512 for each file in files: array
+            awk '/^- url: /{print $2}' "$yml" | while read url; do
+              file="$dir/$url"
+              if [ -f "$file" ]; then
+                hash=$(sha512sum "$file" | awk '{print $1}')
+                b64=$(echo "$hash" | xxd -r -p | base64)
+                # Use perl for in-place update of the correct sha512 line
+                perl -i -pe "BEGIN{undef $/;} s|(\- url: $url\\s+sha512: ).*|\1$b64|s" "$yml"
+              else
+                echo "WARN: $file not found for $yml"
+              fi
+            done
+            # Update root-level sha512 and path if present
+            root_path=$(awk '/^path: /{print $2; exit}' "$yml")
+            if [ -n "$root_path" ]; then
+              file="$dir/$root_path"
+              if [ -f "$file" ]; then
+                hash=$(sha512sum "$file" | awk '{print $1}')
+                b64=$(echo "$hash" | xxd -r -p | base64)
+                sed -i.bak -E "s|^sha512:.*|sha512: $b64|" "$yml"
+              fi
+            fi
+            echo "Updated $yml"
+          done
+
       - name: Print artifact hash (debug, Windows)
         if: runner.os == 'Windows'
         shell: pwsh
