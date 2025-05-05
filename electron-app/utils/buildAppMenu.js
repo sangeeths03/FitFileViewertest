@@ -41,7 +41,11 @@ function setTheme(theme) {
  * @param {string} [currentTheme=null] - The current theme of the application, used to set the checked state of theme radio buttons.
  * @param {string|null} [loadedFitFilePath=null] - The path of the loaded FIT file, used to enable/disable the Summary Columns menu item.
  */
-function buildAppMenu(mainWindow, currentTheme = null, loadedFitFilePath = null) {
+function buildAppMenu(
+	mainWindow,
+	currentTheme = null,
+	loadedFitFilePath = null,
+) {
 	const theme = currentTheme || getTheme();
 	const recentFiles = loadRecentFiles();
 	const recentMenuItems =

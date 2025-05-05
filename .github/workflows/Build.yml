@@ -282,13 +282,9 @@ jobs:
               if [ -f "$file" ]; then
                 hash=$(sha512sum "$file" | awk '{print $1}')
                 b64=$(echo "$hash" | xxd -r -p | base64)
-                # Use yq if available, else fallback to sed with safe delimiter
-                if command -v yq >/dev/null 2>&1; then
-                  yq -i "(.files[] | select(.url == \"$url\") | .sha512) = \"$b64\"" "$yml"
-                else
-                  # Use a unique delimiter unlikely to appear in base64
-                  sed -i.bak "/- url: $url/{n;s|^\\( *sha512: \\).*|\\1$b64|;}" "$yml"
-                fi
+                # Escape special characters in url for sed
+                escaped_url=$(printf '%s\n' "$url" | sed 's/[][\\.*^$(){}?+|/]/\\&/g')
+                sed -i.bak "/- url: $escaped_url/{n;s|^\\( *sha512: \\).*|\\1$b64|;}" "$yml"
               else
                 echo "WARN: $file not found for $yml"
               fi
