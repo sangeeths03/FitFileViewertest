@@ -261,11 +261,12 @@ jobs:
       - name: Organize distributables by platform and arch
         run: |
           mkdir -p release-dist
-          for artifact_dir in ./artifacts/*; do
+          for artifact_dir in ./artifacts/dist-*; do
+            [ -d "$artifact_dir" ] || continue
             artifact_name=$(basename "$artifact_dir")
             platform_arch=${artifact_name#dist-}
             mkdir -p "release-dist/$platform_arch"
-            cp -v $artifact_dir/Fit-File-Viewer-* "release-dist/$platform_arch/"
+            cp -avr $artifact_dir/Fit-File-Viewer-* "release-dist/$platform_arch/"
           done
 
       - name: Print artifact hash (debug, Windows)
