@@ -157,12 +157,21 @@ jobs:
             $b64 = [Convert]::ToBase64String($bytes)
             Write-Host "$($file.FullName): $b64"
           }
-      - name: Print distributable hash (debug, Linux/macOS)
-        if: runner.os != 'Windows'
+      - name: Print distributable hash (debug, Linux)
+        if: runner.os == 'Linux'
         shell: bash
         run: |
           find dist -type f \( -name '*.exe' -o -name '*.dmg' -o -name '*.AppImage' -o -name '*.snap' -o -name '*.zip' -o -name '*.yml' -o -name '*.blockmap' -o -name '*.msi' -o -name '*.deb' -o -name '*.rpm' \) | sort | while read file; do
             hash=$(sha512sum "$file" | awk '{print $1}')
+            b64=$(echo "$hash" | xxd -r -p | base64)
+            echo "$file: $b64"
+          done
+      - name: Print distributable hash (debug, macOS)
+        if: runner.os == 'macOS'
+        shell: bash
+        run: |
+          find dist -type f \( -name '*.exe' -o -name '*.dmg' -o -name '*.AppImage' -o -name '*.snap' -o -name '*.zip' -o -name '*.yml' -o -name '*.blockmap' -o -name '*.msi' -o -name '*.deb' -o -name '*.rpm' \) | sort | while read file; do
+            hash=$(shasum -a 512 "$file" | awk '{print $1}')
             b64=$(echo "$hash" | xxd -r -p | base64)
             echo "$file: $b64"
           done
@@ -211,12 +220,21 @@ jobs:
             $b64 = [Convert]::ToBase64String($bytes)
             Write-Host "$($file.FullName): $b64"
           }
-      - name: Print artifact hash (debug, Linux/macOS)
-        if: runner.os != 'Windows'
+      - name: Print artifact hash (debug, Linux)
+        if: runner.os == 'Linux'
         shell: bash
         run: |
           find artifacts -type f \( -name '*.exe' -o -name '*.dmg' -o -name '*.AppImage' -o -name '*.snap' -o -name '*.zip' -o -name '*.yml' -o -name '*.blockmap' -o -name '*.msi' -o -name '*.deb' -o -name '*.rpm' \) | sort | while read file; do
             hash=$(sha512sum "$file" | awk '{print $1}')
+            b64=$(echo "$hash" | xxd -r -p | base64)
+            echo "$file: $b64"
+          done
+      - name: Print artifact hash (debug, macOS)
+        if: runner.os == 'macOS'
+        shell: bash
+        run: |
+          find artifacts -type f \( -name '*.exe' -o -name '*.dmg' -o -name '*.AppImage' -o -name '*.snap' -o -name '*.zip' -o -name '*.yml' -o -name '*.blockmap' -o -name '*.msi' -o -name '*.deb' -o -name '*.rpm' \) | sort | while read file; do
+            hash=$(shasum -a 512 "$file" | awk '{print $1}')
             b64=$(echo "$hash" | xxd -r -p | base64)
             echo "$file: $b64"
           done
