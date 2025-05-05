@@ -275,30 +275,78 @@ jobs:
         run: |
           set -e
           for yml in $(find release-dist -type f -name 'latest*.yml'); do
+            echo "Processing $yml"
             dir=$(dirname "$yml")
-            # Update sha512 for each file in files: array
-            awk '/^- url: /{print $2}' "$yml" | while read -r url; do
-              file="$dir/$url"
-              if [ -f "$file" ]; then
-                hash=$(sha512sum "$file" | awk '{print $1}')
-                b64=$(echo "$hash" | xxd -r -p | base64)
-                # Escape special characters in url for sed
-                escaped_url=$(printf '%s\n' "$url" | sed 's/[]\[.*^$(){}?+|/]/\\&/g')
-                sed -i.bak "/- url: $escaped_url/{n;s#^\( *sha512: \).*#\1$b64#;}" "$yml"
+
+            # Create a temporary file for the modified content
+            tmp_file="${yml}.tmp"
+
+            # Initialize variables to track state while reading the file
+            in_files_section=0
+            current_url=""
+            prev_line=""
+
+            # Process the file line by line
+            while IFS= read -r line; do
+              # Check if we're in the files section
+              if [[ $line == "files:" ]]; then
+                in_files_section=1
+                echo "$line" >> "$tmp_file"
+                continue
+              fi
+
+              # If in files section, track URL and update SHA512
+              if [[ $in_files_section -eq 1 ]]; then
+                if [[ $line =~ ^-\ url:\ (.*) ]]; then
+                  current_url="${BASH_REMATCH[1]}"
+                  echo "$line" >> "$tmp_file"
+                elif [[ $line =~ ^\ \ sha512:\ .* && -n $current_url ]]; then
+                  # Found SHA512 line after URL line - update it
+                  file_path="$dir/$current_url"
+                  if [ -f "$file_path" ]; then
+                    hash=$(sha512sum "$file_path" | awk '{print $1}')
+                    b64=$(echo "$hash" | xxd -r -p | base64)
+                    echo "  sha512: $b64" >> "$tmp_file"
+
+                    echo "  - Updated SHA512 for $current_url"
+                    current_url=""
+                  else
+                    echo "  - WARNING: File not found: $file_path"
+                    echo "$line" >> "$tmp_file"
+                  fi
+                else
+                  echo "$line" >> "$tmp_file"
+                fi
               else
-                echo "WARN: $file not found for $yml"
+                # Handle root-level SHA512 if we find a path
+                if [[ $line =~ ^path:\ (.*) ]]; then
+                  root_path="${BASH_REMATCH[1]}"
+                  echo "$line" >> "$tmp_file"
+
+                  # The next line might be sha512
+                  read -r next_line
+                  if [[ $next_line =~ ^sha512:\ .* ]]; then
+                    file_path="$dir/$root_path"
+                    if [ -f "$file_path" ]; then
+                      hash=$(sha512sum "$file_path" | awk '{print $1}')
+                      b64=$(echo "$hash" | xxd -r -p | base64)
+                      echo "sha512: $b64" >> "$tmp_file"
+                      echo "  - Updated root SHA512 for $root_path"
+                    else
+                      echo "  - WARNING: Root file not found: $file_path"
+                      echo "$next_line" >> "$tmp_file"
+                    fi
+                  else
+                    echo "$next_line" >> "$tmp_file"
+                  fi
+                else
+                  echo "$line" >> "$tmp_file"
+                fi
               fi
-            done
-            # Update root-level sha512 and path if present
-            root_path=$(awk '/^path: /{print $2; exit}' "$yml")
-            if [ -n "$root_path" ]; then
-              file="$dir/$root_path"
-              if [ -f "$file" ]; then
-                hash=$(sha512sum "$file" | awk '{print $1}')
-                b64=$(echo "$hash" | xxd -r -p | base64)
-                sed -i.bak -E "s|^sha512:.*|sha512: $b64|" "$yml"
-              fi
-            fi
+            done < "$yml"
+
+            # Replace original file with updated content
+            mv "$tmp_file" "$yml"
             echo "Updated $yml"
           done
 
