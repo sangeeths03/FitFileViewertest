@@ -283,8 +283,8 @@ jobs:
                 hash=$(sha512sum "$file" | awk '{print $1}')
                 b64=$(echo "$hash" | xxd -r -p | base64)
                 # Escape special characters in url for sed
-                escaped_url=$(printf '%s\n' "$url" | sed 's/[][\\.*^$(){}?+|/]/\\&/g')
-                sed -i.bak "/- url: $escaped_url/{n;s|^\\( *sha512: \\).*|\\1$b64|;}" "$yml"
+                escaped_url=$(printf '%s\n' "$url" | sed 's/[]\[.*^$(){}?+|/]/\\&/g')
+                sed -i.bak "/- url: $escaped_url/{n;s#^\( *sha512: \).*#\1$b64#;}" "$yml"
               else
                 echo "WARN: $file not found for $yml"
               fi
