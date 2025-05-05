@@ -111,7 +111,7 @@
     "url": "https://github.com/Nick2bad4u/FitFileViewer/issues"
   },
   "license": "ISC",
-  "description": "Fit File Viewer is a cross-platform application for parsing, visualizing, and analyzing .fit files using charts, maps, and tables.",
+  "description": "Fit File Viewer is a cross-platform application for parsing, visualizing, and analyzing .fit files using charts, maps, tables, and other data visualization tools for Garmin and fitness activities.",
   "devDependencies": {
     "electron": "^36.1.0",
     "electron-builder": "^26.0.12",
