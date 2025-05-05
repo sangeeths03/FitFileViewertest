@@ -142,6 +142,32 @@ h2 {
 	margin-bottom: 18px;
 }
 
+/* Ensure tab content fills the screen in fullscreen mode */
+.tab-content:fullscreen:not(.tab-content:-webkit-full-screen),
+.tab-content:-webkit-full-screen:not(.tab-content:-webkit-full-screen) {
+  width: 100vw !important;
+  height: 100vh !important;
+  max-width: 100vw !important;
+  max-height: 100vh !important;
+  background: var(--color-bg-alt);
+  overflow: auto;
+  z-index: 9999;
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: block !important;
+}
+
+/* Make all direct children of tab-content also fill fullscreen */
+.tab-content:fullscreen > *,
+.tab-content:-webkit-full-screen > * {
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100vw !important;
+  max-height: 100vh !important;
+  box-sizing: border-box;
+}
+
 /* =====================================================
    Card & Section Containers
    ===================================================== */
@@ -161,6 +187,8 @@ h2 {
 	margin-bottom: 15px;
 	border-radius: 4px;
 	box-shadow: 0 1px 3px #0000004d;
+	width: auto !important;
+	height: auto !important;
 }
 
 /* =====================================================
@@ -652,12 +680,12 @@ body.theme-dark .custom-fullscreen-bar button:focus {
 
 .fullscreen-btn.improved {
   pointer-events: auto;
-  background: rgba(30, 34, 54, 0.92);
+  background: rgb(30 34 54 / 92%);
   border: none;
   border-radius: 50%;
   width: 48px;
   height: 48px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.18);
+  box-shadow: 0 2px 12px rgb(0 0 0 / 18%);
   color: #fff;
   font-size: 1.6rem;
   display: flex;
@@ -668,11 +696,27 @@ body.theme-dark .custom-fullscreen-bar button:focus {
   outline: none;
 }
 
+.tab-content:fullscreen,
+.tab-content:-webkit-full-screen {
+  width: 100vw !important;
+  height: 100vh !important;
+  max-width: 100vw !important;
+  max-height: 100vh !important;
+  background: var(--color-bg-alt);
+  overflow: auto;
+  z-index: 9999;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+
+
 .fullscreen-btn.improved:hover,
 .fullscreen-btn.improved:focus {
   background: #1976d2;
   color: #fff;
-  box-shadow: 0 4px 18px rgba(25, 118, 210, 0.25);
+  box-shadow: 0 4px 18px rgb(25 118 210 / 25%);
   transform: scale(1.08);
 }
 

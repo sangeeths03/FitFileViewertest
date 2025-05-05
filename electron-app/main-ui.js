@@ -23,6 +23,15 @@ function arrayBufferToBase64(buffer) {
   return window.btoa(binary);
 }
 
+// Define getActiveTabContent function
+function getActiveTabContent() {
+	const tabContents = document.querySelectorAll('.tab-content');
+	for (const el of tabContents) {
+		if (el.style.display === 'block') return el;
+	}
+	return null;
+}
+
 // When a FIT file is opened, always send it to the iframe (even if not active)
 window.sendFitFileToAltFitReader = async function(arrayBuffer) {
   const iframe = document.getElementById('altfit-iframe');
@@ -113,10 +122,8 @@ if (window.electronAPI && window.electronAPI.onIpc) {
 function addFullScreenButton(tabContentId) {
 	const container = document.getElementById(tabContentId);
 	if (!container) return;
-	// Prevent duplicate
 	if (document.getElementById(tabContentId + '-fullscreen-btn')) return;
 
-	// Create a wrapper for the button in the margin area
 	const wrapper = document.createElement('div');
 	wrapper.className = 'fullscreen-btn-wrapper';
 	wrapper.style.position = 'absolute';
@@ -125,7 +132,6 @@ function addFullScreenButton(tabContentId) {
 	wrapper.style.zIndex = 1001;
 	wrapper.style.pointerEvents = 'none';
 
-	// Button itself
 	const btn = document.createElement('button');
 	btn.id = tabContentId + '-fullscreen-btn';
 	btn.className = 'fullscreen-btn improved';
@@ -135,32 +141,71 @@ function addFullScreenButton(tabContentId) {
 
 	btn.onclick = (e) => {
 		e.stopPropagation();
+		const activeContent = getActiveTabContent();
+		if (!activeContent) return;
 		if (!document.fullscreenElement) {
-			container.requestFullscreen();
+			activeContent.requestFullscreen();
 			btn.title = 'Exit Full Screen';
 			btn.querySelector('.fullscreen-icon').textContent = '🗗';
+			addExitFullscreenOverlay(activeContent);
 		} else {
 			document.exitFullscreen();
 			btn.title = 'Toggle Full Screen';
 			btn.querySelector('.fullscreen-icon').textContent = '⛶';
+			removeExitFullscreenOverlay(activeContent);
 		}
 	};
 
-	// Listen for fullscreen change to update button
 	document.addEventListener('fullscreenchange', () => {
 		if (!document.fullscreenElement) {
 			btn.title = 'Toggle Full Screen';
 			btn.querySelector('.fullscreen-icon').textContent = '⛶';
+			const activeContent = getActiveTabContent();
+			if (activeContent) removeExitFullscreenOverlay(activeContent);
 		}
 	});
 
 	wrapper.appendChild(btn);
-	// Place wrapper in the parent of the tab content (so it's in the margin, not inside content)
 	const parent = container.parentElement;
 	if (parent) {
 		parent.style.position = 'relative';
 		parent.appendChild(wrapper);
 	}
+}
+
+function addExitFullscreenOverlay(container) {
+	if (container.querySelector('.exit-fullscreen-overlay')) return;
+	const overlay = document.createElement('button');
+	overlay.className = 'exit-fullscreen-overlay';
+	overlay.innerHTML = 'Exit Fullscreen';
+	overlay.style.position = 'fixed';
+	overlay.style.top = '24px';
+	overlay.style.right = '24px';
+	overlay.style.zIndex = 10002;
+	overlay.style.padding = '10px 18px';
+	overlay.style.background = 'rgba(30,34,54,0.92)';
+	overlay.style.color = '#fff';
+	overlay.style.border = 'none';
+	overlay.style.borderRadius = '24px';
+	overlay.style.fontSize = '1.1rem';
+	overlay.style.cursor = 'pointer';
+	overlay.style.boxShadow = '0 2px 12px rgb(0 0 0 / 18%)';
+	overlay.style.setProperty('width', 'auto', 'important');
+	overlay.style.setProperty('height', 'auto', 'important');
+	overlay.style.minWidth = 'unset';
+	overlay.style.minHeight = 'unset';
+	overlay.style.display = 'inline-block';
+	overlay.style.pointerEvents = 'auto';
+	overlay.onclick = (e) => {
+		e.stopPropagation();
+		document.exitFullscreen();
+	};
+	container.appendChild(overlay);
+}
+
+function removeExitFullscreenOverlay(container) {
+	const overlay = container.querySelector('.exit-fullscreen-overlay');
+	if (overlay) overlay.remove();
 }
 
 window.addEventListener('DOMContentLoaded', () => {
