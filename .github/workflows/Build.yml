@@ -207,7 +207,7 @@ jobs:
             artifact_name=$(basename "$artifact_dir")
             platform_arch=${artifact_name#dist-}
             mkdir -p "release-dist/$platform_arch"
-            cp -v $artifact_dir/* "release-dist/$platform_arch/"
+            cp -vr $artifact_dir/* "release-dist/$platform_arch/"
           done
 
       - name: Create or update release with distributable builds
