@@ -1,5 +1,5 @@
 const { loadRecentFiles, getShortRecentName } = require('./recentFiles');
-const { Menu, BrowserWindow } = require('electron');
+const { Menu, BrowserWindow, app } = require('electron');
 const Store = require('electron-store').default;
 const store = new Store({ name: 'settings' });
 
@@ -30,6 +30,45 @@ function getTheme() {
 
 function setTheme(theme) {
 	store.set('theme', theme);
+}
+
+// Add platform-specific (macOS) App menu for About, Preferences, and Quit
+function getPlatformAppMenu(mainWindow) {
+	if (process.platform === 'darwin') {
+		return [{
+			label: app.name,
+			submenu: [
+				{
+					label: 'About',
+					role: 'about',
+					click: () => {
+						const win = BrowserWindow.getFocusedWindow() || mainWindow;
+						if (win && win.webContents) win.webContents.send('menu-about');
+					},
+				},
+				{ type: 'separator' },
+				{
+					label: 'Preferences...',
+					accelerator: 'CmdOrCtrl+,',
+					click: () => {
+						const win = BrowserWindow.getFocusedWindow() || mainWindow;
+						if (win && win.webContents) win.webContents.send('menu-preferences');
+					},
+				},
+				{ type: 'separator' },
+				{ role: 'services', submenu: [] },
+				{ type: 'separator' },
+				{ role: 'hide' },
+				{ role: 'hideothers' },
+				{ role: 'unhide' },
+				{ type: 'separator' },
+				{ role: 'quit' },
+			],
+		}];
+	} else {
+		// For Windows/Linux, add About and Preferences to Help menu
+		return [];
+	}
 }
 
 /**
@@ -96,6 +135,7 @@ function buildAppMenu(
 	 * @property {string} [role] - Built-in role for standard menu items.
 	 */
 	const template = [
+		...getPlatformAppMenu(mainWindow),
 		{
 			label: 'File',
 			submenu: [
@@ -221,6 +261,60 @@ function buildAppMenu(
 						const win = BrowserWindow.getFocusedWindow() || mainWindow;
 						if (win && win.webContents) {
 							win.webContents.send('menu-check-for-updates');
+						}
+					},
+				},
+			],
+		},
+		{
+			label: 'Help',
+			submenu: [
+				{
+					label: 'About',
+					click: () => {
+						const win = BrowserWindow.getFocusedWindow() || mainWindow;
+						if (win && win.webContents) {
+							win.webContents.send('menu-about');
+						}
+						},
+				},
+				{ type: 'separator' },
+				{
+					label: 'Documentation',
+					click: () => {
+						require('electron').shell.openExternal('https://github.com/Nick2bad4u/FitFileViewer#readme');
+					},
+				},
+				{
+					label: 'GitHub Repository',
+					click: () => {
+						require('electron').shell.openExternal('https://github.com/Nick2bad4u/FitFileViewer');
+					},
+				},
+				{
+					label: 'Report an Issue',
+					click: () => {
+						require('electron').shell.openExternal('https://github.com/Nick2bad4u/FitFileViewer/issues');
+					},
+				},
+				{ type: 'separator' },
+				{
+					label: 'Keyboard Shortcuts',
+					click: () => {
+						const win = BrowserWindow.getFocusedWindow() || mainWindow;
+						if (win && win.webContents) {
+							win.webContents.send('menu-keyboard-shortcuts');
+						}
+					},
+				},
+				{
+					label: 'Restart & Update',
+					enabled: false, // Will be enabled via IPC when update is downloaded
+					id: 'restart-update',
+					click: () => {
+						const win = BrowserWindow.getFocusedWindow() || mainWindow;
+						if (win && win.webContents) {
+							win.webContents.send('menu-restart-update');
 						}
 					},
 				},

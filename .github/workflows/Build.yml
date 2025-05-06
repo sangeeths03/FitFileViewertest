@@ -113,7 +113,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y rpm dpkg fakeroot xz-utils libarchive-tools
-          sudo apt-get install -y flatpak # Only if you need flatpak
+          sudo apt-get install -y flatpak flatpak-builder # Only if you need flatpak/flatpak-builder
 
       - name: Install macOS build dependencies
         if: runner.os == 'macOS'

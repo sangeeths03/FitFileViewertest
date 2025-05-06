@@ -376,6 +376,39 @@ if (window.electronAPI && window.electronAPI.onIpc) {
 	});
 }
 
+// --- About Dialog Handler ---
+if (window.electronAPI && window.electronAPI.onIpc) {
+	window.electronAPI.onIpc('menu-about', async () => {
+		const version = (window.electronAPI.getAppVersion && await window.electronAPI.getAppVersion()) || 'Unknown';
+		const author = 'Nick2bad4u';
+		const license = 'ISC';
+		const aboutMsg = `Fit File Viewer\nVersion: ${version}\nAuthor: ${author}\nLicense: ${license}`;
+		alert(aboutMsg);
+	});
+}
+
+// --- Keyboard Shortcuts Dialog Handler ---
+if (window.electronAPI && window.electronAPI.onIpc) {
+	window.electronAPI.onIpc('menu-keyboard-shortcuts', () => {
+		const shortcuts = [
+			['Open File', 'Ctrl+O'],
+			['Save As', 'Ctrl+S'],
+			['Print', 'Ctrl+P'],
+			['Close Window', 'Ctrl+W'],
+			['Reload', 'Ctrl+R'],
+			['Toggle DevTools', 'Ctrl+Shift+I'],
+			['Toggle Fullscreen', 'F11'],
+			['Export', 'No default'],
+			['Theme: Dark/Light', 'Settings > Theme'],
+		];
+		let msg = 'Keyboard Shortcuts:\n\n';
+		for (const [action, keys] of shortcuts) {
+			msg += `${action}: ${keys}\n`;
+		}
+		alert(msg);
+	});
+}
+
 // Debounce chart rendering on window resize for performance
 let chartRenderTimeout;
 window.addEventListener('resize', () => {

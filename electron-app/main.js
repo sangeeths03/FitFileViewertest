@@ -51,6 +51,11 @@ function setupAutoUpdater(mainWindow) {
 	});
 	autoUpdater.on('update-downloaded', (info) => {
 		mainWindow.webContents.send('update-downloaded', info);
+		const menu = Menu.getApplicationMenu();
+		if (menu) {
+			const restartItem = menu.getMenuItemById('restart-update');
+			if (restartItem) restartItem.enabled = true;
+		}
 	});
 }
 
@@ -241,6 +246,10 @@ app.whenReady().then(() => {
 		if (!canceled && filePath) {
 			win.webContents.send('export-file', filePath);
 		}
+	});
+
+	ipcMain.on('menu-restart-update', () => {
+		autoUpdater.quitAndInstall();
 	});
 
 	app.on('activate', function () {
