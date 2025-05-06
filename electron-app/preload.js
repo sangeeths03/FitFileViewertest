@@ -118,4 +118,10 @@ contextBridge.exposeInMainWorld('electronAPI', {
 	 * Trigger install of a downloaded update.
 	 */
 	installUpdate: () => ipcRenderer.send('install-update'),
+
+	/**
+	 * Sets the full screen mode.
+	 * @param {boolean} flag
+	 */
+	setFullScreen: (flag) => ipcRenderer.send('set-fullscreen', flag),
 });

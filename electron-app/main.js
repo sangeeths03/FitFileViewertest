@@ -252,6 +252,11 @@ app.whenReady().then(() => {
 		autoUpdater.quitAndInstall();
 	});
 
+	ipcMain.on('set-fullscreen', (event, flag) => {
+		const win = BrowserWindow.getFocusedWindow();
+		if (win) win.setFullScreen(!!flag);
+	});
+
 	app.on('activate', function () {
 		if (BrowserWindow.getAllWindows().length === 0) {
 			const win = createWindow();

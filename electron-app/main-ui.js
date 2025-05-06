@@ -208,6 +208,40 @@ function removeExitFullscreenOverlay(container) {
 	if (overlay) overlay.remove();
 }
 
+window.addEventListener('fullscreenchange', () => {
+	const activeContent = getActiveTabContent && getActiveTabContent();
+	if (document.fullscreenElement) {
+		if (activeContent) addExitFullscreenOverlay(activeContent);
+	} else {
+		if (activeContent) removeExitFullscreenOverlay(activeContent);
+	}
+});
+
+window.addEventListener('keydown', (e) => {
+	if (e.key === 'F11' || e.key === 'Escape') {
+		e.preventDefault();
+		// Always try to exit browser fullscreen first
+		if (document.fullscreenElement && document.hasFocus()) {
+			document.exitFullscreen().catch(() => {});
+		} else {
+			// If not in browser fullscreen, check for tab pseudo-fullscreen
+			const tabContents = document.querySelectorAll('.tab-content');
+			let exited = false;
+			for (const el of tabContents) {
+				if (el.classList.contains('fullscreen')) {
+					el.classList.remove('fullscreen');
+					removeExitFullscreenOverlay(el);
+					exited = true;
+				}
+			}
+			// If nothing exited, try to exit Electron's native fullscreen
+			if (!exited && window.electronAPI && typeof window.electronAPI.setFullScreen === 'function') {
+				window.electronAPI.setFullScreen(false);
+			}
+		}
+	}
+});
+
 window.addEventListener('DOMContentLoaded', () => {
 	['content-data', 'content-chart', 'content-map', 'content-summary', 'content-altfit'].forEach(addFullScreenButton);
 });

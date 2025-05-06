@@ -1,6 +1,6 @@
 {
   "name": "fitfileviewer",
-  "version": "6.7.0",
+  "version": "6.8.0",
   "main": "main.js",
   "appid": "com.example.fitfileviewer",
   "displayName": "Fit File Viewer",
@@ -67,9 +67,6 @@
     "snap": {
       "artifactName": "Fit-File-Viewer-snap-${version}.${ext}"
     },
-    "flatpak": {
-      "artifactName": "Fit-File-Viewer-flatpak-${version}.${ext}"
-    },
     "freebsd": {
       "artifactName": "Fit-File-Viewer-freebsd-${version}.${ext}"
     },
@@ -109,7 +106,6 @@
         "deb",
         "rpm",
         "snap",
-        "flatpak",
         "freebsd",
         "pacman",
         "p5p",
