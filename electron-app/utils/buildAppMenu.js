@@ -253,6 +253,31 @@ function buildAppMenu(
 					accelerator: 'F11',
 					role: 'togglefullscreen',
 				},
+				{ type: 'separator' },
+				{
+					label: '♿ Accessibility',
+					submenu: [
+						{
+							label: '🔡 Font Size',
+							submenu: [
+								{ label: '🅰️ Extra Small', type: 'radio', checked: store.get('fontSize', 'medium') === 'xsmall', click: () => { store.set('fontSize', 'xsmall'); const win = BrowserWindow.getFocusedWindow() || mainWindow; if (win && win.webContents) win.webContents.send('set-font-size', 'xsmall'); } },
+								{ label: '🔠 Small', type: 'radio', checked: store.get('fontSize', 'medium') === 'small', click: () => { store.set('fontSize', 'small'); const win = BrowserWindow.getFocusedWindow() || mainWindow; if (win && win.webContents) win.webContents.send('set-font-size', 'small'); } },
+								{ label: '🔤 Medium', type: 'radio', checked: store.get('fontSize', 'medium') === 'medium', click: () => { store.set('fontSize', 'medium'); const win = BrowserWindow.getFocusedWindow() || mainWindow; if (win && win.webContents) win.webContents.send('set-font-size', 'medium'); } },
+								{ label: '🔡 Large', type: 'radio', checked: store.get('fontSize', 'medium') === 'large', click: () => { store.set('fontSize', 'large'); const win = BrowserWindow.getFocusedWindow() || mainWindow; if (win && win.webContents) win.webContents.send('set-font-size', 'large'); } },
+								{ label: '🅰️ Extra Large', type: 'radio', checked: store.get('fontSize', 'medium') === 'xlarge', click: () => { store.set('fontSize', 'xlarge'); const win = BrowserWindow.getFocusedWindow() || mainWindow; if (win && win.webContents) win.webContents.send('set-font-size', 'xlarge'); } },
+							],
+						},
+						{
+							label: '🎨 High Contrast Mode',
+							submenu: [
+								{ label: '⬛ Black (Default)', type: 'radio', checked: store.get('highContrast', 'black') === 'black', click: () => { store.set('highContrast', 'black'); const win = BrowserWindow.getFocusedWindow() || mainWindow; if (win && win.webContents) win.webContents.send('set-high-contrast', 'black'); } },
+								{ label: '⬜ White', type: 'radio', checked: store.get('highContrast', 'black') === 'white', click: () => { store.set('highContrast', 'white'); const win = BrowserWindow.getFocusedWindow() || mainWindow; if (win && win.webContents) win.webContents.send('set-high-contrast', 'white'); } },
+								{ label: '🟨 Yellow', type: 'radio', checked: store.get('highContrast', 'black') === 'yellow', click: () => { store.set('highContrast', 'yellow'); const win = BrowserWindow.getFocusedWindow() || mainWindow; if (win && win.webContents) win.webContents.send('set-high-contrast', 'yellow'); } },
+								{ label: '🚫 Off', type: 'radio', checked: !store.get('highContrast', false) || store.get('highContrast', 'black') === 'off', click: () => { store.set('highContrast', 'off'); const win = BrowserWindow.getFocusedWindow() || mainWindow; if (win && win.webContents) win.webContents.send('set-high-contrast', 'off'); } },
+							],
+						},
+					],
+				},
 			],
 		},
 		{
@@ -349,30 +374,6 @@ function buildAppMenu(
 							win.webContents.send('menu-keyboard-shortcuts');
 						}
 					},
-				},
-				{
-					label: '♿ Accessibility',
-					submenu: [
-						{
-							label: '🔡 Font Size',
-							submenu: [
-								{ label: '🅰️ Extra Small', type: 'radio', checked: store.get('fontSize', 'medium') === 'xsmall', click: () => { store.set('fontSize', 'xsmall'); const win = BrowserWindow.getFocusedWindow() || mainWindow; if (win && win.webContents) win.webContents.send('set-font-size', 'xsmall'); } },
-								{ label: '🔠 Small', type: 'radio', checked: store.get('fontSize', 'medium') === 'small', click: () => { store.set('fontSize', 'small'); const win = BrowserWindow.getFocusedWindow() || mainWindow; if (win && win.webContents) win.webContents.send('set-font-size', 'small'); } },
-								{ label: '🔤 Medium', type: 'radio', checked: store.get('fontSize', 'medium') === 'medium', click: () => { store.set('fontSize', 'medium'); const win = BrowserWindow.getFocusedWindow() || mainWindow; if (win && win.webContents) win.webContents.send('set-font-size', 'medium'); } },
-								{ label: '🔡 Large', type: 'radio', checked: store.get('fontSize', 'medium') === 'large', click: () => { store.set('fontSize', 'large'); const win = BrowserWindow.getFocusedWindow() || mainWindow; if (win && win.webContents) win.webContents.send('set-font-size', 'large'); } },
-								{ label: '🅰️ Extra Large', type: 'radio', checked: store.get('fontSize', 'medium') === 'xlarge', click: () => { store.set('fontSize', 'xlarge'); const win = BrowserWindow.getFocusedWindow() || mainWindow; if (win && win.webContents) win.webContents.send('set-font-size', 'xlarge'); } },
-							],
-						},
-						{
-							label: '🎨 High Contrast Mode',
-							submenu: [
-								{ label: '⬛ Black (Default)', type: 'radio', checked: store.get('highContrast', 'black') === 'black', click: () => { store.set('highContrast', 'black'); const win = BrowserWindow.getFocusedWindow() || mainWindow; if (win && win.webContents) win.webContents.send('set-high-contrast', 'black'); } },
-								{ label: '⬜ White', type: 'radio', checked: store.get('highContrast', 'black') === 'white', click: () => { store.set('highContrast', 'white'); const win = BrowserWindow.getFocusedWindow() || mainWindow; if (win && win.webContents) win.webContents.send('set-high-contrast', 'white'); } },
-								{ label: '🟨 Yellow', type: 'radio', checked: store.get('highContrast', 'black') === 'yellow', click: () => { store.set('highContrast', 'yellow'); const win = BrowserWindow.getFocusedWindow() || mainWindow; if (win && win.webContents) win.webContents.send('set-high-contrast', 'yellow'); } },
-								{ label: '🚫 Off', type: 'radio', checked: !store.get('highContrast', false) || store.get('highContrast', 'black') === 'off', click: () => { store.set('highContrast', 'off'); const win = BrowserWindow.getFocusedWindow() || mainWindow; if (win && win.webContents) win.webContents.send('set-high-contrast', 'off'); } },
-							],
-						},
-					],
 				},
 				{
 					label: '🔄 Restart & Update',
