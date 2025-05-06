@@ -146,7 +146,7 @@ jobs:
         if: runner.os == 'Windows'
         shell: pwsh
         run: |
-          $patterns = @('*.exe','*.dmg','*.AppImage','*.snap','*.zip','*.yml','*.blockmap','*.msi','*.deb','*.rpm','*.7z')
+          $patterns = @('*.exe','*.dmg','*.AppImage','*.snap','*.zip','*.yml','*.blockmap','*.msi','*.deb','*.rpm','*.7z','*.pkg','*.mas','*.apk','*.p5p','*.pacman','*.freebsd','*.flatpak','*.tar.xz','*.tar.gz','*.tar.bz2')
           $files = @()
           foreach ($pattern in $patterns) {
             $files += Get-ChildItem -Path dist -Recurse -Include $pattern -ErrorAction SilentlyContinue
@@ -161,7 +161,7 @@ jobs:
         if: runner.os == 'Linux'
         shell: bash
         run: |
-          find dist -type f \( -name '*.exe' -name '*.7z' -o -name '*.dmg' -o -name '*.AppImage' -o -name '*.snap' -o -name '*.zip' -o -name '*.yml' -o -name '*.blockmap' -o -name '*.msi' -o -name '*.deb' -o -name '*.rpm' \) | sort | while read file; do
+          find dist -type f \( -name '*.exe' -name '*.7z' -o -name '*.dmg' -o -name '*.AppImage' -o -name '*.snap' -o -name '*.zip' -o -name '*.yml' -o -name '*.blockmap' -o -name '*.msi' -o -name '*.deb' -o -name '*.rpm' -o -name '*.pkg' -o -name '*.mas' -o -name '*.apk' -o -name '*.p5p' -o -name '*.pacman' -o -name '*.freebsd' -o -name '*.flatpak' -o -name '*.tar.xz' -o -name '*.tar.gz' -o -name '*.tar.bz2' \) | sort | while read file; do
             hash=$(sha512sum "$file" | awk '{print $1}')
             b64=$(echo "$hash" | xxd -r -p | base64)
             echo "$file: $b64"
@@ -170,7 +170,7 @@ jobs:
         if: runner.os == 'macOS'
         shell: bash
         run: |
-          find dist -type f \( -name '*.exe' -name '*.7z' -o -name '*.dmg' -o -name '*.AppImage' -o -name '*.snap' -o -name '*.zip' -o -name '*.yml' -o -name '*.blockmap' -o -name '*.msi' -o -name '*.deb' -o -name '*.rpm' \) | sort | while read file; do
+          find dist -type f \( -name '*.exe' -name '*.7z' -o -name '*.dmg' -o -name '*.AppImage' -o -name '*.snap' -o -name '*.zip' -o -name '*.yml' -o -name '*.blockmap' -o -name '*.msi' -o -name '*.deb' -o -name '*.rpm' -o -name '*.pkg' -o -name '*.mas' -o -name '*.apk' -o -name '*.p5p' -o -name '*.pacman' -o -name '*.freebsd' -o -name '*.flatpak' -o -name '*.tar.xz' -o -name '*.tar.gz' -o -name '*.tar.bz2' \) | sort | while read file; do
             hash=$(shasum -a 512 "$file" | awk '{print $1}')
             b64=$(echo "$hash" | xxd -r -p | base64)
             echo "$file: $b64"
@@ -201,7 +201,7 @@ jobs:
         if: runner.os == 'Windows'
         shell: pwsh
         run: |
-          $patterns = @('*.exe','*.dmg','*.AppImage','*.snap','*.zip','*.yml','*.blockmap','*.msi','*.deb','*.rpm','*.7z')
+          $patterns = @('*.exe','*.dmg','*.AppImage','*.snap','*.zip','*.yml','*.blockmap','*.msi','*.deb','*.rpm','*.7z','*.pkg','*.mas','*.apk','*.p5p','*.pacman','*.freebsd','*.flatpak','*.tar.xz','*.tar.gz','*.tar.bz2')
           $files = @()
           foreach ($pattern in $patterns) {
             $files += Get-ChildItem -Path artifacts -Recurse -Include $pattern -ErrorAction SilentlyContinue
@@ -216,7 +216,7 @@ jobs:
         if: runner.os == 'Linux'
         shell: bash
         run: |
-          find artifacts -type f \( -name '*.exe' -name '*.7z' -o -name '*.dmg' -o -name '*.AppImage' -o -name '*.snap' -o -name '*.zip' -o -name '*.yml' -o -name '*.blockmap' -o -name '*.msi' -o -name '*.deb' -o -name '*.rpm' \) | sort | while read file; do
+          find artifacts -type f \( -name '*.exe' -name '*.7z' -o -name '*.dmg' -o -name '*.AppImage' -o -name '*.snap' -o -name '*.zip' -o -name '*.yml' -o -name '*.blockmap' -o -name '*.msi' -o -name '*.deb' -o -name '*.rpm' -o -name '*.pkg' -o -name '*.mas' -o -name '*.apk' -o -name '*.p5p' -o -name '*.pacman' -o -name '*.freebsd' -o -name '*.flatpak' -o -name '*.tar.xz' -o -name '*.tar.gz' -o -name '*.tar.bz2' \) | sort | while read file; do
             hash=$(sha512sum "$file" | awk '{print $1}')
             b64=$(echo "$hash" | xxd -r -p | base64)
             echo "$file: $b64"
@@ -225,7 +225,7 @@ jobs:
         if: runner.os == 'macOS'
         shell: bash
         run: |
-          find artifacts -type f \( -name '*.exe' -name '*.7z' -o -name '*.dmg' -o -name '*.AppImage' -o -name '*.snap' -o -name '*.zip' -o -name '*.yml' -o -name '*.blockmap' -o -name '*.msi' -o -name '*.deb' -o -name '*.rpm' \) | sort | while read file; do
+          find artifacts -type f \( -name '*.exe' -name '*.7z' -o -name '*.dmg' -o -name '*.AppImage' -o -name '*.snap' -o -name '*.zip' -o -name '*.yml' -o -name '*.blockmap' -o -name '*.msi' -o -name '*.deb' -o -name '*.rpm' -o -name '*.pkg' -o -name '*.mas' -o -name '*.apk' -o -name '*.p5p' -o -name '*.pacman' -o -name '*.freebsd' -o -name '*.flatpak' -o -name '*.tar.xz' -o -name '*.tar.gz' -o -name '*.tar.bz2' \) | sort | while read file; do
             hash=$(shasum -a 512 "$file" | awk '{print $1}')
             b64=$(echo "$hash" | xxd -r -p | base64)
             echo "$file: $b64"
@@ -348,7 +348,7 @@ jobs:
         if: runner.os == 'Windows'
         shell: pwsh
         run: |
-          $patterns = @('*.exe','*.dmg','*.AppImage','*.snap','*.zip','*.yml','*.blockmap','*.msi','*.deb','*.rpm','*.7z')
+          $patterns = @('*.exe','*.dmg','*.AppImage','*.snap','*.zip','*.yml','*.blockmap','*.msi','*.deb','*.rpm','*.7z','*.pkg','*.mas','*.apk','*.p5p','*.pacman','*.freebsd','*.flatpak','*.tar.xz','*.tar.gz','*.tar.bz2')
           $files = @()
           foreach ($pattern in $patterns) {
             $files += Get-ChildItem -Path artifacts -Recurse -Include $pattern -ErrorAction SilentlyContinue
@@ -363,7 +363,7 @@ jobs:
         if: runner.os == 'Linux'
         shell: bash
         run: |
-          find artifacts -type f \( -name '*.exe' -name '*.7z' -o -name '*.dmg' -o -name '*.AppImage' -o -name '*.snap' -o -name '*.zip' -o -name '*.yml' -o -name '*.blockmap' -o -name '*.msi' -o -name '*.deb' -o -name '*.rpm' \) | sort | while read file; do
+          find artifacts -type f \( -name '*.exe' -name '*.7z' -o -name '*.dmg' -o -name '*.AppImage' -o -name '*.snap' -o -name '*.zip' -o -name '*.yml' -o -name '*.blockmap' -o -name '*.msi' -o -name '*.deb' -o -name '*.rpm' -o -name '*.pkg' -o -name '*.mas' -o -name '*.apk' -o -name '*.p5p' -o -name '*.pacman' -o -name '*.freebsd' -o -name '*.flatpak' -o -name '*.tar.xz' -o -name '*.tar.gz' -o -name '*.tar.bz2' \) | sort | while read file; do
             hash=$(sha512sum "$file" | awk '{print $1}')
             b64=$(echo "$hash" | xxd -r -p | base64)
             echo "$file: $b64"
@@ -372,7 +372,7 @@ jobs:
         if: runner.os == 'macOS'
         shell: bash
         run: |
-          find artifacts -type f \( -name '*.exe' -name '*.7z' -o -name '*.dmg' -o -name '*.AppImage' -o -name '*.snap' -o -name '*.zip' -o -name '*.yml' -o -name '*.blockmap' -o -name '*.msi' -o -name '*.deb' -o -name '*.rpm' \) | sort | while read file; do
+          find artifacts -type f \( -name '*.exe' -name '*.7z' -o -name '*.dmg' -o -name '*.AppImage' -o -name '*.snap' -o -name '*.zip' -o -name '*.yml' -o -name '*.blockmap' -o -name '*.msi' -o -name '*.deb' -o -name '*.rpm' -o -name '*.pkg' -o -name '*.mas' -o -name '*.apk' -o -name '*.p5p' -o -name '*.pacman' -o -name '*.freebsd' -o -name '*.flatpak' -o -name '*.tar.xz' -o -name '*.tar.gz' -o -name '*.tar.bz2' \) | sort | while read file; do
             hash=$(shasum -a 512 "$file" | awk '{print $1}')
             b64=$(echo "$hash" | xxd -r -p | base64)
             echo "$file: $b64"

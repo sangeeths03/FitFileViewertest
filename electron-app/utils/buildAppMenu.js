@@ -204,23 +204,23 @@ function buildAppMenu(
 						},
 					],
 				},
-				{
-					label: 'Check for Updates...',
-					click: () => {
-						const win = BrowserWindow.getFocusedWindow() || mainWindow;
-						if (win && win.webContents) {
-							win.webContents.send('menu-check-for-updates');
-						}
-					},
-				},
-				decoderOptionsMenu,
-				{
+								{
 					label: 'Summary Columns...',
 					enabled: !!loadedFitFilePath,
 					click: () => {
 						const win = BrowserWindow.getFocusedWindow() || mainWindow;
 						if (win && win.webContents) {
 							win.webContents.send('open-summary-column-selector');
+						}
+					},
+				},
+				decoderOptionsMenu,
+				{
+					label: 'Check for Updates...',
+					click: () => {
+						const win = BrowserWindow.getFocusedWindow() || mainWindow;
+						if (win && win.webContents) {
+							win.webContents.send('menu-check-for-updates');
 						}
 					},
 				},

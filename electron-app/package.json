@@ -1,6 +1,6 @@
 {
   "name": "fitfileviewer",
-  "version": "6.2.0",
+  "version": "6.3.0",
   "main": "main.js",
   "appid": "com.example.fitfileviewer",
   "displayName": "Fit File Viewer",
@@ -26,7 +26,10 @@
         "7z",
         "portable",
         "squirrel",
-        "msi"
+        "msi",
+        "tar.xz",
+        "tar.gz",
+        "tar.bz2"
       ],
       "legalTrademarks": "Fit File Viewer",
       "requestedExecutionLevel": "asInvoker"
@@ -52,11 +55,64 @@
     "msi": {
       "artifactName": "Fit-File-Viewer-msi-${version}.${ext}"
     },
+    "tarxz": {
+      "artifactName": "Fit-File-Viewer-tar-xz-${version}.${ext}"
+    },
+    "targz": {
+      "artifactName": "Fit-File-Viewer-tar-gz-${version}.${ext}"
+    },
+    "tarbz2": {
+      "artifactName": "Fit-File-Viewer-tar-bz2-${version}.${ext}"
+    },
+    "AppImage": {
+      "artifactName": "Fit-File-Viewer-appimage-${version}.${ext}"
+    },
+    "deb": {
+      "artifactName": "Fit-File-Viewer-deb-${version}.${ext}"
+    },
+    "rpm": {
+      "artifactName": "Fit-File-Viewer-rpm-${version}.${ext}"
+    },
+    "snap": {
+      "artifactName": "Fit-File-Viewer-snap-${version}.${ext}"
+    },
+    "flatpak": {
+      "artifactName": "Fit-File-Viewer-flatpak-${version}.${ext}"
+    },
+    "freebsd": {
+      "artifactName": "Fit-File-Viewer-freebsd-${version}.${ext}"
+    },
+    "pacman": {
+      "artifactName": "Fit-File-Viewer-pacman-${version}.${ext}"
+    },
+    "p5p": {
+      "artifactName": "Fit-File-Viewer-p5p-${version}.${ext}"
+    },
+    "apk": {
+      "artifactName": "Fit-File-Viewer-apk-${version}.${ext}"
+    },
+    "zip": {
+      "artifactName": "Fit-File-Viewer-zip-${version}.${ext}"
+    },
+    "dmg": {
+      "artifactName": "Fit-File-Viewer-dmg-${version}.${ext}"
+    },
+    "mas": {
+      "artifactName": "Fit-File-Viewer-mas-${version}.${ext}"
+    },
+    "pkg": {
+      "artifactName": "Fit-File-Viewer-pkg-${version}.${ext}"
+    },
     "mac": {
       "icon": "icons/favicon-512x512.icns",
       "target": [
         "dmg",
-        "zip"
+        "zip",
+        "mas",
+        "pkg",
+        "tar.xz",
+        "tar.gz",
+        "tar.bz2"
       ],
       "category": "public.app-category.productivity",
       "hardenedRuntime": true,
@@ -68,7 +124,16 @@
         "AppImage",
         "deb",
         "rpm",
-        "snap"
+        "snap",
+        "flatpak",
+        "freebsd",
+        "pacman",
+        "p5p",
+        "apk",
+        "zip",
+        "tar.xz",
+        "tar.gz",
+        "tar.bz2"
       ],
       "category": "Utility",
       "synopsis": "A cross-platform viewer for .fit activity files.",
@@ -140,6 +205,7 @@
     "cross-env": "^7.0.3",
     "electron": "^36.1.0",
     "electron-builder": "^26.0.12",
+    "electron-builder-squirrel-windows": "^26.0.12",
     "eslint": "^9.16.0",
     "jest": "^29.7.0"
   },
