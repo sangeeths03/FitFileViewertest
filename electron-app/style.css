@@ -53,6 +53,117 @@ body.theme-light {
 }
 
 /* =====================================================
+   Accessibility: Font Sizes
+   ===================================================== */
+.font-small,
+.font-small body,
+.font-small button,
+.font-small input,
+.font-small select,
+.font-small textarea,
+.font-small table,
+.font-small th,
+.font-small td,
+.font-small .tab-button,
+.font-small .themed-btn {
+	font-size: 13px !important;
+}
+.font-medium,
+.font-medium body,
+.font-medium button,
+.font-medium input,
+.font-medium select,
+.font-medium textarea,
+.font-medium table,
+.font-medium th,
+.font-medium td,
+.font-medium .tab-button,
+.font-medium .themed-btn {
+	font-size: 16px !important;
+}
+.font-large,
+.font-large body,
+.font-large button,
+.font-large input,
+.font-large select,
+.font-large textarea,
+.font-large table,
+.font-large th,
+.font-large td,
+.font-large .tab-button,
+.font-large .themed-btn {
+	font-size: 20px !important;
+}
+.font-xsmall,
+.font-xsmall body,
+.font-xsmall button,
+.font-xsmall input,
+.font-xsmall select,
+.font-xsmall textarea,
+.font-xsmall table,
+.font-xsmall th,
+.font-xsmall td,
+.font-xsmall .tab-button,
+.font-xsmall .themed-btn {
+	font-size: 11px !important;
+}
+.font-xlarge,
+.font-xlarge body,
+.font-xlarge button,
+.font-xlarge input,
+.font-xlarge select,
+.font-xlarge textarea,
+.font-xlarge table,
+.font-xlarge th,
+.font-xlarge td,
+.font-xlarge .tab-button,
+.font-xlarge .themed-btn {
+	font-size: 26px !important;
+}
+
+/* =====================================================
+   Accessibility: High Contrast
+   ===================================================== */
+.high-contrast {
+	background: #000 !important;
+	color: #fff !important;
+}
+.high-contrast a,
+.high-contrast button,
+.high-contrast input,
+.high-contrast select {
+	color: #fff !important;
+	background: #222 !important;
+	border-color: #fff !important;
+}
+
+.high-contrast-white {
+	background: #fff !important;
+	color: #000 !important;
+}
+.high-contrast-white a,
+.high-contrast-white button,
+.high-contrast-white input,
+.high-contrast-white select {
+	color: #000 !important;
+	background: #fff !important;
+	border-color: #000 !important;
+}
+
+.high-contrast-yellow {
+	background: #ffff00 !important;
+	color: #000 !important;
+}
+.high-contrast-yellow a,
+.high-contrast-yellow button,
+.high-contrast-yellow input,
+.high-contrast-yellow select {
+	color: #000 !important;
+	background: #ffff00 !important;
+	border-color: #000 !important;
+}
+
+/* =====================================================
    Base Layout & Typography
    ===================================================== */
 body {
@@ -143,29 +254,33 @@ h2 {
 }
 
 /* Ensure tab content fills the screen in fullscreen mode */
-.tab-content:fullscreen:not(.tab-content:-webkit-full-screen),
-.tab-content:-webkit-full-screen:not(.tab-content:-webkit-full-screen) {
-  width: 100vw !important;
-  height: 100vh !important;
-  max-width: 100vw !important;
-  max-height: 100vh !important;
-  background: var(--color-bg-alt);
-  overflow: auto;
-  z-index: 9999;
-  position: fixed;
-  top: 0;
-  left: 0;
-  display: block !important;
+.tab-content:fullscreen:not(
+		.tab-content:-webkit-full-screen
+	),
+.tab-content:-webkit-full-screen:not(
+		.tab-content:-webkit-full-screen
+	) {
+	width: 100vw !important;
+	height: 100vh !important;
+	max-width: 100vw !important;
+	max-height: 100vh !important;
+	background: var(--color-bg-alt);
+	overflow: auto;
+	z-index: 9999;
+	position: fixed;
+	top: 0;
+	left: 0;
+	display: block !important;
 }
 
 /* Make all direct children of tab-content also fill fullscreen */
 .tab-content:fullscreen > *,
 .tab-content:-webkit-full-screen > * {
-  width: 100% !important;
-  height: 100% !important;
-  max-width: 100vw !important;
-  max-height: 100vh !important;
-  box-sizing: border-box;
+	width: 100% !important;
+	height: 100% !important;
+	max-width: 100vw !important;
+	max-height: 100vh !important;
+	box-sizing: border-box;
 }
 
 /* =====================================================
@@ -675,60 +790,59 @@ body.theme-dark .custom-fullscreen-bar button:focus {
 
 /* Improved Fullscreen Button */
 .fullscreen-btn-wrapper {
-  pointer-events: none;
+	pointer-events: none;
 }
 
 .fullscreen-btn.improved {
-  pointer-events: auto;
-  background: rgb(30 34 54 / 92%);
-  border: none;
-  border-radius: 50%;
-  width: 48px;
-  height: 48px;
-  box-shadow: 0 2px 12px rgb(0 0 0 / 18%);
-  color: #fff;
-  font-size: 1.6rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background 0.2s, box-shadow 0.2s, transform 0.2s;
-  cursor: pointer;
-  outline: none;
+	pointer-events: auto;
+	background: rgb(30 34 54 / 92%);
+	border: none;
+	border-radius: 50%;
+	width: 48px;
+	height: 48px;
+	box-shadow: 0 2px 12px rgb(0 0 0 / 18%);
+	color: #fff;
+	font-size: 1.6rem;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	transition: background 0.2s, box-shadow 0.2s,
+		transform 0.2s;
+	cursor: pointer;
+	outline: none;
 }
 
 .tab-content:fullscreen,
 .tab-content:-webkit-full-screen {
-  width: 100vw !important;
-  height: 100vh !important;
-  max-width: 100vw !important;
-  max-height: 100vh !important;
-  background: var(--color-bg-alt);
-  overflow: auto;
-  z-index: 9999;
-  position: fixed;
-  top: 0;
-  left: 0;
+	width: 100vw !important;
+	height: 100vh !important;
+	max-width: 100vw !important;
+	max-height: 100vh !important;
+	background: var(--color-bg-alt);
+	overflow: auto;
+	z-index: 9999;
+	position: fixed;
+	top: 0;
+	left: 0;
 }
-
-
 
 .fullscreen-btn.improved:hover,
 .fullscreen-btn.improved:focus {
-  background: #1976d2;
-  color: #fff;
-  box-shadow: 0 4px 18px rgb(25 118 210 / 25%);
-  transform: scale(1.08);
+	background: #1976d2;
+	color: #fff;
+	box-shadow: 0 4px 18px rgb(25 118 210 / 25%);
+	transform: scale(1.08);
 }
 
 .fullscreen-btn.improved:active {
-  background: #1565c0;
-  transform: scale(0.98);
+	background: #1565c0;
+	transform: scale(0.98);
 }
 
 .fullscreen-btn .fullscreen-icon {
-  pointer-events: none;
-  font-size: 1.4em;
-  transition: color 0.2s;
+	pointer-events: none;
+	font-size: 1.4em;
+	transition: color 0.2s;
 }
 
 /* =====================================================

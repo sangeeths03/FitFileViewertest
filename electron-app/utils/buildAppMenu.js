@@ -101,10 +101,19 @@ function buildAppMenu(
 			: [{ label: 'No Recent Files', enabled: false }];
 
 	const decoderOptions = getDecoderOptions();
+	const decoderOptionEmojis = {
+		applyScaleAndOffset: '📏',
+		expandSubFields: '🧩',
+		expandComponents: '🔗',
+		convertTypesToStrings: '🔤',
+		convertDateTimesToDates: '📅',
+		includeUnknownData: '❓',
+		mergeHeartRates: '❤️',
+	};
 	const decoderOptionsMenu = {
-		label: 'Decoder Options',
+		label: '💿 Decoder Options',
 		submenu: Object.keys(decoderOptionDefaults).map((key) => ({
-			label: key,
+			label: `${decoderOptionEmojis[key] || ''} ${key}`.trim(),
 			type: 'checkbox',
 			checked: !!decoderOptions[key],
 			click: (menuItem) => {
@@ -137,10 +146,10 @@ function buildAppMenu(
 	const template = [
 		...getPlatformAppMenu(mainWindow),
 		{
-			label: 'File',
+			label: '📁 File',
 			submenu: [
 				{
-					label: 'Open...',
+					label: '📂 Open...',
 					accelerator: 'CmdOrCtrl+O',
 					click: () => {
 						if (mainWindow && mainWindow.webContents) {
@@ -150,12 +159,29 @@ function buildAppMenu(
 				},
 				{ type: 'separator' },
 				{
-					label: 'Open Recent',
-					submenu: recentMenuItems,
+					label: '🕑 Open Recent',
+					submenu: [
+						...recentMenuItems,
+						{
+							label: '🧹 Clear Recent Files',
+							enabled: recentFiles.length > 0,
+							click: () => {
+								const win = BrowserWindow.getFocusedWindow() || mainWindow;
+								const Store = require('electron-store').default;
+								const store = new Store({ name: 'settings' });
+								store.set('recentFiles', []);
+								if (win && win.webContents) {
+									win.webContents.send('show-notification', 'Recent files cleared.', 'info');
+									win.webContents.send('unload-fit-file');
+								}
+								buildAppMenu(win, getTheme(), null);
+							},
+						},
+					],
 				},
 				{ type: 'separator' },
 				{
-					label: 'Unload File',
+					label: '❌ Unload File',
 					enabled: !!loadedFitFilePath,
 					click: () => {
 						const win = BrowserWindow.getFocusedWindow() || mainWindow;
@@ -165,7 +191,7 @@ function buildAppMenu(
 					},
 				},
 				{
-					label: 'Save As...',
+					label: '💾 Save As...',
 					enabled: !!loadedFitFilePath,
 					accelerator: 'CmdOrCtrl+S',
 					click: () => {
@@ -176,7 +202,7 @@ function buildAppMenu(
 					},
 				},
 				{
-					label: 'Export...',
+					label: '📤 Export...',
 					enabled: !!loadedFitFilePath,
 					click: () => {
 						const win = BrowserWindow.getFocusedWindow() || mainWindow;
@@ -186,7 +212,7 @@ function buildAppMenu(
 					},
 				},
 				{
-					label: 'Print...',
+					label: '🖨️ Print...',
 					enabled: !!loadedFitFilePath,
 					accelerator: 'CmdOrCtrl+P',
 					click: () => {
@@ -198,7 +224,7 @@ function buildAppMenu(
 				},
 				{ type: 'separator' },
 				{
-					label: 'Close Window',
+					label: '🚪 Close Window',
 					accelerator: 'CmdOrCtrl+W',
 					click: () => {
 						const win = BrowserWindow.getFocusedWindow();
@@ -208,35 +234,35 @@ function buildAppMenu(
 					},
 				},
 				{ type: 'separator' },
-				{ role: 'quit' },
+				{ role: 'quit', label: '❎ Quit' },
 			],
 		},
-			{
-			label: 'View',
+		{
+			label: '👁️ View',
 			submenu: [
-				{ role: 'reload' },
-				{ role: 'forcereload' },
-				{ role: 'toggledevtools' },
+				{ role: 'reload', label: '🔄 Reload' },
+				{ role: 'forcereload', label: '🔁 Force Reload' },
+				{ role: 'toggledevtools', label: '🛠️ Toggle DevTools' },
 				{ type: 'separator' },
-				{ role: 'resetzoom' },
-				{ role: 'zoomin' },
-				{ role: 'zoomout' },
+				{ role: 'resetzoom', label: '🔎 Reset Zoom' },
+				{ role: 'zoomin', label: '➕ Zoom In' },
+				{ role: 'zoomout', label: '➖ Zoom Out' },
 				{ type: 'separator' },
 				{
-					label: 'Toggle Fullscreen',
+					label: '🖥️ Toggle Fullscreen',
 					accelerator: 'F11',
-					role: 'togglefullscreen'
+					role: 'togglefullscreen',
 				},
 			],
 		},
 		{
-			label: 'Settings',
+			label: '⚙️ Settings',
 			submenu: [
 				{
-					label: 'Theme',
+					label: '🎨 Theme',
 					submenu: [
 						{
-							label: 'Dark',
+							label: '🌑 Dark',
 							type: 'radio',
 							checked: theme === 'dark',
 							click: () => {
@@ -248,7 +274,7 @@ function buildAppMenu(
 							},
 						},
 						{
-							label: 'Light',
+							label: '🌕 Light',
 							type: 'radio',
 							checked: theme === 'light',
 							click: () => {
@@ -261,8 +287,8 @@ function buildAppMenu(
 						},
 					],
 				},
-								{
-					label: 'Summary Columns...',
+				{
+					label: '📊 Summary Columns...',
 					enabled: !!loadedFitFilePath,
 					click: () => {
 						const win = BrowserWindow.getFocusedWindow() || mainWindow;
@@ -273,7 +299,7 @@ function buildAppMenu(
 				},
 				decoderOptionsMenu,
 				{
-					label: 'Check for Updates...',
+					label: '🔄 Check for Updates...',
 					click: () => {
 						const win = BrowserWindow.getFocusedWindow() || mainWindow;
 						if (win && win.webContents) {
@@ -284,39 +310,39 @@ function buildAppMenu(
 			],
 		},
 		{
-			label: 'Help',
+			label: '❓ Help',
 			submenu: [
 				{
-					label: 'About',
+					label: 'ℹ️ About',
 					click: () => {
 						const win = BrowserWindow.getFocusedWindow() || mainWindow;
 						if (win && win.webContents) {
 							win.webContents.send('menu-about');
 						}
-						},
+					},
 				},
 				{ type: 'separator' },
 				{
-					label: 'Documentation',
+					label: '📖 Documentation',
 					click: () => {
 						require('electron').shell.openExternal('https://github.com/Nick2bad4u/FitFileViewer#readme');
 					},
 				},
 				{
-					label: 'GitHub Repository',
+					label: '🌐 GitHub Repository',
 					click: () => {
 						require('electron').shell.openExternal('https://github.com/Nick2bad4u/FitFileViewer');
 					},
 				},
 				{
-					label: 'Report an Issue',
+					label: '❗Report an Issue',
 					click: () => {
 						require('electron').shell.openExternal('https://github.com/Nick2bad4u/FitFileViewer/issues');
 					},
 				},
 				{ type: 'separator' },
 				{
-					label: 'Keyboard Shortcuts',
+					label: '⌨️ Keyboard Shortcuts',
 					click: () => {
 						const win = BrowserWindow.getFocusedWindow() || mainWindow;
 						if (win && win.webContents) {
@@ -325,7 +351,31 @@ function buildAppMenu(
 					},
 				},
 				{
-					label: 'Restart & Update',
+					label: '♿ Accessibility',
+					submenu: [
+						{
+							label: '🔡 Font Size',
+							submenu: [
+								{ label: '🅰️ Extra Small', type: 'radio', checked: store.get('fontSize', 'medium') === 'xsmall', click: () => { store.set('fontSize', 'xsmall'); const win = BrowserWindow.getFocusedWindow() || mainWindow; if (win && win.webContents) win.webContents.send('set-font-size', 'xsmall'); } },
+								{ label: '🔠 Small', type: 'radio', checked: store.get('fontSize', 'medium') === 'small', click: () => { store.set('fontSize', 'small'); const win = BrowserWindow.getFocusedWindow() || mainWindow; if (win && win.webContents) win.webContents.send('set-font-size', 'small'); } },
+								{ label: '🔤 Medium', type: 'radio', checked: store.get('fontSize', 'medium') === 'medium', click: () => { store.set('fontSize', 'medium'); const win = BrowserWindow.getFocusedWindow() || mainWindow; if (win && win.webContents) win.webContents.send('set-font-size', 'medium'); } },
+								{ label: '🔡 Large', type: 'radio', checked: store.get('fontSize', 'medium') === 'large', click: () => { store.set('fontSize', 'large'); const win = BrowserWindow.getFocusedWindow() || mainWindow; if (win && win.webContents) win.webContents.send('set-font-size', 'large'); } },
+								{ label: '🅰️ Extra Large', type: 'radio', checked: store.get('fontSize', 'medium') === 'xlarge', click: () => { store.set('fontSize', 'xlarge'); const win = BrowserWindow.getFocusedWindow() || mainWindow; if (win && win.webContents) win.webContents.send('set-font-size', 'xlarge'); } },
+							],
+						},
+						{
+							label: '🎨 High Contrast Mode',
+							submenu: [
+								{ label: '⬛ Black (Default)', type: 'radio', checked: store.get('highContrast', 'black') === 'black', click: () => { store.set('highContrast', 'black'); const win = BrowserWindow.getFocusedWindow() || mainWindow; if (win && win.webContents) win.webContents.send('set-high-contrast', 'black'); } },
+								{ label: '⬜ White', type: 'radio', checked: store.get('highContrast', 'black') === 'white', click: () => { store.set('highContrast', 'white'); const win = BrowserWindow.getFocusedWindow() || mainWindow; if (win && win.webContents) win.webContents.send('set-high-contrast', 'white'); } },
+								{ label: '🟨 Yellow', type: 'radio', checked: store.get('highContrast', 'black') === 'yellow', click: () => { store.set('highContrast', 'yellow'); const win = BrowserWindow.getFocusedWindow() || mainWindow; if (win && win.webContents) win.webContents.send('set-high-contrast', 'yellow'); } },
+								{ label: '🚫 Off', type: 'radio', checked: !store.get('highContrast', false) || store.get('highContrast', 'black') === 'off', click: () => { store.set('highContrast', 'off'); const win = BrowserWindow.getFocusedWindow() || mainWindow; if (win && win.webContents) win.webContents.send('set-high-contrast', 'off'); } },
+							],
+						},
+					],
+				},
+				{
+					label: '🔄 Restart & Update',
 					enabled: false, // Will be enabled via IPC when update is downloaded
 					id: 'restart-update',
 					click: () => {

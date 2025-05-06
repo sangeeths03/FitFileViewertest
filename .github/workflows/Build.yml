@@ -112,8 +112,8 @@ jobs:
         if: runner.os == 'Linux'
         run: |
           sudo apt-get update
-          sudo apt-get install -y rpm dpkg fakeroot xz-utils libarchive-tools
-          sudo apt-get install -y flatpak flatpak-builder # Only if you need flatpak/flatpak-builder
+          sudo apt-get install -y rpm dpkg fakeroot xz-utils libarchive-tools pkg pkgsend flatpak flatpak-builder ruby ruby-dev build-essential zlib1g-dev
+          sudo gem install --no-document fpm
 
       - name: Install macOS build dependencies
         if: runner.os == 'macOS'

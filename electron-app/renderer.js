@@ -510,3 +510,21 @@ function showUpdateNotification(message, type = 'info', duration = 6000, withAct
 		}, duration);
 	}
 }
+
+// --- Accessibility Event Listeners ---
+if (window.electronAPI && window.electronAPI.onIpc) {
+	window.electronAPI.onIpc('set-font-size', (event, size) => {
+		document.body.classList.remove('font-xsmall', 'font-small', 'font-medium', 'font-large', 'font-xlarge');
+		document.body.classList.add(`font-${size}`);
+	});
+	window.electronAPI.onIpc('set-high-contrast', (event, mode) => {
+		document.body.classList.remove('high-contrast', 'high-contrast-white', 'high-contrast-yellow');
+		if (mode === 'black') {
+			document.body.classList.add('high-contrast');
+		} else if (mode === 'white') {
+			document.body.classList.add('high-contrast-white');
+		} else if (mode === 'yellow') {
+			document.body.classList.add('high-contrast-yellow');
+		}
+	});
+}
