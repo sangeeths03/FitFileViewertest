@@ -55,16 +55,7 @@
     "msi": {
       "artifactName": "Fit-File-Viewer-msi-${version}.${ext}"
     },
-    "tarxz": {
-      "artifactName": "Fit-File-Viewer-tar-xz-${version}.${ext}"
-    },
-    "targz": {
-      "artifactName": "Fit-File-Viewer-tar-gz-${version}.${ext}"
-    },
-    "tarbz2": {
-      "artifactName": "Fit-File-Viewer-tar-bz2-${version}.${ext}"
-    },
-    "AppImage": {
+    "appImage": {
       "artifactName": "Fit-File-Viewer-appimage-${version}.${ext}"
     },
     "deb": {
