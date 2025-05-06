@@ -376,7 +376,7 @@ function buildAppMenu(
 					},
 				},
 				{
-					label: '🔄 Restart & Update',
+					label: '🔄 Restart && Update',
 					enabled: false, // Will be enabled via IPC when update is downloaded
 					id: 'restart-update',
 					click: () => {

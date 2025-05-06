@@ -12,6 +12,7 @@ on:
 # Define permissions required for the workflow
 permissions:
   contents: read # Required to fetch code using actions/checkout
+  id-token: write # Added to support token fetch for Defender for Cloud integration
 
 jobs:
   OSSAR-Scan:

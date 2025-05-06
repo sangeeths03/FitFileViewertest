@@ -1,0 +1,8 @@
+{
+  "tools": {
+    "eslint": {
+      "enabled": true,
+      "runCmd": "eslint --config eslint.config.js --ext .js --ext .ts --ignore-pattern *.d.ts ."
+    }
+  }
+}

@@ -218,7 +218,20 @@ window.addEventListener('fullscreenchange', () => {
 });
 
 window.addEventListener('keydown', (e) => {
-	if (e.key === 'F11' || e.key === 'Escape') {
+	if (e.key === 'F11') {
+		e.preventDefault();
+		const activeContent = getActiveTabContent && getActiveTabContent();
+		if (activeContent) {
+			if (!document.fullscreenElement) {
+				activeContent.requestFullscreen();
+				addExitFullscreenOverlay(activeContent);
+			} else {
+				document.exitFullscreen();
+				removeExitFullscreenOverlay(activeContent);
+			}
+		}
+	}
+	if (e.key === 'Escape') {
 		e.preventDefault();
 		// Always try to exit browser fullscreen first
 		if (document.fullscreenElement && document.hasFocus()) {

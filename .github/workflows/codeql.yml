@@ -14,9 +14,13 @@ name: "CodeQL"
 on:
   push:
     branches: ["main"]
+    paths-ignore:
+      - electron-app/libs/**
   pull_request:
     # The branches below must be a subset of the branches above
     branches: ["main"]
+    paths-ignore:
+      - electron-app/libs/**
   schedule:
     - cron: "0 0 * * 1"
 
@@ -57,6 +61,14 @@ jobs:
           # By default, queries listed here will override any specified in a config file.
           # Prefix the list here with "+" to use these queries and those in the config file.
 
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install dependencies
+        run: npm ci
+
       # Autobuild attempts to build any compiled languages  (C/C++, C#, or Java).
       # If this step fails, then you should remove it and run the build manually (see below)
       - name: Autobuild
@@ -76,5 +88,3 @@ jobs:
         uses: github/codeql-action/analyze@28deaeda66b76a05916b6923827895f2b14ab387 # v3.28.16
         with:
           category: "/language:${{matrix.language}}"
-          paths-ignore: "/electron-app/libs/**"
-
