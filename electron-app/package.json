@@ -1,6 +1,6 @@
 {
   "name": "fitfileviewer",
-  "version": "7.2.0",
+  "version": "7.3.0",
   "main": "main.js",
   "appid": "com.example.fitfileviewer",
   "displayName": "Fit File Viewer",
@@ -108,7 +108,6 @@
         "snap",
         "freebsd",
         "pacman",
-        "p5p",
         "apk",
         "zip",
         "tar.xz",
