@@ -108,6 +108,23 @@ jobs:
         with:
           node-version: 20
 
+      - name: Install Linux build dependencies
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y rpm dpkg fakeroot xz-utils libarchive-tools
+          sudo apt-get install -y flatpak # Only if you need flatpak
+
+      - name: Install macOS build dependencies
+        if: runner.os == 'macOS'
+        run: |
+          brew install rpm dpkg xz gnu-tar
+
+      - name: Install Windows build dependencies
+        if: runner.os == 'Windows'
+        run: |
+          choco install -y 7zip.install
+
       - name: Cache node modules (Windows)
         if: runner.os == 'Windows'
         uses: actions/cache@v4
