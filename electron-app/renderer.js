@@ -425,11 +425,8 @@ if (window.electronAPI && window.electronAPI.onUpdateEvent) {
 		showUpdateNotification(`Downloading update: ${Math.round(progress.percent)}%`, 'info', 2000);
 	});
 	window.electronAPI.onUpdateEvent('update-downloaded', () => {
-		console.log('[AutoUpdater] Update downloaded. Restarting to install...');
-		showUpdateNotification('Update downloaded! Restarting to install...', 'success', 2000);
-		setTimeout(() => {
-			window.electronAPI.installUpdate();
-		}, 2000);
+		console.log('[AutoUpdater] Update downloaded. Waiting for user action...');
+		showUpdateNotification('Update downloaded! Restart to install the update now, or choose Later to finish your work.', 'success', 0, 'update-downloaded');
 	});
 }
 
@@ -440,7 +437,30 @@ function showUpdateNotification(message, type = 'info', duration = 6000, withAct
 	notification.textContent = message;
 	notification.className = `notification ${type}`;
 	notification.style.display = 'block';
-	if (withAction) {
+	// Remove previous buttons if any
+	while (notification.firstChild) notification.removeChild(notification.firstChild);
+	const msgSpan = document.createElement('span');
+	msgSpan.textContent = message;
+	notification.appendChild(msgSpan);
+	if (withAction === 'update-downloaded') {
+		const restartBtn = document.createElement('button');
+		restartBtn.textContent = 'Restart & Update';
+		restartBtn.className = 'themed-btn';
+		restartBtn.onclick = () => {
+			if (window.electronAPI && window.electronAPI.installUpdate) {
+				window.electronAPI.installUpdate();
+			}
+		};
+		notification.appendChild(restartBtn);
+		const laterBtn = document.createElement('button');
+		laterBtn.textContent = 'Later';
+		laterBtn.className = 'themed-btn';
+		laterBtn.style.marginLeft = '10px';
+		laterBtn.onclick = () => {
+			notification.style.display = 'none';
+		};
+		notification.appendChild(laterBtn);
+	} else if (withAction) {
 		const btn = document.createElement('button');
 		btn.textContent = 'Restart & Update';
 		btn.className = 'themed-btn';
@@ -451,7 +471,7 @@ function showUpdateNotification(message, type = 'info', duration = 6000, withAct
 		};
 		notification.appendChild(btn);
 	}
-	if (!withAction) {
+	if (!withAction || withAction === true) {
 		setTimeout(() => {
 			notification.style.display = 'none';
 		}, duration);
