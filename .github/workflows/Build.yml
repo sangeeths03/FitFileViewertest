@@ -182,7 +182,7 @@ jobs:
           name: dist-${{ matrix.os }}-${{ matrix.arch }}
           path: |
             electron-app/dist/Fit-File-Viewer-*
-            electron-app/dist/*.yml
+            electron-app/dist/latest*.yml
           include-hidden-files: true
 
   release:
