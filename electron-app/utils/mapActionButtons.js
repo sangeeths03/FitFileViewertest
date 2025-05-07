@@ -25,7 +25,7 @@ export function createExportGPXButton() {
 			]);
 		let gpx = `<?xml version="1.0" encoding="UTF-8"?>\n<gpx version="1.1" creator="FitFileViewer">\n<trk><name>Exported Track</name><trkseg>`;
 		coords.forEach((c) => {
-			gpx += `\n<trkpt lat=\"${c[0]}\" lon=\"${c[1]}\"/>`;
+			gpx += `\n<trkpt lat="${c[0]}" lon="${c[1]}"/>`;
 		});
 		gpx += '\n</trkseg></trk></gpx>';
 		const blob = new Blob([gpx], { type: 'application/gpx+xml' });

@@ -4,7 +4,7 @@ export async function setupTheme(applyTheme, listenForThemeChange) {
 	if (window.electronAPI && typeof window.electronAPI.getTheme === 'function') {
 		try {
 			theme = await window.electronAPI.getTheme();
-		} catch (e) {
+		} catch {
 			console.warn('Could not get theme from main process, defaulting to dark.');
 		}
 	}

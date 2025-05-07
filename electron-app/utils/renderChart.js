@@ -1,3 +1,5 @@
+/* eslint-disable no-undef */
+
 /**
  * Renders a Vega-Lite chart into the specified container using global FIT file data.
  *
@@ -91,7 +93,7 @@ export function renderChart(targetContainer) {
 			} else if (document.body.classList.contains('theme-light')) {
 				theme = 'light';
 			}
-		} catch (e) {}
+		} catch {/* intentionally ignore errors */}
 
 		const spec = getChartSpec(folded.objects(), theme);
 		const vegaContainer = chartContainer.querySelector('#vega-container');

@@ -1,5 +1,5 @@
 /* eslint-env node */
-/* eslint-disable no-console */
+/* global require, Buffer, process */
 const { app, BrowserWindow, dialog, ipcMain, Menu } = require('electron');
 const { createWindow } = require('./windowStateUtils');
 const path = require('path');

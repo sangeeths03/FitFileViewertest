@@ -1,3 +1,4 @@
+/* global require, process, module */
 /* eslint-env node */
 /**
  * Utility functions for managing recent files.
@@ -53,7 +54,7 @@ if (process.env.RECENT_FILES_PATH) {
 	try {
 		// app may be undefined in test environments
 		userDataPath = app && typeof app.getPath === 'function' ? app.getPath('userData') : null;
-	} catch (e) {
+	} catch {
 		userDataPath = null;
 	}
 	if (userDataPath) {

@@ -32,6 +32,8 @@
 		<!-- utils.js should be loaded after other dependencies because it relies on global objects or functions
 			 defined by libraries like jQuery, DataTables, Arquero, and Chart.js. -->
 		<script src="utils.js" type="module"></script>
+		<!-- Load screenfull before main-ui.js -->
+		<script src="libs/screenfull.min.js"></script>
 		<script src="main-ui.js" type="module"></script>
 	</head>
 
@@ -43,7 +45,12 @@
 		<!-- Header Bar for File Open and Filename -->
 		<div class="header-bar">
 			<button id="openFileBtn" class="themed-btn" aria-label="Open FIT File" role="button" tabindex="0">Open FIT File</button>
-			<span id="activeFileName"></span>
+			<div id="activeFileNameContainer">
+				<span id="activeFileName"></span>
+				<button id="unloadFileBtn" title="Unload file" style="display:none" aria-label="Unload file" tabindex="0">
+					<svg viewBox="0 0 24 24"><path d="M18.3 5.71a1 1 0 0 0-1.41 0L12 10.59 7.11 5.7A1 1 0 0 0 5.7 7.11L10.59 12l-4.89 4.89a1 1 0 1 0 1.41 1.41L12 13.41l4.89 4.89a1 1 0 0 0 1.41-1.41L13.41 12l4.89-4.89a1 1 0 0 0 0-1.4z"/></svg>
+				</button>
+			</div>
 		</div>
 		<!-- Centered Tab Bar -->
 		<div id="tabs" class="tab-bar" role="tablist" aria-label="Main Tabs">

@@ -1,8 +1,16 @@
-body.theme-dark, .theme-dark body {
+body.theme-dark {
   background: #181a1b;
   color: #eee;
 }
-body.theme-light, .theme-light body {
+.theme-dark body {
+  background: #181a1b;
+  color: #eee;
+}
+body.theme-light {
+  background: #fff;
+  color: #222;
+}
+.theme-light body {
   background: #fff;
   color: #222;
 }

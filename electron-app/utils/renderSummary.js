@@ -3,12 +3,9 @@ import { formatDistance } from './formatDistance.js';
 import { formatDuration } from './formatDuration.js';
 import {
 	getStorageKey,
-	saveColPrefs,
 	loadColPrefs,
-	getRowLabel,
 	renderTable,
-	showColModal,
-	LABEL_COL
+	showColModal
 } from './renderSummaryHelpers.js';
 
 /**

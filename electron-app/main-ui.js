@@ -9,10 +9,11 @@ import { applyTheme, loadTheme, listenForThemeChange } from './utils/theme.js';
 import { showFitData } from './utils/showFitData.js';
 import { arrayBufferToBase64 } from './utils/arrayBufferToBase64.js';
 import { getActiveTabContent } from './utils/getActiveTabContent.js';
-import { addFullScreenButton } from './utils/addFullScreenButton.js';
-import { addExitFullscreenOverlay } from './utils/addExitFullscreenOverlay.js';
-import { removeExitFullscreenOverlay } from './utils/removeExitFullscreenOverlay.js';
 import { setupTabButton } from './utils/setupTabButton.js';
+import { setupFullscreenListeners, setupDOMContentLoaded } from './utils/addFullScreenButton.js';
+import { setupWindowOnload } from './utils/setupWindow.js';
+
+const screenfull = window.screenfull;
 
 window.globalData = window.globalData || null; // will hold all data received from the extension
 
@@ -104,238 +105,48 @@ if (window.electronAPI && window.electronAPI.onIpc) {
     });
 }
 
-window.addEventListener('fullscreenchange', () => {
-	const activeContent = getActiveTabContent && getActiveTabContent();
-	if (document.fullscreenElement) {
-		if (activeContent) addExitFullscreenOverlay(activeContent);
-	} else {
-		if (activeContent) removeExitFullscreenOverlay(activeContent);
-	}
-});
-
-window.addEventListener('keydown', (e) => {
-	if (e.key === 'F11') {
-		e.preventDefault();
-		const activeContent = getActiveTabContent && getActiveTabContent();
-		if (activeContent) {
-			if (!document.fullscreenElement) {
-				activeContent.requestFullscreen();
-				addExitFullscreenOverlay(activeContent);
-			} else {
-				document.exitFullscreen();
-				removeExitFullscreenOverlay(activeContent);
-			}
+// Unload file when the red X is clicked
+const unloadBtn = document.getElementById('unloadFileBtn');
+if (unloadBtn) {
+	unloadBtn.onclick = () => {
+		window.globalData = {};
+		const fileSpan = document.getElementById('activeFileName');
+		if (fileSpan) {
+			fileSpan.textContent = '';
+			fileSpan.title = '';
+			fileSpan.classList.remove('marquee');
 		}
-	}
-	if (e.key === 'Escape') {
-		e.preventDefault();
-		// Always try to exit browser fullscreen first
-		if (document.fullscreenElement && document.hasFocus()) {
-			document.exitFullscreen().catch(() => {});
-		} else {
-			// If not in browser fullscreen, check for tab pseudo-fullscreen
-			const tabContents = document.querySelectorAll('.tab-content');
-			let exited = false;
-			for (const el of tabContents) {
-				if (el.classList.contains('fullscreen')) {
-					el.classList.remove('fullscreen');
-					removeExitFullscreenOverlay(el);
-					exited = true;
-				}
-			}
-			// If nothing exited, try to exit Electron's native fullscreen
-			if (!exited && window.electronAPI && typeof window.electronAPI.setFullScreen === 'function') {
-				window.electronAPI.setFullScreen(false);
-			}
+		const fileNameContainer = document.getElementById('activeFileNameContainer');
+		if (fileNameContainer) {
+			fileNameContainer.classList.remove('has-file');
 		}
-	}
-});
-
-window.addEventListener('DOMContentLoaded', () => {
-	['content-data', 'content-chart', 'content-map', 'content-summary', 'content-altfit'].forEach(addFullScreenButton);
-});
-
-window.onload = () => {
-	// Signal to the extension that the webview is ready (only if available)
-	let vscode;
-	if (typeof acquireVsCodeApi === 'function') {
-		vscode = acquireVsCodeApi();
-		vscode.postMessage({ type: 'ready' });
-	} else {
-		console.warn(
-			'acquireVsCodeApi is not available. Messages will be logged locally.',
-		);
-		vscode = {
-			postMessage: (message) => {
-				console.log('Message logged locally:', message);
-			},
-		};
-	}
-
-	// Default: show the Map tab
-	toggleTabVisibility('content-map');
-
-	// Tab button click handlers (refactored to loop)
-	const tabConfig = [
-		{
-			id: 'tab-data',
-			content: 'content-data',
-			handler: () => {
-				if (document.getElementById('tab-data').classList.contains('active'))
-					return;
-				toggleTabVisibility('content-data');
-				setActiveTab('tab-data');
-				// If data is pre-rendered in background, move it to visible container
-				const bg = document.getElementById('background-data-container');
-				const visible = document.getElementById('content-data');
-				if (bg && bg.childNodes.length > 0 && visible) {
-					visible.innerHTML = '';
-					while (bg.firstChild) visible.appendChild(bg.firstChild);
-				} else {
-					if (globalData && Object.keys(globalData).length > 0) {
-						window.displayTables(globalData);
-					}
-				}
-			},
-		},
-		{
-			id: 'tab-chart',
-			content: 'content-chart',
-			handler: () => {
-				if (document.getElementById('tab-chart').classList.contains('active'))
-					return;
-				toggleTabVisibility('content-chart');
-				setActiveTab('tab-chart');
-				// If chart is pre-rendered in background, move it to visible container
-				const bg = document.getElementById('background-chart-container');
-				const chartContent = bg && bg.firstChild ? bg.firstChild : null;
-				const visible = document.getElementById('content-chart');
-				if (chartContent && visible) {
-					visible.innerHTML = '';
-					visible.appendChild(chartContent);
-				} else {
-					// Fallback: render as usual
-					setTimeout(() => {
-						window.renderChart();
-					}, 0);
-				}
-			},
-		},
-		{
-			id: 'tab-map',
-			content: 'content-map',
-			handler: () => {
-				if (document.getElementById('tab-map').classList.contains('active'))
-					return;
-				toggleTabVisibility('content-map');
-				setActiveTab('tab-map');
-				window.renderMap();
-			},
-		},
-		{
-			id: 'tab-summary',
-			content: 'content-summary',
-			handler: () => {
-				if (document.getElementById('tab-summary').classList.contains('active'))
-					return;
-				toggleTabVisibility('content-summary');
-				setActiveTab('tab-summary');
-				if (globalData && Object.keys(globalData).length > 0) {
-					window.renderSummary(globalData);
-				}
-			},
-		},
-		{
-			id: 'tab-altfit',
-			content: 'content-altfit',
-			handler: () => {
-				if (document.getElementById('tab-altfit').classList.contains('active')) return;
-				toggleTabVisibility('content-altfit');
-				setActiveTab('tab-altfit');
-				// Dynamically set iframe src when tab is activated
-				const iframe = document.getElementById('altfit-iframe');
-				if (iframe && !iframe.src.includes('libs/ffv/index.html')) {
-					iframe.src = 'libs/ffv/index.html';
-				}
-			},
-		},
-	];
-
-	// Refactor tabConfig.forEach to use a reusable function
-	tabConfig.forEach(({ id, handler }) => setupTabButton(id, handler));
-
-	// After tabConfig.forEach
-	// Ensure iframe src is cleared when switching away from altfit tab
-	const allTabButtons = document.querySelectorAll('.tab-button');
-	allTabButtons.forEach((btn) => {
-		btn.addEventListener('click', () => {
-			if (btn.id !== 'tab-altfit') {
-				const iframe = document.getElementById('altfit-iframe');
-				if (iframe) iframe.src = '';
-			}
-		});
-	});
-
-	// Alt FIT Reader logic
-	const altFitBtn = document.getElementById('altfit-open-btn');
-	if (altFitBtn) {
-		altFitBtn.onclick = async () => {
-			const lib = document.getElementById('fit-lib-select').value;
-			const decrypt = document.getElementById('fit-decrypt-select').value;
-			const resultDiv = document.getElementById('altfit-result');
-			resultDiv.innerHTML = '';
-			try {
-				// Placeholder: open file dialog and parse using selected lib/method
-				if (!window.electronAPI || !window.electronAPI.openFileDialog) {
-					resultDiv.innerHTML = '<span style="color:red">Electron API not available.</span>';
-					return;
-				}
-				const file = await window.electronAPI.openFileDialog();
-				if (!file) return;
-				let arrayBuffer = await window.electronAPI.readFile(file);
-				let result;
-				if (lib === 'default') {
-					result = await window.electronAPI.parseFitFile(arrayBuffer, { decrypt });
-				} else {
-					// Placeholder for alternative library logic
-					result = { error: 'Alternative FIT library not implemented yet.' };
-				}
-				if (result && result.error) {
-					resultDiv.innerHTML = `<span style='color:red'>Error: ${result.error}</span>`;
-				} else {
-					resultDiv.innerHTML = `<pre>${JSON.stringify(result, null, 2)}</pre>`;
-				}
-			} catch (err) {
-				resultDiv.innerHTML = `<span style='color:red'>Error: ${err}</span>`;
-			}
-		};
-	}
-
-	// Listen for fitData message from the extension
-	window.addEventListener('message', (event) => {
-		const message = event.data;
-		if (
-			message &&
-			typeof message === 'object' &&
-			'type' in message &&
-			message.type === 'fitData' &&
-			'data' in message &&
-			typeof message.data === 'object'
-		) {
-			globalData = message.data;
-			displayTables(globalData);
-			const tabChart = document.getElementById('tab-chart');
-			const tabMap = document.getElementById('tab-map');
-			const tabSummary = document.getElementById('tab-summary');
-			if (tabChart && tabChart.classList.contains('active')) {
-				renderChart();
-			}
-			if (tabMap && tabMap.classList.contains('active')) {
-				renderMap();
-			}
-			if (tabSummary && tabSummary.classList.contains('active')) {
-				renderSummary(globalData);
-			}
+		unloadBtn.style.display = 'none';
+		// Reset all content areas
+		document.getElementById('content-map').innerHTML = '';
+		document.getElementById('content-data').innerHTML = '';
+		document.getElementById('content-chart').innerHTML = '';
+		document.getElementById('content-summary').innerHTML = '';
+		// Switch to map tab
+		setActiveTab('tab-map');
+		// Notify main process to update menu
+		if (window.electronAPI && window.electronAPI.send) {
+			window.electronAPI.send('fit-file-loaded', null);
 		}
-	});
-};
+	};
+}
+
+// Move event listener setup to utility functions
+setupFullscreenListeners();
+setupDOMContentLoaded();
+setupWindowOnload({
+  toggleTabVisibility,
+  setActiveTab,
+  setupTabButton,
+  displayTables,
+  renderChart,
+  renderMap,
+  renderSummary,
+  getActiveTabContent,
+  arrayBufferToBase64,
+  showFitData
+});

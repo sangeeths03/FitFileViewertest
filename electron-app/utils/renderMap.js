@@ -1,3 +1,4 @@
+/*global L */
 /**
  * Renders a Leaflet map inside the element with id 'content-map'.
  * If `window.globalData.recordMesgs` exists and contains valid latitude and longitude data,
@@ -46,6 +47,7 @@ export function renderMap() {
 	});
 	window._leafletMapInstance = map;
 
+	// eslint-disable-next-line no-unused-vars
 	const layersControl = L.control
 		.layers(baseLayers, null, { position: 'topright', collapsed: true })
 		.addTo(map);
@@ -215,6 +217,7 @@ export function renderMap() {
 				attribution: '',
 			},
 		);
+		// eslint-disable-next-line no-unused-vars
 		const miniMap = new L.Control.MiniMap(miniMapLayer, {
 			toggleDisplay: true,
 		}).addTo(map);

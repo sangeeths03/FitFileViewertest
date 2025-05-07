@@ -1,3 +1,4 @@
+/* global L */
 // Utility to create Leaflet icons for start and end markers
 export function createStartIcon() {
 	return L.icon({

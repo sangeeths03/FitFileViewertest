@@ -1,5 +1,5 @@
 import { copyTableAsCSV } from './copyTableAsCSV.js';
-
+/* global $ */
 /**
  * Renders a collapsible table section with a header, copy-to-CSV button, and optional DataTables integration.
  *

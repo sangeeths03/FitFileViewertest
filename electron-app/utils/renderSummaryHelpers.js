@@ -2,7 +2,7 @@ import { patchSummaryFields } from './patchSummaryFields.js';
 
 export const LABEL_COL = '__row_label__';
 
-export function getStorageKey(data, allKeys) {
+export function getStorageKey(data) {
 	let fpath = '';
 	if (window?.globalData?.cachedFilePath) {
 		fpath = window.globalData.cachedFilePath;
@@ -20,10 +20,10 @@ export function getStorageKey(data, allKeys) {
 export function saveColPrefs(key, visibleColumns) {
 	try {
 		localStorage.setItem(key, JSON.stringify(visibleColumns));
-	} catch (e) {}
+	} catch {/* intentionally ignore errors */}
 }
 
-export function loadColPrefs(key, allKeys) {
+export function loadColPrefs(key) {
 	try {
 		const v = localStorage.getItem(key);
 		if (v) {
@@ -32,7 +32,7 @@ export function loadColPrefs(key, allKeys) {
 				return arr;
 			}
 		}
-	} catch (e) {}
+	} catch {/* intentionally ignore errors */}
 	return null;
 }
 
@@ -41,7 +41,7 @@ export function getRowLabel(rowIdx, isLap) {
 	return 'Summary';
 }
 
-export function renderTable({ container, data, allKeys, visibleColumns, setVisibleColumns, gearBtn }) {
+export function renderTable({ container, data, visibleColumns, setVisibleColumns, gearBtn }) {
 	let section = container.querySelector('.summary-section');
 	if (!section) {
 		section = document.createElement('div');
@@ -67,9 +67,9 @@ export function renderTable({ container, data, allKeys, visibleColumns, setVisib
 	// --- Persist filter value on container ---
 	let filterValue = container._summaryFilterValue || 'All';
 	filterSelect.value = filterValue;
-	filterSelect.onchange = (e) => {
+	filterSelect.onchange = () => {
 		container._summaryFilterValue = filterSelect.value;
-		renderTable({ container, data, allKeys, visibleColumns, setVisibleColumns, gearBtn });
+		renderTable({ container, data, visibleColumns, setVisibleColumns, gearBtn });
 	};
 	// Add scroll wheel support for changing selection
 	filterSelect.addEventListener('wheel', (e) => {
@@ -84,7 +84,7 @@ export function renderTable({ container, data, allKeys, visibleColumns, setVisib
 		if (options[idx]) {
 			filterSelect.value = options[idx].value;
 			container._summaryFilterValue = filterSelect.value;
-			renderTable({ container, data, allKeys, visibleColumns, setVisibleColumns, gearBtn });
+			renderTable({ container, data, visibleColumns, setVisibleColumns, gearBtn });
 		}
 	}, { passive: false });
 	filterLabel.appendChild(filterSelect);
@@ -102,7 +102,7 @@ export function renderTable({ container, data, allKeys, visibleColumns, setVisib
 	copyBtn.className = 'copy-btn';
 	copyBtn.onclick = () => {
 		const rows = [];
-		const sortedVisible = [LABEL_COL, ...allKeys.filter(k => visibleColumns.includes(k))];
+		const sortedVisible = [LABEL_COL, ...visibleColumns];
 		rows.push(sortedVisible.map(k => k === LABEL_COL ? 'Type' : k).join(','));
 		// Summary row
 		if (filterValue === 'All' || filterValue === 'Summary') {
@@ -131,7 +131,7 @@ export function renderTable({ container, data, allKeys, visibleColumns, setVisib
 	table.classList.add('display');
 	const thead = document.createElement('thead');
 	const tbody = document.createElement('tbody');
-	const sortedVisible = [LABEL_COL, ...allKeys.filter(k => visibleColumns.includes(k))];
+	const sortedVisible = [LABEL_COL, ...visibleColumns];
 	const headerRow = document.createElement('tr');
 	sortedVisible.forEach((key) => {
 		const th = document.createElement('th');
@@ -161,7 +161,7 @@ export function renderTable({ container, data, allKeys, visibleColumns, setVisib
 		patchedLaps.forEach((lap, i) => {
 			if (filterValue === 'All' || filterValue === `Lap ${i+1}`) {
 				const lapRow = document.createElement('tr');
-				sortedVisible.forEach((key, idx) => {
+				sortedVisible.forEach((key) => {
 					const td = document.createElement('td');
 					if (key === LABEL_COL) {
 						td.textContent = `Lap ${i+1}`;
@@ -229,7 +229,7 @@ function getSummaryRows(data) {
 	return [{}];
 }
 
-export function showColModal({ container, allKeys, visibleColumns: initialVisibleColumns, setVisibleColumns, renderTable }) {
+export function showColModal({ allKeys, visibleColumns: initialVisibleColumns, setVisibleColumns, renderTable }) {
 	// Remove any existing modal
 	const old = document.querySelector('.summary-col-modal-overlay');
 	if (old) old.remove();

@@ -428,14 +428,80 @@ tr:hover {
 	margin-top: 0;
 }
 
+#activeFileNameContainer {
+	display: flex;
+	align-items: center;
+	gap: 4px;
+	position: relative;
+	min-width: 0;
+	max-width: 100%;
+	flex: 0 1 auto;
+	transition: max-width 0.3s, flex 0.3s;
+}
+
+#activeFileNameContainer:not(.has-file) {
+	max-width: 0;
+	flex: 0 0 auto;
+	overflow: hidden;
+	visibility: hidden;
+	margin-left: 0;
+}
+
+#activeFileNameContainer.has-file {
+	max-width: none;
+	flex: 0 1 auto;
+	visibility: visible;
+	margin-left: 12px;
+}
+
 #activeFileName {
 	color: var(--color-filename);
 	font-size: 1rem;
 	font-style: italic;
-	max-width: 350px;
+	min-width: 0;
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
+	display: inline-block;
+	vertical-align: middle;
+	position: relative;
+	flex: 0 1 auto;
+	max-width: 100%;
+}
+
+#activeFileName .active-label {
+	color: #43a047;
+	font-weight: bold;
+	margin-right: 4px;
+}
+
+#unloadFileBtn {
+	background: none;
+	border: none;
+	padding: 0 4px;
+	margin-left: 4px;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	transition: color 0.2s, background 0.2s;
+	border-radius: 50%;
+	outline: none;
+	width: 36px;
+	height: 36px;
+	justify-content: center;
+	flex: 0 0 auto;
+	z-index: 1;
+}
+#unloadFileBtn svg {
+	width: 24px;
+	height: 24px;
+	fill: #d32f2f;
+	transition: fill 0.2s;
+}
+#unloadFileBtn:hover svg {
+	fill: #b71c1c;
+	background: #ffeaea;
+	border-radius: 50%;
 }
 
 /* =====================================================
@@ -820,6 +886,10 @@ body.theme-dark .custom-fullscreen-bar button:focus {
 /* Improved Fullscreen Button */
 .fullscreen-btn-wrapper {
 	pointer-events: none;
+	position: absolute;
+	top: 24px;
+	right: 24px;
+	z-index: 2001;
 }
 
 .fullscreen-btn.improved {
@@ -835,10 +905,31 @@ body.theme-dark .custom-fullscreen-bar button:focus {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	transition: background 0.2s, box-shadow 0.2s,
-		transform 0.2s;
+	transition: background 0.2s, box-shadow 0.2s, transform 0.2s;
 	cursor: pointer;
 	outline: none;
+}
+
+.fullscreen-btn.improved:hover,
+.fullscreen-btn.improved:focus,
+.exit-fullscreen-overlay:hover,
+.exit-fullscreen-overlay:focus {
+	background: #1976d2 !important;
+	color: #fff !important;
+	box-shadow: 0 4px 18px rgb(25 118 210 / 25%);
+	transform: scale(1.08);
+}
+
+.fullscreen-btn.improved:active,
+.exit-fullscreen-overlay:active {
+	background: #1565c0;
+	transform: scale(0.98);
+}
+
+.fullscreen-btn .fullscreen-icon {
+	pointer-events: none;
+	font-size: 1.4em;
+	transition: color 0.2s;
 }
 
 .tab-content:fullscreen,
@@ -860,25 +951,6 @@ body.theme-dark .custom-fullscreen-bar button:focus {
     width: 100% !important;
 }
 
-.fullscreen-btn.improved:hover,
-.fullscreen-btn.improved:focus {
-	background: #1976d2;
-	color: #fff;
-	box-shadow: 0 4px 18px rgb(25 118 210 / 25%);
-	transform: scale(1.08);
-}
-
-.fullscreen-btn.improved:active {
-	background: #1565c0;
-	transform: scale(0.98);
-}
-
-.fullscreen-btn .fullscreen-icon {
-	pointer-events: none;
-	font-size: 1.4em;
-	transition: color 0.2s;
-}
-
 /* =====================================================
    Exit Fullscreen Overlay & Button
    ===================================================== */
@@ -887,6 +959,7 @@ body.theme-dark .custom-fullscreen-bar button:focus {
 	top: 24px;
 	right: 24px;
 	z-index: 2000;
+	-webkit-user-select: none;
 	user-select: none;
 	margin-left: 10px;
 	padding: 10px 24px;

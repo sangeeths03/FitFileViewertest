@@ -1,3 +1,4 @@
+/* global require, process, module */
 /* eslint-env node */
 const { loadRecentFiles, getShortRecentName } = require('./recentFiles');
 const { Menu, BrowserWindow, app } = require('electron');

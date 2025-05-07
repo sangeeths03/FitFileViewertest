@@ -1,3 +1,4 @@
+/* global title */
 /**
  * Copies the contents of a table as a CSV string to the clipboard.
  *

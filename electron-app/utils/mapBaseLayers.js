@@ -1,3 +1,4 @@
+/* global L */
 // Leaflet baseLayers configuration for map backgrounds
 export const baseLayers = {
     OpenStreetMap: L.tileLayer(

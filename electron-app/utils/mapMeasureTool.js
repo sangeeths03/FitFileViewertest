@@ -1,3 +1,4 @@
+/* global L */
 // Simple point-to-point measurement tool for Leaflet
 export function addSimpleMeasureTool(map, controlsDiv) {
 	let measurePoints = [];
