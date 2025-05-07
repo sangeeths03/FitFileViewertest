@@ -3,9 +3,16 @@ import globals from "globals";
 import css from "@eslint/css";
 import { defineConfig } from "eslint-define-config";
 
-
 export default defineConfig([
-  { files: ["**/*.{js,mjs,cjs}"], plugins: { js }, extends: ["js/recommended"] },
-  { files: ["**/*.{js,mjs,cjs}"], languageOptions: { globals: globals.browser } },
-  { files: ["**/*.css"], plugins: { css }, language: "css/css", extends: ["css/recommended"] },
+  {
+    files: ["**/*.{js,mjs,cjs}"],
+    ignores: ["electron-app/libs/**"],
+    ...js.configs.recommended,
+    languageOptions: { globals: { ...globals.browser } },
+  },
+  {
+    files: ["**/*.css"],
+    ignores: ["electron-app/libs/**"],
+    ...css.configs.recommended,
+  },
 ]);

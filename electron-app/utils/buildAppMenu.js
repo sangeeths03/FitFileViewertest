@@ -1,3 +1,4 @@
+/* eslint-env node */
 const { loadRecentFiles, getShortRecentName } = require('./recentFiles');
 const { Menu, BrowserWindow, app } = require('electron');
 const Store = require('electron-store').default;

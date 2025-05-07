@@ -270,9 +270,9 @@ export function setupListeners({
 				['Export', 'No default'],
 				['Theme: Dark/Light', 'Settings > Theme'],
 			];
-			let html = '<h2>Keyboard Shortcuts</h2><ul style="list-style:none;padding:0;">';
+			let html = '<h2>Keyboard Shortcuts</h2><ul class="shortcut-list">';
 			for (const [action, keys] of shortcuts) {
-				html += `<li style='margin-bottom:8px;'><strong>${action}:</strong> <span style='color:#2196f3;'>${keys}</span></li>`;
+				html += `<li class='shortcut-list-item'><strong>${action}:</strong> <span class='shortcut-key'>${keys}</span></li>`;
 			}
 			html += '</ul>';
 			showAboutModal(html);

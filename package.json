@@ -1,5 +1,9 @@
 {
   "dependencies": {
     "makensis": "^2.0.8"
+  },
+  "devDependencies": {
+    "@eslint/css": "^0.7.0",
+    "eslint-define-config": "^2.1.0"
   }
 }

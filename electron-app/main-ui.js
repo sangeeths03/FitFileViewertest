@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 // This file is part of the Electron app that interacts with the main process and the UI.
 import { displayTables } from './utils/displayTables.js';
 import { renderChart } from './utils/renderChart.js';
@@ -8,29 +7,16 @@ import { setActiveTab } from './utils/setActiveTab.js';
 import { toggleTabVisibility } from './utils/toggleTabVisibility.js';
 import { applyTheme, loadTheme, listenForThemeChange } from './utils/theme.js';
 import { showFitData } from './utils/showFitData.js';
+import { arrayBufferToBase64 } from './utils/arrayBufferToBase64.js';
+import { getActiveTabContent } from './utils/getActiveTabContent.js';
+import { addFullScreenButton } from './utils/addFullScreenButton.js';
+import { addExitFullscreenOverlay } from './utils/addExitFullscreenOverlay.js';
+import { removeExitFullscreenOverlay } from './utils/removeExitFullscreenOverlay.js';
+import { setupTabButton } from './utils/setupTabButton.js';
 
 window.globalData = window.globalData || null; // will hold all data received from the extension
 
 window.showFitData = showFitData;
-
-// Helper to convert ArrayBuffer to base64
-function arrayBufferToBase64(buffer) {
-  let binary = '';
-  const bytes = new Uint8Array(buffer);
-  for (let i = 0; i < bytes.length; i++) {
-    binary += String.fromCharCode(bytes[i]);
-  }
-  return window.btoa(binary);
-}
-
-// Define getActiveTabContent function
-function getActiveTabContent() {
-	const tabContents = document.querySelectorAll('.tab-content');
-	for (const el of tabContents) {
-		if (el.style.display === 'block') return el;
-	}
-	return null;
-}
 
 // When a FIT file is opened, always send it to the iframe (even if not active)
 window.sendFitFileToAltFitReader = async function(arrayBuffer) {
@@ -116,96 +102,6 @@ if (window.electronAPI && window.electronAPI.onIpc) {
             window.electronAPI.send('fit-file-loaded', null);
         }
     });
-}
-
-// --- Improved Full Screen Button for Each Tab ---
-function addFullScreenButton(tabContentId) {
-	const container = document.getElementById(tabContentId);
-	if (!container) return;
-	if (document.getElementById(tabContentId + '-fullscreen-btn')) return;
-
-	const wrapper = document.createElement('div');
-	wrapper.className = 'fullscreen-btn-wrapper';
-	wrapper.style.position = 'absolute';
-	wrapper.style.right = '24px';
-	wrapper.style.bottom = '24px';
-	wrapper.style.zIndex = 1001;
-	wrapper.style.pointerEvents = 'none';
-
-	const btn = document.createElement('button');
-	btn.id = tabContentId + '-fullscreen-btn';
-	btn.className = 'fullscreen-btn improved';
-	btn.title = 'Toggle Full Screen';
-	btn.innerHTML = '<span class="fullscreen-icon">⛶</span>';
-	btn.style.pointerEvents = 'auto';
-
-	btn.onclick = (e) => {
-		e.stopPropagation();
-		const activeContent = getActiveTabContent();
-		if (!activeContent) return;
-		if (!document.fullscreenElement) {
-			activeContent.requestFullscreen();
-			btn.title = 'Exit Full Screen';
-			btn.querySelector('.fullscreen-icon').textContent = '🗗';
-			addExitFullscreenOverlay(activeContent);
-		} else {
-			document.exitFullscreen();
-			btn.title = 'Toggle Full Screen';
-			btn.querySelector('.fullscreen-icon').textContent = '⛶';
-			removeExitFullscreenOverlay(activeContent);
-		}
-	};
-
-	document.addEventListener('fullscreenchange', () => {
-		if (!document.fullscreenElement) {
-			btn.title = 'Toggle Full Screen';
-			btn.querySelector('.fullscreen-icon').textContent = '⛶';
-			const activeContent = getActiveTabContent();
-			if (activeContent) removeExitFullscreenOverlay(activeContent);
-		}
-	});
-
-	wrapper.appendChild(btn);
-	const parent = container.parentElement;
-	if (parent) {
-		parent.style.position = 'relative';
-		parent.appendChild(wrapper);
-	}
-}
-
-function addExitFullscreenOverlay(container) {
-	if (container.querySelector('.exit-fullscreen-overlay')) return;
-	const overlay = document.createElement('button');
-	overlay.className = 'exit-fullscreen-overlay';
-	overlay.innerHTML = 'Exit Fullscreen';
-	overlay.style.position = 'fixed';
-	overlay.style.top = '24px';
-	overlay.style.right = '24px';
-	overlay.style.zIndex = 10002;
-	overlay.style.padding = '10px 18px';
-	overlay.style.background = 'rgba(30,34,54,0.92)';
-	overlay.style.color = '#fff';
-	overlay.style.border = 'none';
-	overlay.style.borderRadius = '24px';
-	overlay.style.fontSize = '1.1rem';
-	overlay.style.cursor = 'pointer';
-	overlay.style.boxShadow = '0 2px 12px rgb(0 0 0 / 18%)';
-	overlay.style.setProperty('width', 'auto', 'important');
-	overlay.style.setProperty('height', 'auto', 'important');
-	overlay.style.minWidth = 'unset';
-	overlay.style.minHeight = 'unset';
-	overlay.style.display = 'inline-block';
-	overlay.style.pointerEvents = 'auto';
-	overlay.onclick = (e) => {
-		e.stopPropagation();
-		document.exitFullscreen();
-	};
-	container.appendChild(overlay);
-}
-
-function removeExitFullscreenOverlay(container) {
-	const overlay = container.querySelector('.exit-fullscreen-overlay');
-	if (overlay) overlay.remove();
 }
 
 window.addEventListener('fullscreenchange', () => {
@@ -366,10 +262,6 @@ window.onload = () => {
 	];
 
 	// Refactor tabConfig.forEach to use a reusable function
-	function setupTabButton(id, handler) {
-		const btn = document.getElementById(id);
-		if (btn) btn.onclick = handler;
-	}
 	tabConfig.forEach(({ id, handler }) => setupTabButton(id, handler));
 
 	// After tabConfig.forEach

@@ -1,3 +1,4 @@
+/* eslint-env node */
 /**
  * Utility functions for managing recent files.
  *

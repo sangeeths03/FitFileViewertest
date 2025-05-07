@@ -1,3 +1,5 @@
+/* eslint-env browser */
+
 // utils.js - Utility exports for FitFileViewer Electron app
 /**
  * Exposes utility functions globally for use in index.html and other scripts.
