@@ -27,3 +27,7 @@ jobs:
 
       - name: Run StyleLint
         uses: Nick2bad4u/stylelint@2709fc4ab011637ffecb8e2cb672ff8aaa832735 # master
+        with:
+          pattern: |
+            electron-app/*.css
+            electron-app/**/*.css

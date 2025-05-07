@@ -1,201 +1,232 @@
 {
-  "name": "fitfileviewer",
-  "version": "7.9.0",
-  "main": "main.js",
-  "appid": "com.example.fitfileviewer",
-  "displayName": "Fit File Viewer",
-  "productName": "Fit File Viewer",
-  "build": {
-    "icon": "icons/favicon.ico",
-    "appId": "com.example.fitfileviewer",
-    "artifactName": "Fit-File-Viewer-${platform}-${version}.${ext}",
-    "asar": true,
-    "publish": [
-      {
-        "provider": "github",
-        "owner": "Nick2bad4u",
-        "repo": "FitFileViewer"
-      }
-    ],
-    "win": {
-      "icon": "icons/favicon-256x256.ico",
-      "target": [
-        "nsis",
-        "nsis-web",
-        "zip",
-        "7z",
-        "portable",
-        "squirrel",
-        "msi",
-        "tar.xz",
-        "tar.gz",
-        "tar.bz2"
-      ],
-      "legalTrademarks": "Fit File Viewer",
-      "requestedExecutionLevel": "asInvoker"
-    },
-    "nsis": {
-      "oneClick": false,
-      "allowElevation": true,
-      "allowToChangeInstallationDirectory": true,
-      "createDesktopShortcut": true,
-      "createStartMenuShortcut": true,
-      "runAfterFinish": true,
-      "artifactName": "Fit-File-Viewer-nsis-${version}.${ext}"
-    },
-    "nsisWeb": {
-      "artifactName": "Fit-File-Viewer-nsis-web-${version}.${ext}"
-    },
-    "portable": {
-      "artifactName": "Fit-File-Viewer-portable-${version}.${ext}"
-    },
-    "squirrelWindows": {
-      "artifactName": "Fit-File-Viewer-squirrel-${version}.${ext}"
-    },
-    "msi": {
-      "artifactName": "Fit-File-Viewer-msi-${version}.${ext}"
-    },
-    "appImage": {
-      "artifactName": "Fit-File-Viewer-appimage-${version}.${ext}"
-    },
-    "deb": {
-      "artifactName": "Fit-File-Viewer-deb-${version}.${ext}"
-    },
-    "rpm": {
-      "artifactName": "Fit-File-Viewer-rpm-${version}.${ext}"
-    },
-    "snap": {
-      "artifactName": "Fit-File-Viewer-snap-${version}.${ext}"
-    },
-    "freebsd": {
-      "artifactName": "Fit-File-Viewer-freebsd-${version}.${ext}"
-    },
-    "pacman": {
-      "artifactName": "Fit-File-Viewer-pacman-${version}.${ext}"
-    },
-    "p5p": {
-      "artifactName": "Fit-File-Viewer-p5p-${version}.${ext}"
-    },
-    "apk": {
-      "artifactName": "Fit-File-Viewer-apk-${version}.${ext}"
-    },
-    "dmg": {
-      "artifactName": "Fit-File-Viewer-dmg-${version}.${ext}"
-    },
-    "pkg": {
-      "artifactName": "Fit-File-Viewer-pkg-${version}.${ext}"
-    },
-    "mac": {
-      "icon": "icons/favicon-512x512.icns",
-      "target": [
-        "dmg",
-        "zip",
-        "pkg",
-        "tar.xz",
-        "tar.gz",
-        "tar.bz2"
-      ],
-      "category": "public.app-category.productivity",
-      "hardenedRuntime": true,
-      "gatekeeperAssess": true
-    },
-    "linux": {
-      "icon": "icons/favicon-256x256.png",
-      "target": [
-        "AppImage",
-        "deb",
-        "rpm",
-        "snap",
-        "freebsd",
-        "pacman",
-        "apk",
-        "zip",
-        "tar.xz",
-        "tar.gz",
-        "tar.bz2"
-      ],
-      "category": "Utility",
-      "synopsis": "A cross-platform viewer for .fit activity files.",
-      "maintainer": "Nick2bad4u <nick2bad4u@users.noreply.github.com>",
-      "desktop": {
-        "entry": {
-          "Name": "Fit File Viewer",
-          "Comment": "View and analyze .fit activity files",
-          "Categories": "Utility;Sports;"
-        }
-      }
-    },
-    "fileAssociations": [
-      {
-        "ext": "fit",
-        "name": "Flexible and Interoperable Data Transfer File",
-        "description": ".fit activity file",
-        "role": "Viewer"
-      }
-    ]
-  },
-  "scripts": {
-    "test": "jest",
-    "start": "electron . --inspect=9229",
-    "start-prod": "cross-env ELECTRON_IS_DEV=0 electron .",
-    "build": "electron-builder",
-    "build-all": "electron-builder -l",
-    "package": "electron-builder --dir",
-    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
-    "lint:fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
-    "prettier": "prettier --write .",
-    "prettier:check": "prettier --check .",
-    "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage",
-    "test:unit": "jest --testPathPattern=unit",
-    "test:integration": "jest --testPathPattern=integration",
-    "test:e2e": "jest --testPathPattern=e2e",
-    "build:prod": "cross-env NODE_ENV=production electron-builder"
-  },
-  "keywords": [
-    "fit-file",
-    "viewer",
-    "fit",
-    "data-visualization",
-    "electron",
-    "garmin",
-    "charts",
-    "maps",
-    "tables"
-  ],
-  "author": "Nick2bad4u",
-  "contributors": [
-    {
-      "name": "Nick2bad4u",
-      "email": "20943337+Nick2bad4u@users.noreply.github.com"
-    }
-  ],
-  "homepage": "https://github.com/Nick2bad4u/FitFileViewer",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/Nick2bad4u/FitFileViewer.git"
-  },
-  "bugs": {
-    "url": "https://github.com/Nick2bad4u/FitFileViewer/issues"
-  },
-  "license": "ISC",
-  "description": "Fit File Viewer is a cross-platform application for parsing, visualizing, and analyzing .fit files using charts, maps, tables, and other data visualization tools for Garmin and fitness activities.",
-  "devDependencies": {
-    "@eslint/css": "^0.7.0",
-    "cross-env": "^7.0.3",
-    "electron": "^36.1.0",
-    "electron-builder": "^26.0.15",
-    "electron-builder-squirrel-windows": "^26.0.15",
-    "eslint": "^9.26.0",
-    "eslint-define-config": "^2.1.0",
-    "jest": "^29.7.0",
-    "screenfull": "^6.0.2"
-  },
-  "dependencies": {
-    "@garmin/fitsdk": "^21.170.0",
-    "electron-log": "^5.4.0",
-    "electron-store": "^8.2.0",
-    "electron-updater": "^6.6.4",
-    "makensis": "^2.0.8"
-  }
+	"name": "fitfileviewer",
+	"version": "7.9.0",
+	"main": "main.js",
+	"appid": "com.example.fitfileviewer",
+	"displayName": "Fit File Viewer",
+	"productName": "Fit File Viewer",
+	"build": {
+		"icon": "icons/favicon.ico",
+		"appId": "com.example.fitfileviewer",
+		"artifactName": "Fit-File-Viewer-${platform}-${version}.${ext}",
+		"asar": true,
+		"publish": [
+			{
+				"provider": "github",
+				"owner": "Nick2bad4u",
+				"repo": "FitFileViewer"
+			}
+		],
+		"win": {
+			"icon": "icons/favicon-256x256.ico",
+			"target": [
+				"nsis",
+				"nsis-web",
+				"zip",
+				"7z",
+				"portable",
+				"squirrel",
+				"msi",
+				"tar.xz",
+				"tar.gz",
+				"tar.bz2"
+			],
+			"legalTrademarks": "Fit File Viewer",
+			"requestedExecutionLevel": "asInvoker"
+		},
+		"nsis": {
+			"oneClick": false,
+			"allowElevation": true,
+			"allowToChangeInstallationDirectory": true,
+			"createDesktopShortcut": true,
+			"createStartMenuShortcut": true,
+			"runAfterFinish": true,
+			"artifactName": "Fit-File-Viewer-nsis-${version}.${ext}"
+		},
+		"nsisWeb": {
+			"artifactName": "Fit-File-Viewer-nsis-web-${version}.${ext}"
+		},
+		"portable": {
+			"artifactName": "Fit-File-Viewer-portable-${version}.${ext}"
+		},
+		"squirrelWindows": {
+			"artifactName": "Fit-File-Viewer-squirrel-${version}.${ext}"
+		},
+		"msi": {
+			"artifactName": "Fit-File-Viewer-msi-${version}.${ext}"
+		},
+		"appImage": {
+			"artifactName": "Fit-File-Viewer-appimage-${version}.${ext}"
+		},
+		"deb": {
+			"artifactName": "Fit-File-Viewer-deb-${version}.${ext}"
+		},
+		"rpm": {
+			"artifactName": "Fit-File-Viewer-rpm-${version}.${ext}"
+		},
+		"snap": {
+			"artifactName": "Fit-File-Viewer-snap-${version}.${ext}"
+		},
+		"freebsd": {
+			"artifactName": "Fit-File-Viewer-freebsd-${version}.${ext}"
+		},
+		"pacman": {
+			"artifactName": "Fit-File-Viewer-pacman-${version}.${ext}"
+		},
+		"p5p": {
+			"artifactName": "Fit-File-Viewer-p5p-${version}.${ext}"
+		},
+		"apk": {
+			"artifactName": "Fit-File-Viewer-apk-${version}.${ext}"
+		},
+		"dmg": {
+			"artifactName": "Fit-File-Viewer-dmg-${version}.${ext}"
+		},
+		"pkg": {
+			"artifactName": "Fit-File-Viewer-pkg-${version}.${ext}"
+		},
+		"mac": {
+			"icon": "icons/favicon-512x512.icns",
+			"target": [
+				"dmg",
+				"zip",
+				"pkg",
+				"tar.xz",
+				"tar.gz",
+				"tar.bz2"
+			],
+			"category": "public.app-category.productivity",
+			"hardenedRuntime": true,
+			"gatekeeperAssess": true
+		},
+		"linux": {
+			"icon": "icons/favicon-256x256.png",
+			"target": [
+				"AppImage",
+				"deb",
+				"rpm",
+				"snap",
+				"freebsd",
+				"pacman",
+				"apk",
+				"zip",
+				"tar.xz",
+				"tar.gz",
+				"tar.bz2"
+			],
+			"category": "Utility",
+			"synopsis": "A cross-platform viewer for .fit activity files.",
+			"maintainer": "Nick2bad4u <nick2bad4u@users.noreply.github.com>",
+			"desktop": {
+				"entry": {
+					"Name": "Fit File Viewer",
+					"Comment": "View and analyze .fit activity files",
+					"Categories": "Utility;Sports;"
+				}
+			}
+		},
+		"fileAssociations": [
+			{
+				"ext": "fit",
+				"name": "Flexible and Interoperable Data Transfer File",
+				"description": ".fit activity file",
+				"role": "Viewer"
+			}
+		]
+	},
+	"scripts": {
+		"test": "jest",
+		"start": "electron . --inspect=9229",
+		"start-prod": "cross-env ELECTRON_IS_DEV=0 electron .",
+		"build": "electron-builder",
+		"build-all": "electron-builder -l",
+		"package": "electron-builder --dir",
+		"lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+		"lint:fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
+		"prettier": "prettier --write .",
+		"prettier:check": "prettier --check .",
+		"test:watch": "jest --watch",
+		"test:coverage": "jest --coverage",
+		"test:unit": "jest --testPathPattern=unit",
+		"test:integration": "jest --testPathPattern=integration",
+		"test:e2e": "jest --testPathPattern=e2e",
+		"build:prod": "cross-env NODE_ENV=production electron-builder",
+		"build:dev": "cross-env NODE_ENV=development electron-builder",
+		"build:dev:all": "cross-env NODE_ENV=development electron-builder -l",
+		"build:dev:package": "cross-env NODE_ENV=development electron-builder --dir",
+		"build:dev:package:all": "cross-env NODE_ENV=development electron-builder -l --dir",
+		"build:dev:package:prod": "cross-env NODE_ENV=production electron-builder --dir",
+		"build:dev:package:prod:all": "cross-env NODE_ENV=production electron-builder -l --dir",
+		"build:dev:package:prod:all:zip": "cross-env NODE_ENV=production electron-builder -l --dir --win --x64 --ia32 --mac --linux --zip"
+	},
+	"keywords": [
+		"fit-file",
+		"viewer",
+		"fit",
+		"data-visualization",
+		"electron",
+		"garmin",
+		"charts",
+		"maps",
+		"tables",
+		"fitness",
+		"activity",
+		"analysis",
+		"cross-platform",
+		"open-source",
+		"fitness-activities",
+		"data-analysis",
+		"data-visualization-tools",
+		"fitness-data",
+		"activity-tracking",
+		"fitness-app",
+		"fitness-analytics",
+		"fitness-visualization",
+		"fitness-tracking",
+		"fitness-activities-analysis",
+		"fitness-activities-visualization",
+		"fitness-activities-tracking",
+		"fitness-activities-data",
+		"fitness-activities-data-visualization"
+	],
+	"author": "Nick2bad4u",
+	"contributors": [
+		{
+			"name": "Nick2bad4u",
+			"email": "20943337+Nick2bad4u@users.noreply.github.com"
+		}
+	],
+	"homepage": "https://github.com/Nick2bad4u/FitFileViewer",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/Nick2bad4u/FitFileViewer.git"
+	},
+	"bugs": {
+		"url": "https://github.com/Nick2bad4u/FitFileViewer/issues"
+	},
+	"license": "ISC",
+	"description": "Fit File Viewer is a cross-platform application for parsing, visualizing, and analyzing .fit files using charts, maps, tables, and other data visualization tools for Garmin and fitness activities.",
+	"devDependencies": {
+		"@eslint/css": "^0.7.0",
+		"@types/jest": "^29.5.14",
+		"cross-env": "^7.0.3",
+		"electron": "^36.1.0",
+		"electron-builder": "^26.0.15",
+		"electron-builder-squirrel-windows": "^26.0.15",
+		"eslint": "^9.26.0",
+		"eslint-define-config": "^2.1.0",
+		"jest": "^29.7.0",
+		"jsdom": "^26.1.0",
+		"makensis": "^2.0.8",
+		"screenfull": "^6.0.2",
+		"stylelint-config-standard": "^38.0.0",
+		"ts-jest": "^29.3.2",
+		"vitest": "^3.1.3"
+	},
+	"dependencies": {
+		"@garmin/fitsdk": "^21.171.0",
+		"electron-log": "^5.4.0",
+		"electron-store": "^10.0.1",
+		"electron-updater": "^6.6.4"
+	}
 }
