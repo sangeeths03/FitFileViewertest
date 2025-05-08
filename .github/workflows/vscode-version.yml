@@ -9,6 +9,10 @@ on:
     branches:
       - main
 
+concurrency:
+  group: vscode-version-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   vscode-versions:
     runs-on: ubuntu-latest

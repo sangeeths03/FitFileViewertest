@@ -1,17 +1,30 @@
 [![ActionLint](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/ActionLint.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/ActionLint.yml) 🧹
+[![Build and Release Electron App](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/Build.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/Build.yml) 🏗️
 [![Build and Release Electron App](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/Build.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/Build.yml) 🚀
 [![CodeQL-Advanced](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/codeql.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/codeql.yml) 🛡️
 [![Dependabot Updates](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/dependabot/dependabot-updates/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/dependabot/dependabot-updates) 🤖
 [![Dependency Review](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/dependency-review.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/dependency-review.yml) 🔍
-[![Build and Release Electron App](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/Build.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/Build.yml) 🏗️
+[![Deploy Jekyll with GitHub Pages dependencies preinstalled](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/jekyll-gh-pages.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/jekyll-gh-pages.yml) 📚
+[![DevSkim](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/devskim.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/devskim.yml) 🔒
 [![ESLint](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/eslint.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/eslint.yml) 🧑‍💻
+[![Electronegativity Scan](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/electronegativity.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/electronegativity.yml) ⚡
 [![GitHub Pages - Generate XML sitemap](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/sitemap.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/sitemap.yml) 🗺️
+[![Greetings](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/greetings.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/greetings.yml) 👋
+[![Lint Code Base](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/superlinter.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/superlinter.yml) 🧹
 [![Mark stale issues and pull requests](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/stale.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/stale.yml) 💤
+[![Mark stale issues and pull requests](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/stale.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/stale.yml) 💤
+[![Metrics Repository Stats](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/repo-stats.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/repo-stats.yml) 📊
 [![Microsoft Defender for DevOps](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/defender.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/defender.yml) 🛡️
 [![OSSAR](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/ossar.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/ossar.yml) 🏅
 [![OSV-Scanner](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/osv-scanner.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/osv-scanner.yml) 🔎
-[![pages-build-deployment](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/pages/pages-build-deployment) 🌐
+[![Prettier](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/prettier.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/prettier.yml) 🎨
 [![Scorecard supply-chain security](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/scorecards.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/scorecards.yml) 📊
+[![StyleLint](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/stylelint.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/stylelint.yml) 🎨
+[![Summarize new issues](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/summary.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/summary.yml) 📋
+[![TruffleHog Secret Scan](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/trugglehog.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/trugglehog.yml) 🔑
+[![VSCode Version Matrix](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/vscode-version.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/vscode-version.yml) 📅
+[![npm audit](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/npm-audit.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/npm-audit.yml) 🔍
+[![pages-build-deployment](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/pages/pages-build-deployment) 🌐
 
 # Fit File Viewer README 📖
 
@@ -82,3 +95,9 @@ See [LICENSE.md](LICENSE.md) for details.
 ---
 
 For more information, documentation, and updates, visit the [GitHub repository](https://github.com/Nick2bad4u/FitFileViewer). 📦
+
+<div align="center">
+
+<img src="https://raw.githubusercontent.com/Nick2bad4u/FitFileViewer/refs/heads/main/metrics.repository.svg" alt="Repository Metrics" style="filter: invert(1); width: 100%; max-width: 800px;"/>
+
+</div>

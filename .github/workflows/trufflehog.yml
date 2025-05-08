@@ -9,6 +9,9 @@ on:
 jobs:
   trufflehog:
     runs-on: ubuntu-latest
+    concurrency:
+      group: trufflehog-${{ github.ref }}
+      cancel-in-progress: false
     steps:
       - name: Checkout code
         uses: actions/checkout@v4

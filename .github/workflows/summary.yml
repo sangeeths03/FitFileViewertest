@@ -9,8 +9,10 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       issues: write
-      models: read
       contents: read
+    concurrency:
+      group: summary-${{ github.ref }}
+      cancel-in-progress: false
 
     steps:
       - name: Checkout repository

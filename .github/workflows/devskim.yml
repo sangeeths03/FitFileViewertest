@@ -13,6 +13,10 @@ on:
   schedule:
     - cron: "37 1 * * 2"
 
+concurrency:
+  group: devskim-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   lint:
     name: DevSkim

@@ -6,15 +6,37 @@ on:
     branches:
       - main
 
+concurrency:
+  group: prettier-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   prettier:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install Prettier
+        run: npm install --no-save prettier
+
+      - name: Run Prettier and output results
+        run: npx prettier --check "**/*.{js,md,css,html}" > prettier-output.txt || true
+
+      - name: Convert Prettier output to SARIF
+        run: node utils/generate-prettier-sarif.js prettier-output.txt prettier-results.sarif
+
+      - name: Upload SARIF to code scanning
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: prettier-results.sarif
 
       - name: Prettify code
-        uses: creyD/prettier_action@v4.3
+        uses: creyD/prettier_action@v4.5
         with:
           prettier_options: --check **/*.{js,md,css,html}
-          working_directory: ./electron-app

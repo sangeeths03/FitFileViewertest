@@ -36,6 +36,10 @@ jobs:
       contents: read
       security-events: write
 
+    concurrency:
+      group: codeql-${{ github.ref }}
+      cancel-in-progress: false
+
     strategy:
       fail-fast: false
       matrix:

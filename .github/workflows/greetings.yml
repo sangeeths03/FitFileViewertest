@@ -9,6 +9,10 @@ on:
 permissions:
   contents: read # Required to fetch repository contents
 
+concurrency:
+  group: greetings-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   greeting:
     # Specify the runner to use (ubuntu-latest)
