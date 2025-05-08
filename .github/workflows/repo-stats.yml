@@ -3,7 +3,7 @@ name: Metrics Repository Stats
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 0 * * *" # Runs daily
+    - cron: "0 0 * * *" # Runs daily at midnight (UTC)
 
 jobs:
   metrics:
@@ -14,8 +14,8 @@ jobs:
         with:
           template: repository
           filename: metrics.repository.svg
-          token: ${{ secrets.GITHUB_TOKEN}}
-          user: lowlighter
-          repo: metrics
+          token: ${{ secrets.GITHUB_TOKEN }}
+          user: nick2bad4u
+          repo: FitFileViewer
           plugin_lines: yes
           plugin_followup: yes

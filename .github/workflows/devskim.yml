@@ -32,7 +32,7 @@ jobs:
           should-scan-archives: false
           output-filename: devskim-results.sarif
           output-directory: .
-          ignore-globs: "**/.git/**,**/bin/**"
+          ignore-globs: "**/.git/**,**/bin/**,**/*.fit,**/*.png,**/*.jpg,**/*.jpeg,**/*.ico,**/*.icns,**/*.svg,**/*.pdf"
 
       - name: Upload DevSkim scan results to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v3

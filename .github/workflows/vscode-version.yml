@@ -13,6 +13,9 @@ jobs:
   vscode-versions:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Retrieve VSCode dependency versions
         id: vscode-versions
         uses: EcksDy/vscode-version-matrix@v1.0.0

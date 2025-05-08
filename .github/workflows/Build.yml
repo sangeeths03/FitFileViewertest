@@ -150,9 +150,9 @@ jobs:
         uses: actions/cache@v4
         with:
           path: |
-            C:\Users\runneradmin\AppData\Local\npm-cache
-            C:\Users\runneradmin\.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+            ~\AppData\Local\npm-cache
+            ~\.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('electron-app/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
           enableCrossOsArchive: true

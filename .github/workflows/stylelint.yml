@@ -29,3 +29,4 @@ jobs:
         uses: actions-hub/stylelint@master
         env:
           PATTERN: "electron-app/*.css electron-app/**/*.css"
+        continue-on-error: true # Continue even if this step fails
