@@ -95,7 +95,7 @@
 				<a href="https://leafletjs.com/" target="_blank" rel="noopener">
 					Leaflet.js
 				</a> 🗺️,
-				<a href="https://vega.github.io/vega-lite/" target="_blank" rel="noopener">
+				<a href="https://vega.github.io/vega-lite/" target="_blank" rel="noopener"></a>
 					Vega-Lite
 				</a> 📊,
 				<a href="https://github.com/vega/vega-embed" target="_blank" rel="noopener">
@@ -109,6 +109,12 @@
 		<!-- Loading Overlay -->
 		<div id="loadingOverlay">
 			<span>Loading...</span>
+		</div>
+		<!-- Drag-and-Drop Overlay -->
+		<div id="drop-overlay" style="display:none;">
+			<div class="drop-overlay-content">
+				<span>Drop FIT file to open</span>
+			</div>
 		</div>
 		<!-- Ensure utils.js and main-ui.js are loaded before renderer.js because renderer.js depends on them -->
 		<script src="renderer.js" type="module" defer></script>

@@ -28,10 +28,10 @@ jobs:
       - name: Run DevSkim scanner
         uses: microsoft/DevSkim-Action@v1
         with:
-          directory-to-scan: ${{ github.workspace }}
+          directory-to-scan: .
           should-scan-archives: false
           output-filename: devskim-results.sarif
-          output-directory: ${{ github.workspace }}
+          output-directory: .
           ignore-globs: "**/.git/**,**/bin/**"
 
       - name: Upload DevSkim scan results to GitHub Security tab

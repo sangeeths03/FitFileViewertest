@@ -189,12 +189,26 @@ app.whenReady().then(() => {
 		return await fitParser.decodeFitFile(buffer);
 	});
 
+	// Add IPC handler for decoding FIT files (for decodeFitFile)
+	ipcMain.handle('fit:decode', async (event, arrayBuffer) => {
+		const fitParser = require('./fitParser');
+		const buffer = Buffer.from(arrayBuffer);
+		return await fitParser.decodeFitFile(buffer);
+	});
+
 	// Add IPC handler for getting the current theme
 	ipcMain.handle('theme:get', async () => {
 		// Use the same logic as buildAppMenu to get the theme from electron-store
 		const Store = require('electron-store').default;
 		const store = new Store({ name: 'settings' });
 		return store.get('theme', 'dark');
+	});
+
+	// Add IPC handler for getting the selected map tab
+	ipcMain.handle('map-tab:get', async () => {
+		const Store = require('electron-store').default;
+		const store = new Store({ name: 'settings' });
+		return store.get('selectedMapTab', 'map');
 	});
 
 	// Listen for theme change from renderer and update menu

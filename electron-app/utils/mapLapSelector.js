@@ -11,10 +11,10 @@ export function addLapSelector(map, container, drawMapForLap) {
 			<button id="multi-lap-toggle" class="multi-lap-toggle" type="button" title="Enable multi-lap mode: select multiple laps by clicking or dragging. Click again to return to single-lap mode.">
 				<svg class="icon" viewBox="0 0 16 16" width="16" height="16"><rect x="2" y="2" width="5" height="5" rx="1" fill="#888"/><rect x="9" y="9" width="5" height="5" rx="1" fill="#888"/><rect x="2" y="9" width="5" height="5" rx="1" fill="#bbb"/><rect x="9" y="2" width="5" height="5" rx="1" fill="#bbb"/></svg>
 			</button>
-			<button id="deselect-all-btn" class="deselect-all-btn" title="Deselect all laps (Esc)" style="display:none;">
+			<button id="deselect-all-btn" class="deselect-all-btn" title="Deselect all laps (Esc)">
 				<svg class="icon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="7" fill="none" stroke="#888" stroke-width="2"/><line x1="5" y1="5" x2="11" y2="11" stroke="#888" stroke-width="2"/><line x1="11" y1="5" x2="5" y2="11" stroke="#888" stroke-width="2"/></svg>
 			</button>
-			<label for="lap-select" style="margin:0 4px 0 0;">Lap:</label>
+			<label for="lap-select" class="lap-label">Lap:</label>
 			<select id="lap-select">
 				<option value="all">All</option>
 				${window.globalData.lapMesgs.map((lap, i) => `<option value="${i}">Lap ${i + 1}</option>`).join('')}

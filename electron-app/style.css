@@ -1565,3 +1565,75 @@ body.theme-dark .map-action-btn.disabled {
 .shortcut-key {
 	color: #2196f3;
 }
+
+/* Inline CSS moved from JS templates and elements */
+.measure-exit-btn {
+	position: absolute;
+	top: 2px;
+	right: 2px;
+	background: none;
+	border: none;
+	color: #b71c1c;
+	font-size: 16px;
+	line-height: 1;
+	cursor: pointer;
+	z-index: 10;
+  }
+  .measure-label-content {
+	position: relative;
+	padding-right: 20px;
+  }
+  .deselect-all-btn {
+	display: none;
+  }
+  .lap-label {
+	margin: 0 4px 0 0;
+  }
+  .inline-svg {
+	display: inline-block;
+	vertical-align: middle;
+  }
+  .margin-horizontal {
+	margin: 0 8px;
+  }
+  .text-red {
+	color: red;
+  }
+  .text-green {
+	color: green;
+  }
+
+/* =====================================================
+   Drag-and-Drop Overlay
+   ===================================================== */
+#drop-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgb(30 34 54 / 85%);
+  z-index: 10050;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+#drop-overlay .drop-overlay-content {
+  background: rgb(40 44 64 / 98%);
+  color: #fff;
+  padding: 48px 64px;
+  border-radius: 18px;
+  box-shadow: 0 4px 32px #000a;
+  font-size: 2.2rem;
+  font-weight: 700;
+  text-align: center;
+  border: 2px dashed #2196f3;
+  opacity: 98%;
+  pointer-events: auto;
+}
+#drop-overlay[style*="display: none"] {
+  opacity: 0%;
+  pointer-events: none;
+}

@@ -31,6 +31,13 @@ contextBridge.exposeInMainWorld('electronAPI', {
 	parseFitFile: (arrayBuffer) => ipcRenderer.invoke('fit:parse', arrayBuffer),
 
 	/**
+	 * Decodes a FIT file from an ArrayBuffer and returns the parsed data.
+	 * @param {ArrayBuffer} arrayBuffer
+	 * @returns {Promise<any>}
+	 */
+	decodeFitFile: (arrayBuffer) => ipcRenderer.invoke('fit:decode', arrayBuffer),
+
+	/**
 	 * Gets the list of recent files.
 	 * @returns {Promise<string[]>}
 	 */
@@ -126,4 +133,11 @@ contextBridge.exposeInMainWorld('electronAPI', {
 	 * @param {boolean} flag
 	 */
 	setFullScreen: (flag) => ipcRenderer.send('set-fullscreen', flag),
+
+	/**
+	 * Expose ipcRenderer.invoke for direct use.
+	 * @param {...any} args
+	 * @returns {Promise<any>}
+	 */
+	invoke: (...args) => ipcRenderer.invoke(...args),
 });

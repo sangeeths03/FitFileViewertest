@@ -20,7 +20,6 @@
 #
 # Both jobs use custom arguments for the OSV-Scanner:
 # - -r: Recursively scan directories.
-# - --skip-git: Skip scanning of git-related files.
 # - ./: Scan the current directory.
 # - --fail-on-vuln=false: Do not fail the workflow if vulnerabilities are found.
 
@@ -62,7 +61,6 @@ jobs:
       # Example of specifying custom arguments
       scan-args: |-
         -r
-        --skip-git
         ./
         --fail-on-vuln=false
   scan-pr:
@@ -72,6 +70,5 @@ jobs:
       # Example of specifying custom arguments
       scan-args: |-
         -r
-        --skip-git
         ./
         --fail-on-vuln=false

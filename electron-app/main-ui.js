@@ -135,6 +135,79 @@ if (unloadBtn) {
 	};
 }
 
+// --- Enhanced Drag and Drop UI and Global Handling ---
+(function() {
+  const dropOverlay = document.getElementById('drop-overlay');
+  let dragCounter = 0;
+
+  function showDropOverlay() {
+    if (dropOverlay) dropOverlay.style.display = 'flex';
+    const iframe = document.getElementById('altfit-iframe');
+    if (iframe) iframe.style.pointerEvents = 'none';
+  }
+  function hideDropOverlay() {
+    if (dropOverlay) dropOverlay.style.display = 'none';
+    const iframe = document.getElementById('altfit-iframe');
+    if (iframe) iframe.style.pointerEvents = '';
+  }
+
+  // Show overlay on dragenter, hide on dragleave/drop
+  window.addEventListener('dragenter', (e) => {
+    dragCounter++;
+    showDropOverlay();
+  });
+  window.addEventListener('dragleave', (e) => {
+    dragCounter--;
+    if (dragCounter <= 0) {
+      hideDropOverlay();
+      dragCounter = 0;
+    }
+  });
+  window.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'copy';
+    showDropOverlay();
+  });
+  window.addEventListener('drop', (e) => {
+    dragCounter = 0;
+    hideDropOverlay();
+    e.preventDefault();
+    if (!e.dataTransfer || !e.dataTransfer.files || e.dataTransfer.files.length === 0) return;
+    const file = e.dataTransfer.files[0];
+    if (file && file.name.toLowerCase().endsWith('.fit')) {
+      const reader = new FileReader();
+      reader.onload = async function(event) {
+        const arrayBuffer = event.target.result;
+        if (arrayBuffer) {
+          const fitData = await window.electronAPI.decodeFitFile(arrayBuffer);
+          if (fitData && !fitData.error) {
+            showFitData(fitData, file.name);
+            window.sendFitFileToAltFitReader(arrayBuffer);
+          } else {
+            alert('Failed to parse FIT file: ' + (fitData.error || 'Unknown error'));
+          }
+        }
+      };
+      reader.readAsArrayBuffer(file);
+    } else {
+      alert('Please drop a .fit file.');
+    }
+  });
+
+  // Prevent iframe from blocking drag/drop events
+  const iframe = document.getElementById('altfit-iframe');
+  if (iframe) {
+    iframe.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      showDropOverlay();
+    });
+    iframe.addEventListener('drop', (e) => {
+      e.preventDefault();
+      hideDropOverlay();
+    });
+  }
+})();
+
 // Move event listener setup to utility functions
 setupFullscreenListeners();
 setupDOMContentLoaded();

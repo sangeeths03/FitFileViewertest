@@ -1,4 +1,4 @@
-/* global require, module */
+/* global require */
 /* eslint-env node */
 const { Buffer } = require('buffer');
 const Store = require('electron-store');

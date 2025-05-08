@@ -34,7 +34,7 @@ export function addSimpleMeasureTool(map, controlsDiv) {
 	});
 
 	function createExitButton() {
-		return `<button class="measure-exit-btn" title="Remove measurement" style="position:absolute;top:2px;right:2px;background:none;border:none;color:#b71c1c;font-size:16px;line-height:1;cursor:pointer;z-index:10;">&times;</button>`;
+		return `<button class="measure-exit-btn" title="Remove measurement">&times;</button>`;
 	}
 
 	function onLabelExitClick(e) {
@@ -63,7 +63,7 @@ export function addSimpleMeasureTool(map, controlsDiv) {
 			measureLabel = L.marker(mid, {
 				icon: L.divIcon({
 					className: 'measure-label',
-					html: `<div class="measure-label-content" style="position:relative;padding-right:20px;">${createExitButton()}${dist >= 1000 ? distKm.toFixed(2) + ' km' : dist.toFixed(1) + ' m'}<br>${distMi.toFixed(2)} mi</div>`
+					html: `<div class="measure-label-content">${createExitButton()}${dist >= 1000 ? distKm.toFixed(2) + ' km' : dist.toFixed(1) + ' m'}<br>${distMi.toFixed(2)} mi</div>`
 				}),
 				iconSize: [120, 38],
 				iconAnchor: [60, 19],

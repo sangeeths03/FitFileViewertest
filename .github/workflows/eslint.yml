@@ -3,7 +3,7 @@
 # It includes the following steps:
 # 1. Harden Runner: Uses the step-security/harden-runner action to enhance the security of the GitHub Actions runner.
 # 2. Checkout code: Uses the actions/checkout action to check out the repository code.
-# 3. Install ESLint: Installs ESLint and the Microsoft SARIF formatter for ESLint.
+# 3. Install all required ESLint plugins: Installs ESLint, the Microsoft SARIF formatter for ESLint, and all required ESLint plugins and configs used in eslint.config.js in the electron-app directory.
 # 4. Run ESLint: Executes ESLint with the specified configuration and file extensions, outputting the results in SARIF format.
 # 5. Upload analysis results to GitHub: Uses the github/codeql-action/upload-sarif action to upload the ESLint results to GitHub for analysis.
 #
@@ -47,10 +47,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
-      - name: Install ESLint
+      - name: Install all required ESLint plugins
         run: |
           npm install eslint --legacy-peer-deps
           npm install @microsoft/eslint-formatter-sarif --legacy-peer-deps
+          npm install --save-dev @eslint/js globals @eslint/css eslint-define-config --legacy-peer-deps
+        working-directory: electron-app
 
       - name: Run ESLint
         env:
@@ -59,6 +61,7 @@ jobs:
           --format @microsoft/eslint-formatter-sarif
           --output-file eslint-results.sarif
         continue-on-error: true
+
       - name: Upload analysis results to GitHub
         uses: github/codeql-action/upload-sarif@28deaeda66b76a05916b6923827895f2b14ab387 # v2.27.0
         with:

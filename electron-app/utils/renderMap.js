@@ -107,11 +107,11 @@ export function renderMap() {
 		)}" step="1" id="zoom-slider-input">
 		<div class="custom-zoom-slider-values">
 			<span id="zoom-slider-min">0%</span>
-			<span style="margin:0 8px;">|</span>
+				<span class="margin-horizontal">|</span>
 			<span id="zoom-slider-current">${Math.round(
 				zoomToPercent(map.getZoom()),
 			)}%</span>
-			<span style="margin:0 8px;">|</span>
+				<span class="margin-horizontal">|</span>
 			<span id="zoom-slider-max">100%</span>
 		</div>
 	`;

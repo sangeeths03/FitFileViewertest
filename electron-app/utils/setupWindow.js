@@ -147,7 +147,7 @@ export function setupWindowOnload({
 					// Placeholder: open file dialog and parse using selected lib/method
 					if (!window.electronAPI || !window.electronAPI.openFileDialog) {
 						resultDiv.innerHTML =
-							'<span style="color:red">Electron API not available.</span>';
+							'<span class="text-red">Electron API not available.</span>';
 						return;
 					}
 					const file = await window.electronAPI.openFileDialog();
@@ -163,7 +163,7 @@ export function setupWindowOnload({
 						result = { error: 'Alternative FIT library not implemented yet.' };
 					}
 					if (result && result.error) {
-						resultDiv.innerHTML = `<span style='color:red'>Error: ${result.error}</span>`;
+						resultDiv.innerHTML = `<span class='text-red'>Error: ${result.error}</span>`;
 					} else {
 						resultDiv.innerHTML = `<pre>${JSON.stringify(
 							result,
@@ -172,7 +172,7 @@ export function setupWindowOnload({
 						)}</pre>`;
 					}
 				} catch (err) {
-					resultDiv.innerHTML = `<span style='color:red'>Error: ${err}</span>`;
+					resultDiv.innerHTML = `<span class='text-red'>Error: ${err}</span>`;
 				}
 			};
 		}
