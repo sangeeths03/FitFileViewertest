@@ -20,7 +20,7 @@ jobs:
       new_version: ${{ steps.bump.outputs.new_version }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.2.2
         continue-on-error: true
 
       - name: Debug Step - Show git diff for electron-app
@@ -66,7 +66,7 @@ jobs:
         continue-on-error: true
 
       - name: Commit and push version bump
-        uses: EndBug/add-and-commit@v9
+        uses: EndBug/add-and-commit@v9.1.4
         with:
           message: "Bump version to ${{ steps.bump.outputs.new_version }}"
           add: "package.json"
@@ -76,7 +76,7 @@ jobs:
         continue-on-error: true
 
       - name: Upload bumped package.json
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v4.6.2
         with:
           name: bumped-package-json
           path: electron-app/package.json
@@ -105,18 +105,18 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.2.2
         continue-on-error: true
 
       - name: Download bumped package.json
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v4.3.0
         with:
           name: bumped-package-json
           path: ./electron-app
         continue-on-error: true
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v4.4.0
         with:
           node-version: 20
         continue-on-error: true
@@ -147,7 +147,7 @@ jobs:
 
       - name: Cache node modules (Windows)
         if: runner.os == 'Windows'
-        uses: actions/cache@v4
+        uses: actions/cache@v4.2.3
         with:
           path: |
             ~\AppData\Local\npm-cache
@@ -160,7 +160,7 @@ jobs:
 
       - name: Cache node modules (non-Windows)
         if: runner.os != 'Windows'
-        uses: actions/cache@v4
+        uses: actions/cache@v4.2.3
         with:
           path: ~/.npm
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
@@ -221,7 +221,7 @@ jobs:
         continue-on-error: true
 
       - name: Upload distributable files as artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v4.6.2
         with:
           name: dist-${{ matrix.os }}-${{ matrix.arch }}
           path: |
@@ -235,10 +235,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.2.2
 
       - name: Download all build artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v4.3.0
         with:
           path: ./artifacts
 
@@ -424,7 +424,7 @@ jobs:
           done
 
       - name: Create or update release with distributable builds
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v2.2.2
         with:
           tag_name: v${{ needs.bump-version.outputs.new_version }}
           name: FitFileViewer v${{ needs.bump-version.outputs.new_version }}

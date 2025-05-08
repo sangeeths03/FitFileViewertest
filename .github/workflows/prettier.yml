@@ -15,10 +15,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.2.2
 
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v4.4.0
         with:
           node-version: 20
 
@@ -29,7 +29,7 @@ jobs:
         run: npx prettier --check "**/*.{js,md,css,html}" > prettier-output.txt || true
 
       - name: Convert Prettier output to SARIF
-        run: node utils/generate-prettier-sarif.js prettier-output.txt prettier-results.sarif
+        run: node electron-app/utils/generate-prettier-sarif.js prettier-output.txt prettier-results.sarif
 
       - name: Upload SARIF to code scanning
         uses: github/codeql-action/upload-sarif@v3
