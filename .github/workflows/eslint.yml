@@ -63,6 +63,7 @@ jobs:
 
       - name: Install all required ESLint plugins
         run: |
+          cd electron-app
           npm install
           npm install eslint --legacy-peer-deps
           npm install @microsoft/eslint-formatter-sarif --legacy-peer-deps
