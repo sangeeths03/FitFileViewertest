@@ -149,6 +149,11 @@ jobs:
           brew install rpm dpkg xz gnu-tar
         continue-on-error: true
 
+      - name: Install dmg-license workaround
+        if: runner.os == 'macOS'
+        run: npm install --save-dev dmg-license
+        working-directory: electron-app
+
       - name: Install Windows build dependencies
         if: runner.os == 'Windows'
         run: |
