@@ -81,6 +81,12 @@ contextBridge.exposeInMainWorld('electronAPI', {
 	getChromeVersion: () => ipcRenderer.invoke('getChromeVersion'),
 
 	/**
+	 * Gets the license info from the main process.
+	 * @returns {Promise<string>}
+	 */
+	getLicenseInfo: () => ipcRenderer.invoke('getLicenseInfo'),
+
+	/**
 	 * Gets the platform and architecture.
 	 * @returns {Promise<{platform: string, arch: string}>}
 	 */

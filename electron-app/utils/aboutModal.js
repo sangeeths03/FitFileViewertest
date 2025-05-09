@@ -75,9 +75,15 @@ export function showAboutModal(html) {
 		closeBtn.onkeydown = null;
 		modal.onclick = null;
 
-		closeBtn.onclick = () => { hideAboutModal(); };
-		closeBtn.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') hideAboutModal(); };
-		modal.onclick = (e) => { if (e.target === modal) hideAboutModal(); };
+		closeBtn.onclick = () => {
+			hideAboutModal();
+		};
+		closeBtn.onkeydown = (e) => {
+			if (e.key === 'Enter' || e.key === ' ') hideAboutModal();
+		};
+		modal.onclick = (e) => {
+			if (e.target === modal) hideAboutModal();
+		};
 
 		// Save last focused element and move focus to close button
 		lastFocusedElement = document.activeElement;

@@ -3,7 +3,7 @@
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<title>Fit File Viewer</title>
-		 <!-- App/Website Icons -->
+		<!-- App/Website Icons -->
 		<link rel="icon" type="image/png" href="icons/favicon-96x96.png" sizes="96x96" />
 		<link rel="icon" type="image/svg+xml" href="icons/favicon.svg" />
 		<link rel="shortcut icon" href="icons/favicon.ico" />
@@ -11,30 +11,29 @@
 		<meta name="apple-mobile-web-app-title" content="FitFileViewer" />
 		<link rel="manifest" href="icons/site.webmanifest" />
 		<!-- Use local copies of JS/CSS libraries from libs/ -->
-		<script src="libs/jquery-3.7.1.min.js"></script>
-		<script src="libs/dataTables-2.2.1.min.js"></script>
-		<script src="libs/arquero-latest.js"></script>
-		<script src="libs/chartjs-latest.js"></script>
-		<script src="libs/vega-5-latest.js"></script>
-		<script src="libs/vega-lite-5-latest.js"></script>
-		<script src="libs/vega-embed-6-latest.js"></script>
+		<script src="libs/jquery-3.7.1.min.js" defer></script>
+		<script src="libs/dataTables-2.2.1.min.js" defer></script>
+		<script src="libs/arquero-latest.js" defer></script>
+		<script src="libs/chartjs-latest.js" defer></script>
+		<script src="libs/vega-5-latest.js" defer></script>
+		<script src="libs/vega-lite-5-latest.js" defer></script>
+		<script src="libs/vega-embed-6-latest.js" defer></script>
 		<link rel="stylesheet" href="libs/dataTables-2.2.1.min.css" />
 		<link rel="stylesheet" href="libs/leaflet.css" />
-		<link rel="stylesheet" href="libs/leaflet.locatecontrol.css">
-		<link rel="stylesheet" href="libs/Control.MiniMap.css">
-		<script src="libs/leaflet.js"></script>
-		<script src="libs/leaflet.locatecontrol.js"></script>
-		<script src="libs/Control.MiniMap.js"></script>
+		<link rel="stylesheet" href="libs/leaflet.locatecontrol.css" />
+		<link rel="stylesheet" href="libs/Control.MiniMap.css" />
+		<script src="libs/leaflet.js" defer></script>
+		<script src="libs/leaflet.locatecontrol.js" defer></script>
+		<script src="libs/Control.MiniMap.js" defer></script>
 		<link rel="stylesheet" href="libs/maplibre-gl.css" />
-		<script src="libs/maplibre-gl.js"></script>
-		<script src="libs/maplibre-gl-leaflet.js"></script>
+		<script src="libs/maplibre-gl.js" defer></script>
+		<script src="libs/maplibre-gl-leaflet.js" defer></script>
 		<link rel="stylesheet" href="style.css" />
-		<!-- utils.js should be loaded after other dependencies because it relies on global objects or functions
-			 defined by libraries like jQuery, DataTables, Arquero, and Chart.js. -->
-		<script src="utils.js" type="module"></script>
+		<!-- utils.js depends on jQuery, DataTables, Arquero, and Chart.js. Load it after these libraries using defer to maintain order. -->
+		<script src="utils.js" type="module" defer></script>
 		<!-- Load screenfull before main-ui.js -->
-		<script src="libs/screenfull.min.js"></script>
-		<script src="main-ui.js" type="module"></script>
+		<script src="libs/screenfull.min.js" defer></script>
+		<script src="main-ui.js" type="module" defer></script>
 	</head>
 
 	<body>
@@ -44,11 +43,17 @@
 		</header>
 		<!-- Header Bar for File Open and Filename -->
 		<div class="header-bar">
-			<button id="openFileBtn" class="themed-btn" aria-label="Open FIT File" role="button" tabindex="0">Open FIT File</button>
+			<button id="openFileBtn" class="themed-btn" aria-label="Open FIT File" role="button" tabindex="0">
+				Open FIT File
+			</button>
 			<div id="activeFileNameContainer">
 				<span id="activeFileName"></span>
-				<button id="unloadFileBtn" title="Unload file" style="display:none" aria-label="Unload file" tabindex="0">
-					<svg viewBox="0 0 24 24"><path d="M18.3 5.71a1 1 0 0 0-1.41 0L12 10.59 7.11 5.7A1 1 0 0 0 5.7 7.11L10.59 12l-4.89 4.89a1 1 0 1 0 1.41 1.41L12 13.41l4.89 4.89a1 1 0 0 0 1.41-1.41L13.41 12l4.89-4.89a1 1 0 0 0 0-1.4z"/></svg>
+				<button id="unloadFileBtn" title="Unload file" style="display: none" aria-label="Unload file" tabindex="0">
+					<svg viewBox="0 0 24 24">
+						<path
+							d="M18.3 5.71a1 1 0 0 0-1.41 0L12 10.59 7.11 5.7A1 1 0 0 0 5.7 7.11L10.59 12l-4.89 4.89a1 1 0 1 0 1.41 1.41L12 13.41l4.89 4.89a1 1 0 0 0 1.41-1.41L13.41 12l4.89-4.89a1 1 0 0 0 0-1.4z"
+						/>
+					</svg>
 				</button>
 			</div>
 		</div>
@@ -80,27 +85,34 @@
 			<footer>
 				<a href="https://www.FitFileViewer.com/" class="italic ms-2" target="_blank" rel="noopener">
 					FitFileViewer.com
-					<img alt="FitFileViewer logo" src="data:image/png;base64,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" class="ms-2 h-3 inline-block" width="14" height="12">
-				</a>,
+					<img
+						alt="FitFileViewer logo"
+						src="data:image/png;base64,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"
+						class="ms-2 h-3 inline-block"
+						width="14"
+						height="12"
+					/> </a
+				>,
 				<a href="https://www.harryonline.net/" class="italic ms-2" target="_blank" rel="noopener">
 					HarryOnline
-					<img alt="HarryOnline logo" src="data:image/png;base64,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" class="ms-2 h-3 inline-block" width="14" height="12">
-				</a>,
+					<img
+						alt="HarryOnline logo"
+						src="data:image/png;base64,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"
+						class="ms-2 h-3 inline-block"
+						width="14"
+						height="12"
+					/> </a
+				>,
 				<a href="https://github.com/thomascamminady/fit-viewer" target="_blank" rel="noopener">
-					Thomas Camminady
-				</a> 💾,
+					<span class="italic">Thomas Camminady</span>
+				</a>
+				💾,
 				<a href="https://github.com/garmin/fit-javascript-sdk" target="_blank" rel="noopener">
 					Garmin FIT JavaScript SDK
-				</a> ⌚,
-				<a href="https://leafletjs.com/" target="_blank" rel="noopener">
-					Leaflet.js
-				</a> 🗺️,
-				<a href="https://vega.github.io/vega-lite/" target="_blank" rel="noopener">
-					Vega-Lite
-				</a> 📊,
-				<a href="https://github.com/vega/vega-embed" target="_blank" rel="noopener">
-					Vega-Embed
-				</a> 📈
+				</a>
+				⌚, <a href="https://leafletjs.com/" target="_blank" rel="noopener"> Leaflet.js </a> 🗺️,
+				<a href="https://vega.github.io/vega-lite/" target="_blank" rel="noopener"> Vega-Lite </a> 📊,
+				<a href="https://github.com/vega/vega-embed" target="_blank" rel="noopener"> Vega-Embed </a> 📈
 			</footer>
 		</div>
 
@@ -111,12 +123,14 @@
 			<span>Loading...</span>
 		</div>
 		<!-- Drag-and-Drop Overlay -->
-		<div id="drop-overlay" style="display:none;">
+		<div id="drop-overlay" style="display: none">
 			<div class="drop-overlay-content">
 				<span>Drop FIT file to open</span>
 			</div>
 		</div>
-		<!-- Ensure utils.js and main-ui.js are loaded before renderer.js because renderer.js depends on them -->
+		<!-- Ensure utils.js and main-ui.js are loaded before renderer.js.
+			 If they are not loaded first, renderer.js will fail to execute properly
+			 because it relies on functions and variables defined in those scripts. -->
 		<script src="renderer.js" type="module" defer></script>
 	</body>
 </html>

@@ -70,6 +70,14 @@ jobs:
         with:
           node-version: "20"
 
+      - name: Cache node modules
+        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
+        with:
+          path: electron-app/node_modules
+          key: ${{ runner.os }}-electron-app-node-modules-${{ hashFiles('electron-app/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-electron-app-node-modules-
+
       - name: Install dependencies
         run: npm install
         working-directory: electron-app

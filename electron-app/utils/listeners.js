@@ -255,16 +255,17 @@ export function setupListeners({
 				electronVersion,
 				nodeVersion,
 				chromeVersion,
-				platformInfo
+				platformInfo,
+				license
 			] = await Promise.all([
 				window.electronAPI.getAppVersion ? window.electronAPI.getAppVersion() : 'Unknown',
 				window.electronAPI.getElectronVersion ? window.electronAPI.getElectronVersion() : 'Unknown',
 				window.electronAPI.getNodeVersion ? window.electronAPI.getNodeVersion() : 'Unknown',
 				window.electronAPI.getChromeVersion ? window.electronAPI.getChromeVersion() : 'Unknown',
-				window.electronAPI.getPlatformInfo ? window.electronAPI.getPlatformInfo() : { platform: 'Unknown', arch: 'Unknown' }
+				window.electronAPI.getPlatformInfo ? window.electronAPI.getPlatformInfo() : { platform: 'Unknown', arch: 'Unknown' },
+				window.electronAPI.getLicenseInfo ? window.electronAPI.getLicenseInfo() : 'Unknown'
 			]);
 			const author = 'Nick2bad4u';
-			const license = 'ISC';
 			const aboutMsg =
 				`Version: ${version}<br>
 				Electron: ${electronVersion}<br>

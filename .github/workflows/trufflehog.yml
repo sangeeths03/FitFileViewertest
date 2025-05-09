@@ -22,7 +22,9 @@ jobs:
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           fetch-depth: 0
-      - name: Secret Scanning
+      - name: Secret Scanning (entire repo)
         uses: trufflesecurity/trufflehog@e42153d44a5e5c37c1bd0c70e074781e9edcb760 # v3.88.28
         with:
+          base: ""
+          head: ${{ github.ref_name }}
           extra_args: --results=verified,unknown

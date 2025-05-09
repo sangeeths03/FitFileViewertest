@@ -245,6 +245,18 @@ app.whenReady().then(() => {
 		};
 	});
 
+	// Add IPC handler for license info
+	ipcMain.handle('getLicenseInfo', async () => {
+		try {
+			const packageJsonPath = path.join(app.getAppPath(), 'package.json');
+			const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
+			return packageJson.license || 'Unknown';
+		} catch (err) {
+			console.error('Failed to read license from package.json:', err);
+			return 'Unknown';
+		}
+	});
+
 	// Listen for theme change from renderer and update menu
 	ipcMain.on('theme-changed', (event, theme) => {
 		const win = BrowserWindow.fromWebContents(event.sender);
