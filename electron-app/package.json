@@ -5,6 +5,8 @@
   "appid": "com.example.fitfileviewer",
   "displayName": "Fit File Viewer",
   "productName": "Fit File Viewer",
+  "type": "module",
+  "module": "electron",
   "build": {
     "icon": "icons/favicon.ico",
     "appId": "com.example.fitfileviewer",
