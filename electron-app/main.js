@@ -1,5 +1,4 @@
 /* eslint-env node */
-/* global require, Buffer, process */
 const { app, BrowserWindow, dialog, ipcMain, Menu } = require('electron');
 const { createWindow } = require('./windowStateUtils');
 const path = require('path');
@@ -8,9 +7,7 @@ const { autoUpdater } = require('electron-updater');
 
 const {
 	loadRecentFiles,
-	saveRecentFiles,
 	addRecentFile,
-	getShortRecentName,
 } = require('./utils/recentFiles');
 const { buildAppMenu } = require('./utils/buildAppMenu');
 
@@ -143,6 +140,7 @@ app.whenReady().then(() => {
 	ipcMain.on('fit-file-loaded', (event, filePath) => {
 		loadedFitFilePath = filePath;
 		const win = BrowserWindow.fromWebContents(event.sender);
+		// eslint-disable-next-line no-unused-vars
 		let theme = 'dark';
 		if (win) {
 			win.webContents.executeJavaScript('localStorage.getItem("ffv-theme")').then((theme) => {

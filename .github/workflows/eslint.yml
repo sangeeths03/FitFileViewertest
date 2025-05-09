@@ -65,10 +65,6 @@ jobs:
         run: |
           cd electron-app
           npm install
-          npm install eslint --legacy-peer-deps
-          npm install @microsoft/eslint-formatter-sarif --legacy-peer-deps
-          npm install @eslint/css --legacy-peer-deps
-          npm install --save-dev @eslint/js globals eslint-define-config --legacy-peer-deps
 
       - name: Run ESLint
         env:

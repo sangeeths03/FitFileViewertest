@@ -1,4 +1,3 @@
-/* global require */
 /* eslint-env node */
 const { contextBridge, ipcRenderer } = require('electron');
 

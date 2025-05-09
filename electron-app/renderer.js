@@ -45,7 +45,6 @@ if (!openFileBtn) {
 	showNotification('Open File button not found!', 'error', 7000);
 }
 
-let isOpeningFile = false;
 const isOpeningFileRef = { value: false };
 
 setupListeners({

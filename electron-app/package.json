@@ -1,12 +1,18 @@
 {
   "name": "fitfileviewer",
+  "packageManager": "npm@910.9.0",
   "version": "9.4.0",
   "main": "main.js",
   "appid": "com.example.fitfileviewer",
   "displayName": "Fit File Viewer",
   "productName": "Fit File Viewer",
-  "type": "module",
+  "type": "commonjs",
   "module": "electron",
+  "os": [
+    "darwin",
+    "win32",
+    "linux"
+  ],
   "build": {
     "icon": "icons/favicon.ico",
     "appId": "com.example.fitfileviewer",
@@ -191,11 +197,12 @@
     "fitness-activities-data",
     "fitness-activities-data-visualization"
   ],
-  "author": "Nick2bad4u",
+  "author": "Nick2bad4u <20943337+Nick2bad4u@users.noreply.github.com> (https://fitfileviewer.typpi.online)",
   "contributors": [
     {
       "name": "Nick2bad4u",
-      "email": "20943337+Nick2bad4u@users.noreply.github.com"
+      "email": "20943337+Nick2bad4u@users.noreply.github.com",
+      "url": "https://github.com/Nick2bad4u"
     }
   ],
   "homepage": "https://github.com/Nick2bad4u/FitFileViewer",
@@ -206,10 +213,13 @@
   "bugs": {
     "url": "https://github.com/Nick2bad4u/FitFileViewer/issues"
   },
-  "license": "The UnLicense",
+  "license": "UnLicense",
   "description": "Fit File Viewer is a cross-platform application for parsing, visualizing, and analyzing .fit files using charts, maps, tables, and other data visualization tools for Garmin and fitness activities.",
   "devDependencies": {
     "@eslint/css": "^0.7.0",
+    "@eslint/js": "^9.26.0",
+    "@eslint/json": "^0.12.0",
+    "@eslint/markdown": "^6.4.0",
     "@microsoft/eslint-formatter-sarif": "^3.1.0",
     "@types/jest": "^29.5.14",
     "@types/mocha": "^10.0.10",
@@ -218,7 +228,7 @@
     "electron-builder": "^26.0.15",
     "electron-builder-squirrel-windows": "^26.0.15",
     "eslint": "^9.26.0",
-    "eslint-define-config": "^2.1.0",
+    "globals": "^16.1.0",
     "jest": "^29.7.0",
     "jsdom": "^26.1.0",
     "makensis": "^2.0.8",
@@ -236,5 +246,60 @@
   "authorEmail": "20943337+Nick2bad4u@users.noreply.github.com",
   "authorName": "Nick2bad4u",
   "companyName": "Nick2bad4u",
-  "copyright": "Copyright © 2024 Nick2bad4u"
+  "copyright": "Copyright © 2024 Nick2bad4u",
+  "categories": [
+    "Visualization",
+    "Data Science",
+    "Other"
+  ],
+  "capabilities": {
+    "fileSystem": true,
+    "fileSystemRead": true,
+    "fileSystemWrite": true,
+    "fileSystemDelete": true,
+    "fileSystemRename": true,
+    "fileSystemCopy": true,
+    "fileSystemMove": true,
+    "fileSystemCreate": true,
+    "fileSystemOpen": true,
+    "fileSystemClose": true,
+    "fileSystemReadFile": true,
+    "fileSystemWriteFile": true,
+    "fileSystemDeleteFile": true,
+    "fileSystemRenameFile": true,
+    "fileSystemCopyFile": true,
+    "fileSystemMoveFile": true
+  },
+  "maintainers": [
+    {
+      "name": "Nick2bad4u",
+      "email": "20943337+Nick2bad4u@users.noreply.github.com"
+    }
+  ],
+  "exports": {
+    ".": "./main.js",
+    "./package.json": "./package.json",
+    "./main.js": "./main.js",
+    "./preload.js": "./preload.js",
+    "./renderer.js": "./renderer.js",
+    "./index.html": "./index.html",
+    "./icons/favicon.ico": "./icons/favicon.ico",
+    "./icons/favicon-256x256.ico": "./icons/favicon-256x256.ico",
+    "./icons/favicon-512x512.icns": "./icons/favicon-512x512.icns",
+    "./icons/favicon-256x256.png": "./icons/favicon-256x256.png"
+  },
+  "readme": "README.md",
+  "icon": "icons/favicon.ico",
+  "api": "none",
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=7.0.0"
+  },
+  "engineStrict": false,
+  "cpu": [
+    "x64",
+    "arm64"
+  ],
+  "pricing": "Free",
+  "preferGlobal": false
 }

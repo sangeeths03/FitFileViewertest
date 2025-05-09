@@ -1,4 +1,3 @@
-/* global require, process, module */
 /* eslint-env node */
 const { loadRecentFiles, getShortRecentName } = require('./recentFiles');
 const { Menu, BrowserWindow, app } = require('electron');
@@ -91,7 +90,7 @@ function buildAppMenu(
 	const recentFiles = loadRecentFiles();
 	const recentMenuItems =
 		recentFiles.length > 0
-			? recentFiles.map((file, idx) => ({
+			? recentFiles.map((file) => ({
 					label: getShortRecentName(file),
 					tooltip: file,
 					click: () => {
