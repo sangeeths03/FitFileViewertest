@@ -204,14 +204,15 @@
   "bugs": {
     "url": "https://github.com/Nick2bad4u/FitFileViewer/issues"
   },
-  "license": "ISC",
+  "license": "UnLicense",
   "description": "Fit File Viewer is a cross-platform application for parsing, visualizing, and analyzing .fit files using charts, maps, tables, and other data visualization tools for Garmin and fitness activities.",
   "devDependencies": {
     "@eslint/css": "^0.7.0",
     "@microsoft/eslint-formatter-sarif": "^3.1.0",
     "@types/jest": "^29.5.14",
+    "@types/mocha": "^10.0.10",
     "cross-env": "^7.0.3",
-    "electron": "^36.1.0",
+    "electron": "36.2.0",
     "electron-builder": "^26.0.15",
     "electron-builder-squirrel-windows": "^26.0.15",
     "eslint": "^9.26.0",
@@ -229,5 +230,9 @@
     "electron-log": "^5.4.0",
     "electron-store": "^10.0.1",
     "electron-updater": "^6.6.4"
-  }
+  },
+  "authorEmail": "20943337+Nick2bad4u@users.noreply.github.com",
+  "authorName": "Nick2bad4u",
+  "companyName": "Nick2bad4u",
+  "copyright": "Copyright © 2024 Nick2bad4u"
 }

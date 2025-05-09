@@ -32,7 +32,10 @@ export function addFullscreenControl(map) {
 			mapDiv.classList.remove('fullscreen');
 			fullscreenBtn.title = 'Enter Fullscreen';
 			fullscreenBtn.innerHTML = fullscreenEnterSVG;
-			setTimeout(() => map.invalidateSize(), 300);
+			// Only call invalidateSize if map is still valid and map container is in the DOM
+			if (map && map._container && document.body.contains(map._container)) {
+				setTimeout(() => map.invalidateSize(), 300);
+			}
 		}
 	});
 

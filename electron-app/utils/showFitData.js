@@ -31,6 +31,8 @@ export function showFitData(data, filePath) {
 		if (unloadBtn) {
 			unloadBtn.style.display = '';
 		}
+		// Enable tab buttons when a file is loaded
+		if (window.setTabButtonsEnabled) window.setTabButtonsEnabled(true);
 		document.title = fileName ? `Fit File Viewer - ${fileName}` : 'Fit File Viewer';
 		if (window.electronAPI && window.electronAPI.send) {
 			window.electronAPI.send('fit-file-loaded', filePath);

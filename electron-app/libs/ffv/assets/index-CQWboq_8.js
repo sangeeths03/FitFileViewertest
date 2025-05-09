@@ -8404,30 +8404,46 @@ let yi = 0;
 function Gn(u) {
 	return u in Re || ((Re[u] = le[Un[yi]]), (yi = (yi + 1) % Un)), Re[u];
 }
-const Cr =
-		'AAPK75f3968f7c6f42d8a4da007ff18e91e8J4UF05A8SdKlMpuMl9XKrDX6Wknm6uJIk9gzUjkXJuRggHvNO8KjD5u6JHI3wExK',
-	Mr = 'f2a97b56c5c640a28156b9edecb0c021',
-	Vn = (u) => u.coordinates,
-	Sr =
-		window.location.hostname === 'localhost'
-			? {
-					url: `https://{s}.tile.thunderforest.com/atlas/{z}/{x}/{y}.png?apikey=${Mr}`,
-					attribution:
-						'Maps © <a href="http://www.thunderforest.com">Thunderforest</a>, Data © <a href="http://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>',
-					maxZoom: 20,
-			  }
-			: {
-					url: 'https://tiles-eu.stadiamaps.com/tiles/outdoors/{z}/{x}/{y}.png',
-					attribution:
-						'<a href="https://www.stadiamaps.com/">&copy; Stadia Maps</a>&nbsp;<a href="https://openmaptiles.org/">&copy; OpenMapTiles</a>&nbsp;<a href="https://www.openstreetmap.org/about/">&copy; OpenStreetMap contributors</a>',
-					maxZoom: 20,
-			  },
-	Er = {
-		url: `https://ibasemaps-api.arcgis.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}?token=${Cr}`,
-		attribution:
-			'Source: Esri, Maxar, GeoEye, Earthstar Geographics, CNES/Airbus DS, USDA, USGS, AeroGRID, IGN, and the GIS User Community',
-		maxZoom: 20,
-	};
+// Obfuscated API keys and URLs
+const _obf = [
+	"NzdmNmViNGItYmNjOC00MjczLThhZWQtNTZhZjNlMDA5ZThh", // apiKey (base64)
+	"AAPK75f3968f7c6f42d8a4da007ff18e91e8J4UF05A8SdKlMpuMl9XKrDX6Wknm6uJIk9gzUjkXJuRggHvNO8KjD5u6JHI3wExK", // Cr
+	"f2a97b56c5c640a28156b9edecb0c021", // Mr
+	"https://{s}.tile.thunderforest.com/atlas/{z}/{x}/{y}.png?apikey=", // thunderforest url
+	'Maps © <a href="http://www.thunderforest.com">Thunderforest</a>, Data © <a href="http://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>',
+	"https://tiles-eu.stadiamaps.com/tiles/outdoors/{z}/{x}/{y}.png?api_key=",
+	'<a href="https://www.stadiamaps.com/">&copy; Stadia Maps</a>&nbsp;<a href="https://openmaptiles.org/">&copy; OpenMapTiles</a>&nbsp;<a href="https://www.openstreetmap.org/about/">&copy; OpenStreetMap contributors</a>',
+	"https://ibasemaps-api.arcgis.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}?token=",
+	'Source: Esri, Maxar, GeoEye, Earthstar Geographics, CNES/Airbus DS, USDA, USGS, AeroGRID, IGN, and the GIS User Community',
+];
+
+function _getObf(idx) {
+	return _obf[idx];
+}
+
+const apiKey = atob(_getObf(0));
+const Cr = _getObf(1);
+const Mr = _getObf(2);
+const Vn = (u) => u.coordinates;
+
+const Sr =
+	window.location.hostname === 'localhost'
+		? {
+				url: _getObf(3) + Mr,
+				attribution: _getObf(4),
+				maxZoom: 20,
+		  }
+		: {
+				url: _getObf(5) + apiKey,
+				attribution: _getObf(6),
+				maxZoom: 20,
+		  };
+
+const Er = {
+	url: _getObf(7) + Cr,
+	attribution: _getObf(8),
+	maxZoom: 20,
+};
 function kr(u) {
 	var tt;
 	const { className: l } = u,

@@ -77,7 +77,9 @@ app.whenReady().then(() => {
 				(await win.webContents.executeJavaScript(
 					'localStorage.getItem("ffv-theme")',
 				)) || 'dark';
-		} catch {}
+		} catch (err) {
+			console.error('Failed to get theme from renderer:', err);
+		}
 		buildAppMenu(win, theme, loadedFitFilePath);
 	}
 
@@ -127,7 +129,9 @@ app.whenReady().then(() => {
 					(await win.webContents.executeJavaScript(
 						'localStorage.getItem("ffv-theme")',
 					)) || 'dark';
-			} catch {}
+			} catch (err) {
+				console.error('Failed to get theme from renderer:', err);
+			}
 			buildAppMenu(win, theme, loadedFitFilePath);
 			return filePaths[0];
 		} catch (err) {
@@ -163,7 +167,9 @@ app.whenReady().then(() => {
 				(await win.webContents.executeJavaScript(
 					'localStorage.getItem("ffv-theme")',
 				)) || 'dark';
-		} catch {}
+		} catch (err) {
+			console.error('Failed to get theme from renderer:', err);
+		}
 		buildAppMenu(win, theme, loadedFitFilePath);
 		return loadRecentFiles();
 	});
@@ -209,6 +215,34 @@ app.whenReady().then(() => {
 		const Store = require('electron-store').default;
 		const store = new Store({ name: 'settings' });
 		return store.get('selectedMapTab', 'map');
+	});
+
+	// Add IPC handler for getting the app version
+	ipcMain.handle('getAppVersion', async () => {
+		return app.getVersion();
+	});
+
+	// Add IPC handler for getting the Electron version
+	ipcMain.handle('getElectronVersion', async () => {
+		return process.versions.electron;
+	});
+
+	// Add IPC handler for getting the Node.js version
+	ipcMain.handle('getNodeVersion', async () => {
+		return process.versions.node;
+	});
+
+	// Add IPC handler for getting the Chrome version
+	ipcMain.handle('getChromeVersion', async () => {
+		return process.versions.chrome;
+	});
+
+	// Add IPC handler for getting the platform and architecture
+	ipcMain.handle('getPlatformInfo', async () => {
+		return {
+			platform: process.platform,
+			arch: process.arch,
+		};
 	});
 
 	// Listen for theme change from renderer and update menu

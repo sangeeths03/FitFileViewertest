@@ -250,10 +250,29 @@ export function setupListeners({
 			if (window.electronAPI.send) window.electronAPI.send('menu-export');
 		});
 		window.electronAPI.onIpc('menu-about', async () => {
-			const version = (window.electronAPI.getAppVersion && await window.electronAPI.getAppVersion()) || 'Unknown';
+			const [
+				version,
+				electronVersion,
+				nodeVersion,
+				chromeVersion,
+				platformInfo
+			] = await Promise.all([
+				window.electronAPI.getAppVersion ? window.electronAPI.getAppVersion() : 'Unknown',
+				window.electronAPI.getElectronVersion ? window.electronAPI.getElectronVersion() : 'Unknown',
+				window.electronAPI.getNodeVersion ? window.electronAPI.getNodeVersion() : 'Unknown',
+				window.electronAPI.getChromeVersion ? window.electronAPI.getChromeVersion() : 'Unknown',
+				window.electronAPI.getPlatformInfo ? window.electronAPI.getPlatformInfo() : { platform: 'Unknown', arch: 'Unknown' }
+			]);
 			const author = 'Nick2bad4u';
 			const license = 'ISC';
-			const aboutMsg = `Fit File Viewer<br>Version: ${version}<br>Author: ${author}<br>License: ${license}`;
+			const aboutMsg =
+				`Version: ${version}<br>
+				Electron: ${electronVersion}<br>
+				Node.js: ${nodeVersion}<br>
+				Chrome: ${chromeVersion}<br>
+				Platform: ${platformInfo.platform} (${platformInfo.arch})<br>
+				Author: ${author}<br>
+				License: ${license}`;
 			showAboutModal(aboutMsg);
 		});
 		window.electronAPI.onIpc('menu-keyboard-shortcuts', () => {

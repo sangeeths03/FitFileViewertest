@@ -255,6 +255,13 @@ h2 {
 	transition: background 0.3s, box-shadow 0.3s;
 }
 
+.tab-button.tab-disabled {
+	opacity: 50%;
+	filter: grayscale(0.7);
+	cursor: not-allowed !important;
+	pointer-events: none;
+}
+
 .tab-content {
 	display: none;
 	padding: 0 10px;

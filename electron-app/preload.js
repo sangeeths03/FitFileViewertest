@@ -57,6 +57,36 @@ contextBridge.exposeInMainWorld('electronAPI', {
 	getTheme: () => ipcRenderer.invoke('theme:get'),
 
 	/**
+	 * Gets the app version from the main process.
+	 * @returns {Promise<string>}
+	 */
+	getAppVersion: () => ipcRenderer.invoke('getAppVersion'),
+
+	/**
+	 * Gets the Electron version.
+	 * @returns {Promise<string>}
+	 */
+	getElectronVersion: () => ipcRenderer.invoke('getElectronVersion'),
+
+	/**
+	 * Gets the Node.js version.
+	 * @returns {Promise<string>}
+	 */
+	getNodeVersion: () => ipcRenderer.invoke('getNodeVersion'),
+
+	/**
+	 * Gets the Chrome version.
+	 * @returns {Promise<string>}
+	 */
+	getChromeVersion: () => ipcRenderer.invoke('getChromeVersion'),
+
+	/**
+	 * Gets the platform and architecture.
+	 * @returns {Promise<{platform: string, arch: string}>}
+	 */
+	getPlatformInfo: () => ipcRenderer.invoke('getPlatformInfo'),
+
+	/**
 	 * Registers a handler for the 'menu-open-file' event.
 	 * @param {Function} callback
 	 */

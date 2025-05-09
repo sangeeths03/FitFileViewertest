@@ -30,6 +30,7 @@ import { showFitData } from './utils/showFitData.js';
 import { applyTheme, loadTheme, listenForThemeChange } from './utils/theme.js';
 import { showNotification, setLoading } from './utils/rendererUtils.js';
 import { formatArray } from './utils/formatUtils.js';
+import { setTabButtonsEnabled } from './utils/enableTabButtons.js';
 
 // List of utilities to expose globally
 const utils = {
@@ -51,6 +52,7 @@ const utils = {
 	showNotification,
 	setLoading,
 	formatArray,
+	setTabButtonsEnabled,
 };
 
 // Attach all utilities to window for global access

@@ -1,6 +1,22 @@
+# FitFileViewer by Nick2bad4u / Typpi ☠️ - README
+
+<div align="center">
+    <img
+      src="https://github.com/Nick2bad4u/Nick2bad4u/blob/main/assets/GitHubProfileLines.gif?raw=true"
+      alt="Repository Banner Line Animation"
+      width="100%"
+    />
+</div>
+
+<!--
+	This README file references multiple GitHub Actions workflows via badges to indicate
+	the current status of various checks (linting, security scanning, deployment, etc.).
+	Each badge provides a direct link to the corresponding workflow run,
+	offering at-a-glance insight into the project's health checks and automation processes.
+-->
+
 [![ActionLint](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/ActionLint.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/ActionLint.yml) 🧹
 [![Build and Release Electron App](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/Build.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/Build.yml) 🏗️
-[![Build and Release Electron App](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/Build.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/Build.yml) 🚀
 [![CodeQL-Advanced](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/codeql.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/codeql.yml) 🛡️
 [![Dependabot Updates](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/dependabot/dependabot-updates/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/dependabot/dependabot-updates) 🤖
 [![Dependency Review](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/dependency-review.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/dependency-review.yml) 🔍
@@ -12,8 +28,6 @@
 [![Greetings](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/greetings.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/greetings.yml) 👋
 [![Lint Code Base](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/superlinter.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/superlinter.yml) 🧹
 [![Mark stale issues and pull requests](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/stale.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/stale.yml) 💤
-[![Mark stale issues and pull requests](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/stale.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/stale.yml) 💤
-[![Metrics Repository Stats](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/repo-stats.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/repo-stats.yml) 📊
 [![Microsoft Defender for DevOps](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/defender.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/defender.yml) 🛡️
 [![OSSAR](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/ossar.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/ossar.yml) 🏅
 [![OSV-Scanner](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/osv-scanner.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/osv-scanner.yml) 🔎
@@ -26,15 +40,49 @@
 [![npm audit](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/npm-audit.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/npm-audit.yml) 🔍
 [![pages-build-deployment](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/pages/pages-build-deployment) 🌐
 
-# Fit File Viewer README 📖
+<div align="center">
+    <img
+      src="https://github.com/Nick2bad4u/Nick2bad4u/blob/main/assets/GitHubProfileLines%20(2).gif?raw=true"
+      alt="Repository Banner Line Animation"
+      width="100%"
+    />
+</div>
 
-Open `.fit` files and visualize their data using maps, tables, and charts. This standalone application provides an intuitive interface for exploring `.fit` file data.
+<div align="center">
+    <img
+        src="https://repobeats.axiom.co/api/embed/e6aa4c9715bfd0419813b728d0d3d80b938836e0.svg"
+        alt="Repobeats Analytics"
+    />
+</div>
 
-![Map](electron-app/screenshots/newMap.png) 🗺️
+<div align="center">
+    <img
+      src="https://github.com/Nick2bad4u/Nick2bad4u/blob/main/assets/GitHubProfileLines%20(8).gif?raw=true"
+      alt="Repository Banner Line Animation"
+      width="100%"
+    />
+</div>
 
-![Table](electron-app/screenshots/newData.png) 📋
+Open `.fit` files, a popular file format used for recording activity data from fitness devices such as GPS watches and cycling computers, and explore their data with ease. This standalone application offers:
 
-![Charts](electron-app/screenshots/newChart.png) 📈
+- Interactive maps for visualizing activity routes. 🗺️
+- Data tables for detailed insights. 📋
+- Charts for analyzing trends and performance. 📈
+
+Enjoy an intuitive interface designed for seamless `.fit` file exploration.
+
+<div align="center">
+
+![Map](electron-app/screenshots/newMap.png)
+*Interactive map displaying the activity route.*
+
+![Table](electron-app/screenshots/newData.png)
+*Data table showing detailed activity metrics.*
+
+![Charts](electron-app/screenshots/newChart.png)
+*Charts visualizing trends and performance data.*
+
+</div>
 
 ## 🛠️ Installation
 
@@ -59,17 +107,17 @@ To set up a development environment:
 
 ```bash
 # Clone the repository
- git clone https://github.com/Nick2bad4u/FitFileViewer.git
- cd FitFileViewer/electron-app
+git clone https://github.com/Nick2bad4u/FitFileViewer.git
+cd FitFileViewer/electron-app
 
 # Install dependencies
- npm install
+npm install
 
 # Run the app in development mode
- npm start
+npm start
 
 # To build a production release
- npm run build
+npm run build
 ```
 
 - For more details, see the [GitHub repository](https://github.com/Nick2bad4u/FitFileViewer).
@@ -97,7 +145,9 @@ See [LICENSE.md](LICENSE.md) for details.
 For more information, documentation, and updates, visit the [GitHub repository](https://github.com/Nick2bad4u/FitFileViewer). 📦
 
 <div align="center">
-
-<img src="https://raw.githubusercontent.com/Nick2bad4u/FitFileViewer/refs/heads/main/metrics.repository.svg" alt="Repository Metrics" style="filter: invert(1); width: 100%; max-width: 800px;"/>
-
+    <img
+      src="https://raw.githubusercontent.com/Nick2bad4u/FitFileViewer/HEAD/metrics.repository.svg"
+      alt="Repo Metrics"
+      width="100%"
+    />
 </div>

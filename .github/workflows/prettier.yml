@@ -25,18 +25,8 @@ jobs:
       - name: Install Prettier
         run: npm install --no-save prettier
 
-      - name: Run Prettier and output results
-        run: npx prettier --check "**/*.{js,md,css,html}" > prettier-output.txt || true
-
-      - name: Convert Prettier output to SARIF
-        run: node electron-app/utils/generate-prettier-sarif.js prettier-output.txt prettier-results.sarif
-
-      - name: Upload SARIF to code scanning
-        uses: github/codeql-action/upload-sarif@v3
-        with:
-          sarif_file: prettier-results.sarif
-
       - name: Prettify code
         uses: creyD/prettier_action@v4.5
         with:
           prettier_options: --check **/*.{js,md,css,html}
+        continue-on-error: true

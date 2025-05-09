@@ -13,8 +13,6 @@ import { setupTabButton } from './utils/setupTabButton.js';
 import { setupFullscreenListeners, setupDOMContentLoaded } from './utils/addFullScreenButton.js';
 import { setupWindowOnload } from './utils/setupWindow.js';
 
-const screenfull = window.screenfull;
-
 window.globalData = window.globalData || null; // will hold all data received from the extension
 
 window.showFitData = showFitData;
@@ -102,6 +100,8 @@ if (window.electronAPI && window.electronAPI.onIpc) {
         if (window.electronAPI && window.electronAPI.send) {
             window.electronAPI.send('fit-file-loaded', null);
         }
+        // Disable tab buttons when no file is loaded
+        window.setTabButtonsEnabled(false);
     });
 }
 
@@ -132,8 +132,15 @@ if (unloadBtn) {
 		if (window.electronAPI && window.electronAPI.send) {
 			window.electronAPI.send('fit-file-loaded', null);
 		}
+		// Disable tab buttons when no file is loaded
+		window.setTabButtonsEnabled(false);
 	};
 }
+
+// On startup, disable tab buttons
+window.addEventListener('DOMContentLoaded', () => {
+    window.setTabButtonsEnabled(false);
+});
 
 // --- Enhanced Drag and Drop UI and Global Handling ---
 (function() {
@@ -152,11 +159,11 @@ if (unloadBtn) {
   }
 
   // Show overlay on dragenter, hide on dragleave/drop
-  window.addEventListener('dragenter', (e) => {
+  window.addEventListener('dragenter', () => {
     dragCounter++;
     showDropOverlay();
   });
-  window.addEventListener('dragleave', (e) => {
+  window.addEventListener('dragleave', () => {
     dragCounter--;
     if (dragCounter <= 0) {
       hideDropOverlay();
