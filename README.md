@@ -73,13 +73,13 @@ Enjoy an intuitive interface designed for seamless `.fit` file exploration.
 
 <div align="center">
 
-![Map](electron-app/screenshots/newMap.png)
+![Map](https://raw.githubusercontent.com/Nick2bad4u/FitFileViewer/refs/heads/main/electron-app/screenshots/newMap.png)
 *Interactive map displaying the activity route.*
 
-![Table](electron-app/screenshots/newData.png)
+![Table](https://raw.githubusercontent.com/Nick2bad4u/FitFileViewer/refs/heads/main/electron-app/screenshots/newData.png)
 *Data table showing detailed activity metrics.*
 
-![Charts](electron-app/screenshots/newChart.png)
+![Charts](https://raw.githubusercontent.com/Nick2bad4u/FitFileViewer/refs/heads/main/electron-app/screenshots/newChart.png)
 *Charts visualizing trends and performance data.*
 
 </div>

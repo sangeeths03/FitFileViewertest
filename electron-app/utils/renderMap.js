@@ -20,8 +20,9 @@ import { drawMapForLap } from './drawMapForLap.js';
 import { updateMapTheme } from './updateMapTheme.js';
 import { createStartIcon, createEndIcon } from './mapIcons.js';
 import { baseLayers } from './mapBaseLayers.js';
-import { createPrintButton, createExportGPXButton, createElevationProfileButton, createMarkerCountSelector } from './mapActionButtons.js';
+import { createPrintButton, createExportGPXButton, createElevationProfileButton, createMarkerCountSelector, createAddFitFileToMapButton, createShownFilesList } from './mapActionButtons.js';
 import { addFullscreenControl } from './mapFullscreenControl.js';
+import { drawOverlayForFitFile } from './drawMapForLap.js';
 
 export function renderMap() {
 	const mapContainer = document.getElementById('content-map');
@@ -167,13 +168,20 @@ export function renderMap() {
 	controlsDiv.appendChild(createPrintButton());
 	controlsDiv.appendChild(createExportGPXButton());
 	controlsDiv.appendChild(createElevationProfileButton());
-	// Add marker count selector
 	controlsDiv.appendChild(createMarkerCountSelector(() => {
 		// Redraw map with new marker count
 		if (window.globalData && window.globalData.recordMesgs) {
 			drawMapForLapWrapper('all');
 		}
+		if (window.updateShownFilesList) window.updateShownFilesList();
 	}));
+	addSimpleMeasureTool(map, controlsDiv);
+	controlsDiv.appendChild(createAddFitFileToMapButton());
+	if (window.loadedFitFiles && window.loadedFitFiles.length > 1) {
+		const shownFilesList = createShownFilesList();
+		controlsDiv.appendChild(shownFilesList);
+		if (window.updateShownFilesList) window.updateShownFilesList();
+	}
 
 	// --- Fullscreen button (custom, styled, top left) ---
 	addFullscreenControl(map);
@@ -204,9 +212,6 @@ export function renderMap() {
 		});
 	}
 	addLapSelector(map, document.getElementById('leaflet-map'), drawMapForLapWrapper);
-
-	// --- Simple point-to-point measurement tool ---
-	addSimpleMeasureTool(map, controlsDiv);
 
 	// --- Minimap (if plugin available) ---
 	if (window.L && L.Control && L.Control.MiniMap) {
@@ -248,8 +253,32 @@ export function renderMap() {
 		});
 	}
 
-	// Draw all by default
-	if (window.globalData && window.globalData.recordMesgs) {
+	// --- Overlay logic ---
+	if (window.loadedFitFiles && Array.isArray(window.loadedFitFiles) && window.loadedFitFiles.length > 0) {
+		const colorPalette = [
+			'#1976d2', '#d32f2f', '#388e3c', '#fbc02d', '#7b1fa2', '#0288d1', '#c2185b', '#ffa000', '#388e3c', '#f57c00',
+			'#455a64', '#8bc34a', '#e64a19', '#5d4037', '#0097a7', '#cddc39', '#f44336', '#607d8b', '#00bcd4', '#ffeb3b'
+		];
+		let allBounds = null;
+		window.loadedFitFiles.forEach((fitFile, idx) => {
+			const color = colorPalette[idx % colorPalette.length];
+			const bounds = drawOverlayForFitFile({
+				fitData: fitFile.data,
+				map,
+				color,
+				markerClusterGroup,
+				startIcon,
+				endIcon,
+				formatTooltipData,
+				getLapNumForIdx
+			});
+			if (bounds) {
+				if (!allBounds) allBounds = bounds;
+				else allBounds.extend(bounds);
+			}
+		});
+		if (allBounds) map.fitBounds(allBounds, { padding: [20, 20] });
+	} else if (window.globalData && window.globalData.recordMesgs) {
 		drawMapForLapWrapper('all');
 	}
 
