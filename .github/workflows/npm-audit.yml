@@ -35,7 +35,7 @@ jobs:
             ${{ runner.os }}-electron-app-node-modules-
 
       - name: install dependencies
-        run: npm ci
+        run: npm install
       - uses: oke-py/npm-audit-action@6ec7878c81d7dfe2b3295a63e1a608e9c952f46a # v3.0.0
         with:
           audit_level: moderate

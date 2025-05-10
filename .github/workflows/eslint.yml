@@ -69,7 +69,9 @@ jobs:
       - name: Run ESLint
         env:
           SARIF_ESLINT_IGNORE_SUPPRESSED: "true"
-        run: npx eslint . --format @microsoft/eslint-formatter-sarif --output-file ../eslint-results.sarif
+        run: |
+          npx eslint . --format stylish
+          npx eslint . --format @microsoft/eslint-formatter-sarif --output-file ../eslint-results.sarif
         working-directory: electron-app
         continue-on-error: true
 
