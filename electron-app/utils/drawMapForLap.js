@@ -1,3 +1,5 @@
+import { getOverlayFileName, overlayColorPalette } from './mapActionButtons.js';
+
 /* global L */
 // Draws the map for a given lap or laps
 // Dependencies must be passed as arguments: map, baseLayers, markerClusterGroup, startIcon, endIcon, mapContainer, getLapColor, formatTooltipData, getLapNumForIdx
@@ -172,32 +174,57 @@ export function drawMapForLap(
 			Array.isArray(window.loadedFitFiles) &&
 			window.loadedFitFiles.length > 1
 		) {
-			// The first entry is the main file, skip it
 			const colorPalette = [
-				'#d32f2f',
-				'#388e3c',
-				'#fbc02d',
-				'#7b1fa2',
-				'#0288d1',
-				'#c2185b',
-				'#ffa000',
-				'#388e3c',
-				'#f57c00',
-				'#455a64',
-				'#8bc34a',
-				'#e64a19',
-				'#5d4037',
-				'#0097a7',
-				'#cddc39',
-				'#f44336',
-				'#607d8b',
-				'#00bcd4',
-				'#ffeb3b',
+				'#ff5252',
+				'#40c4ff',
+				'#ffd740',
+				'#69f0ae',
+				'#ff4081',
+				'#7c4dff',
+				'#18ffff',
+				'#ffab40',
+				'#64ffda',
+				'#eeff41',
+				'#536dfe',
+				'#ff6e40',
+				'#00e676',
+				'#ffb300',
+				'#00b8d4',
+				'#ffd600',
+				'#00bfae',
+				'#ff1744',
+				'#00e5ff',
+				'#ffea00',
+				'#76ff03',
+				'#ff80ab',
+				'#b388ff',
+				'#ff9100',
+				'#1de9b6',
+				'#ff3d00',
+				'#00bfae',
+				'#ffd740',
+				'#00e676',
+				'#40c4ff',
+				'#ff4081',
+				'#69f0ae',
+				'#ffab40',
+				'#18ffff',
+				'#eeff41',
+				'#7c4dff',
+				'#ff5252',
+				'#ffd600',
+				'#00e5ff',
+				'#ffea00',
+				'#76ff03',
 			];
 			let overlayIdx = 0;
 			for (let i = 1; i < window.loadedFitFiles.length; ++i) {
 				const overlay = window.loadedFitFiles[i];
 				const color = colorPalette[overlayIdx % colorPalette.length];
+				const fileName =
+					typeof getOverlayFileName === 'function'
+						? getOverlayFileName(i)
+						: overlay.filePath || '';
 				drawOverlayForFitFile({
 					fitData: overlay.data,
 					map,
@@ -207,6 +234,8 @@ export function drawMapForLap(
 					endIcon,
 					formatTooltipData,
 					getLapNumForIdx,
+					fileName,
+					overlayIdx: i,
 				});
 				overlayIdx++;
 			}
@@ -351,32 +380,57 @@ export function drawMapForLap(
 			Array.isArray(window.loadedFitFiles) &&
 			window.loadedFitFiles.length > 1
 		) {
-			// The first entry is the main file, skip it
 			const colorPalette = [
-				'#d32f2f',
-				'#388e3c',
-				'#fbc02d',
-				'#7b1fa2',
-				'#0288d1',
-				'#c2185b',
-				'#ffa000',
-				'#388e3c',
-				'#f57c00',
-				'#455a64',
-				'#8bc34a',
-				'#e64a19',
-				'#5d4037',
-				'#0097a7',
-				'#cddc39',
-				'#f44336',
-				'#607d8b',
-				'#00bcd4',
-				'#ffeb3b',
+				'#ff5252',
+				'#40c4ff',
+				'#ffd740',
+				'#69f0ae',
+				'#ff4081',
+				'#7c4dff',
+				'#18ffff',
+				'#ffab40',
+				'#64ffda',
+				'#eeff41',
+				'#536dfe',
+				'#ff6e40',
+				'#00e676',
+				'#ffb300',
+				'#00b8d4',
+				'#ffd600',
+				'#00bfae',
+				'#ff1744',
+				'#00e5ff',
+				'#ffea00',
+				'#76ff03',
+				'#ff80ab',
+				'#b388ff',
+				'#ff9100',
+				'#1de9b6',
+				'#ff3d00',
+				'#00bfae',
+				'#ffd740',
+				'#00e676',
+				'#40c4ff',
+				'#ff4081',
+				'#69f0ae',
+				'#ffab40',
+				'#18ffff',
+				'#eeff41',
+				'#7c4dff',
+				'#ff5252',
+				'#ffd600',
+				'#00e5ff',
+				'#ffea00',
+				'#76ff03',
 			];
 			let overlayIdx = 0;
 			for (let i = 1; i < window.loadedFitFiles.length; ++i) {
 				const overlay = window.loadedFitFiles[i];
 				const color = colorPalette[overlayIdx % colorPalette.length];
+				const fileName =
+					typeof getOverlayFileName === 'function'
+						? getOverlayFileName(i)
+						: overlay.filePath || '';
 				drawOverlayForFitFile({
 					fitData: overlay.data,
 					map,
@@ -386,6 +440,8 @@ export function drawMapForLap(
 					endIcon,
 					formatTooltipData,
 					getLapNumForIdx,
+					fileName,
+					overlayIdx: i,
 				});
 				overlayIdx++;
 			}
@@ -399,12 +455,14 @@ export function drawMapForLap(
 export function drawOverlayForFitFile({
 	fitData,
 	map,
-	color,
+	color, // keep for API compatibility, but will override below
 	markerClusterGroup,
 	startIcon,
 	endIcon,
 	formatTooltipData,
 	getLapNumForIdx,
+	fileName,
+	overlayIdx, // pass overlayIdx for highlight logic
 }) {
 	const recordMesgs = fitData.recordMesgs || [];
 	const lapMesgs = fitData.lapMesgs || [];
@@ -431,15 +489,37 @@ export function drawOverlayForFitFile({
 		.filter((coord) => coord !== null);
 
 	if (coords.length > 0) {
+		const isHighlighted =
+			typeof overlayIdx === 'number' &&
+			window._highlightedOverlayIdx === overlayIdx;
+		const paletteColor =
+			typeof overlayIdx === 'number'
+				? overlayColorPalette[overlayIdx % overlayColorPalette.length]
+				: overlayColorPalette[0];
 		const polyline = L.polyline(
 			coords.map((c) => [c[0], c[1]]),
 			{
-				color: color || '#1976d2',
-				weight: 4,
-				opacity: 0.9,
+				color: paletteColor,
+				weight: isHighlighted ? 10 : 4,
+				opacity: 0.95,
 				dashArray: null,
+				className: isHighlighted ? 'overlay-highlight-glow' : '',
 			},
 		).addTo(map);
+
+		// Track overlay polylines for highlight updates
+		if (typeof overlayIdx === 'number') {
+			if (!window._overlayPolylines) window._overlayPolylines = {};
+			window._overlayPolylines[overlayIdx] = polyline;
+		}
+
+		if (isHighlighted) {
+			const polyElem = polyline.getElement && polyline.getElement();
+			if (polyElem) {
+				polyElem.style.filter =
+					'drop-shadow(0 0 8px ' + (paletteColor || '#1976d2') + ')';
+			}
+		}
 
 		const start = coords[0];
 		const end = coords[coords.length - 1];
@@ -463,7 +543,7 @@ export function drawOverlayForFitFile({
 			const c = coords[i];
 			const marker = L.circleMarker([c[0], c[1]], {
 				radius: 4,
-				color: color || '#1976d2',
+				color: paletteColor || '#1976d2',
 				fillColor: '#fff',
 				fillOpacity: 0.85,
 				weight: 2,
@@ -474,15 +554,37 @@ export function drawOverlayForFitFile({
 				marker.addTo(map);
 			}
 			const lapDisplay = c[8] || 1;
-			marker.bindTooltip(
-				formatTooltipData ? formatTooltipData(c[6], c[7], lapDisplay) : '',
-				{
-					direction: 'top',
-					sticky: true,
-				},
-			);
+			let tooltip = formatTooltipData
+				? formatTooltipData(c[6], c[7], lapDisplay)
+				: '';
+			if (fileName) {
+				tooltip = `<b>${fileName}</b><br>` + tooltip;
+			}
+			marker.bindTooltip(tooltip, {
+				direction: 'top',
+				sticky: true,
+			});
 		}
 		return polyline.getBounds();
 	}
 	return null;
 }
+
+// Add global function to update overlay highlights without redrawing the map
+window.updateOverlayHighlights = function () {
+	if (!window._overlayPolylines) return;
+	Object.entries(window._overlayPolylines).forEach(([idx, polyline]) => {
+		const isHighlighted = Number(idx) === window._highlightedOverlayIdx;
+		polyline.setStyle({
+			weight: isHighlighted ? 10 : 4,
+			className: isHighlighted ? 'overlay-highlight-glow' : '',
+			// Optionally, update color or other style here if needed
+		});
+		const polyElem = polyline.getElement && polyline.getElement();
+		if (polyElem) {
+			polyElem.style.filter = isHighlighted
+				? 'drop-shadow(0 0 8px ' + (polyline.options.color || '#1976d2') + ')'
+				: '';
+		}
+	});
+};

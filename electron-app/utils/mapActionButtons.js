@@ -196,6 +196,51 @@ export function createAddFitFileToMapButton() {
 	return addOverlayBtn;
 }
 
+// Export the overlay color palette for use in map rendering
+export const overlayColorPalette = [
+	'#ff5252',
+	'#40c4ff',
+	'#ffd740',
+	'#69f0ae',
+	'#ff4081',
+	'#7c4dff',
+	'#18ffff',
+	'#ffab40',
+	'#64ffda',
+	'#eeff41',
+	'#536dfe',
+	'#ff6e40',
+	'#00e676',
+	'#ffb300',
+	'#00b8d4',
+	'#ffd600',
+	'#00bfae',
+	'#ff1744',
+	'#00e5ff',
+	'#ffea00',
+	'#76ff03',
+	'#ff80ab',
+	'#b388ff',
+	'#ff9100',
+	'#1de9b6',
+	'#ff3d00',
+	'#00bfae',
+	'#ffd740',
+	'#00e676',
+	'#40c4ff',
+	'#ff4081',
+	'#69f0ae',
+	'#ffab40',
+	'#18ffff',
+	'#eeff41',
+	'#7c4dff',
+	'#ff5252',
+	'#ffd600',
+	'#00e5ff',
+	'#ffea00',
+	'#76ff03',
+].sort(() => Math.random() - 0.5);
+
 export function createShownFilesList() {
 	const container = document.createElement('div');
 	container.className = 'shown-files-list';
@@ -210,50 +255,6 @@ export function createShownFilesList() {
 	container.innerHTML =
 		'<b>Extra Files shown on map:</b><ul id="shown-files-ul" style="margin:0; padding-left:18px;"></ul>';
 
-	const colorPalette = [
-		'#ff5252', // bright red
-		'#40c4ff', // bright blue
-		'#ffd740', // bright yellow
-		'#69f0ae', // bright green
-		'#ff4081', // bright pink
-		'#7c4dff', // bright purple
-		'#18ffff', // cyan
-		'#ffab40', // orange
-		'#64ffda', // teal
-		'#eeff41', // lime
-		'#536dfe', // vivid blue
-		'#ff6e40', // coral
-		'#00e676', // vivid green
-		'#ffb300', // gold
-		'#00b8d4', // turquoise
-		'#ffd600', // yellow
-		'#00bfae', // aqua
-		'#ff1744', // vivid red
-		'#00e5ff', // electric blue
-		'#ffea00', // lemon
-		'#76ff03', // light green
-		'#ff80ab', // light pink
-		'#b388ff', // light purple
-		'#ff9100', // vivid orange
-		'#1de9b6', // mint
-		'#ff3d00', // orange red
-		'#00bfae', // teal
-		'#ffd740', // yellow
-		'#00e676', // green
-		'#40c4ff', // blue
-		'#ff4081', // pink
-		'#69f0ae', // green
-		'#ffab40', // orange
-		'#18ffff', // cyan
-		'#eeff41', // lime
-		'#7c4dff', // purple
-		'#ff5252', // red
-		'#ffd600', // yellow
-		'#00e5ff', // blue
-		'#ffea00', // lemon
-		'#76ff03'  // green
-	].sort(() => Math.random() - 0.5);
-
 	function applyTheme() {
 		const isDark = document.body.classList.contains('theme-dark');
 		container.style.background = isDark
@@ -265,6 +266,53 @@ export function createShownFilesList() {
 	applyTheme();
 	document.body.addEventListener('themechange', applyTheme);
 
+	// Helper: Check color contrast (returns true if color is accessible on the given background)
+	function isColorAccessible(fg, bg, filter = '') {
+		// fg, bg: CSS color strings (e.g., '#fff', 'rgb(30,34,40)')
+		// filter: CSS filter string (e.g., 'invert(0.92) ...')
+		function hexToRgb(hex) {
+			hex = hex.replace('#', '');
+			if (hex.length === 3)
+				hex = hex
+					.split('')
+					.map((x) => x + x)
+					.join('');
+			const num = parseInt(hex, 16);
+			return [num >> 16, (num >> 8) & 255, num & 255];
+		}
+		function parseColor(str) {
+			if (str.startsWith('#')) return hexToRgb(str);
+			const m = str.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
+			if (m) return [parseInt(m[1]), parseInt(m[2]), parseInt(m[3])];
+			return [255, 255, 255];
+		}
+		// If a filter is provided, simulate the filtered color using a temp element
+		let fgColor = fg;
+		if (filter) {
+			const temp = document.createElement('span');
+			temp.style.color = fg;
+			temp.style.filter = filter;
+			temp.style.display = 'none';
+			document.body.appendChild(temp);
+			fgColor = getComputedStyle(temp).color;
+			document.body.removeChild(temp);
+		}
+		const [r1, g1, b1] = parseColor(fgColor);
+		const [r2, g2, b2] = parseColor(bg);
+		// Relative luminance
+		function lum(r, g, b) {
+			[r, g, b] = [r, g, b].map((v) => {
+				v /= 255;
+				return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+			});
+			return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+		}
+		const L1 = lum(r1, g1, b1) + 0.05,
+			L2 = lum(r2, g2, b2) + 0.05;
+		const ratio = L1 > L2 ? L1 / L2 : L2 / L1;
+		return ratio >= 3.5; // WCAG AA for UI text
+	}
+
 	window.updateShownFilesList = function () {
 		const ul = container.querySelector('#shown-files-ul');
 		ul.innerHTML = '';
@@ -273,7 +321,103 @@ export function createShownFilesList() {
 				if (idx === 0) return; // skip main file
 				const li = document.createElement('li');
 				li.textContent = 'File: ' + (f.filePath || '(unknown)');
-				li.style.color = colorPalette[(idx - 1) % colorPalette.length];
+				const colorIdx = idx % overlayColorPalette.length;
+				const color = overlayColorPalette[colorIdx];
+				const isDark = document.body.classList.contains('theme-dark');
+				let filter = '';
+				if (isDark) {
+					filter =
+						'invert(0.92) hue-rotate(180deg) brightness(0.9) contrast(1.1)';
+					li.style.filter = filter;
+				}
+				const bg = isDark ? 'rgb(30,34,40)' : '#fff';
+				li.style.color = color;
+				li.style.filter = filter;
+				// Add a subtle text outline for readability
+				li.style.textShadow = isDark
+					? '0 0 1px #000, 0 0 1px #000, 0 0 1px #000'
+					: '0 0 1px #fff, 0 0 1px #fff, 0 0 1px #fff';
+				let showWarning = !isColorAccessible(color, bg, filter);
+				let fullPath = f.filePath || '(unknown)';
+				li.style.cursor = 'pointer';
+				li.onmouseenter = (e) => {
+					window._highlightedOverlayIdx = idx;
+					if (window.updateOverlayHighlights) window.updateOverlayHighlights();
+					// Show tooltip with full path and warning if needed
+					let tooltip = document.createElement('div');
+					tooltip.className = 'overlay-filename-tooltip';
+					tooltip.style.position = 'fixed';
+					tooltip.style.zIndex = 9999;
+					tooltip.style.pointerEvents = 'none';
+					tooltip.style.background = isDark ? '#23263a' : '#fff';
+					tooltip.style.color = isDark ? '#fff' : '#222';
+					tooltip.style.border = '1px solid ' + (isDark ? '#444' : '#bbb');
+					tooltip.style.borderRadius = '4px';
+					tooltip.style.padding = '6px 10px';
+					tooltip.style.fontSize = '0.95em';
+					tooltip.style.boxShadow = '0 2px 8px #0003';
+					let html = '<b>File:</b> ' + fullPath;
+					if (showWarning) {
+						html +=
+							'<br><span style="color:#eab308;">⚠️ This color may be hard to read in this theme.</span>';
+					}
+					tooltip.innerHTML = html;
+					document.body.appendChild(tooltip);
+					const moveTooltip = (evt) => {
+						const pad = 12;
+						let x = evt.clientX + pad;
+						let y = evt.clientY + pad;
+						if (x + tooltip.offsetWidth > window.innerWidth)
+							x = window.innerWidth - tooltip.offsetWidth - pad;
+						if (y + tooltip.offsetHeight > window.innerHeight)
+							y = window.innerHeight - tooltip.offsetHeight - pad;
+						tooltip.style.left = x + 'px';
+						tooltip.style.top = y + 'px';
+					};
+					moveTooltip(e);
+					window.addEventListener('mousemove', moveTooltip);
+					li._tooltipRemover = () => {
+						window.removeEventListener('mousemove', moveTooltip);
+						if (tooltip.parentNode) tooltip.parentNode.removeChild(tooltip);
+					};
+				};
+				li.onmouseleave = () => {
+					window._highlightedOverlayIdx = null;
+					if (window.updateOverlayHighlights) window.updateOverlayHighlights();
+					if (li._tooltipRemover) li._tooltipRemover();
+				};
+				li.onclick = () => {
+					window._highlightedOverlayIdx = idx;
+					if (window.updateOverlayHighlights) window.updateOverlayHighlights();
+					if (li._tooltipRemover) li._tooltipRemover();
+					// Bring the overlay polyline to front and flash highlight
+					if (window._overlayPolylines && window._overlayPolylines[idx]) {
+						const polyline = window._overlayPolylines[idx];
+						if (polyline.bringToFront) polyline.bringToFront();
+						const polyElem = polyline.getElement && polyline.getElement();
+						if (polyElem) {
+							polyElem.style.transition = 'filter 0.2s';
+							polyElem.style.filter =
+								'drop-shadow(0 0 16px ' +
+								(polyline.options.color || '#1976d2') +
+								')';
+							setTimeout(() => {
+								if (window._highlightedOverlayIdx === idx) {
+									polyElem.style.filter =
+										'drop-shadow(0 0 8px ' +
+										(polyline.options.color || '#1976d2') +
+										')';
+								}
+							}, 250);
+							// Center and fit map to this overlay
+							if (polyline.getBounds && window._leafletMapInstance) {
+								window._leafletMapInstance.fitBounds(polyline.getBounds(), {
+									padding: [20, 20],
+								});
+							}
+						}
+					}
+				};
 				ul.appendChild(li);
 			});
 			container.style.display = '';
