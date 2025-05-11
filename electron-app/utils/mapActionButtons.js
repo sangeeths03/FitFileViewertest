@@ -316,33 +316,73 @@ export function createShownFilesList() {
 	window.updateShownFilesList = function () {
 		const ul = container.querySelector('#shown-files-ul');
 		ul.innerHTML = '';
+		let anyOverlays = false;
 		if (window.loadedFitFiles && window.loadedFitFiles.length > 1) {
 			window.loadedFitFiles.forEach((f, idx) => {
 				if (idx === 0) return; // skip main file
+				anyOverlays = true;
 				const li = document.createElement('li');
+				li.style.position = 'relative';
 				li.textContent = 'File: ' + (f.filePath || '(unknown)');
 				const colorIdx = idx % overlayColorPalette.length;
 				const color = overlayColorPalette[colorIdx];
 				const isDark = document.body.classList.contains('theme-dark');
 				let filter = '';
 				if (isDark) {
-					filter =
-						'invert(0.92) hue-rotate(180deg) brightness(0.9) contrast(1.1)';
+					filter = 'invert(0.92) hue-rotate(180deg) brightness(0.9) contrast(1.1)';
 					li.style.filter = filter;
 				}
 				const bg = isDark ? 'rgb(30,34,40)' : '#fff';
 				li.style.color = color;
 				li.style.filter = filter;
-				// Add a subtle text outline for readability
 				li.style.textShadow = isDark
-					? '0 0 1px #000, 0 0 1px #000, 0 0 1px #000'
-					: '0 0 1px #fff, 0 0 1px #fff, 0 0 1px #fff';
-				let showWarning = !isColorAccessible(color, bg, filter);
+					? '0 0 2px #000, 0 0 1px #000, 0 0 1px #000'
+					: '0 0 2px #fff, 0 0 1px #fff, 0 0 1px #fff';
+				// Improved: check accessibility using the filtered color as actually rendered
+				let filteredColor = color;
+				if (filter) {
+					const temp = document.createElement('span');
+					temp.style.color = color;
+					temp.style.filter = filter;
+					temp.style.display = 'none';
+					document.body.appendChild(temp);
+					filteredColor = getComputedStyle(temp).color;
+					document.body.removeChild(temp);
+				}
+				let showWarning = !isColorAccessible(filteredColor, bg);
 				let fullPath = f.filePath || '(unknown)';
 				li.style.cursor = 'pointer';
+
+				// Add remove (X) button, only visible on hover
+				const removeBtn = document.createElement('span');
+				removeBtn.textContent = '×';
+				removeBtn.title = 'Remove this overlay';
+				removeBtn.style.position = 'absolute';
+				removeBtn.style.right = '6px';
+				removeBtn.style.top = '2px';
+				removeBtn.style.fontWeight = 'bold';
+				removeBtn.style.fontSize = '1.1em';
+				removeBtn.style.color = isDark ? '#ff5252' : '#e53935';
+				removeBtn.style.background = 'transparent';
+				removeBtn.style.border = 'none';
+				removeBtn.style.cursor = 'pointer';
+				removeBtn.style.opacity = '0';
+				removeBtn.style.transition = 'opacity 0.15s';
+				removeBtn.onmouseenter = (ev) => { removeBtn.style.opacity = '1'; ev.stopPropagation(); };
+				removeBtn.onmouseleave = (ev) => { removeBtn.style.opacity = '0'; ev.stopPropagation(); };
+				removeBtn.onclick = (ev) => {
+					ev.stopPropagation();
+					if (window.loadedFitFiles) {
+						window.loadedFitFiles.splice(idx, 1);
+						if (window.renderMap) window.renderMap();
+						if (window.updateShownFilesList) window.updateShownFilesList();
+					}
+				};
+				li.appendChild(removeBtn);
 				li.onmouseenter = (e) => {
 					window._highlightedOverlayIdx = idx;
 					if (window.updateOverlayHighlights) window.updateOverlayHighlights();
+					removeBtn.style.opacity = '1';
 					// Show tooltip with full path and warning if needed
 					let tooltip = document.createElement('div');
 					tooltip.className = 'overlay-filename-tooltip';
@@ -358,8 +398,7 @@ export function createShownFilesList() {
 					tooltip.style.boxShadow = '0 2px 8px #0003';
 					let html = '<b>File:</b> ' + fullPath;
 					if (showWarning) {
-						html +=
-							'<br><span style="color:#eab308;">⚠️ This color may be hard to read in this theme.</span>';
+						html += '<br><span style="color:#eab308;">⚠️ This color may be hard to read in this theme.</span>';
 					}
 					tooltip.innerHTML = html;
 					document.body.appendChild(tooltip);
@@ -367,10 +406,8 @@ export function createShownFilesList() {
 						const pad = 12;
 						let x = evt.clientX + pad;
 						let y = evt.clientY + pad;
-						if (x + tooltip.offsetWidth > window.innerWidth)
-							x = window.innerWidth - tooltip.offsetWidth - pad;
-						if (y + tooltip.offsetHeight > window.innerHeight)
-							y = window.innerHeight - tooltip.offsetHeight - pad;
+						if (x + tooltip.offsetWidth > window.innerWidth) x = window.innerWidth - tooltip.offsetWidth - pad;
+						if (y + tooltip.offsetHeight > window.innerHeight) y = window.innerHeight - tooltip.offsetHeight - pad;
 						tooltip.style.left = x + 'px';
 						tooltip.style.top = y + 'px';
 					};
@@ -384,6 +421,7 @@ export function createShownFilesList() {
 				li.onmouseleave = () => {
 					window._highlightedOverlayIdx = null;
 					if (window.updateOverlayHighlights) window.updateOverlayHighlights();
+					removeBtn.style.opacity = '0';
 					if (li._tooltipRemover) li._tooltipRemover();
 				};
 				li.onclick = () => {
@@ -420,6 +458,31 @@ export function createShownFilesList() {
 				};
 				ul.appendChild(li);
 			});
+			// Add Clear All button if overlays exist
+			if (anyOverlays && !ul.parentNode.querySelector('.overlay-clear-all-btn')) {
+				const clearAll = document.createElement('button');
+				clearAll.textContent = 'Clear All';
+				clearAll.className = 'overlay-clear-all-btn';
+				clearAll.style.margin = '8px 0 0 0';
+				clearAll.style.padding = '3px 12px';
+				clearAll.style.fontSize = '0.95em';
+				clearAll.style.background = '#e53935';
+				clearAll.style.color = '#fff';
+				clearAll.style.border = 'none';
+				clearAll.style.borderRadius = '4px';
+				clearAll.style.cursor = 'pointer';
+				clearAll.style.float = 'right';
+				clearAll.title = 'Remove all overlays from the map';
+				clearAll.onclick = (ev) => {
+					ev.stopPropagation();
+					if (window.loadedFitFiles) {
+						window.loadedFitFiles.splice(1);
+						if (window.renderMap) window.renderMap();
+						if (window.updateShownFilesList) window.updateShownFilesList();
+					}
+				};
+				ul.parentNode.appendChild(clearAll);
+			}
 			container.style.display = '';
 		} else {
 			container.style.display = 'none';
