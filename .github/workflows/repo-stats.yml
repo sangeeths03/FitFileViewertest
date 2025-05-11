@@ -24,7 +24,7 @@ jobs:
           filename: metrics.repository.svg
           token: ${{ secrets.GITHUB_TOKEN }}
           user: nick2bad4u
-          # repo: fitfileviewer
+          repo: fitfileviewer
           # The 'repo' input is not supported in this context and causes 'Unsupported context repository' error. Remove or comment out this line.
           base: header, activity, community, repositories, metadata
           base_indepth: yes
