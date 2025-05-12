@@ -47,63 +47,313 @@ export function createElevationProfileButton() {
 	btn.innerHTML =
 		'<svg class="icon" viewBox="0 0 20 20" width="18" height="18"><polyline points="2,16 6,10 10,14 14,6 18,12" fill="none" stroke="#1976d2" stroke-width="2"/><circle cx="2" cy="16" r="1.5" fill="#1976d2"/><circle cx="6" cy="10" r="1.5" fill="#1976d2"/><circle cx="10" cy="14" r="1.5" fill="#1976d2"/><circle cx="14" cy="6" r="1.5" fill="#1976d2"/><circle cx="18" cy="12" r="1.5" fill="#1976d2"/></svg> <span>Elevation</span>';
 	btn.title = 'Show Elevation Profile';
-	const hasAltitude =
-		window.globalData &&
-		window.globalData.recordMesgs &&
-		window.globalData.recordMesgs.some((r) => r.altitude != null);
-	if (!hasAltitude) {
-		btn.disabled = true;
-		btn.title = 'No altitude data available';
-	}
-	btn.onclick = () => {
-		if (!window.globalData || !window.globalData.recordMesgs) return;
-		const altitudes = window.globalData.recordMesgs
+
+	function getProfileData(fitData) {
+		if (!fitData || !fitData.recordMesgs) return [];
+		return fitData.recordMesgs
 			.filter(
 				(r) =>
 					r.positionLat != null && r.positionLong != null && r.altitude != null,
 			)
 			.map((r, i) => ({ x: i, y: r.altitude }));
+	}
+
+	btn.onclick = () => {
+		let fitFiles = [];
+		if (window.loadedFitFiles && window.loadedFitFiles.length > 0) {
+			fitFiles = window.loadedFitFiles;
+		} else if (window.globalData && window.globalData.recordMesgs) {
+			fitFiles = [
+				{
+					data: window.globalData,
+					filePath: window.globalData?.cachedFilePath,
+				},
+			];
+		}
 		const isDark = document.body.classList.contains('theme-dark');
 		const chartWin = window.open(
 			'',
 			'Elevation Profile',
-			'width=600,height=400',
+			'width=900,height=600',
 		);
-		chartWin.document.write(`
-			<html><head><title>Elevation Profile</title>
+		let chartHtml = `
+		<html>
+		<head>
+			<title>Elevation Profiles</title>
+			<meta name="viewport" content="width=device-width, initial-scale=1">
 			<script src="./libs/chartjs-latest.js"></script>
 			<link rel="stylesheet" href="./elevProfile.css">
-			</head><body class="${
-				isDark ? 'theme-dark' : 'theme-light'
-			}"><canvas id="elevChart"></canvas>
+			<style>
+				body {
+					margin: 0;
+					padding: 0;
+					font-family: 'Segoe UI', 'Roboto', 'Arial', sans-serif;
+					background: ${isDark ? '#181a23' : '#f7f9fb'};
+					color: ${isDark ? '#f3f6fa' : '#23263a'};
+				}
+				header {
+					display: flex;
+					align-items: center;
+					justify-content: space-between;
+					padding: 24px 32px 0 32px;
+					background: ${isDark ? '#23263a' : '#fff'};
+					box-shadow: 0 2px 12px #0001;
+					border-radius: 0 0 18px 18px;
+				}
+				#elevChartsContainer {
+					display: flex;
+					flex-direction: column;
+					gap: 32px;
+					max-height: 90vh;
+					overflow: auto;
+					padding: 32px 32px 32px 32px;
+				}
+				.elev-profile-block {
+					background: ${isDark ? '#23263a' : '#fff'};
+					border-radius: 14px;
+					box-shadow: 0 4px 24px #0002;
+					padding: 24px 24px 18px 24px;
+					display: flex;
+					flex-direction: column;
+					align-items: stretch;
+					transition: box-shadow 0.2s;
+					border: 1px solid ${isDark ? '#2e3347' : '#e3e8f0'};
+				}
+				.elev-profile-block:hover {
+					box-shadow: 0 8px 32px #1976d233;
+					border-color: ${isDark ? '#40c4ff' : '#1976d2'};
+				}
+				.elev-profile-label {
+					font-weight: 600;
+					margin-bottom: 12px;
+					font-size: 1.13em;
+					color: inherit;
+					text-shadow: ${
+						isDark ? '0 0 2px #000, 0 0 1px #000' : '0 0 2px #fff, 0 0 1px #fff'
+					};
+					letter-spacing: 0.01em;
+					display: flex;
+					align-items: center;
+					gap: 8px;
+				}
+				.elev-profile-label .dot {
+					display: inline-block;
+					width: 14px;
+					height: 14px;
+					border-radius: 50%;
+					margin-right: 2px;
+					box-shadow: 0 0 0 2px #fff3, 0 1px 4px #0002;
+					border: 2px solid ${isDark ? '#23263a' : '#fff'};
+				}
+				.elev-profile-canvas {
+					width: 100%;
+					min-width: 320px;
+					max-width: 100vw;
+					height: 200px;
+					background: inherit;
+					border-radius: 8px;
+					box-shadow: 0 2px 8px #0001;
+				}
+				.no-altitude-data {
+					color: ${isDark ? '#b0b8c9' : '#888'};
+					font-size: 1em;
+					margin-top: 12px;
+					text-align: center;
+				}
+				::-webkit-scrollbar {
+					width: 10px;
+					background: ${isDark ? '#23263a' : '#e3e8f0'};
+				}
+				::-webkit-scrollbar-thumb {
+					background: ${isDark ? '#2e3347' : '#cfd8dc'};
+					border-radius: 6px;
+				}
+				@media (max-width: 700px) {
+					header, #elevChartsContainer { padding: 10px; }
+					.elev-profile-block { padding: 12px 8px 10px 8px; }
+					.elev-profile-canvas { min-width: 0; }
+				}
+			</style>
+		</head>
+		<body class="${isDark ? 'theme-dark' : 'theme-light'}">
+			<header>
+				<h2 style="margin:0;font-size:1.5em;font-weight:700;letter-spacing:0.01em;">Elevation Profiles</h2>
+				<span style="font-size:1.1em;opacity:0.7;">${fitFiles.length} file${
+			fitFiles.length > 1 ? 's' : ''
+		}</span>
+			</header>
+			<div id="elevChartsContainer"></div>
 			<script>
-			window.onload = function() {
-				const ctx = document.getElementById('elevChart').getContext('2d');
-				new Chart(ctx, {
-					type: 'line',
-					data: { labels: ${JSON.stringify(
-						altitudes.map((a) => a.x),
-					)}, datasets: [{ label: 'Altitude', data: ${JSON.stringify(
-			altitudes.map((a) => a.y),
-		)}, borderColor: '${
-			isDark ? '#4fc3f7' : 'blue'
-		}', backgroundColor: 'transparent', fill: false }] },
-					options: { responsive: true, plugins: { legend: { labels: { color: '${
-						isDark ? '#eee' : '#222'
-					}' } } }, scales: { x: { title: { display: true, text: 'Point Index', color: '${
-			isDark ? '#eee' : '#222'
-		}' }, ticks: { color: '${
-			isDark ? '#eee' : '#222'
-		}' } }, y: { title: { display: true, text: 'Altitude (m)', color: '${
-			isDark ? '#eee' : '#222'
-		}' }, ticks: { color: '${isDark ? '#eee' : '#222'}' } } } }
+				const fitFiles = ${JSON.stringify(
+					fitFiles.map((f, idx) => ({
+						filePath: f.filePath || `File ${idx + 1}`,
+						altitudes:
+							f.data && f.data.recordMesgs
+								? f.data.recordMesgs
+										.filter(
+											(r) =>
+												r.positionLat != null &&
+												r.positionLong != null &&
+												r.altitude != null,
+										)
+										.map((r, i) => ({ x: i, y: r.altitude }))
+								: [],
+						color:
+							window.opener && window.opener.overlayColorPalette
+								? window.opener.overlayColorPalette[
+										idx % window.opener.overlayColorPalette.length
+								  ]
+								: '#1976d2',
+					})),
+				)};
+				const isDark = ${isDark};
+				const container = document.getElementById('elevChartsContainer');
+				fitFiles.forEach((f, idx) => {
+					const div = document.createElement('div');
+					div.className = 'elev-profile-block';
+					const label = document.createElement('div');
+					label.className = 'elev-profile-label';
+					const dot = document.createElement('span');
+					dot.className = 'dot';
+					dot.style.background = f.color;
+					label.appendChild(dot);
+					const text = document.createElement('span');
+					text.textContent = f.filePath;
+					label.appendChild(text);
+					label.style.color = f.color;
+					div.appendChild(label);
+					const canvas = document.createElement('canvas');
+					canvas.id = 'elevChart_' + idx;
+					canvas.className = 'elev-profile-canvas';
+					div.appendChild(canvas);
+					container.appendChild(div);
+					if (f.altitudes.length > 0) {
+						const ctx = canvas.getContext('2d');
+						new window.Chart(ctx, {
+							type: 'line',
+							data: {
+								labels: f.altitudes.map(a => a.x),
+								datasets: [{
+									label: 'Altitude',
+									data: f.altitudes.map(a => a.y),
+									borderColor: f.color,
+									backgroundColor: isDark
+										? window.Chart.helpers.color(f.color).alpha(0.18).rgbString()
+										: window.Chart.helpers.color(f.color).alpha(0.10).rgbString(),
+									fill: true,
+									pointRadius: 0,
+									borderWidth: 2.5,
+									tension: 0.22,
+									hoverBorderWidth: 3.2,
+								}]
+							},
+							options: {
+								maintainAspectRatio: true,
+								responsive: true,
+								plugins: {
+									legend: { display: false },
+									tooltip: {
+										mode: 'index',
+										intersect: false,
+										backgroundColor: isDark ? '#23263a' : '#fff',
+										titleColor: isDark ? '#fff' : '#222',
+										bodyColor: isDark ? '#fff' : '#222',
+										borderColor: f.color,
+										borderWidth: 1.5,
+										padding: 10,
+										displayColors: true,
+										callbacks: {
+											title: function(context) {
+												// context[0].label is the point index (seconds)
+												const idx = context[0].dataIndex;
+												return 'Second: ' + idx + '';
+											}
+										}
+									}
+								},
+								scales: {
+									x: {
+										title: { display: true, text: 'Seconds (Point Index)', color: isDark ? '#eee' : '#222', font: { weight: 500 } },
+										ticks: { color: isDark ? '#b0b8c9' : '#222', maxTicksLimit: 12, font: { size: 13 } },
+										grid: { color: isDark ? '#2e3347' : '#e3e8f0' }
+									},
+									y: {
+										title: { display: true, text: 'Altitude (m)', color: isDark ? '#eee' : '#222', font: { weight: 500 } },
+										ticks: { color: isDark ? '#b0b8c9' : '#222', maxTicksLimit: 7, font: { size: 13 } },
+										grid: { color: isDark ? '#2e3347' : '#e3e8f0' }
+									}
+								}
+							}
+						});
+					} else {
+						const noData = document.createElement('div');
+						noData.textContent = 'No altitude data.';
+						noData.className = 'no-altitude-data';
+						div.appendChild(noData);
+					}
 				});
-			}
-			</script></body></html>
-		`);
+			</script>
+		</body>
+		</html>
+		`;
+		chartWin.document.write(chartHtml);
 		chartWin.document.close();
 	};
 	return btn;
+}
+
+// --- Loading overlay for file loading progress ---
+function showLoadingOverlay(progressText, fileName = '') {
+	let overlay = document.getElementById('fitfile-loading-overlay');
+	if (!overlay) {
+		overlay = document.createElement('div');
+		overlay.id = 'fitfile-loading-overlay';
+		overlay.style.position = 'fixed';
+		overlay.style.top = '0';
+		overlay.style.left = '0';
+		overlay.style.width = '100vw';
+		overlay.style.height = '100vh';
+		overlay.style.background = 'rgba(30,34,40,0.85)';
+		overlay.style.display = 'flex';
+		overlay.style.flexDirection = 'column';
+		overlay.style.alignItems = 'center';
+		overlay.style.justifyContent = 'center';
+		overlay.style.zIndex = '99999';
+		overlay.style.color = '#fff';
+		overlay.style.fontSize = '1.3em';
+		overlay.innerHTML = `
+			<div style="display:flex;flex-direction:column;align-items:center;">
+				<div class="modern-spinner" style="margin-bottom:22px;width:54px;height:54px;">
+					<style>
+					@keyframes fitfile-spin { 100% { transform: rotate(360deg); } }
+					.modern-spinner {
+						display: inline-block;
+						position: relative;
+					}
+					.modern-spinner svg {
+						animation: fitfile-spin 1.1s linear infinite;
+						display: block;
+					}
+					</style>
+					<svg viewBox="0 0 50 50" width="54" height="54">
+						<circle cx="25" cy="25" r="20" fill="none" stroke="#40c4ff" stroke-width="5" opacity="0.18"/>
+						<circle cx="25" cy="25" r="20" fill="none" stroke="#40c4ff" stroke-width="5" stroke-linecap="round" stroke-dasharray="31.4 94.2"/>
+					</svg>
+				</div>
+				<div id="fitfile-loading-text" style="font-size:1.15em;font-weight:500;margin-bottom:6px;">Loading...</div>
+				<div id="fitfile-loading-filename" style="font-size:0.98em;color:#b3e5fc;max-width:340px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></div>
+			</div>
+		`;
+		document.body.appendChild(overlay);
+	}
+	const textDiv = document.getElementById('fitfile-loading-text');
+	if (textDiv) textDiv.textContent = progressText || 'Loading...';
+	const fileDiv = document.getElementById('fitfile-loading-filename');
+	if (fileDiv) fileDiv.textContent = fileName ? `File: ${fileName}` : '';
+}
+function hideLoadingOverlay() {
+	const overlay = document.getElementById('fitfile-loading-overlay');
+	if (overlay) overlay.remove();
 }
 
 export function createAddFitFileToMapButton() {
@@ -122,71 +372,86 @@ export function createAddFitFileToMapButton() {
 		input.onchange = async (e) => {
 			const files = Array.from(e.target.files);
 			if (files.length > 0) {
+				showLoadingOverlay('Loading 0 / ' + files.length + ' files...');
+				let loaded = 0;
 				for (const file of files) {
+					showLoadingOverlay(
+						'Loading ' + (loaded + 1) + ' / ' + files.length + ' files...',
+						file.name,
+					);
 					const reader = new FileReader();
-					reader.onload = async function (event) {
-						const arrayBuffer = event.target.result;
-						if (
-							arrayBuffer &&
-							window.electronAPI &&
-							window.electronAPI.decodeFitFile
-						) {
-							const fitData = await window.electronAPI.decodeFitFile(
-								arrayBuffer,
-							);
-							if (fitData && !fitData.error) {
-								if (
-									!window.loadedFitFiles ||
-									window.loadedFitFiles.length === 0
-								) {
-									if (window.globalData && window.globalData.recordMesgs) {
-										window.loadedFitFiles = [
-											{
-												data: window.globalData,
-												filePath: window.globalData?.cachedFilePath,
-											},
-										];
-									}
-								}
-								if (
-									!window.loadedFitFiles.some((f) => f.filePath === file.name)
-								) {
+					await new Promise((resolve) => {
+						reader.onload = async function (event) {
+							const arrayBuffer = event.target.result;
+							if (
+								arrayBuffer &&
+								window.electronAPI &&
+								window.electronAPI.decodeFitFile
+							) {
+								const fitData = await window.electronAPI.decodeFitFile(
+									arrayBuffer,
+								);
+								if (fitData && !fitData.error) {
 									if (
-										fitData &&
-										Array.isArray(fitData.recordMesgs) &&
-										fitData.recordMesgs.length > 0
+										!window.loadedFitFiles ||
+										window.loadedFitFiles.length === 0
 									) {
-										window.loadedFitFiles.push({
-											data: fitData,
-											filePath: file.name,
-										});
-										if (window.renderMap) window.renderMap();
-										if (window.updateShownFilesList)
-											window.updateShownFilesList();
+										if (window.globalData && window.globalData.recordMesgs) {
+											window.loadedFitFiles = [
+												{
+													data: window.globalData,
+													filePath: window.globalData?.cachedFilePath,
+												},
+											];
+										}
+									}
+									if (
+										!window.loadedFitFiles.some((f) => f.filePath === file.name)
+									) {
+										if (
+											fitData &&
+											Array.isArray(fitData.recordMesgs) &&
+											fitData.recordMesgs.length > 0
+										) {
+											window.loadedFitFiles.push({
+												data: fitData,
+												filePath: file.name,
+											});
+											if (window.renderMap) window.renderMap();
+											if (window.updateShownFilesList)
+												window.updateShownFilesList();
+										} else {
+											alert(
+												'No valid location data found in this FIT file: ' +
+													file.name,
+											);
+										}
 									} else {
 										alert(
-											'No valid location data found in this FIT file: ' +
+											'This FIT file is already added as an overlay: ' +
 												file.name,
 										);
 									}
 								} else {
 									alert(
-										'This FIT file is already added as an overlay: ' +
-											file.name,
+										'Failed to parse FIT file: ' +
+											file.name +
+											' - ' +
+											(fitData.error || 'Unknown error'),
 									);
 								}
-							} else {
-								alert(
-									'Failed to parse FIT file: ' +
-										file.name +
-										' - ' +
-										(fitData.error || 'Unknown error'),
-								);
 							}
-						}
-					};
-					reader.readAsArrayBuffer(file);
+							loaded++;
+							showLoadingOverlay(
+								'Loading ' + loaded + ' / ' + files.length + ' files...',
+								file.name,
+							);
+							resolve();
+						};
+						reader.readAsArrayBuffer(file);
+					});
 				}
+				hideLoadingOverlay();
 			}
 		};
 		document.body.appendChild(input);
@@ -305,7 +570,7 @@ export function createShownFilesList() {
 				v /= 255;
 				return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
 			});
-			return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+			return 0.2126 * r + 0.7152 * g + 0.0722;
 		}
 		const L1 = lum(r1, g1, b1) + 0.05,
 			L2 = lum(r2, g2, b2) + 0.05;
@@ -329,7 +594,8 @@ export function createShownFilesList() {
 				const isDark = document.body.classList.contains('theme-dark');
 				let filter = '';
 				if (isDark) {
-					filter = 'invert(0.92) hue-rotate(180deg) brightness(0.9) contrast(1.1)';
+					filter =
+						'invert(0.92) hue-rotate(180deg) brightness(0.9) contrast(1.1)';
 					li.style.filter = filter;
 				}
 				const bg = isDark ? 'rgb(30,34,40)' : '#fff';
@@ -368,8 +634,14 @@ export function createShownFilesList() {
 				removeBtn.style.cursor = 'pointer';
 				removeBtn.style.opacity = '0';
 				removeBtn.style.transition = 'opacity 0.15s';
-				removeBtn.onmouseenter = (ev) => { removeBtn.style.opacity = '1'; ev.stopPropagation(); };
-				removeBtn.onmouseleave = (ev) => { removeBtn.style.opacity = '0'; ev.stopPropagation(); };
+				removeBtn.onmouseenter = (ev) => {
+					removeBtn.style.opacity = '1';
+					ev.stopPropagation();
+				};
+				removeBtn.onmouseleave = (ev) => {
+					removeBtn.style.opacity = '0';
+					ev.stopPropagation();
+				};
 				removeBtn.onclick = (ev) => {
 					ev.stopPropagation();
 					if (window.loadedFitFiles) {
@@ -398,7 +670,8 @@ export function createShownFilesList() {
 					tooltip.style.boxShadow = '0 2px 8px #0003';
 					let html = '<b>File:</b> ' + fullPath;
 					if (showWarning) {
-						html += '<br><span style="color:#eab308;">⚠️ This color may be hard to read in this theme.</span>';
+						html +=
+							'<br><span style="color:#eab308;">⚠️ This color may be hard to read in this theme.</span>';
 					}
 					tooltip.innerHTML = html;
 					document.body.appendChild(tooltip);
@@ -406,8 +679,10 @@ export function createShownFilesList() {
 						const pad = 12;
 						let x = evt.clientX + pad;
 						let y = evt.clientY + pad;
-						if (x + tooltip.offsetWidth > window.innerWidth) x = window.innerWidth - tooltip.offsetWidth - pad;
-						if (y + tooltip.offsetHeight > window.innerHeight) y = window.innerHeight - tooltip.offsetHeight - pad;
+						if (x + tooltip.offsetWidth > window.innerWidth)
+							x = window.innerWidth - tooltip.offsetWidth - pad;
+						if (y + tooltip.offsetHeight > window.innerHeight)
+							y = window.innerHeight - tooltip.offsetHeight - pad;
 						tooltip.style.left = x + 'px';
 						tooltip.style.top = y + 'px';
 					};
@@ -459,7 +734,10 @@ export function createShownFilesList() {
 				ul.appendChild(li);
 			});
 			// Add Clear All button if overlays exist
-			if (anyOverlays && !ul.parentNode.querySelector('.overlay-clear-all-btn')) {
+			if (
+				anyOverlays &&
+				!ul.parentNode.querySelector('.overlay-clear-all-btn')
+			) {
 				const clearAll = document.createElement('button');
 				clearAll.textContent = 'Clear All';
 				clearAll.className = 'overlay-clear-all-btn';

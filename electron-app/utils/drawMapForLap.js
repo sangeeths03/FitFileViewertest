@@ -455,6 +455,7 @@ export function drawMapForLap(
 export function drawOverlayForFitFile({
 	fitData,
 	map,
+	// eslint-disable-next-line no-unused-vars -- API Compability
 	color, // keep for API compatibility, but will override below
 	markerClusterGroup,
 	startIcon,
