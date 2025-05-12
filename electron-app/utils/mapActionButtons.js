@@ -18,7 +18,12 @@ export function createExportGPXButton() {
 		'<svg class="icon" viewBox="0 0 20 20" width="18" height="18"><path d="M10 2v12M10 14l-4-4m4 4l4-4" stroke="#1976d2" stroke-width="2" fill="none"/><rect x="4" y="16" width="12" height="2" rx="1" fill="#1976d2"/></svg> <span>Export GPX</span>';
 	exportBtn.title = 'Export the current track as a GPX file';
 	exportBtn.onclick = () => {
-		if (!window.globalData || !window.globalData.recordMesgs) return;
+		if (
+			!window.globalData ||
+			!window.globalData.recordMesgs ||
+			!Array.isArray(window.globalData.recordMesgs)
+		)
+			return;
 		const coords = window.globalData.recordMesgs
 			.filter((row) => row.positionLat != null && row.positionLong != null)
 			.map((row) => [
@@ -370,10 +375,12 @@ export function createAddFitFileToMapButton() {
 		input.multiple = true;
 		input.style.display = 'none';
 		input.onchange = async (e) => {
+			if (!e.target.files) return; // Ensure files are valid
 			const files = Array.from(e.target.files);
 			if (files.length > 0) {
 				showLoadingOverlay('Loading 0 / ' + files.length + ' files...');
 				let loaded = 0;
+				const invalidFiles = [];
 				for (const file of files) {
 					showLoadingOverlay(
 						'Loading ' + (loaded + 1) + ' / ' + files.length + ' files...',
@@ -406,7 +413,10 @@ export function createAddFitFileToMapButton() {
 										}
 									}
 									if (
-										!window.loadedFitFiles.some((f) => f.filePath === file.name)
+										!window.loadedFitFiles.some(
+											(f) =>
+												f.filePath?.toLowerCase() === file.name.toLowerCase(),
+										)
 									) {
 										if (
 											fitData &&
@@ -421,10 +431,7 @@ export function createAddFitFileToMapButton() {
 											if (window.updateShownFilesList)
 												window.updateShownFilesList();
 										} else {
-											alert(
-												'No valid location data found in this FIT file: ' +
-													file.name,
-											);
+											invalidFiles.push(file.name);
 										}
 									} else {
 										alert(
@@ -452,17 +459,30 @@ export function createAddFitFileToMapButton() {
 					});
 				}
 				hideLoadingOverlay();
+				if (invalidFiles.length > 0) {
+					alert(
+						`The following files have no valid location data:\n${invalidFiles.join(
+							'\n'
+						)}`
+					);
+				}
 			}
 		};
 		document.body.appendChild(input);
 		input.click();
-		setTimeout(() => document.body.removeChild(input), 5000);
+		document.body.removeChild(input);
 	};
 	return addOverlayBtn;
 }
 
 // Export the overlay color palette for use in map rendering
-export const overlayColorPalette = [
+export const overlayColorPalette = (function shuffle(array) {
+	for (let i = array.length - 1; i > 0; i--) {
+		const j = Math.floor(Math.random() * (i + 1));
+		[array[i], array[j]] = [array[j], array[i]];
+	}
+	return array;
+})([
 	'#ff5252',
 	'#40c4ff',
 	'#ffd740',
@@ -504,7 +524,7 @@ export const overlayColorPalette = [
 	'#00e5ff',
 	'#ffea00',
 	'#76ff03',
-].sort(() => Math.random() - 0.5);
+]);
 
 export function createShownFilesList() {
 	const container = document.createElement('div');
@@ -807,13 +827,17 @@ export function createMarkerCountSelector(onChange) {
 
 	// Set initial value from global or default
 	let initial;
+	const validOptions = [10, 25, 50, 100, 200, 500, 1000, 'all'];
 	if (window.mapMarkerCount === undefined) {
 		window.mapMarkerCount = 50;
 		initial = 50;
 	} else if (window.mapMarkerCount === 0) {
 		initial = 'all';
-	} else {
+	} else if (validOptions.includes(window.mapMarkerCount)) {
 		initial = window.mapMarkerCount;
+	} else {
+		initial = 50; // Fallback to default if unsupported value
+		window.mapMarkerCount = 50;
 	}
 	select.value = initial;
 
@@ -836,10 +860,11 @@ export function createMarkerCountSelector(onChange) {
 		let idx = select.selectedIndex;
 		if (e.deltaY > 0 && idx < options.length - 1) {
 			select.selectedIndex = idx + 1;
+			select.dispatchEvent(new Event('change'));
 		} else if (e.deltaY < 0 && idx > 0) {
 			select.selectedIndex = idx - 1;
+			select.dispatchEvent(new Event('change'));
 		}
-		select.dispatchEvent(new Event('change'));
 	});
 
 	container.appendChild(label);
