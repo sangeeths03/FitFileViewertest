@@ -17,6 +17,7 @@ export function drawMapForLap(
 		getLapNumForIdx,
 	},
 ) {
+	console.log('[drawMapForLap] ENTERED FUNCTION, lapIdx =', lapIdx, 'type:', typeof lapIdx, Array.isArray(lapIdx) ? 'isArray' : 'notArray');
 	let coords = [];
 	const lapMesgs = window.globalData.lapMesgs || [];
 	const recordMesgs = window.globalData.recordMesgs || [];
@@ -43,6 +44,24 @@ export function drawMapForLap(
 		return minIdx;
 	}
 
+	// Helper: Wait until map container is visible and sized before fitBounds
+	function safeFitBounds(map, bounds, options = {}) {
+		function tryFit() {
+			if (
+				map._container &&
+				map._container.offsetParent !== null &&
+				map._container.clientWidth > 0 &&
+				map._container.clientHeight > 0
+			) {
+				map.invalidateSize();
+				map.fitBounds(bounds, options);
+			} else {
+				requestAnimationFrame(tryFit);
+			}
+		}
+		tryFit();
+	}
+
 	// If lapIdx is an array with one element (not "all"), treat as single lap
 	if (Array.isArray(lapIdx) && lapIdx.length === 1 && lapIdx[0] !== 'all') {
 		lapIdx = lapIdx[0];
@@ -56,7 +75,350 @@ export function drawMapForLap(
 	});
 	if (markerClusterGroup) markerClusterGroup.clearLayers();
 
+	// --- FIX: handle both string 'all' and array containing 'all' ---
+	if (lapIdx === 'all' || (Array.isArray(lapIdx) && lapIdx.includes('all'))) {
+		console.log('[drawMapForLap] "all" laps mode: recordMesgs.length =', recordMesgs.length, 'lapMesgs.length =', lapMesgs.length, 'lapMesgs[0]=', lapMesgs[0]);
+		coords = recordMesgs
+			.map((row, idx) => {
+				if (
+					typeof row.positionLat === 'number' &&
+					typeof row.positionLong === 'number'
+				) {
+					let lapNum = 1;
+					if (getLapNumForIdx) {
+						lapNum = getLapNumForIdx(idx, lapMesgs);
+						if (!lapNum || isNaN(lapNum)) lapNum = 1;
+					}
+					if (idx < 10 || idx > recordMesgs.length - 10) {
+						console.log(`[drawMapForLap] idx=${idx}, lapNum=${lapNum}, lat=${row.positionLat}, lon=${row.positionLong}`);
+					}
+					return [
+						Number((row.positionLat / 2 ** 31) * 180),
+						Number((row.positionLong / 2 ** 31) * 180),
+						row.timestamp || null,
+						row.altitude || null,
+						row.heartRate || null,
+						row.speed || null,
+						idx,
+						row,
+						lapNum
+					];
+				}
+				return null;
+			})
+			.filter((coord) => coord !== null);
+		if (coords.length > 0) {
+			const polyColor = getLapColor('all');
+			console.log('[drawMapForLap] Drawing polyline for all laps, coords.length =', coords.length);
+			const polyline = L.polyline(
+				coords.map((c) => [c[0], c[1]]),
+				{
+					color: polyColor,
+					weight: 4,
+					opacity: 0.9,
+					dashArray: '6, 8',
+				},
+			).addTo(map);
+			map.invalidateSize();
+			map.fitBounds(polyline.getBounds(), { padding: [20, 20] });
+			const start = coords[0];
+			const end = coords[coords.length - 1];
+			if (startIcon && endIcon) {
+				L.marker([start[0], start[1]], { title: 'Start', icon: startIcon })
+					.addTo(map)
+					.bindPopup('Start');
+				L.marker([end[0], end[1]], { title: 'End', icon: endIcon })
+					.addTo(map)
+					.bindPopup('End');
+			}
+			for (
+				let i = 0;
+				i < coords.length;
+				i +=
+					window.mapMarkerCount === 0 || !window.mapMarkerCount
+						? 1
+						: Math.max(1, Math.floor(coords.length / window.mapMarkerCount))
+			) {
+				const c = coords[i];
+				let lapDisplay = c[8]; // c[8] is set to lapNum above
+				if (!lapDisplay || isNaN(lapDisplay)) lapDisplay = 1;
+				if (i < 10 || i > coords.length - 10) {
+					console.log(`[drawMapForLap] Marker i=${i}, c[6]=${c[6]}, lapDisplay=${lapDisplay}`);
+				}
+				const marker = L.circleMarker([c[0], c[1]], {
+					radius: 4,
+					color: polyColor,
+					fillColor: '#fff',
+					fillOpacity: 0.85,
+					weight: 2,
+				});
+				if (markerClusterGroup) {
+					markerClusterGroup.addLayer(marker);
+				} else {
+					marker.addTo(map);
+				}
+				marker.bindTooltip(formatTooltipData(c[6], c[7], lapDisplay), {
+					direction: 'top',
+					sticky: true,
+				});
+			}
+		}
+		// Draw overlays if present (reuse existing logic)
+		if (
+			window.loadedFitFiles &&
+			Array.isArray(window.loadedFitFiles) &&
+			window.loadedFitFiles.length > 1
+		) {
+			const colorPalette = [
+				'#ff5252',
+				'#40c4ff',
+				'#ffd740',
+				'#69f0ae',
+				'#ff4081',
+				'#7c4dff',
+				'#18ffff',
+				'#ffab40',
+				'#64ffda',
+				'#eeff41',
+				'#536dfe',
+				'#ff6e40',
+				'#00e676',
+				'#ffb300',
+				'#00b8d4',
+				'#ffd600',
+				'#00bfae',
+				'#ff1744',
+				'#00e5ff',
+				'#ffea00',
+				'#76ff03',
+				'#ff80ab',
+				'#b388ff',
+				'#ff9100',
+				'#1de9b6',
+				'#ff3d00',
+				'#00bfae',
+				'#ffd740',
+				'#00e676',
+				'#40c4ff',
+				'#ff4081',
+				'#69f0ae',
+				'#ffab40',
+				'#18ffff',
+				'#eeff41',
+				'#7c4dff',
+				'#ff5252',
+				'#ffd600',
+				'#00e5ff',
+				'#ffea00',
+				'#76ff03',
+			];
+			let overlayIdx = 0;
+			let allBounds = null;
+			for (let i = 1; i < window.loadedFitFiles.length; ++i) {
+				const overlay = window.loadedFitFiles[i];
+				const color = colorPalette[overlayIdx % colorPalette.length];
+				const fileName =
+					typeof getOverlayFileName === 'function'
+						? getOverlayFileName(i)
+						: overlay.filePath || '';
+				const bounds = drawOverlayForFitFile({
+					fitData: overlay.data,
+					map,
+					color,
+					markerClusterGroup,
+					startIcon,
+					endIcon,
+					formatTooltipData,
+					getLapNumForIdx,
+					fileName,
+					overlayIdx: i,
+				});
+				if (bounds) {
+					if (!allBounds) allBounds = bounds;
+					else allBounds.extend(bounds);
+				}
+				overlayIdx++;
+			}
+			if (allBounds) {
+				safeFitBounds(map, allBounds, { padding: [20, 20] });
+			}
+		}
+		return;
+	}
+
 	if (Array.isArray(lapIdx)) {
+		console.log('[drawMapForLap] lapIdx is array:', lapIdx);
+		// If 'all' is included, treat as 'all' laps mode (single polyline, global record indices)
+		if (lapIdx.includes('all')) {
+			console.log('[drawMapForLap] "all" laps mode: recordMesgs.length =', recordMesgs.length, 'lapMesgs.length =', lapMesgs.length, 'lapMesgs[0]=', lapMesgs[0]);
+			coords = recordMesgs
+				.map((row, idx) => {
+					if (
+						typeof row.positionLat === 'number' &&
+						typeof row.positionLong === 'number'
+					) {
+						let lapNum = 1;
+						if (getLapNumForIdx) {
+							lapNum = getLapNumForIdx(idx, lapMesgs);
+							if (!lapNum || isNaN(lapNum)) lapNum = 1;
+						}
+						if (idx < 10 || idx > recordMesgs.length - 10) {
+							console.log(`[drawMapForLap] idx=${idx}, lapNum=${lapNum}, lat=${row.positionLat}, lon=${row.positionLong}`);
+						}
+						return [
+							Number((row.positionLat / 2 ** 31) * 180),
+							Number((row.positionLong / 2 ** 31) * 180),
+							row.timestamp || null,
+							row.altitude || null,
+							row.heartRate || null,
+							row.speed || null,
+							idx,
+							row,
+							lapNum
+						];
+					}
+					return null;
+				})
+				.filter((coord) => coord !== null);
+			if (coords.length > 0) {
+				const polyColor = getLapColor('all');
+				console.log('[drawMapForLap] Drawing polyline for all laps, coords.length =', coords.length);
+				const polyline = L.polyline(
+					coords.map((c) => [c[0], c[1]]),
+					{
+						color: polyColor,
+						weight: 4,
+						opacity: 0.9,
+						dashArray: '6, 8',
+					},
+				).addTo(map);
+				map.invalidateSize();
+				map.fitBounds(polyline.getBounds(), { padding: [20, 20] });
+				const start = coords[0];
+				const end = coords[coords.length - 1];
+				if (startIcon && endIcon) {
+					L.marker([start[0], start[1]], { title: 'Start', icon: startIcon })
+						.addTo(map)
+						.bindPopup('Start');
+					L.marker([end[0], end[1]], { title: 'End', icon: endIcon })
+						.addTo(map)
+						.bindPopup('End');
+				}
+				for (
+					let i = 0;
+					i < coords.length;
+					i +=
+						window.mapMarkerCount === 0 || !window.mapMarkerCount
+							? 1
+							: Math.max(1, Math.floor(coords.length / window.mapMarkerCount))
+				) {
+					const c = coords[i];
+					let lapDisplay = c[8]; // c[8] is set to lapNum above
+					if (!lapDisplay || isNaN(lapDisplay)) lapDisplay = 1;
+					if (i < 10 || i > coords.length - 10) {
+						console.log(`[drawMapForLap] Marker i=${i}, c[6]=${c[6]}, lapDisplay=${lapDisplay}`);
+					}
+					const marker = L.circleMarker([c[0], c[1]], {
+						radius: 4,
+						color: polyColor,
+						fillColor: '#fff',
+						fillOpacity: 0.85,
+						weight: 2,
+					});
+					if (markerClusterGroup) {
+						markerClusterGroup.addLayer(marker);
+					} else {
+						marker.addTo(map);
+					}
+					marker.bindTooltip(formatTooltipData(c[6], c[7], lapDisplay), {
+						direction: 'top',
+						sticky: true,
+					});
+				}
+			}
+			// Draw overlays if present (reuse existing logic)
+			if (
+				window.loadedFitFiles &&
+				Array.isArray(window.loadedFitFiles) &&
+				window.loadedFitFiles.length > 1
+			) {
+				const colorPalette = [
+					'#ff5252',
+					'#40c4ff',
+					'#ffd740',
+					'#69f0ae',
+					'#ff4081',
+					'#7c4dff',
+					'#18ffff',
+					'#ffab40',
+					'#64ffda',
+					'#eeff41',
+					'#536dfe',
+					'#ff6e40',
+					'#00e676',
+					'#ffb300',
+					'#00b8d4',
+					'#ffd600',
+					'#00bfae',
+					'#ff1744',
+					'#00e5ff',
+					'#ffea00',
+					'#76ff03',
+					'#ff80ab',
+					'#b388ff',
+					'#ff9100',
+					'#1de9b6',
+					'#ff3d00',
+					'#00bfae',
+					'#ffd740',
+					'#00e676',
+					'#40c4ff',
+					'#ff4081',
+					'#69f0ae',
+					'#ffab40',
+					'#18ffff',
+					'#eeff41',
+					'#7c4dff',
+					'#ff5252',
+					'#ffd600',
+					'#00e5ff',
+					'#ffea00',
+					'#76ff03',
+				];
+				let overlayIdx = 0;
+				let allBounds = null;
+				for (let i = 1; i < window.loadedFitFiles.length; ++i) {
+					const overlay = window.loadedFitFiles[i];
+					const color = colorPalette[overlayIdx % colorPalette.length];
+					const fileName =
+						typeof getOverlayFileName === 'function'
+							? getOverlayFileName(i)
+							: overlay.filePath || '';
+					const bounds = drawOverlayForFitFile({
+						fitData: overlay.data,
+						map,
+						color,
+						markerClusterGroup,
+						startIcon,
+						endIcon,
+						formatTooltipData,
+						getLapNumForIdx,
+						fileName,
+						overlayIdx: i,
+					});
+					if (bounds) {
+						if (!allBounds) allBounds = bounds;
+						else allBounds.extend(bounds);
+					}
+					overlayIdx++;
+				}
+				if (allBounds) {
+					safeFitBounds(map, allBounds, { padding: [20, 20] });
+				}
+			}
+			return;
+		}
+		// Existing code for multi-lap (not 'all')
 		let bounds = null;
 		const showIcons =
 			lapIdx.length === 1 || (lapIdx.length === 1 && lapIdx[0] === 'all');
@@ -157,7 +519,13 @@ export function drawMapForLap(
 							} else {
 								marker.addTo(map);
 							}
-							const lapDisplay = c[8] || 1;
+							let lapDisplay;
+							if (lapIdx === 'all' || (Array.isArray(lapIdx) && lapIdx.includes('all'))) {
+								lapDisplay = getLapNumForIdx ? getLapNumForIdx(c[6], lapMesgs) : (c[8] || 1);
+								if (!lapDisplay) lapDisplay = 1;
+							} else {
+								lapDisplay = c[8] || 1;
+							}
 							marker.bindTooltip(formatTooltipData(c[6], c[7], lapDisplay), {
 								direction: 'top',
 								sticky: true,
@@ -218,6 +586,7 @@ export function drawMapForLap(
 				'#76ff03',
 			];
 			let overlayIdx = 0;
+			let allBounds = null;
 			for (let i = 1; i < window.loadedFitFiles.length; ++i) {
 				const overlay = window.loadedFitFiles[i];
 				const color = colorPalette[overlayIdx % colorPalette.length];
@@ -225,7 +594,7 @@ export function drawMapForLap(
 					typeof getOverlayFileName === 'function'
 						? getOverlayFileName(i)
 						: overlay.filePath || '';
-				drawOverlayForFitFile({
+				const bounds = drawOverlayForFitFile({
 					fitData: overlay.data,
 					map,
 					color,
@@ -237,8 +606,16 @@ export function drawMapForLap(
 					fileName,
 					overlayIdx: i,
 				});
+				if (bounds) {
+					if (!allBounds) allBounds = bounds;
+					else allBounds.extend(bounds);
+				}
 				overlayIdx++;
 			}
+			if (allBounds) {
+				safeFitBounds(map, allBounds, { padding: [20, 20] });
+			}
+			return;
 		}
 		return;
 	}
@@ -336,6 +713,9 @@ export function drawMapForLap(
 				dashArray: lapIdx === 'all' ? '6, 8' : null,
 			},
 		).addTo(map);
+
+		// Fix: Ensure map is sized before fitBounds
+		map.invalidateSize();
 		map.fitBounds(polyline.getBounds(), { padding: [20, 20] });
 
 		const start = coords[0];
@@ -368,7 +748,13 @@ export function drawMapForLap(
 			} else {
 				marker.addTo(map);
 			}
-			const lapDisplay = c[8] || 1;
+			let lapDisplay;
+			if (lapIdx === 'all' || (Array.isArray(lapIdx) && lapIdx.includes('all'))) {
+				lapDisplay = getLapNumForIdx ? getLapNumForIdx(c[6], lapMesgs) : (c[8] || 1);
+				if (!lapDisplay) lapDisplay = 1;
+			} else {
+				lapDisplay = c[8] || 1;
+			}
 			marker.bindTooltip(formatTooltipData(c[6], c[7], lapDisplay), {
 				direction: 'top',
 				sticky: true,
@@ -424,6 +810,7 @@ export function drawMapForLap(
 				'#76ff03',
 			];
 			let overlayIdx = 0;
+			let allBounds = null;
 			for (let i = 1; i < window.loadedFitFiles.length; ++i) {
 				const overlay = window.loadedFitFiles[i];
 				const color = colorPalette[overlayIdx % colorPalette.length];
@@ -431,7 +818,7 @@ export function drawMapForLap(
 					typeof getOverlayFileName === 'function'
 						? getOverlayFileName(i)
 						: overlay.filePath || '';
-				drawOverlayForFitFile({
+				const bounds = drawOverlayForFitFile({
 					fitData: overlay.data,
 					map,
 					color,
@@ -443,7 +830,14 @@ export function drawMapForLap(
 					fileName,
 					overlayIdx: i,
 				});
+				if (bounds) {
+					if (!allBounds) allBounds = bounds;
+					else allBounds.extend(bounds);
+				}
 				overlayIdx++;
+			}
+			if (allBounds) {
+				safeFitBounds(map, allBounds, { padding: [20, 20] });
 			}
 		}
 	} else {
@@ -452,6 +846,23 @@ export function drawMapForLap(
 }
 
 // Draws a polyline, markers, and tooltips for a given FIT file's data as an overlay
+/**
+ * Draws a polyline, markers, and tooltips for a given FIT file's data as an overlay on the map.
+ *
+ * @param {Object} options - The options for drawing the overlay.
+ * @param {Object} options.fitData - The FIT file data containing `recordMesgs` and `lapMesgs`.
+ * @param {Array} options.fitData.recordMesgs - Array of records with properties like `positionLat`, `positionLong`, `timestamp`, etc.
+ * @param {Array} options.fitData.lapMesgs - Array of lap messages, used for lap-specific data.
+ * @param {Object} options.map - The Leaflet map instance to draw on.
+ * @param {string} [options.color] - The color for the polyline. This parameter is retained for API compatibility but is overridden by the `overlayIdx`-based palette.
+ * @param {Object} [options.markerClusterGroup] - A Leaflet marker cluster group for clustering markers.
+ * @param {L.Icon} [options.startIcon] - The icon for the start marker.
+ * @param {L.Icon} [options.endIcon] - The icon for the end marker.
+ * @param {Function} [options.formatTooltipData] - Function to format tooltip content for markers.
+ * @param {Function} [options.getLapNumForIdx] - Function to get the lap number for a given record index.
+ * @param {string} [options.fileName] - The name of the FIT file, displayed in tooltips.
+ * @param {number} [options.overlayIdx] - The index of the overlay, used for highlighting logic.
+ */
 export function drawOverlayForFitFile({
 	fitData,
 	map,
@@ -494,9 +905,9 @@ export function drawOverlayForFitFile({
 			typeof overlayIdx === 'number' &&
 			window._highlightedOverlayIdx === overlayIdx;
 		const paletteColor =
-			typeof overlayIdx === 'number'
+			Array.isArray(overlayColorPalette) && overlayColorPalette.length > 0 && typeof overlayIdx === 'number'
 				? overlayColorPalette[overlayIdx % overlayColorPalette.length]
-				: overlayColorPalette[0];
+				: '#1976d2'; // Default fallback color
 		const polyline = L.polyline(
 			coords.map((c) => [c[0], c[1]]),
 			{
@@ -554,9 +965,14 @@ export function drawOverlayForFitFile({
 			} else {
 				marker.addTo(map);
 			}
-			const lapDisplay = c[8] || 1;
+			let lapDisplay;
+			if (getLapNumForIdx && fitData && fitData.lapMesgs && fitData.lapMesgs.length > 0) {
+				lapDisplay = getLapNumForIdx(c[6], fitData.lapMesgs);
+			} else {
+				lapDisplay = c[8] || 1;
+			}
 			let tooltip = formatTooltipData
-				? formatTooltipData(c[6], c[7], lapDisplay)
+				? formatTooltipData(c[6], c[7], lapDisplay, recordMesgs)
 				: '';
 			if (fileName) {
 				tooltip = `<b>${fileName}</b><br>` + tooltip;

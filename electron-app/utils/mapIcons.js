@@ -1,19 +1,42 @@
 /* global L */
 // Utility to create Leaflet icons for start and end markers
+// Defines the size of the marker icons in pixels
+const ICON_SIZE = [32, 32];
+const ICON_ANCHOR = [16, 32];
+const POPUP_ANCHOR = [0, -32];
+
+// Base path for asset URLs
+let ASSET_BASE_PATH = 'libs/assets/icons';
+if (!ASSET_BASE_PATH.endsWith('/')) {
+	ASSET_BASE_PATH += '/';
+}
+
+/**
+ * Creates a Leaflet icon for the start marker.
+ *
+ * @returns {L.Icon} A Leaflet icon configured for the start marker.
+ */
+
 export function createStartIcon() {
 	return L.icon({
-		iconUrl: 'https://i.gyazo.com/71a575e54ca160ae139e68f7771f1c42.png',
-		iconSize: [32, 32],
-		iconAnchor: [16, 32],
-		popupAnchor: [0, -32],
+		iconUrl: `${ASSET_BASE_PATH}start-icon.png`,
+		iconSize: ICON_SIZE,
+		iconAnchor: ICON_ANCHOR,
+		popupAnchor: POPUP_ANCHOR,
 	});
 }
 
+/**
+ * Creates a Leaflet icon for the end marker.
+ *
+ * @returns {L.Icon} A Leaflet icon configured for the end marker.
+ */
+
 export function createEndIcon() {
 	return L.icon({
-		iconUrl: 'https://i.gyazo.com/56eb532007a2a739753c131840994f02.png',
-		iconSize: [32, 32],
-		iconAnchor: [16, 32],
-		popupAnchor: [0, -32],
+		iconUrl: `${ASSET_BASE_PATH}end-icon.png`,
+		iconSize: ICON_SIZE,
+		iconAnchor: ICON_ANCHOR,
+		popupAnchor: POPUP_ANCHOR,
 	});
 }

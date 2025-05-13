@@ -19,6 +19,9 @@ export async function handleOpenFile({
 				'error',
 				7000,
 			);
+			openFileBtn.disabled = false;
+			setLoading(false);
+			isOpeningFileRef.value = false;
 			return;
 		}
 
@@ -28,9 +31,10 @@ export async function handleOpenFile({
 		try {
 			filePath = await window.electronAPI.openFile();
 		} catch (err) {
-			showNotification(`Failed to open file dialog: ${err}`, 'error');
+			showNotification(`Unable to open the file dialog. Please try again. Error details: ${err}`, 'error');
 			openFileBtn.disabled = false;
 			setLoading(false);
+			isOpeningFileRef.value = false;
 			return;
 		}
 		if (filePath) {
@@ -58,7 +62,9 @@ export async function handleOpenFile({
 					'error',
 				);
 			} else {
-				console.log('[DEBUG] FIT parse result:', result);
+				if (process.env.NODE_ENV !== 'production') {
+					console.log('[DEBUG] FIT parse result:', result);
+				}
 				try {
 					window.showFitData(result, filePath);
 					if (window.sendFitFileToAltFitReader) {

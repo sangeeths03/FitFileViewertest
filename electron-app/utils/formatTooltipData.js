@@ -1,5 +1,5 @@
 // Utility for formatting tooltip data on the map
-export function formatTooltipData(idx, row, lapNum) {
+export function formatTooltipData(idx, row, lapNum, recordMesgsOverride) {
 	const dateStr = row.timestamp
 		? new Date(row.timestamp).toLocaleString()
 		: '';
@@ -26,13 +26,13 @@ export function formatTooltipData(idx, row, lapNum) {
 
 	// Calculate total ride time since start in human readable format
 	let rideTime = '';
+	const recordMesgs = recordMesgsOverride || (window.globalData && window.globalData.recordMesgs);
 	if (
-		window.globalData &&
-		window.globalData.recordMesgs &&
-		window.globalData.recordMesgs.length > 0 &&
+		recordMesgs &&
+		recordMesgs.length > 0 &&
 		row.timestamp
 	) {
-		const first = window.globalData.recordMesgs.find(
+		const first = recordMesgs.find(
 			(r) => r.timestamp != null,
 		);
 		if (first && first.timestamp) {

@@ -310,6 +310,7 @@ export function renderMap() {
 		let allBounds = null;
 		window.loadedFitFiles.forEach((fitFile, idx) => {
 			const color = overlayColorPalette[idx % overlayColorPalette.length];
+			const fileName = (fitFile.filePath || '').split(/[\\/]/).pop();
 			const bounds = drawOverlayForFitFile({
 				fitData: fitFile.data,
 				map,
@@ -317,9 +318,9 @@ export function renderMap() {
 				markerClusterGroup,
 				startIcon,
 				endIcon,
-				formatTooltipData,
+				formatTooltipData: (idx, row, lapNum) => formatTooltipData(idx, row, lapNum, fitFile.data && fitFile.data.recordMesgs),
 				getLapNumForIdx,
-				fileName: fitFile.filePath || '',
+				fileName,
 				overlayIdx: idx,
 			});
 			if (bounds) {
@@ -327,7 +328,14 @@ export function renderMap() {
 				else allBounds.extend(bounds);
 			}
 		});
-		if (allBounds) map.fitBounds(allBounds, { padding: [20, 20] });
+		// Fix: Prevent Leaflet _leaflet_pos error by deferring fitBounds and checking map container
+		if (allBounds) {
+			setTimeout(() => {
+				if (map._container && map._container.offsetParent !== null) {
+					map.fitBounds(allBounds, { padding: [20, 20] });
+				}
+			}, 0);
+		}
 	} else if (window.globalData && window.globalData.recordMesgs) {
 		drawMapForLapWrapper('all');
 	}

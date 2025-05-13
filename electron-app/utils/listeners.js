@@ -19,7 +19,7 @@ export function setupListeners({
 	// Recent Files Context Menu
 	openFileBtn.addEventListener('contextmenu', async (event) => {
 		event.preventDefault();
-		if (!window.electronAPI || !window.electronAPI.recentFiles) return;
+		if (!window.electronAPI?.recentFiles) return;
 		const recentFiles = await window.electronAPI.recentFiles();
 		if (!recentFiles || recentFiles.length === 0) {
 			showNotification('No recent files found.', 'info', 2000);
@@ -53,7 +53,7 @@ export function setupListeners({
 			const parts = file.split(/\\|\//g);
 			const shortName =
 				parts.length >= 2
-					? `${parts[parts.length - 2]}${String.fromCharCode(92)}${parts[parts.length - 1]}`
+					? `${parts[parts.length - 2]}\\${parts[parts.length - 1]}`
 					: parts[parts.length - 1];
 			const item = document.createElement('div');
 			item.textContent = shortName;
@@ -120,7 +120,7 @@ export function setupListeners({
 		});
 		setTimeout(() => focusItem(0), 0);
 		const removeMenu = (e) => {
-			if (!menu.contains(e.target)) menu.remove();
+			if (!menu.contains(e.target) && e.target !== menu) menu.remove();
 			document.removeEventListener('mousedown', removeMenu);
 		};
 		document.addEventListener('mousedown', removeMenu);
@@ -168,7 +168,8 @@ export function setupListeners({
 	}
 
 	if (window.electronAPI && window.electronAPI.onIpc) {
-		window.electronAPI.onIpc('decoder-options-changed', (event, newOptions) => {
+		// Handles changes to decoder options and updates the UI or data accordingly
+		window.electronAPI.onIpc('decoder-options-changed', (newOptions) => {
 			console.log('[DEBUG] Decoder options changed:', newOptions);
 			showNotification('Decoder options updated.', 'info', 2000);
 			if (window.globalData && window.globalData.cachedFilePath) {
@@ -208,40 +209,45 @@ export function setupListeners({
 					}, 100);
 				}
 			} else if (ext === 'gpx') {
-				if (window.createExportGPXButton && window.globalData.recordMesgs) {
+				if (window.createExportGPXButton && window.globalData.recordMesgs && Array.isArray(window.globalData.recordMesgs) && window.globalData.recordMesgs.length > 0) {
 					const coords = window.globalData.recordMesgs
 						.filter((row) => row.positionLat != null && row.positionLong != null)
 						.map((row) => [
 							Number((row.positionLat / 2 ** 31) * 180),
 							Number((row.positionLong / 2 ** 31) * 180),
 						]);
-					let gpx = `<?xml version="1.0" encoding="UTF-8"?>\n<gpx version="1.1" creator="FitFileViewer">\n<trk><name>Exported Track</name><trkseg>`;
-					coords.forEach((c) => {
-						gpx += `\n<trkpt lat="${c[0]}" lon="${c[1]}"/>`;
-					});
-					gpx += '\n</trkseg></trk></gpx>';
-					const blob = new Blob([gpx], { type: 'application/gpx+xml' });
-					const a = document.createElement('a');
-					a.href = URL.createObjectURL(blob);
-					a.download = filePath.split(/[\\/]/).pop();
-					document.body.appendChild(a);
-					a.click();
-					setTimeout(() => {
-						URL.revokeObjectURL(a.href);
-						document.body.removeChild(a);
-					}, 100);
+					if (coords.length > 0) {
+						let gpx = `<?xml version="1.0" encoding="UTF-8"?>\n<gpx version="1.1" creator="FitFileViewer">\n<trk><name>Exported Track</name><trkseg>`;
+						coords.forEach((c) => {
+							gpx += `\n<trkpt lat="${c[0]}" lon="${c[1]}"/>`;
+						});
+						gpx += '\n</trkseg></trk></gpx>';
+						const blob = new Blob([gpx], { type: 'application/gpx+xml' });
+						const a = document.createElement('a');
+						a.href = URL.createObjectURL(blob);
+						a.download = filePath.split(/[\\/]/).pop();
+						document.body.appendChild(a);
+						a.click();
+						setTimeout(() => {
+							URL.revokeObjectURL(a.href);
+							document.body.removeChild(a);
+						}, 100);
+					} else {
+						showNotification('No valid coordinates found for GPX export.', 'info', 3000);
+					}
+				} else {
+					showNotification('No data available for GPX export.', 'info', 3000);
 				}
 			}
 		});
-		window.electronAPI.onIpc('show-notification', (event, msg, type) => {
+		window.electronAPI.onIpc('show-notification', (msg, type) => {
 			if (typeof showNotification === 'function') showNotification(msg, type || 'info', 3000);
 		});
 		window.electronAPI.onIpc('menu-print', () => {
 			window.print();
 		});
 		window.electronAPI.onIpc('menu-check-for-updates', () => {
-			const { ipcRenderer } = window.require ? window.require('electron') : {};
-			if (ipcRenderer) ipcRenderer.send('menu-check-for-updates');
+			if (window.electronAPI.send) window.electronAPI.send('menu-check-for-updates');
 		});
 		window.electronAPI.onIpc('menu-save-as', () => {
 			if (window.electronAPI.send) window.electronAPI.send('menu-save-as');
@@ -266,14 +272,15 @@ export function setupListeners({
 				window.electronAPI.getLicenseInfo ? window.electronAPI.getLicenseInfo() : 'Unknown'
 			]);
 			const author = 'Nick2bad4u';
-			const aboutMsg =
-				`Version: ${version}<br>
+			const aboutMsg = `
+				Version: ${version}<br>
 				Electron: ${electronVersion}<br>
 				Node.js: ${nodeVersion}<br>
 				Chrome: ${chromeVersion}<br>
 				Platform: ${platformInfo.platform} (${platformInfo.arch})<br>
 				Author: ${author}<br>
-				License: ${license}`;
+				License: ${license}
+			`;
 			showAboutModal(aboutMsg);
 		});
 		window.electronAPI.onIpc('menu-keyboard-shortcuts', () => {
@@ -312,7 +319,11 @@ export function setupListeners({
 			showUpdateNotification('Update error: ' + err, 'error', 7000);
 		});
 		window.electronAPI.onUpdateEvent('update-download-progress', (progress) => {
-			showUpdateNotification(`Downloading update: ${Math.round(progress.percent)}%`, 'info', 2000);
+			if (progress && typeof progress.percent === 'number') {
+				showUpdateNotification(`Downloading update: ${Math.round(progress.percent)}%`, 'info', 2000);
+			} else {
+				showUpdateNotification('Downloading update: progress information unavailable.', 'info', 2000);
+			}
 		});
 		window.electronAPI.onUpdateEvent('update-downloaded', () => {
 			showUpdateNotification('Update downloaded! Restart to install the update now, or choose Later to finish your work.', 'success', 0, 'update-downloaded');
