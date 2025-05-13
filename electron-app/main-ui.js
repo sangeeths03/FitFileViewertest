@@ -40,14 +40,21 @@ window.sendFitFileToAltFitReader = async function(arrayBuffer) {
 };
 
 // Listen for theme change from main process
-listenForThemeChange((theme) => {
-	applyTheme(theme);
-	// If chart tab is active, re-render chart to update theme
-	const tabChart = document.getElementById('tab-chart');
-	if (tabChart && tabChart.classList.contains('active')) {
-		renderChart();
-	}
-});
+if (window.electronAPI && typeof window.electronAPI.onSetTheme === 'function' && typeof window.electronAPI.sendThemeChanged === 'function') {
+  // If chart tab is active, re-render chart to update theme
+  listenForThemeChange((theme) => {
+    applyTheme(theme);
+    const tabChart = document.getElementById('tab-chart');
+    if (tabChart && tabChart.classList.contains('active')) {
+      if (!window._isChartRendered) {
+        renderChart();
+        window._isChartRendered = true; // Mark chart as rendered
+      }
+    } else {
+      window._isChartRendered = false; // Reset flag if chart tab is not active
+    }
+  });
+}
 
 // On load, apply theme
 applyTheme(loadTheme());

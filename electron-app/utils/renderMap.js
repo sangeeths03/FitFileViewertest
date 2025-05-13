@@ -33,6 +33,9 @@ import { addFullscreenControl } from './mapFullscreenControl.js';
 import { drawOverlayForFitFile } from './drawMapForLap.js';
 
 export function renderMap() {
+	// Reset overlay polylines to prevent stale references and memory leaks
+	window._overlayPolylines = {};
+
 	const mapContainer = document.getElementById('content-map');
 	// Fix: Remove any previous Leaflet map instance to avoid grey background bug
 	if (window._leafletMapInstance && window._leafletMapInstance.remove) {
@@ -43,10 +46,17 @@ export function renderMap() {
 	if (oldMapDiv) {
 		oldMapDiv.remove();
 	}
-	mapContainer.innerHTML = `
-		<div id="leaflet-map"></div>
-		<div id="map-controls"></div>
-	`;
+	while (mapContainer.firstChild) {
+		mapContainer.removeChild(mapContainer.firstChild);
+	}
+
+	const leafletMapDiv = document.createElement('div');
+	leafletMapDiv.id = 'leaflet-map';
+	mapContainer.appendChild(leafletMapDiv);
+
+	const mapControlsDiv = document.createElement('div');
+	mapControlsDiv.id = 'map-controls';
+	mapContainer.appendChild(mapControlsDiv);
 
 	const map = L.map('leaflet-map', {
 		center: [0, 0],
@@ -70,7 +80,10 @@ export function renderMap() {
 	mapTypeBtn.style.zIndex = 900; // ensure above layers control
 	mapTypeBtn.innerHTML = '🗺️ Change Map Type';
 	mapTypeBtn.title = 'Click to change the map type';
-	mapTypeBtn.onclick = (e) => {
+	mapTypeBtn.onclick = handleMapTypeButtonClick;
+	document.getElementById('leaflet-map').appendChild(mapTypeBtn);
+
+	function handleMapTypeButtonClick(e) {
 		e.stopPropagation();
 		const layersControlEl = document.querySelector('.leaflet-control-layers');
 		if (layersControlEl) {
@@ -80,8 +93,7 @@ export function renderMap() {
 			const firstInput = layersControlEl.querySelector('input[type="radio"]');
 			if (firstInput) firstInput.focus();
 		}
-	};
-	document.getElementById('leaflet-map').appendChild(mapTypeBtn);
+	}
 
 	// When the user clicks outside the control, collapse it
 	document.addEventListener('mousedown', (e) => {
@@ -133,15 +145,36 @@ export function renderMap() {
 
 	// Fix jank: Only update map zoom on change, and update slider on zoomend
 	let isDragging = false;
-	zoomSlider.addEventListener('input', (e) => {
-		isDragging = true;
-		const percent = Number(e.target.value);
-		zoomSliderCurrent.textContent = `${percent}%`;
-	});
+	// Debounce function to limit the frequency of updates
+	function debounce(func, wait) {
+		let timeout;
+		return function (...args) {
+			const context = this;
+			clearTimeout(timeout);
+			timeout = setTimeout(() => func.apply(context, args), wait);
+		};
+	}
+
+	zoomSlider.addEventListener(
+		'input',
+		debounce((e) => {
+			isDragging = true;
+			const percent = Number(e.target.value);
+			zoomSliderCurrent.textContent = `${percent}%`;
+		}, 100), // Adjust debounce delay as needed
+	);
 	zoomSlider.addEventListener('change', (e) => {
 		const percent = Number(e.target.value);
 		const newZoom = percentToZoom(percent);
 		map.setZoom(Math.round(newZoom));
+		isDragging = false;
+	});
+
+	// Reset isDragging flag if interaction is canceled
+	document.addEventListener('mouseup', () => {
+		isDragging = false;
+	});
+	document.addEventListener('touchend', () => {
 		isDragging = false;
 	});
 	const updateZoomSlider = () => {
@@ -236,8 +269,7 @@ export function renderMap() {
 				attribution: '',
 			},
 		);
-		// eslint-disable-next-line no-unused-vars
-		const miniMap = new L.Control.MiniMap(miniMapLayer, {
+		new L.Control.MiniMap(miniMapLayer, {
 			toggleDisplay: true,
 		}).addTo(map);
 	}
@@ -301,9 +333,11 @@ export function renderMap() {
 	}
 
 	// --- Theme support (dark/light) ---
-	updateMapTheme();
-	if (!window._mapThemeListener) {
-		window._mapThemeListener = () => updateMapTheme();
-		document.body.addEventListener('themechange', window._mapThemeListener);
+	if (document.getElementById('leaflet-map')) {
+		updateMapTheme();
+		if (!window._mapThemeListener) {
+			window._mapThemeListener = () => updateMapTheme();
+			document.body.addEventListener('themechange', window._mapThemeListener);
+		}
 	}
 }

@@ -17,11 +17,22 @@ let loadedFitFilePath = null;
 function setupAutoUpdater(mainWindow) {
 	// Set feed URL if needed (autoUpdater will use GitHub by default if configured in package.json)
 	autoUpdater.autoDownload = true;
-	autoUpdater.logger = require('electron-log');
+	try {
+		const log = require('electron-log');
+		if (log) {
+			autoUpdater.logger = log;
+		} else {
+			console.warn('Logger initialization failed. Falling back to console logging.');
+			autoUpdater.logger = console;
+		}
+	} catch (err) {
+		console.error('Error initializing logger:', err);
+		autoUpdater.logger = console;
+	}
 	autoUpdater.logger.transports.file.level = 'info';
 
 	// Debug: Log the update feed URL
-	if (autoUpdater.feedURL) {
+	if (autoUpdater.feedURL !== undefined && autoUpdater.feedURL !== null) {
 		autoUpdater.logger.info(`AutoUpdater feed URL: ${autoUpdater.feedURL}`);
 		console.log(`AutoUpdater feed URL: ${autoUpdater.feedURL}`);
 	} else {
@@ -39,10 +50,9 @@ function setupAutoUpdater(mainWindow) {
 		mainWindow.webContents.send('update-not-available', info);
 	});
 	autoUpdater.on('error', (err) => {
-		mainWindow.webContents.send(
-			'update-error',
-			err == null ? 'unknown' : err.message || err.toString(),
-		);
+		const errorMessage = err == null ? 'unknown' : err.message || err.toString();
+		autoUpdater.logger.error(`AutoUpdater Error: ${errorMessage}`);
+		mainWindow.webContents.send('update-error', errorMessage);
 	});
 	autoUpdater.on('download-progress', (progressObj) => {
 		mainWindow.webContents.send('update-download-progress', progressObj);
@@ -52,7 +62,9 @@ function setupAutoUpdater(mainWindow) {
 		const menu = Menu.getApplicationMenu();
 		if (menu) {
 			const restartItem = menu.getMenuItemById('restart-update');
-			if (restartItem) restartItem.enabled = true;
+			if (restartItem && restartItem.enabled !== undefined) {
+				restartItem.enabled = true;
+			}
 		}
 	});
 }

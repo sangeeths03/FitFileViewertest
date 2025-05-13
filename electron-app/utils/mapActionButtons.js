@@ -53,16 +53,6 @@ export function createElevationProfileButton() {
 		'<svg class="icon" viewBox="0 0 20 20" width="18" height="18"><polyline points="2,16 6,10 10,14 14,6 18,12" fill="none" stroke="#1976d2" stroke-width="2"/><circle cx="2" cy="16" r="1.5" fill="#1976d2"/><circle cx="6" cy="10" r="1.5" fill="#1976d2"/><circle cx="10" cy="14" r="1.5" fill="#1976d2"/><circle cx="14" cy="6" r="1.5" fill="#1976d2"/><circle cx="18" cy="12" r="1.5" fill="#1976d2"/></svg> <span>Elevation</span>';
 	btn.title = 'Show Elevation Profile';
 
-	function getProfileData(fitData) {
-		if (!fitData || !fitData.recordMesgs) return [];
-		return fitData.recordMesgs
-			.filter(
-				(r) =>
-					r.positionLat != null && r.positionLong != null && r.altitude != null,
-			)
-			.map((r, i) => ({ x: i, y: r.altitude }));
-	}
-
 	btn.onclick = () => {
 		let fitFiles = [];
 		if (window.loadedFitFiles && window.loadedFitFiles.length > 0) {
