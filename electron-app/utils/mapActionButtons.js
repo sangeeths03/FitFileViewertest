@@ -408,10 +408,14 @@ export function createAddFitFileToMapButton() {
 												f.filePath?.toLowerCase() === file.name.toLowerCase(),
 										)
 									) {
+										const validLocationCount = Array.isArray(fitData.recordMesgs)
+											? fitData.recordMesgs.filter(r => typeof r.positionLat === 'number' && typeof r.positionLong === 'number').length
+											: 0;
 										if (
 											fitData &&
 											Array.isArray(fitData.recordMesgs) &&
-											fitData.recordMesgs.length > 0
+											fitData.recordMesgs.length > 0 &&
+											validLocationCount > 0
 										) {
 											window.loadedFitFiles.push({
 												data: fitData,
@@ -658,57 +662,15 @@ export function createShownFilesList() {
 						window.loadedFitFiles.splice(idx, 1);
 						if (window.renderMap) window.renderMap();
 						if (window.updateShownFilesList) window.updateShownFilesList();
+						// Remove any lingering tooltips from the DOM after overlays are cleared
+						setTimeout(() => {
+							const tooltips = document.querySelectorAll('.overlay-filename-tooltip');
+							tooltips.forEach(t => t.parentNode && t.parentNode.removeChild(t));
+						}, 10);
 					}
 				};
 				li.appendChild(removeBtn);
-				li.onmouseenter = (e) => {
-					window._highlightedOverlayIdx = idx;
-					if (window.updateOverlayHighlights) window.updateOverlayHighlights();
-					removeBtn.style.opacity = '1';
-					// Show tooltip with full path and warning if needed
-					let tooltip = document.createElement('div');
-					tooltip.className = 'overlay-filename-tooltip';
-					tooltip.style.position = 'fixed';
-					tooltip.style.zIndex = 9999;
-					tooltip.style.pointerEvents = 'none';
-					tooltip.style.background = isDark ? '#23263a' : '#fff';
-					tooltip.style.color = isDark ? '#fff' : '#222';
-					tooltip.style.border = '1px solid ' + (isDark ? '#444' : '#bbb');
-					tooltip.style.borderRadius = '4px';
-					tooltip.style.padding = '6px 10px';
-					tooltip.style.fontSize = '0.95em';
-					tooltip.style.boxShadow = '0 2px 8px #0003';
-					let html = '<b>File:</b> ' + fullPath;
-					if (showWarning) {
-						html +=
-							'<br><span style="color:#eab308;">⚠️ This color may be hard to read in this theme.</span>';
-					}
-					tooltip.innerHTML = html;
-					document.body.appendChild(tooltip);
-					const moveTooltip = (evt) => {
-						const pad = 12;
-						let x = evt.clientX + pad;
-						let y = evt.clientY + pad;
-						if (x + tooltip.offsetWidth > window.innerWidth)
-							x = window.innerWidth - tooltip.offsetWidth - pad;
-						if (y + tooltip.offsetHeight > window.innerHeight)
-							y = window.innerHeight - tooltip.offsetHeight - pad;
-						tooltip.style.left = x + 'px';
-						tooltip.style.top = y + 'px';
-					};
-					moveTooltip(e);
-					window.addEventListener('mousemove', moveTooltip);
-					li._tooltipRemover = () => {
-						window.removeEventListener('mousemove', moveTooltip);
-						if (tooltip.parentNode) tooltip.parentNode.removeChild(tooltip);
-					};
-				};
-				li.onmouseleave = () => {
-					window._highlightedOverlayIdx = null;
-					if (window.updateOverlayHighlights) window.updateOverlayHighlights();
-					removeBtn.style.opacity = '0';
-					if (li._tooltipRemover) li._tooltipRemover();
-				};
+
 				li.onclick = () => {
 					window._highlightedOverlayIdx = idx;
 					if (window.updateOverlayHighlights) window.updateOverlayHighlights();
@@ -741,6 +703,76 @@ export function createShownFilesList() {
 						}
 					}
 				};
+
+				li._tooltipTimeout = null;
+				li._tooltipRemover = null;
+				li.onmouseenter = (e) => {
+					window._highlightedOverlayIdx = idx;
+					if (window.updateOverlayHighlights) window.updateOverlayHighlights();
+					removeBtn.style.opacity = '1';
+
+					// Tooltip delay and singleton logic
+					if (window._overlayTooltipTimeout) clearTimeout(window._overlayTooltipTimeout);
+					// Remove any existing tooltip immediately
+					const oldTooltips = document.querySelectorAll('.overlay-filename-tooltip');
+					oldTooltips.forEach(t => t.parentNode && t.parentNode.removeChild(t));
+					if (li._tooltipRemover) li._tooltipRemover();
+
+					window._overlayTooltipTimeout = setTimeout(() => {
+						// Only show if still hovered
+						if (window._highlightedOverlayIdx !== idx) return;
+						let tooltip = document.createElement('div');
+						tooltip.className = 'overlay-filename-tooltip';
+						tooltip.style.position = 'fixed';
+						tooltip.style.zIndex = 9999;
+						tooltip.style.pointerEvents = 'none';
+						tooltip.style.background = isDark ? '#23263a' : '#fff';
+						tooltip.style.color = isDark ? '#fff' : '#222';
+						tooltip.style.border = '1px solid ' + (isDark ? '#444' : '#bbb');
+						tooltip.style.borderRadius = '4px';
+						tooltip.style.padding = '6px 10px';
+						tooltip.style.fontSize = '0.95em';
+						tooltip.style.boxShadow = '0 2px 8px #0003';
+						let html = '<b>File:</b> ' + fullPath;
+						if (showWarning) {
+							html += '<br><span style="color:#eab308;">⚠️ This color may be hard to read in this theme.</span>';
+						}
+						tooltip.innerHTML = html;
+						document.body.appendChild(tooltip);
+						const moveTooltip = (evt) => {
+							const pad = 12;
+							let x = evt.clientX + pad;
+							let y = evt.clientY + pad;
+							if (x + tooltip.offsetWidth > window.innerWidth)
+								x = window.innerWidth - tooltip.offsetWidth - pad;
+							if (y + tooltip.offsetHeight > window.innerHeight)
+								y = window.innerHeight - tooltip.offsetHeight - pad;
+							tooltip.style.left = x + 'px';
+							tooltip.style.top = y + 'px';
+						};
+						moveTooltip(e);
+						window.addEventListener('mousemove', moveTooltip);
+						li._tooltipRemover = () => {
+							window.removeEventListener('mousemove', moveTooltip);
+							if (tooltip.parentNode) tooltip.parentNode.removeChild(tooltip);
+						};
+					}, 350);
+				};
+				li.onmouseleave = () => {
+					window._highlightedOverlayIdx = null;
+					if (window.updateOverlayHighlights) window.updateOverlayHighlights();
+					removeBtn.style.opacity = '0';
+					if (window._overlayTooltipTimeout) {
+						clearTimeout(window._overlayTooltipTimeout);
+						window._overlayTooltipTimeout = null;
+					}
+					if (li._tooltipRemover) li._tooltipRemover();
+					// Remove any lingering tooltips from the DOM
+					setTimeout(() => {
+						const tooltips = document.querySelectorAll('.overlay-filename-tooltip');
+						tooltips.forEach(t => t.parentNode && t.parentNode.removeChild(t));
+					}, 10);
+				};
 				ul.appendChild(li);
 			});
 			// Add Clear All button if overlays exist
@@ -767,6 +799,11 @@ export function createShownFilesList() {
 						window.loadedFitFiles.splice(1);
 						if (window.renderMap) window.renderMap();
 						if (window.updateShownFilesList) window.updateShownFilesList();
+						// Remove any lingering tooltips from the DOM after overlays are cleared
+						setTimeout(() => {
+							const tooltips = document.querySelectorAll('.overlay-filename-tooltip');
+							tooltips.forEach(t => t.parentNode && t.parentNode.removeChild(t));
+						}, 10);
 					}
 				};
 				ul.parentNode.appendChild(clearAll);

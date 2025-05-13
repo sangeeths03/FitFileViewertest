@@ -62,7 +62,7 @@ export async function handleOpenFile({
 					'error',
 				);
 			} else {
-				if (process.env.NODE_ENV !== 'production') {
+				if (typeof process !== 'undefined' && process.env && process.env.NODE_ENV !== 'production') {
 					console.log('[DEBUG] FIT parse result:', result);
 				}
 				try {

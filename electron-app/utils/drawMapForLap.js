@@ -1,6 +1,44 @@
 import { getOverlayFileName, overlayColorPalette } from './mapActionButtons.js';
 
 /* global L */
+// Helper to find the index in recordMesgs closest to a given lat/lon
+function findClosestRecordIndexByLatLon(lat, lon, records) {
+	let minDist = Infinity;
+	let minIdx = -1;
+	for (let i = 0; i < records.length; ++i) {
+		const r = records[i];
+		if (
+			typeof r.positionLat === 'number' &&
+			typeof r.positionLong === 'number'
+		) {
+			const dLat = r.positionLat - lat;
+			const dLon = r.positionLong - lon;
+			const dist = dLat * dLat + dLon * dLon;
+			if (dist < minDist) {
+				minDist = dist;
+				minIdx = i;
+			}
+		}
+	}
+	return minIdx;
+}
+
+// Patch lapMesgs to add start_index and end_index if missing
+function patchLapIndices(lapMesgs, recordMesgs) {
+	for (let i = 0; i < lapMesgs.length; ++i) {
+		const lap = lapMesgs[i];
+		if (lap.start_index == null || lap.end_index == null) {
+			// Find closest record index for start and end positions
+			const startIdx = findClosestRecordIndexByLatLon(lap.startPositionLat, lap.startPositionLong, recordMesgs);
+			let endIdx = findClosestRecordIndexByLatLon(lap.endPositionLat, lap.endPositionLong, recordMesgs);
+			if (endIdx === -1) endIdx = recordMesgs.length - 1;
+			lap.start_index = startIdx;
+			lap.end_index = endIdx;
+			console.log(`[patchLapIndices] Lap ${i+1}: start_index=${startIdx}, end_index=${endIdx}`);
+		}
+	}
+}
+
 // Draws the map for a given lap or laps
 // Dependencies must be passed as arguments: map, baseLayers, markerClusterGroup, startIcon, endIcon, mapContainer, getLapColor, formatTooltipData, getLapNumForIdx
 export function drawMapForLap(
@@ -22,27 +60,7 @@ export function drawMapForLap(
 	const lapMesgs = window.globalData.lapMesgs || [];
 	const recordMesgs = window.globalData.recordMesgs || [];
 
-	// Helper to find the index in recordMesgs closest to a given lat/lon
-	function findClosestRecordIndexByLatLon(lat, lon, records) {
-		let minDist = Infinity;
-		let minIdx = -1;
-		for (let i = 0; i < records.length; ++i) {
-			const r = records[i];
-			if (
-				typeof r.positionLat === 'number' &&
-				typeof r.positionLong === 'number'
-			) {
-				const dLat = r.positionLat - lat;
-				const dLon = r.positionLong - lon;
-				const dist = dLat * dLat + dLon * dLon;
-				if (dist < minDist) {
-					minDist = dist;
-					minIdx = i;
-				}
-			}
-		}
-		return minIdx;
-	}
+	patchLapIndices(lapMesgs, recordMesgs);
 
 	// Helper: Wait until map container is visible and sized before fitBounds
 	function safeFitBounds(map, bounds, options = {}) {
@@ -77,7 +95,17 @@ export function drawMapForLap(
 
 	// --- FIX: handle both string 'all' and array containing 'all' ---
 	if (lapIdx === 'all' || (Array.isArray(lapIdx) && lapIdx.includes('all'))) {
-		console.log('[drawMapForLap] "all" laps mode: recordMesgs.length =', recordMesgs.length, 'lapMesgs.length =', lapMesgs.length, 'lapMesgs[0]=', lapMesgs[0]);
+		console.log('[drawMapForLap] "all" laps mode: recordMesgs.length =', recordMesgs.length, 'lapMesgs.length =', lapMesgs.length);
+		console.log('[drawMapForLap] lapMesgs[0]:', lapMesgs[0]);
+		console.log('[drawMapForLap] lapMesgs[1]:', lapMesgs[1]);
+		console.log('[drawMapForLap] lapMesgs[2]:', lapMesgs[2]);
+		// Test getLapNumForIdx for first few indices
+		if (getLapNumForIdx) {
+			for (let testIdx = 0; testIdx < 3; ++testIdx) {
+				const lapNum = getLapNumForIdx(testIdx, lapMesgs);
+				console.log(`[drawMapForLap] getLapNumForIdx(${testIdx}, lapMesgs) =`, lapNum);
+			}
+		}
 		coords = recordMesgs
 			.map((row, idx) => {
 				if (
@@ -107,6 +135,10 @@ export function drawMapForLap(
 				return null;
 			})
 			.filter((coord) => coord !== null);
+		if (coords.length === 0) {
+			mapContainer.innerHTML = `<p>No location data available to display map.<br>Lap: ${lapIdx}<br>recordMesgs: ${recordMesgs.length}<br>lapMesgs: ${lapMesgs.length}</p>`;
+			return;
+		}
 		if (coords.length > 0) {
 			const polyColor = getLapColor('all');
 			console.log('[drawMapForLap] Drawing polyline for all laps, coords.length =', coords.length);
@@ -124,10 +156,10 @@ export function drawMapForLap(
 			const start = coords[0];
 			const end = coords[coords.length - 1];
 			if (startIcon && endIcon) {
-				L.marker([start[0], start[1]], { title: 'Start', icon: startIcon })
+				L.marker([start[0], start[1]], { title: 'Start', icon: startIcon, zIndexOffset: 2000 })
 					.addTo(map)
 					.bindPopup('Start');
-				L.marker([end[0], end[1]], { title: 'End', icon: endIcon })
+				L.marker([end[0], end[1]], { title: 'End', icon: endIcon, zIndexOffset: 2000 })
 					.addTo(map)
 					.bindPopup('End');
 			}
@@ -151,6 +183,7 @@ export function drawMapForLap(
 					fillColor: '#fff',
 					fillOpacity: 0.85,
 					weight: 2,
+					zIndexOffset: 1500,
 				});
 				if (markerClusterGroup) {
 					markerClusterGroup.addLayer(marker);
@@ -280,6 +313,10 @@ export function drawMapForLap(
 					return null;
 				})
 				.filter((coord) => coord !== null);
+			if (coords.length === 0) {
+				mapContainer.innerHTML = `<p>No location data available to display map.<br>Lap: ${lapIdx}<br>recordMesgs: ${recordMesgs.length}<br>lapMesgs: ${lapMesgs.length}</p>`;
+				return;
+			}
 			if (coords.length > 0) {
 				const polyColor = getLapColor('all');
 				console.log('[drawMapForLap] Drawing polyline for all laps, coords.length =', coords.length);
@@ -297,10 +334,10 @@ export function drawMapForLap(
 				const start = coords[0];
 				const end = coords[coords.length - 1];
 				if (startIcon && endIcon) {
-					L.marker([start[0], start[1]], { title: 'Start', icon: startIcon })
+					L.marker([start[0], start[1]], { title: 'Start', icon: startIcon, zIndexOffset: 2000 })
 						.addTo(map)
 						.bindPopup('Start');
-					L.marker([end[0], end[1]], { title: 'End', icon: endIcon })
+					L.marker([end[0], end[1]], { title: 'End', icon: endIcon, zIndexOffset: 2000 })
 						.addTo(map)
 						.bindPopup('End');
 				}
@@ -324,6 +361,7 @@ export function drawMapForLap(
 						fillColor: '#fff',
 						fillOpacity: 0.85,
 						weight: 2,
+						zIndexOffset: 1500,
 					});
 					if (markerClusterGroup) {
 						markerClusterGroup.addLayer(marker);
@@ -488,10 +526,11 @@ export function drawMapForLap(
 							L.marker([start[0], start[1]], {
 								title: 'Start',
 								icon: startIcon,
+								zIndexOffset: 2000,
 							})
 								.addTo(map)
 								.bindPopup('Start');
-							L.marker([end[0], end[1]], { title: 'End', icon: endIcon })
+							L.marker([end[0], end[1]], { title: 'End', icon: endIcon, zIndexOffset: 2000 })
 								.addTo(map)
 								.bindPopup('End');
 						}
@@ -513,6 +552,7 @@ export function drawMapForLap(
 								fillColor: '#fff',
 								fillOpacity: 0.85,
 								weight: 2,
+								zIndexOffset: 1500,
 							});
 							if (markerClusterGroup) {
 								markerClusterGroup.addLayer(marker);
@@ -702,6 +742,11 @@ export function drawMapForLap(
 			.filter((coord) => coord !== null);
 	}
 
+	if (coords.length === 0) {
+		mapContainer.innerHTML = `<p>No location data available to display map.<br>Lap: ${lapIdx}<br>recordMesgs: ${recordMesgs.length}<br>lapMesgs: ${lapMesgs.length}</p>`;
+		return;
+	}
+
 	if (coords.length > 0) {
 		const polyColor = getLapColor(lapIdx);
 		const polyline = L.polyline(
@@ -720,10 +765,10 @@ export function drawMapForLap(
 
 		const start = coords[0];
 		const end = coords[coords.length - 1];
-		L.marker([start[0], start[1]], { title: 'Start', icon: startIcon })
+		L.marker([start[0], start[1]], { title: 'Start', icon: startIcon, zIndexOffset: 2000 })
 			.addTo(map)
 			.bindPopup('Start');
-		L.marker([end[0], end[1]], { title: 'End', icon: endIcon })
+		L.marker([end[0], end[1]], { title: 'End', icon: endIcon, zIndexOffset: 2000 })
 			.addTo(map)
 			.bindPopup('End');
 
@@ -742,6 +787,7 @@ export function drawMapForLap(
 				fillColor: '#fff',
 				fillOpacity: 0.85,
 				weight: 2,
+				zIndexOffset: 1500,
 			});
 			if (markerClusterGroup) {
 				markerClusterGroup.addLayer(marker);
@@ -878,6 +924,8 @@ export function drawOverlayForFitFile({
 }) {
 	const recordMesgs = fitData.recordMesgs || [];
 	const lapMesgs = fitData.lapMesgs || [];
+	// Patch lap indices for overlays as well
+	patchLapIndices(lapMesgs, recordMesgs);
 	const coords = recordMesgs
 		.map((row, idx) => {
 			if (
@@ -900,10 +948,16 @@ export function drawOverlayForFitFile({
 		})
 		.filter((coord) => coord !== null);
 
+	if (coords.length === 0) {
+		console.warn(`[drawOverlayForFitFile] No valid location data in overlay file: ${fileName || ''}`);
+		return null;
+	}
+
 	if (coords.length > 0) {
 		const isHighlighted =
 			typeof overlayIdx === 'number' &&
 			window._highlightedOverlayIdx === overlayIdx;
+
 		const paletteColor =
 			Array.isArray(overlayColorPalette) && overlayColorPalette.length > 0 && typeof overlayIdx === 'number'
 				? overlayColorPalette[overlayIdx % overlayColorPalette.length]
@@ -916,7 +970,7 @@ export function drawOverlayForFitFile({
 				opacity: 0.95,
 				dashArray: null,
 				className: isHighlighted ? 'overlay-highlight-glow' : '',
-			},
+			}
 		).addTo(map);
 
 		// Track overlay polylines for highlight updates
@@ -935,15 +989,17 @@ export function drawOverlayForFitFile({
 
 		const start = coords[0];
 		const end = coords[coords.length - 1];
+		// --- Ensure start/end markers are always above polylines ---
 		if (startIcon && endIcon) {
-			L.marker([start[0], start[1]], { title: 'Start', icon: startIcon })
+			L.marker([start[0], start[1]], { title: 'Start', icon: startIcon, zIndexOffset: 2000 })
 				.addTo(map)
 				.bindPopup('Start');
-			L.marker([end[0], end[1]], { title: 'End', icon: endIcon })
+			L.marker([end[0], end[1]], { title: 'End', icon: endIcon, zIndexOffset: 2000 })
 				.addTo(map)
 				.bindPopup('End');
 		}
 
+		// --- Ensure data point markers are above polylines ---
 		for (
 			let i = 0;
 			i < coords.length;
@@ -959,6 +1015,7 @@ export function drawOverlayForFitFile({
 				fillColor: '#fff',
 				fillOpacity: 0.85,
 				weight: 2,
+				zIndexOffset: 1500, // <-- ensure above polylines
 			});
 			if (markerClusterGroup) {
 				markerClusterGroup.addLayer(marker);

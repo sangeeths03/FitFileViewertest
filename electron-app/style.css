@@ -689,6 +689,180 @@ body .custom-maptype-btn {
 	display: none;
 }
 
+#vg-tooltip-element  {
+	padding: 2px !important;
+	background: var(--color-bg-alt) !important;
+	color: var(--color-fg) !important;
+	border-radius: 6px !important;
+	box-shadow: 0 2px 8px #000a !important;
+	border: 1px solid var(--color-border) !important;
+	font-size: 14px !important;
+}
+
+#vg-tooltip-element table tr td.key {
+	color: var(--color-accent) !important;
+}
+
+.vega-embed {
+  position: relative;
+  display: inline-block;
+  box-sizing: border-box;
+  background: transparent;
+  color: var(--color-fg);
+}
+.vega-embed.has-actions {
+  padding-right: 38px;
+}
+.vega-embed details:not([open]) > :not(summary) {
+  display: none !important;
+}
+.vega-embed summary {
+  list-style: none;
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 6px;
+  z-index: 1000;
+  background: var(--color-bg-alt);
+  box-shadow: 1px 1px 3px rgb(0 0 0 / 10%);
+  color: var(--color-fg);
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  opacity: 20%;
+  transition: opacity 0.4s ease-in;
+  cursor: pointer;
+  line-height: 0px;
+}
+.vega-embed summary::-webkit-details-marker {
+  display: none;
+}
+.vega-embed summary:active {
+  box-shadow: var(--color-border) 0 0 0 1px inset;
+}
+.vega-embed summary svg {
+  width: 14px;
+  height: 14px;
+  fill: var(--color-fg);
+}
+.vega-embed details[open] summary {
+  opacity: 70%;
+}
+.vega-embed:hover summary, .vega-embed:focus-within summary {
+  opacity: 100% !important;
+  transition: opacity 0.2s ease;
+}
+.vega-embed .vega-actions {
+  position: absolute;
+  z-index: 1001;
+  top: 35px;
+  right: -9px;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 8px;
+  padding-top: 8px;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px 0 rgb(0 0 0 / 20%);
+  border: 1px solid var(--color-border);
+  background: var(--color-bg-alt);
+  animation-duration: 0.15s;
+  animation-name: scale-in;
+  animation-timing-function: cubic-bezier(0.2, 0, 0.13, 1.5);
+  text-align: left;
+}
+.vega-embed .vega-actions a {
+  padding: 8px 16px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--color-fg);
+  text-decoration: none;
+  border-radius: 3px;
+  transition: background 0.2s, color 0.2s;
+}
+.vega-embed .vega-actions a:hover, .vega-embed .vega-actions a:focus {
+  background-color: var(--color-btn-hover);
+  color: var(--color-fg-alt);
+}
+.vega-embed .vega-actions::before, .vega-embed .vega-actions::after {
+  content: "";
+  display: inline-block;
+  position: absolute;
+}
+.vega-embed .vega-actions::before {
+  left: auto;
+  right: 14px;
+  top: -16px;
+  border: 8px solid rgb(0 0 0 / 0%);
+  border-bottom-color: var(--color-border);
+}
+.vega-embed .vega-actions::after {
+  left: auto;
+  right: 15px;
+  top: -14px;
+  border: 7px solid rgb(0 0 0 / 0%);
+  border-bottom-color: var(--color-bg-alt);
+}
+.vega-embed .chart-wrapper.fit-x {
+  width: 100%;
+}
+.vega-embed .chart-wrapper.fit-y {
+  height: 100%;
+}
+
+.vega-embed-wrapper {
+  max-width: 100%;
+  overflow: auto;
+  padding-right: 14px;
+}
+
+@keyframes scale-in {
+  from {
+	opacity: 0%;
+	transform: scale(0.6);
+  }
+  to {
+	opacity: 100%;
+	transform: scale(1);
+  }
+}
+
+
+/* Light theme overrides */
+body.theme-light #vg-tooltip-element {
+  background: var(--color-bg-alt) !important;
+  color: var(--color-fg) !important;
+  border: 1px solid var(--color-border) !important;
+}
+body.theme-light #vg-tooltip-element table tr td.key {
+  color: var(--color-accent) !important;
+}
+body.theme-light .vega-embed summary {
+  background: var(--color-bg-alt);
+  color: var(--color-fg);
+  border: 1px solid var(--color-border);
+}
+body.theme-light .vega-embed .vega-actions {
+  background: var(--color-bg-alt);
+  color: var(--color-fg);
+  border: 1px solid var(--color-border);
+}
+body.theme-light .vega-embed .vega-actions a {
+  color: var(--color-fg);
+}
+body.theme-light .vega-embed .vega-actions a:hover,
+body.theme-light .vega-embed .vega-actions a:focus {
+  background: var(--color-btn-hover);
+  color: var(--color-fg-alt);
+}
+body.theme-light .vega-embed .vega-actions::before {
+  border-bottom-color: var(--color-border);
+}
+body.theme-light .vega-embed .vega-actions::after {
+  border-bottom-color: var(--color-bg-alt);
+}
+
+
 /* =====================================================
    Custom Zoom Slider Bar
    ===================================================== */

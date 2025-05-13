@@ -18,55 +18,38 @@ export function getChartSpec(foldedData, theme = 'dark') {
 	const isDark = theme === 'dark';
 	const colors = isDark
 		? {
-			background: 'linear-gradient(135deg, #232526 0%, #414345 100%)',
-			text: '#e0e0e0',
-			fill: '#23263a',
-			axis: '#b0b0b0',
-			axisDomain: '#888',
-			legend: '#e0e0e0',
-			line: '#00bcd4', // Material Cyan
-			point: '#ffeb3b', // Material Yellow
-			firebrick: '#ff5252', // Material Red Accent
-			shadow: 'rgba(0,0,0,0.3)'
-		} : {
-			background: 'linear-gradient(135deg, #fff 0%, #e3e3e3 100%)',
-			text: '#23263a',
-			fill: '#f0f0f0',
-			axis: '#23263a',
-			axisDomain: '#888',
-			legend: '#23263a',
-			line: '#1976d2', // Material Blue
-			point: '#ff9800', // Material Orange
-			firebrick: '#e53935', // Material Red
-			shadow: 'rgba(0,0,0,0.08)'
-		};
+				background: '#181c24',
+				text: '#e0e0e0',
+				fill: '#23263a',
+				axis: '#b0b0b0',
+				axisDomain: '#888',
+				legend: '#e0e0e0',
+				line: '#00bcd4', // Material Cyan
+				point: '#ffeb3b', // Material Yellow
+				firebrick: '#ff5252', // Material Red Accent
+				shadow: 'rgba(0,0,0,0.3)',
+		  }
+		: {
+				background: '#f7f9fa',
+				text: '#23263a',
+				fill: '#f0f0f0',
+				axis: '#23263a',
+				axisDomain: '#888',
+				legend: '#23263a',
+				line: '#1976d2', // Material Blue
+				point: '#ff9800', // Material Orange
+				firebrick: '#e53935', // Material Red
+				shadow: 'rgba(0,0,0,0.08)',
+		  };
 	return {
 		config: {
-			background: undefined, // Use view.fill for gradient
+			background: colors.background,
+			padding: 24,
 			font: 'Inter, Roboto, Segoe UI, Arial, sans-serif',
-			text: {
-				color: colors.text,
-				fontSize: 15,
-				font: 'Inter, Roboto, Segoe UI, Arial, sans-serif',
-			},
-			title: {
-				anchor: 'middle',
-				fontWeight: '600',
-				fontSize: 32,
-				color: colors.text,
-			},
-			header: {
-				titleFontSize: 22,
-				labelFontSize: 18,
-				color: colors.text,
-				fontWeight: '500',
-			},
 			view: {
-				height: 800,
-				width: 800,
 				stroke: null,
 				cornerRadius: 18,
-				fill: colors.fill, // Use a solid color, not an expression or gradient
+				fill: colors.fill,
 				shadow: { color: colors.shadow, blur: 16, offsetX: 0, offsetY: 4 },
 			},
 			axis: {
@@ -76,25 +59,59 @@ export function getChartSpec(foldedData, theme = 'dark') {
 				grid: true,
 				gridColor: isDark ? '#333' : '#e0e0e0',
 				gridDash: [2, 4],
-				labelAngle: 0,
-				tickSize: 7,
-				fontWeight: '400',
-				fontSize: 15,
-				titleFontSize: 18,
-				color: colors.axis,
-				titleColor: colors.axis,
 				labelColor: colors.axis,
+				labelFontSize: 15,
+				labelFontWeight: '400',
 				tickColor: colors.axisDomain,
+				tickSize: 7,
+				titleFontSize: 18,
+				titleFontWeight: '600',
+				titleColor: colors.axis,
 			},
 			legend: {
-				fontWeight: '400',
-				fontSize: 15,
-				titleFontSize: 16,
-				color: colors.legend,
-				titleColor: colors.legend,
+				cornerRadius: 12,
+				fillColor: isDark ? '#23263a' : '#f7f9fa',
+				strokeColor: isDark ? '#333' : '#e0e0e0',
+				strokeWidth: 1,
+				padding: 12,
 				labelColor: colors.legend,
+				labelFontSize: 15,
+				titleColor: colors.legend,
+				titleFontSize: 16,
 				symbolType: 'circle',
 				symbolSize: 120,
+			},
+			title: {
+				anchor: 'middle',
+				fontWeight: '700',
+				fontSize: 32,
+				color: colors.text, // Ensure title uses theme color
+				offset: 18,
+			},
+			range: {
+				category: [
+					'#00bcd4',
+					'#ffeb3b',
+					'#ff5252',
+					'#43a047',
+					'#8e24aa',
+					'#fbc02d',
+					'#1976d2',
+				],
+			},
+			mark: {
+				opacity: 0.9,
+				strokeWidth: 2,
+				cornerRadius: 8,
+			},
+			line: {
+				interpolate: 'monotone',
+			},
+			point: {
+				filled: true,
+				size: 100,
+				stroke: colors.line,
+				strokeWidth: 2,
 			},
 		},
 		data: { values: foldedData },
@@ -107,6 +124,8 @@ export function getChartSpec(foldedData, theme = 'dark') {
 					fontSize: 20,
 					fontWeight: 'bold',
 					color: colors.text,
+					labelFontSize: 28,
+					labelColor: colors.text,
 				},
 				type: 'nominal',
 			},
@@ -135,9 +154,27 @@ export function getChartSpec(foldedData, theme = 'dark') {
 							type: 'quantitative',
 						},
 						tooltip: [
-							{ field: 'timestamp', type: 'temporal', title: 'Time' },
-							{ field: 'value', type: 'quantitative', title: 'Value', format: '.3f' },
-							{ field: 'key', type: 'nominal', title: 'Key' }
+							{
+								field: 'timestamp',
+								type: 'temporal',
+								title: 'Time',
+								format: '%Y-%m-%d %H:%M:%S',
+								formatType: 'time',
+								color: colors.text,
+							},
+							{
+								field: 'value',
+								type: 'quantitative',
+								title: 'Value',
+								format: '.3f',
+								color: colors.text,
+							},
+							{
+								field: 'key',
+								type: 'nominal',
+								title: 'Key',
+								color: colors.text,
+							},
 						],
 					},
 					name: 'view_11',
@@ -155,12 +192,30 @@ export function getChartSpec(foldedData, theme = 'dark') {
 						x: { field: 'timestamp', type: 'temporal' },
 						y: { field: 'value', scale: { zero: false }, type: 'quantitative' },
 						tooltip: [
-							{ field: 'timestamp', type: 'temporal', title: 'Time' },
-							{ field: 'value', type: 'quantitative', title: 'Value', format: '.3f' },
-							{ field: 'key', type: 'nominal', title: 'Key' }
+							{
+								field: 'timestamp',
+								type: 'temporal',
+								title: 'Time',
+								format: '%Y-%m-%d %H:%M:%S',
+								formatType: 'time',
+								color: colors.text,
+							},
+							{
+								field: 'value',
+								type: 'quantitative',
+								title: 'Value',
+								format: '.3f',
+								color: colors.text,
+							},
+							{
+								field: 'key',
+								type: 'nominal',
+								title: 'Key',
+								color: colors.text,
+							},
 						],
 					},
-					transform: [ { filter: { param: 'param_11' } } ],
+					transform: [{ filter: { param: 'param_11' } }],
 				},
 				{
 					mark: {
@@ -176,14 +231,25 @@ export function getChartSpec(foldedData, theme = 'dark') {
 						x: { aggregate: 'min', field: 'timestamp', type: 'temporal' },
 						y: { aggregate: 'min', field: 'value', type: 'quantitative' },
 						tooltip: [
-							{ field: 'timestamp', aggregate: 'min', type: 'temporal', title: 'First Time' },
-							{ field: 'value', aggregate: 'min', type: 'quantitative', title: 'First Value', format: '.3f' },
-							{ field: 'key', type: 'nominal', title: 'Key' }
+							{
+								field: 'timestamp',
+								aggregate: 'min',
+								type: 'temporal',
+								title: 'First Time',
+							},
+							{
+								field: 'value',
+								aggregate: 'min',
+								type: 'quantitative',
+								title: 'First Value',
+								format: '.3f',
+							},
+							{ field: 'key', type: 'nominal', title: 'Key' },
 						],
 					},
 					transform: [
 						{ filter: "length(data('param_11_store')) > 0" },
-						{ filter: { param: 'param_11' } }
+						{ filter: { param: 'param_11' } },
 					],
 				},
 				{
@@ -200,14 +266,25 @@ export function getChartSpec(foldedData, theme = 'dark') {
 						x: { aggregate: 'max', field: 'timestamp', type: 'temporal' },
 						y: { aggregate: 'max', field: 'value', type: 'quantitative' },
 						tooltip: [
-							{ field: 'timestamp', aggregate: 'max', type: 'temporal', title: 'Last Time' },
-							{ field: 'value', aggregate: 'max', type: 'quantitative', title: 'Last Value', format: '.3f' },
-							{ field: 'key', type: 'nominal', title: 'Key' }
+							{
+								field: 'timestamp',
+								aggregate: 'max',
+								type: 'temporal',
+								title: 'Last Time',
+							},
+							{
+								field: 'value',
+								aggregate: 'max',
+								type: 'quantitative',
+								title: 'Last Value',
+								format: '.3f',
+							},
+							{ field: 'key', type: 'nominal', title: 'Key' },
 						],
 					},
 					transform: [
 						{ filter: "length(data('param_11_store')) > 0" },
-						{ filter: { param: 'param_11' } }
+						{ filter: { param: 'param_11' } },
 					],
 				},
 				{
@@ -219,20 +296,50 @@ export function getChartSpec(foldedData, theme = 'dark') {
 					encoding: {
 						x: { aggregate: 'min', field: 'timestamp', type: 'temporal' },
 						x2: { aggregate: 'max', field: 'timestamp' },
-						y: { aggregate: 'min', field: 'value', scale: { zero: false }, type: 'quantitative' },
+						y: {
+							aggregate: 'min',
+							field: 'value',
+							scale: { zero: false },
+							type: 'quantitative',
+						},
+						y2: {
+							aggregate: 'max',
+							field: 'value',
+							scale: { zero: false },
+							type: 'quantitative',
+						},
+						tooltip: [
+							{
+								field: 'timestamp',
+								aggregate: 'min',
+								type: 'temporal',
+								title: 'First Time',
+							},
+							{
+								field: 'value',
+								aggregate: 'min',
+								type: 'quantitative',
+								title: 'First Value',
+								format: '.3f',
+							},
+							{ field: 'key', type: 'nominal', title: 'Key' },
+						],
 					},
 					transform: [
 						{ filter: "length(data('param_11_store')) > 0" },
-						{ filter: { param: 'param_11' } }
+						{ filter: { param: 'param_11' } },
 					],
 				},
 				{
 					mark: {
 						type: 'text',
-						color: colors.line,
+						color: colors.text,
 						dx: 0,
 						dy: -50,
 						size: 20,
+						font: 'sans-serif',
+						fontWeight: 'bold',
+						fontSize: 32,
 					},
 					encoding: {
 						text: {
