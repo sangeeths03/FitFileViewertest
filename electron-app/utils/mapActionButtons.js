@@ -408,54 +408,65 @@ export function createAddFitFileToMapButton() {
 }
 
 // Export the overlay color palette for use in map rendering
-export const overlayColorPalette = (function shuffle(array) {
-	for (let i = array.length - 1; i > 0; i--) {
-		const j = Math.floor(Math.random() * (i + 1));
-		[array[i], array[j]] = [array[j], array[i]];
+export const overlayColorPalette = (function shuffleAndFilter(array) {
+	// Remove duplicates
+	let unique = Array.from(new Set(array));
+
+	// Helper to compute color distance in RGB space
+	function colorDistance(c1, c2) {
+		function hexToRgb(hex) {
+			hex = hex.replace('#', '');
+			if (hex.length === 3)
+				hex = hex.split('').map(x => x + x).join('');
+			const num = parseInt(hex, 16);
+			return [num >> 16, (num >> 8) & 255, num & 255];
+		}
+		const [r1, g1, b1] = hexToRgb(c1);
+		const [r2, g2, b2] = hexToRgb(c2);
+		return Math.sqrt((r1 - r2) ** 2 + (g1 - g2) ** 2 + (b1 - b2) ** 2);
 	}
-	return array;
+
+	// Filter out colors that are too similar (distance < 80)
+	const filtered = [];
+	unique.forEach(color => {
+		if (filtered.every(existing => colorDistance(color, existing) >= 80)) {
+			filtered.push(color);
+		}
+	});
+
+	// Shuffle for randomness
+	for (let i = filtered.length - 1; i > 0; i--) {
+		const j = Math.floor(Math.random() * (i + 1));
+		[filtered[i], filtered[j]] = [filtered[j], filtered[i]];
+	}
+	return filtered;
 })([
-	'#ff5252',
-	'#40c4ff',
-	'#ffd740',
-	'#69f0ae',
-	'#ff4081',
-	'#7c4dff',
-	'#18ffff',
-	'#ffab40',
-	'#64ffda',
-	'#eeff41',
-	'#536dfe',
-	'#ff6e40',
-	'#00e676',
-	'#ffb300',
-	'#00b8d4',
-	'#ffd600',
-	'#00bfae',
-	'#ff1744',
-	'#00e5ff',
-	'#ffea00',
-	'#76ff03',
-	'#ff80ab',
-	'#b388ff',
-	'#ff9100',
-	'#1de9b6',
-	'#ff3d00',
-	'#00bfae',
-	'#ffd740',
-	'#00e676',
-	'#40c4ff',
-	'#ff4081',
-	'#69f0ae',
-	'#ffab40',
-	'#18ffff',
-	'#eeff41',
-	'#7c4dff',
-	'#ff5252',
-	'#ffd600',
-	'#00e5ff',
-	'#ffea00',
-	'#76ff03',
+	'#00adad',
+	'#bf3b00',
+	'#0028bf',
+	'#960f51',
+	'#00bf7e',
+	'#83b200',
+	'#e70000',
+	'#0054bf',
+	'#9b0025',
+	'#1100be',
+	'#ac9201',
+	'#0091bf',
+	'#ff1989',
+	'#004cff',
+	'#ff473b',
+	'#0029ff',
+	'#ff4051',
+	'#00e8bb',
+	'#ff1a00',
+	'#0015ff',
+	'#8900fc',
+	'#007f54',
+	'#4c7700',
+	'#006efb',
+	'#e21649',
+	'#00c2ff',
 ]);
 
 export function createShownFilesList() {
@@ -531,6 +542,8 @@ export function createShownFilesList() {
 		const ul = container.querySelector('#shown-files-ul');
 		ul.innerHTML = '';
 		let anyOverlays = false;
+		// Remove main file clickable entry (undo previous change)
+		// Only show overlays in the list
 		if (window.loadedFitFiles && window.loadedFitFiles.length > 1) {
 			window.loadedFitFiles.forEach((f, idx) => {
 				if (idx === 0) return; // skip main file
@@ -611,6 +624,14 @@ export function createShownFilesList() {
 					if (window._overlayPolylines && window._overlayPolylines[idx]) {
 						const polyline = window._overlayPolylines[idx];
 						if (polyline.bringToFront) polyline.bringToFront();
+						// --- Also bring overlay markers to front ---
+						if (window.L && window.L.CircleMarker && polyline._map && polyline._map._layers) {
+							Object.values(polyline._map._layers).forEach(layer => {
+								if (layer instanceof window.L.CircleMarker && layer.options && polyline.options && layer.options.color === polyline.options.color) {
+									if (layer.bringToFront) layer.bringToFront();
+								}
+							});
+						}
 						const polyElem = polyline.getElement && polyline.getElement();
 						if (polyElem) {
 							polyElem.style.transition = 'filter 0.2s';
@@ -738,6 +759,7 @@ export function createShownFilesList() {
 	if (!(window.loadedFitFiles && window.loadedFitFiles.length > 1)) {
 		container.style.display = 'none';
 	}
+
 	return container;
 }
 
@@ -816,3 +838,138 @@ export function createMarkerCountSelector(onChange) {
 
 	return container;
 }
+
+// --- Make #activeFileName clickable and highlightable, always ---
+function setupActiveFileNameMapActions() {
+    const activeFileName = document.getElementById('activeFileName');
+    if (!activeFileName) {
+        console.log('[FFV] #activeFileName not found in DOM');
+        return;
+    }
+    activeFileName.style.cursor = 'pointer';
+    activeFileName.title = 'Click to center map on main file';
+    // Remove any previous listeners to avoid stacking
+    activeFileName.onclick = null;
+    activeFileName.onmouseenter = null;
+    activeFileName.onmouseleave = null;
+
+    activeFileName.onclick = () => {
+        console.log('[FFV] #activeFileName clicked');
+        // Switch to map tab if not active
+        const mapTabBtn = document.querySelector('[data-tab="map"]');
+        if (mapTabBtn && !mapTabBtn.classList.contains('active')) {
+            console.log('[FFV] Switching to map tab');
+            mapTabBtn.click();
+        }
+        setTimeout(() => {
+            // Always zoom to ONLY the main file polyline, never all overlays
+            const idx = 0;
+            console.log('[FFV] Attempting to zoom to main polyline.');
+            console.log('[FFV] window._overlayPolylines:', window._overlayPolylines);
+            if (window._overlayPolylines && window._overlayPolylines[idx]) {
+                window._highlightedOverlayIdx = idx;
+                if (window.updateOverlayHighlights) window.updateOverlayHighlights();
+                const polyline = window._overlayPolylines[idx];
+                if (polyline.bringToFront) polyline.bringToFront();
+                if (window.L && window.L.CircleMarker && polyline._map && polyline._map._layers) {
+                    Object.values(polyline._map._layers).forEach(layer => {
+                        if (layer instanceof window.L.CircleMarker && layer.options && polyline.options && layer.options.color === polyline.options.color) {
+                            if (layer.bringToFront) layer.bringToFront();
+                        }
+                    });
+                }
+                const polyElem = polyline.getElement && polyline.getElement();
+                if (polyElem) {
+                    polyElem.style.transition = 'filter 0.2s';
+                    polyElem.style.filter = 'drop-shadow(0 0 16px ' + (polyline.options.color || '#1976d2') + ')';
+                    setTimeout(() => {
+                        if (window._highlightedOverlayIdx === idx) {
+                            polyElem.style.filter = 'drop-shadow(0 0 8px ' + (polyline.options.color || '#1976d2') + ')';
+                        }
+                    }, 250);
+                }
+                // --- CRITICAL: Only fitBounds to the main polyline, never all overlays ---
+                if (window._leafletMapInstance) {
+                    let bounds = null;
+                    if (window._mainPolylineOriginalBounds && window._mainPolylineOriginalBounds.isValid && window._mainPolylineOriginalBounds.isValid()) {
+                        bounds = window._mainPolylineOriginalBounds;
+                        console.log('[FFV] Using window._mainPolylineOriginalBounds for fitBounds:', bounds);
+                    } else if (polyline.getBounds) {
+                        bounds = polyline.getBounds();
+                        console.warn('[FFV] window._mainPolylineOriginalBounds missing or invalid, falling back to polyline.getBounds():', bounds);
+                    } else {
+                        console.warn('[FFV] No valid bounds found for main polyline.');
+                    }
+                    if (bounds && bounds.isValid && bounds.isValid()) {
+                        console.log('[FFV] Calling fitBounds with:', bounds, { padding: [20, 20] });
+                        window._leafletMapInstance.fitBounds(bounds, { padding: [20, 20] });
+                        setTimeout(() => {
+                            try {
+                                const center = window._leafletMapInstance.getCenter();
+                                const zoom = window._leafletMapInstance.getZoom();
+                                console.log('[FFV] After fitBounds: map center:', center, 'zoom:', zoom);
+                            } catch (err) {
+                                console.warn('[FFV] Error getting map center/zoom after fitBounds:', err);
+                            }
+                        }, 200);
+                    } else {
+                        console.warn('[FFV] fitBounds: bounds are missing or invalid:', bounds);
+                    }
+                } else {
+                    if (!window._leafletMapInstance) console.warn('[FFV] window._leafletMapInstance is missing');
+                }
+                // Log overlays for debugging
+                if (window.loadedFitFiles) {
+                    console.log('[FFV] loadedFitFiles count:', window.loadedFitFiles.length, window.loadedFitFiles);
+                }
+            } else {
+                console.log('[FFV] No main polyline found in window._overlayPolylines[0]');
+                console.log('[FFV] window._overlayPolylines:', window._overlayPolylines);
+            }
+        }, 0);
+    };
+    activeFileName.onmouseenter = () => {
+        console.log('[FFV] #activeFileName mouseenter');
+        window._highlightedOverlayIdx = 0;
+        if (window.updateOverlayHighlights) window.updateOverlayHighlights();
+    };
+    activeFileName.onmouseleave = () => {
+        console.log('[FFV] #activeFileName mouseleave');
+        window._highlightedOverlayIdx = null;
+        if (window.updateOverlayHighlights) window.updateOverlayHighlights();
+    };
+}
+
+// --- MutationObserver to keep #activeFileName interactive even if replaced ---
+(function observeActiveFileName() {
+    const parent = document.getElementById('activeFileName')?.parentNode;
+    if (!parent) {
+        console.log('[FFV] #activeFileName parent not found for MutationObserver');
+        return;
+    }
+    const observer = new MutationObserver(() => {
+        console.log('[FFV] MutationObserver: childList changed, reapplying setupActiveFileNameMapActions');
+        setupActiveFileNameMapActions();
+    });
+    observer.observe(parent, { childList: true, subtree: false });
+    // Also re-apply on DOMContentLoaded just in case
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('[FFV] DOMContentLoaded: running setupActiveFileNameMapActions');
+            setupActiveFileNameMapActions();
+        });
+    } else {
+        setupActiveFileNameMapActions();
+    }
+})();
+
+// Also rerun after overlays update
+window._setupActiveFileNameMapActions = setupActiveFileNameMapActions;
+
+// Patch updateShownFilesList to always call setupActiveFileNameMapActions
+const origUpdateShownFilesList = window.updateShownFilesList;
+window.updateShownFilesList = function() {
+    if (origUpdateShownFilesList) origUpdateShownFilesList.apply(this, arguments);
+    console.log('[FFV] updateShownFilesList: running setupActiveFileNameMapActions');
+    setupActiveFileNameMapActions();
+};

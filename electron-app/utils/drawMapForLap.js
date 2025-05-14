@@ -42,6 +42,24 @@ export function drawMapForLap(
 	lapIdx,
 	{ map, baseLayers, markerClusterGroup, startIcon, endIcon, mapContainer, getLapColor, formatTooltipData, getLapNumForIdx }
 ) {
+	// --- Always reset overlay polylines and main polyline at the start of a redraw ---
+	window._overlayPolylines = {};
+	window._mainPolylineOriginalBounds = undefined;
+
+	// Remove all layers except base layers and controls
+	map.eachLayer((layer) => {
+		if (!Object.values(baseLayers).includes(layer)) {
+			map.removeLayer(layer);
+		}
+	});
+	if (markerClusterGroup) markerClusterGroup.clearLayers();
+
+	// --- If switching main files, ensure overlays are cleared and only the new main file is plotted ---
+	if (window.loadedFitFiles && window.loadedFitFiles.length > 1 && window._activeMainFileIdx !== undefined) {
+		// Remove overlays from loadedFitFiles except the main file
+		window.loadedFitFiles = [window.loadedFitFiles[window._activeMainFileIdx]];
+	}
+
 	console.log('[drawMapForLap] ENTERED FUNCTION, lapIdx =', lapIdx, 'type:', typeof lapIdx, Array.isArray(lapIdx) ? 'isArray' : 'notArray');
 	let coords = [];
 	const lapMesgs = window.globalData.lapMesgs || [];
@@ -62,18 +80,13 @@ export function drawMapForLap(
 		tryFit();
 	}
 
+	// --- Store original main polyline bounds for zooming ---
+	window._mainPolylineOriginalBounds = undefined;
+
 	// If lapIdx is an array with one element (not "all"), treat as single lap
 	if (Array.isArray(lapIdx) && lapIdx.length === 1 && lapIdx[0] !== 'all') {
 		lapIdx = lapIdx[0];
 	}
-
-	// Remove all layers except base layers and controls
-	map.eachLayer((layer) => {
-		if (!Object.values(baseLayers).includes(layer)) {
-			map.removeLayer(layer);
-		}
-	});
-	if (markerClusterGroup) markerClusterGroup.clearLayers();
 
 	// --- FIX: handle both string 'all' and array containing 'all' ---
 	if (lapIdx === 'all' || (Array.isArray(lapIdx) && lapIdx.includes('all'))) {
@@ -130,8 +143,14 @@ export function drawMapForLap(
 					dashArray: '6, 8',
 				}
 			).addTo(map);
+			// --- Assign main file polyline to window._overlayPolylines[0] ---
+			if (!window._overlayPolylines) window._overlayPolylines = {};
+			window._overlayPolylines[0] = polyline;
+			// --- Store original bounds for main polyline ---
+			const origBounds = polyline.getBounds();
+			window._mainPolylineOriginalBounds = typeof origBounds.clone === 'function' ? origBounds.clone() : L.latLngBounds(origBounds);
 			map.invalidateSize();
-			map.fitBounds(polyline.getBounds(), { padding: [20, 20] });
+			map.fitBounds(window._mainPolylineOriginalBounds, { padding: [20, 20] });
 			const start = coords[0];
 			const end = coords[coords.length - 1];
 			if (startIcon && endIcon) {
@@ -180,53 +199,11 @@ export function drawMapForLap(
 				});
 			}
 		}
-		// Draw overlays if present (reuse existing logic)
+		// --- When adding overlays, only zoom to the overlay just added, not all overlays ---
 		if (window.loadedFitFiles && Array.isArray(window.loadedFitFiles) && window.loadedFitFiles.length > 1) {
-			const colorPalette = [
-				'#ff5252',
-				'#40c4ff',
-				'#ffd740',
-				'#69f0ae',
-				'#ff4081',
-				'#7c4dff',
-				'#18ffff',
-				'#ffab40',
-				'#64ffda',
-				'#eeff41',
-				'#536dfe',
-				'#ff6e40',
-				'#00e676',
-				'#ffb300',
-				'#00b8d4',
-				'#ffd600',
-				'#00bfae',
-				'#ff1744',
-				'#00e5ff',
-				'#ffea00',
-				'#76ff03',
-				'#ff80ab',
-				'#b388ff',
-				'#ff9100',
-				'#1de9b6',
-				'#ff3d00',
-				'#00bfae',
-				'#ffd740',
-				'#00e676',
-				'#40c4ff',
-				'#ff4081',
-				'#69f0ae',
-				'#ffab40',
-				'#18ffff',
-				'#eeff41',
-				'#7c4dff',
-				'#ff5252',
-				'#ffd600',
-				'#00e5ff',
-				'#ffea00',
-				'#76ff03',
-			];
+			const colorPalette = overlayColorPalette;
 			let overlayIdx = 0;
-			let allBounds = null;
+			let lastOverlayBounds = null;
 			for (let i = 1; i < window.loadedFitFiles.length; ++i) {
 				const overlay = window.loadedFitFiles[i];
 				const color = colorPalette[overlayIdx % colorPalette.length];
@@ -244,13 +221,18 @@ export function drawMapForLap(
 					overlayIdx: i,
 				});
 				if (bounds) {
-					if (!allBounds) allBounds = bounds;
-					else allBounds.extend(bounds);
+					// Defensive: ensure bounds is a valid LatLngBounds object
+					let safeBounds = bounds;
+					if (typeof bounds.clone !== 'function' && window.L && window.L.latLngBounds) {
+						safeBounds = window.L.latLngBounds(bounds);
+					}
+					lastOverlayBounds = typeof safeBounds.clone === 'function' ? safeBounds.clone() : safeBounds;
 				}
 				overlayIdx++;
 			}
-			if (allBounds) {
-				safeFitBounds(map, allBounds, { padding: [20, 20] });
+			// Always auto-zoom to the overlay just added (not all overlays)
+			if (lastOverlayBounds) {
+				safeFitBounds(map, lastOverlayBounds, { padding: [20, 20] });
 			}
 		}
 		return;
@@ -310,8 +292,11 @@ export function drawMapForLap(
 						dashArray: '6, 8',
 					}
 				).addTo(map);
+				// --- Store original bounds for main polyline ---
+				const origBounds = polyline.getBounds();
+				window._mainPolylineOriginalBounds = typeof origBounds.clone === 'function' ? origBounds.clone() : L.latLngBounds(origBounds);
 				map.invalidateSize();
-				map.fitBounds(polyline.getBounds(), { padding: [20, 20] });
+				map.fitBounds(window._mainPolylineOriginalBounds, { padding: [20, 20] });
 				const start = coords[0];
 				const end = coords[coords.length - 1];
 				if (startIcon && endIcon) {
@@ -360,53 +345,11 @@ export function drawMapForLap(
 					});
 				}
 			}
-			// Draw overlays if present (reuse existing logic)
+			// --- When adding overlays, only zoom to the overlay just added, not all overlays ---
 			if (window.loadedFitFiles && Array.isArray(window.loadedFitFiles) && window.loadedFitFiles.length > 1) {
-				const colorPalette = [
-					'#ff5252',
-					'#40c4ff',
-					'#ffd740',
-					'#69f0ae',
-					'#ff4081',
-					'#7c4dff',
-					'#18ffff',
-					'#ffab40',
-					'#64ffda',
-					'#eeff41',
-					'#536dfe',
-					'#ff6e40',
-					'#00e676',
-					'#ffb300',
-					'#00b8d4',
-					'#ffd600',
-					'#00bfae',
-					'#ff1744',
-					'#00e5ff',
-					'#ffea00',
-					'#76ff03',
-					'#ff80ab',
-					'#b388ff',
-					'#ff9100',
-					'#1de9b6',
-					'#ff3d00',
-					'#00bfae',
-					'#ffd740',
-					'#00e676',
-					'#40c4ff',
-					'#ff4081',
-					'#69f0ae',
-					'#ffab40',
-					'#18ffff',
-					'#eeff41',
-					'#7c4dff',
-					'#ff5252',
-					'#ffd600',
-					'#00e5ff',
-					'#ffea00',
-					'#76ff03',
-				];
+				const colorPalette = overlayColorPalette;
 				let overlayIdx = 0;
-				let allBounds = null;
+				let lastOverlayBounds = null;
 				for (let i = 1; i < window.loadedFitFiles.length; ++i) {
 					const overlay = window.loadedFitFiles[i];
 					const color = colorPalette[overlayIdx % colorPalette.length];
@@ -424,13 +367,18 @@ export function drawMapForLap(
 						overlayIdx: i,
 					});
 					if (bounds) {
-						if (!allBounds) allBounds = bounds;
-						else allBounds.extend(bounds);
+						// Defensive: ensure bounds is a valid LatLngBounds object
+						let safeBounds = bounds;
+						if (typeof bounds.clone !== 'function' && window.L && window.L.latLngBounds) {
+							safeBounds = window.L.latLngBounds(bounds);
+						}
+						lastOverlayBounds = typeof safeBounds.clone === 'function' ? safeBounds.clone() : safeBounds;
 					}
 					overlayIdx++;
 				}
-				if (allBounds) {
-					safeFitBounds(map, allBounds, { padding: [20, 20] });
+				// Always auto-zoom to the overlay just added (not all overlays)
+				if (lastOverlayBounds) {
+					safeFitBounds(map, lastOverlayBounds, { padding: [20, 20] });
 				}
 			}
 			return;
@@ -535,53 +483,11 @@ export function drawMapForLap(
 			}
 		});
 		if (bounds) map.fitBounds(bounds, { padding: [20, 20] });
-		// --- Draw overlays if present ---
+		// --- When adding overlays, only zoom to the overlay just added, not all overlays ---
 		if (window.loadedFitFiles && Array.isArray(window.loadedFitFiles) && window.loadedFitFiles.length > 1) {
-			const colorPalette = [
-				'#ff5252',
-				'#40c4ff',
-				'#ffd740',
-				'#69f0ae',
-				'#ff4081',
-				'#7c4dff',
-				'#18ffff',
-				'#ffab40',
-				'#64ffda',
-				'#eeff41',
-				'#536dfe',
-				'#ff6e40',
-				'#00e676',
-				'#ffb300',
-				'#00b8d4',
-				'#ffd600',
-				'#00bfae',
-				'#ff1744',
-				'#00e5ff',
-				'#ffea00',
-				'#76ff03',
-				'#ff80ab',
-				'#b388ff',
-				'#ff9100',
-				'#1de9b6',
-				'#ff3d00',
-				'#00bfae',
-				'#ffd740',
-				'#00e676',
-				'#40c4ff',
-				'#ff4081',
-				'#69f0ae',
-				'#ffab40',
-				'#18ffff',
-				'#eeff41',
-				'#7c4dff',
-				'#ff5252',
-				'#ffd600',
-				'#00e5ff',
-				'#ffea00',
-				'#76ff03',
-			];
+			const colorPalette = overlayColorPalette;
 			let overlayIdx = 0;
-			let allBounds = null;
+			let lastOverlayBounds = null;
 			for (let i = 1; i < window.loadedFitFiles.length; ++i) {
 				const overlay = window.loadedFitFiles[i];
 				const color = colorPalette[overlayIdx % colorPalette.length];
@@ -599,15 +505,19 @@ export function drawMapForLap(
 					overlayIdx: i,
 				});
 				if (bounds) {
-					if (!allBounds) allBounds = bounds;
-					else allBounds.extend(bounds);
+					// Defensive: ensure bounds is a valid LatLngBounds object
+					let safeBounds = bounds;
+					if (typeof bounds.clone !== 'function' && window.L && window.L.latLngBounds) {
+						safeBounds = window.L.latLngBounds(bounds);
+					}
+					lastOverlayBounds = typeof safeBounds.clone === 'function' ? safeBounds.clone() : safeBounds;
 				}
 				overlayIdx++;
 			}
-			if (allBounds) {
-				safeFitBounds(map, allBounds, { padding: [20, 20] });
+			// Always auto-zoom to the overlay just added (not all overlays)
+			if (lastOverlayBounds) {
+				safeFitBounds(map, lastOverlayBounds, { padding: [20, 20] });
 			}
-			return;
 		}
 		return;
 	}
@@ -689,9 +599,13 @@ export function drawMapForLap(
 			}
 		).addTo(map);
 
+		// --- Store original bounds for main polyline ---
+		const origBounds = polyline.getBounds();
+		window._mainPolylineOriginalBounds = typeof origBounds.clone === 'function' ? origBounds.clone() : L.latLngBounds(origBounds);
+
 		// Fix: Ensure map is sized before fitBounds
 		map.invalidateSize();
-		map.fitBounds(polyline.getBounds(), { padding: [20, 20] });
+		map.fitBounds(window._mainPolylineOriginalBounds, { padding: [20, 20] });
 
 		const start = coords[0];
 		const end = coords[coords.length - 1];
@@ -741,53 +655,11 @@ export function drawMapForLap(
 				sticky: true,
 			});
 		}
-		// --- Draw overlays if present ---
+		// --- When adding overlays, only zoom to the overlay just added, not all overlays ---
 		if (window.loadedFitFiles && Array.isArray(window.loadedFitFiles) && window.loadedFitFiles.length > 1) {
-			const colorPalette = [
-				'#ff5252',
-				'#40c4ff',
-				'#ffd740',
-				'#69f0ae',
-				'#ff4081',
-				'#7c4dff',
-				'#18ffff',
-				'#ffab40',
-				'#64ffda',
-				'#eeff41',
-				'#536dfe',
-				'#ff6e40',
-				'#00e676',
-				'#ffb300',
-				'#00b8d4',
-				'#ffd600',
-				'#00bfae',
-				'#ff1744',
-				'#00e5ff',
-				'#ffea00',
-				'#76ff03',
-				'#ff80ab',
-				'#b388ff',
-				'#ff9100',
-				'#1de9b6',
-				'#ff3d00',
-				'#00bfae',
-				'#ffd740',
-				'#00e676',
-				'#40c4ff',
-				'#ff4081',
-				'#69f0ae',
-				'#ffab40',
-				'#18ffff',
-				'#eeff41',
-				'#7c4dff',
-				'#ff5252',
-				'#ffd600',
-				'#00e5ff',
-				'#ffea00',
-				'#76ff03',
-			];
+			const colorPalette = overlayColorPalette;
 			let overlayIdx = 0;
-			let allBounds = null;
+			let lastOverlayBounds = null;
 			for (let i = 1; i < window.loadedFitFiles.length; ++i) {
 				const overlay = window.loadedFitFiles[i];
 				const color = colorPalette[overlayIdx % colorPalette.length];
@@ -805,13 +677,18 @@ export function drawMapForLap(
 					overlayIdx: i,
 				});
 				if (bounds) {
-					if (!allBounds) allBounds = bounds;
-					else allBounds.extend(bounds);
+					// Defensive: ensure bounds is a valid LatLngBounds object
+					let safeBounds = bounds;
+					if (typeof bounds.clone !== 'function' && window.L && window.L.latLngBounds) {
+						safeBounds = window.L.latLngBounds(bounds);
+					}
+					lastOverlayBounds = typeof safeBounds.clone === 'function' ? safeBounds.clone() : safeBounds;
 				}
 				overlayIdx++;
 			}
-			if (allBounds) {
-				safeFitBounds(map, allBounds, { padding: [20, 20] });
+			// Always auto-zoom to the overlay just added (not all overlays)
+			if (lastOverlayBounds) {
+				safeFitBounds(map, lastOverlayBounds, { padding: [20, 20] });
 			}
 		}
 	} else {
@@ -964,7 +841,9 @@ export function drawOverlayForFitFile({
 				sticky: true,
 			});
 		}
-		return polyline.getBounds();
+		// Always return a new LatLngBounds object, never the polyline's internal bounds
+		const polyBounds = polyline.getBounds();
+		return typeof polyBounds.clone === 'function' ? polyBounds.clone() : L.latLngBounds(polyBounds);
 	}
 	return null;
 }

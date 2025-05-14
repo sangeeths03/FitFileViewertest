@@ -276,10 +276,11 @@ export function renderMap() {
 
 	// --- Overlay logic ---
 	if (window.loadedFitFiles && Array.isArray(window.loadedFitFiles) && window.loadedFitFiles.length > 0) {
+		console.log('[renderMap] Overlay logic: loadedFitFiles.length =', window.loadedFitFiles.length);
 		// Clear overlay polylines tracking before drawing
 		window._overlayPolylines = {};
-		let allBounds = null;
 		window.loadedFitFiles.forEach((fitFile, idx) => {
+			console.log(`[renderMap] Drawing overlay idx=${idx}, fileName=`, fitFile.filePath);
 			const color = overlayColorPalette[idx % overlayColorPalette.length];
 			const fileName = (fitFile.filePath || '').split(/[\\/]/).pop();
 			const bounds = drawOverlayForFitFile({
@@ -294,20 +295,30 @@ export function renderMap() {
 				fileName,
 				overlayIdx: idx,
 			});
-			if (bounds) {
-				if (!allBounds) allBounds = bounds;
-				else allBounds.extend(bounds);
-			}
+			console.log(`[renderMap] Overlay idx=${idx} bounds:`, bounds);
 		});
-		// Fix: Prevent Leaflet _leaflet_pos error by deferring fitBounds and checking map container
-		if (allBounds) {
-			setTimeout(() => {
-				if (map._container && map._container.offsetParent !== null) {
-					map.fitBounds(allBounds, { padding: [20, 20] });
-				}
-			}, 0);
-		}
+		// --- Bring overlay markers to front so they appear above all polylines ---
+		setTimeout(() => {
+			if (window._overlayPolylines) {
+				Object.entries(window._overlayPolylines).forEach(([idx, polyline]) => {
+					console.log(`[renderMap] Bring to front: overlay idx=${idx}, polyline=`, polyline);
+					if (polyline && polyline._map) {
+						if (polyline._map && polyline._map._layers) {
+							Object.values(polyline._map._layers).forEach(layer => {
+								if (layer instanceof L.CircleMarker && layer.options && polyline.options && layer.options.color === polyline.options.color) {
+									if (layer.bringToFront) layer.bringToFront();
+								}
+							});
+						}
+					}
+				});
+			}
+		}, 10);
+		console.log('[renderMap] Overlay logic complete. No fitBounds/zoom called here.');
+		// --- Always call drawMapForLapWrapper('all') to ensure correct zoom/fitBounds logic ---
+		drawMapForLapWrapper('all');
 	} else if (window.globalData && window.globalData.recordMesgs) {
+		console.log('[renderMap] No overlays, calling drawMapForLapWrapper("all")');
 		drawMapForLapWrapper('all');
 	}
 
