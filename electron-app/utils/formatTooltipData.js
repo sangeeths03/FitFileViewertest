@@ -1,16 +1,13 @@
 // Utility for formatting tooltip data on the map
 export function formatTooltipData(idx, row, lapNum, recordMesgsOverride) {
-	const dateStr = row.timestamp
-		? new Date(row.timestamp).toLocaleString()
-		: '';
+	const dateStr = row.timestamp ? new Date(row.timestamp).toLocaleString() : '';
 	let alt = '';
 	if (row.altitude != null) {
 		const altMeters = Number(row.altitude);
 		const altFeet = altMeters * 3.28084;
 		alt = `${altMeters.toFixed(1)} m / ${altFeet.toFixed(0)} ft`;
 	}
-	const hr =
-		row.heartRate != null ? `${Number(row.heartRate).toFixed(1)} bpm` : '';
+	const hr = row.heartRate != null ? `${Number(row.heartRate).toFixed(1)} bpm` : '';
 	let speedKmh = '',
 		speedMph = '',
 		speed = '';
@@ -21,20 +18,13 @@ export function formatTooltipData(idx, row, lapNum, recordMesgsOverride) {
 		speed = `${speedKmh} / ${speedMph}`;
 	}
 	const power = row.power != null ? `${Number(row.power).toFixed(1)} W` : '';
-	const cadence =
-		row.cadence != null ? `${Number(row.cadence).toFixed(1)} rpm` : '';
+	const cadence = row.cadence != null ? `${Number(row.cadence).toFixed(1)} rpm` : '';
 
 	// Calculate total ride time since start in human readable format
 	let rideTime = '';
 	const recordMesgs = recordMesgsOverride || (window.globalData && window.globalData.recordMesgs);
-	if (
-		recordMesgs &&
-		recordMesgs.length > 0 &&
-		row.timestamp
-	) {
-		const first = recordMesgs.find(
-			(r) => r.timestamp != null,
-		);
+	if (recordMesgs && recordMesgs.length > 0 && row.timestamp) {
+		const first = recordMesgs.find((r) => r.timestamp != null);
 		if (first && first.timestamp) {
 			const firstTime = new Date(first.timestamp).getTime();
 			const currTime = new Date(row.timestamp).getTime();
@@ -45,8 +35,7 @@ export function formatTooltipData(idx, row, lapNum, recordMesgsOverride) {
 			const parts = [];
 			if (h > 0) parts.push(`${h} hour${h !== 1 ? 's' : ''}`);
 			if (m > 0) parts.push(`${m} minute${m !== 1 ? 's' : ''}`);
-			if (s > 0 || parts.length === 0)
-				parts.push(`${s} second${s !== 1 ? 's' : ''}`);
+			if (s > 0 || parts.length === 0) parts.push(`${s} second${s !== 1 ? 's' : ''}`);
 			rideTime = parts.join(', ');
 		}
 	}

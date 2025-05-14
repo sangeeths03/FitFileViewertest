@@ -17,13 +17,7 @@ class FitDecodeError extends Error {
 const unknownMessageMappings = {
 	104: {
 		name: 'Device Status',
-		fields: [
-			'timestamp',
-			'battery_voltage',
-			'battery_level',
-			'temperature',
-			'field_4',
-		],
+		fields: ['timestamp', 'battery_voltage', 'battery_level', 'temperature', 'field_4'],
 	},
 	// Add more mappings as needed
 };
@@ -100,10 +94,7 @@ function getPersistedDecoderOptions() {
  */
 async function decodeFitFile(fileBuffer, options = {}, fitsdk = null) {
 	// Input validation
-	if (
-		!fileBuffer ||
-		!(fileBuffer instanceof Buffer || fileBuffer instanceof Uint8Array)
-	) {
+	if (!fileBuffer || !(fileBuffer instanceof Buffer || fileBuffer instanceof Uint8Array)) {
 		const msg = `Input is not a valid Buffer or Uint8Array. Received type: ${typeof fileBuffer}.`;
 		console.error(msg);
 		throw new FitDecodeError(msg);
@@ -141,7 +132,10 @@ async function decodeFitFile(fileBuffer, options = {}, fitsdk = null) {
 			return { error: error.message, details: error.details };
 		}
 		console.error('Failed to decode file', error);
-		return { error: error.message || 'Failed to decode file', details: error.stack || null };
+		return {
+			error: error.message || 'Failed to decode file',
+			details: error.stack || null,
+		};
 	}
 }
 

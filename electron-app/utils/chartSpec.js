@@ -28,7 +28,7 @@ export function getChartSpec(foldedData, theme = 'dark') {
 				point: '#ffeb3b', // Material Yellow
 				firebrick: '#ff5252', // Material Red Accent
 				shadow: 'rgba(0,0,0,0.3)',
-		  }
+			}
 		: {
 				background: '#f7f9fa',
 				text: '#23263a',
@@ -40,7 +40,7 @@ export function getChartSpec(foldedData, theme = 'dark') {
 				point: '#ff9800', // Material Orange
 				firebrick: '#e53935', // Material Red
 				shadow: 'rgba(0,0,0,0.08)',
-		  };
+			};
 	return {
 		config: {
 			background: colors.background,
@@ -85,19 +85,14 @@ export function getChartSpec(foldedData, theme = 'dark') {
 				anchor: 'middle',
 				fontWeight: '700',
 				fontSize: 32,
-				color: colors.text, // Ensure title uses theme color
+				// Ensure title uses theme color
 				offset: 18,
+				stroke: isDark ? '#23263a' : '#fff', // Outline color for title
+				strokeWidth: 4, // Outline thickness for title
+				strokeOpacity: 0.2, // Outline opacity for title
 			},
 			range: {
-				category: [
-					'#00bcd4',
-					'#ffeb3b',
-					'#ff5252',
-					'#43a047',
-					'#8e24aa',
-					'#fbc02d',
-					'#1976d2',
-				],
+				category: ['#00bcd4', '#ffeb3b', '#ff5252', '#43a047', '#8e24aa', '#fbc02d', '#1976d2'],
 			},
 			mark: {
 				opacity: 0.9,
@@ -126,6 +121,9 @@ export function getChartSpec(foldedData, theme = 'dark') {
 					color: colors.text,
 					labelFontSize: 28,
 					labelColor: colors.text,
+					stroke: isDark ? '#23263a' : '#fff', // Outline color for facet label
+					strokeWidth: 3, // Outline thickness for facet label
+					strokeOpacity: 0.2, // Outline opacity for facet label
 				},
 				type: 'nominal',
 			},
@@ -248,6 +246,7 @@ export function getChartSpec(foldedData, theme = 'dark') {
 						],
 					},
 					transform: [
+						{ filter: 'isValid(datum.value) && isValid(datum.timestamp)' },
 						{ filter: "length(data('param_11_store')) > 0" },
 						{ filter: { param: 'param_11' } },
 					],
@@ -283,6 +282,7 @@ export function getChartSpec(foldedData, theme = 'dark') {
 						],
 					},
 					transform: [
+						{ filter: 'isValid(datum.value) && isValid(datum.timestamp)' },
 						{ filter: "length(data('param_11_store')) > 0" },
 						{ filter: { param: 'param_11' } },
 					],
@@ -326,20 +326,53 @@ export function getChartSpec(foldedData, theme = 'dark') {
 						],
 					},
 					transform: [
+						{ filter: 'isValid(datum.value) && isValid(datum.timestamp)' },
 						{ filter: "length(data('param_11_store')) > 0" },
 						{ filter: { param: 'param_11' } },
 					],
 				},
 				{
+					// Periodic points for visual interest and easier mouseover
+					mark: {
+						type: 'point',
+						color: colors.point,
+						size: 180,
+						filled: true,
+						opacity: 0.85,
+						stroke: colors.line,
+						strokeWidth: 2.5,
+					},
+					encoding: {
+						x: { field: 'timestamp', type: 'temporal' },
+						y: { field: 'value', type: 'quantitative', scale: { zero: false } },
+						tooltip: [
+							{ field: 'timestamp', type: 'temporal', title: 'Time', format: '%Y-%m-%d %H:%M:%S', formatType: 'time', color: colors.text },
+							{ field: 'value', type: 'quantitative', title: 'Value', format: '.3f', color: colors.text },
+							{ field: 'key', type: 'nominal', title: 'Key', color: colors.text },
+						],
+					},
+					transform: [
+						// Only process valid data for window transform
+						{ filter: 'isValid(datum.value) && isValid(datum.timestamp)' },
+						{ window: [{ op: 'row_number', as: 'rownum' }], groupby: ['key'], frame: [null, null] },
+						{ filter: 'datum.rownum % 150 === 0' },
+					],
+				},
+				// Two-layer text shadow effect for summary value text
+				{
 					mark: {
 						type: 'text',
-						color: colors.text,
+						color: isDark ? '#000' : '#fff', // shadow color
 						dx: 0,
 						dy: -50,
 						size: 20,
 						font: 'sans-serif',
 						fontWeight: 'bold',
 						fontSize: 32,
+						opacity: 0.55,
+						stroke: isDark ? '#000' : '#fff',
+						strokeWidth: 6, // Bolder outline
+						strokeOpacity: 0.7,
 					},
 					encoding: {
 						text: {
@@ -363,21 +396,62 @@ export function getChartSpec(foldedData, theme = 'dark') {
 						},
 					},
 					transform: [
+						{ filter: 'isValid(datum.value) && isValid(datum.timestamp)' },
 						{ filter: "length(data('param_11_store')) > 0" },
-						{
-							filter: {
-								param: 'param_11',
-							},
-						},
+						{ filter: { param: 'param_11' } },
 					],
 				},
 				{
 					mark: {
 						type: 'text',
-						color: colors.firebrick,
+						color: isDark ? '#fff' : '#23263a',
+						dx: 0,
+						dy: -50,
+						size: 20,
+						font: 'sans-serif',
+						fontWeight: 'bold',
+						fontSize: 32,
+						opacity: 1,
+					},
+					encoding: {
+						text: {
+							aggregate: 'mean',
+							field: 'value',
+							format: '.3f',
+							type: 'quantitative',
+						},
+						x: {
+							aggregate: 'mean',
+							field: 'timestamp',
+							type: 'temporal',
+						},
+						y: {
+							aggregate: 'min',
+							field: 'value',
+							scale: {
+								zero: false,
+							},
+							type: 'quantitative',
+						},
+					},
+					transform: [
+						{ filter: 'isValid(datum.value) && isValid(datum.timestamp)' },
+						{ filter: "length(data('param_11_store')) > 0" },
+						{ filter: { param: 'param_11' } },
+					],
+				},
+				// Two-layer text shadow effect for count text
+				{
+					mark: {
+						type: 'text',
+						color: isDark ? '#000' : '#fff', // shadow color
 						dx: 0,
 						dy: -10,
 						size: 14,
+						stroke: isDark ? '#23263a' : '#fff',
+						strokeWidth: 6, // Bolder outline
+						strokeOpacity: 0.7,
+						opacity: 0.55,
 					},
 					encoding: {
 						text: {
@@ -401,12 +475,89 @@ export function getChartSpec(foldedData, theme = 'dark') {
 						},
 					},
 					transform: [
+						{ filter: 'isValid(datum.value) && isValid(datum.timestamp)' },
 						{ filter: "length(data('param_11_store')) > 0" },
-						{
-							filter: {
-								param: 'param_11',
-							},
+						{ filter: { param: 'param_11' } },
+					],
+				},
+				{
+					mark: {
+						type: 'text',
+						color: colors.firebrick,
+						dx: 0,
+						dy: -10,
+						size: 14,
+						stroke: isDark ? '#23263a' : '#fff',
+						strokeWidth: 3,
+						strokeOpacity: 0.2,
+						opacity: 1,
+					},
+					encoding: {
+						text: {
+							aggregate: 'count',
+							field: 'value',
+							format: '.3f',
+							type: 'quantitative',
 						},
+						x: {
+							aggregate: 'mean',
+							field: 'timestamp',
+							type: 'temporal',
+						},
+						y: {
+							aggregate: 'min',
+							field: 'value',
+							scale: {
+								zero: false,
+							},
+							type: 'quantitative',
+						},
+					},
+					transform: [
+						{ filter: 'isValid(datum.value) && isValid(datum.timestamp)' },
+						{ filter: "length(data('param_11_store')) > 0" },
+						{ filter: { param: 'param_11' } },
+					],
+				},
+				// Two-layer text shadow effect for min timestamp text
+				{
+					mark: {
+						type: 'text',
+						color: isDark ? '#000' : '#fff', // shadow color
+						dx: -20,
+						dy: -10,
+						size: 14,
+						stroke: isDark ? '#23263a' : '#fff',
+						strokeWidth: 6, // Bolder outline
+						strokeOpacity: 0.7,
+						opacity: 0.55,
+					},
+					encoding: {
+						text: {
+							aggregate: 'min',
+							field: 'timestamp',
+							formatType: 'time',
+							timeUnit: 'hoursminutesseconds',
+							type: 'temporal',
+						},
+						x: {
+							aggregate: 'min',
+							field: 'timestamp',
+							type: 'temporal',
+						},
+						y: {
+							aggregate: 'min',
+							field: 'value',
+							scale: {
+								zero: false,
+							},
+							type: 'quantitative',
+						},
+					},
+					transform: [
+						{ filter: 'isValid(datum.value) && isValid(datum.timestamp)' },
+						{ filter: "length(data('param_11_store')) > 0" },
+						{ filter: { param: 'param_11' } },
 					],
 				},
 				{
@@ -416,6 +567,10 @@ export function getChartSpec(foldedData, theme = 'dark') {
 						dx: -20,
 						dy: -10,
 						size: 14,
+						stroke: isDark ? '#23263a' : '#fff',
+						strokeWidth: 3,
+						strokeOpacity: 0.2,
+						opacity: 1,
 					},
 					encoding: {
 						text: {
@@ -440,12 +595,50 @@ export function getChartSpec(foldedData, theme = 'dark') {
 						},
 					},
 					transform: [
+						{ filter: 'isValid(datum.value) && isValid(datum.timestamp)' },
 						{ filter: "length(data('param_11_store')) > 0" },
-						{
-							filter: {
-								param: 'param_11',
-							},
+						{ filter: { param: 'param_11' } },
+					],
+				},
+				// Two-layer text shadow effect for max timestamp text
+				{
+					mark: {
+						type: 'text',
+						color: isDark ? '#000' : '#fff', // shadow color
+						dx: 20,
+						dy: -10,
+						size: 14,
+						stroke: isDark ? '#23263a' : '#fff',
+						strokeWidth: 6, // Bolder outline
+						strokeOpacity: 0.7,
+						opacity: 0.55,
+					},
+					encoding: {
+						text: {
+							aggregate: 'max',
+							field: 'timestamp',
+							formatType: 'time',
+							timeUnit: 'hoursminutesseconds',
+							type: 'temporal',
 						},
+						x: {
+							aggregate: 'max',
+							field: 'timestamp',
+							type: 'temporal',
+						},
+						y: {
+							aggregate: 'min',
+							field: 'value',
+							scale: {
+								zero: false,
+							},
+							type: 'quantitative',
+						},
+					},
+					transform: [
+						{ filter: 'isValid(datum.value) && isValid(datum.timestamp)' },
+						{ filter: "length(data('param_11_store')) > 0" },
+						{ filter: { param: 'param_11' } },
 					],
 				},
 				{
@@ -455,6 +648,10 @@ export function getChartSpec(foldedData, theme = 'dark') {
 						dx: 20,
 						dy: -10,
 						size: 14,
+						stroke: isDark ? '#23263a' : '#fff',
+						strokeWidth: 3,
+						strokeOpacity: 0.2,
+						opacity: 1,
 					},
 					encoding: {
 						text: {
@@ -479,12 +676,9 @@ export function getChartSpec(foldedData, theme = 'dark') {
 						},
 					},
 					transform: [
+						{ filter: 'isValid(datum.value) && isValid(datum.timestamp)' },
 						{ filter: "length(data('param_11_store')) > 0" },
-						{
-							filter: {
-								param: 'param_11',
-							},
-						},
+						{ filter: { param: 'param_11' } },
 					],
 				},
 			],
@@ -494,7 +688,27 @@ export function getChartSpec(foldedData, theme = 'dark') {
 		params: [
 			{
 				name: 'param_11',
-				select: { type: 'interval', encodings: ['x'] },
+				select: {
+					type: 'interval',
+					encodings: ['x'],
+					// Enhanced brush style for better visibility
+					translate: '[mousedown[!event.shiftKey], window:mouseup] > window:mousemove!',
+					zoom: 'wheel!',
+					mark: {
+						fill: isDark ? '#00bcd4' : '#1976d2',
+						fillOpacity: 0.12,
+						stroke: isDark ? '#ffeb3b' : '#ff9800',
+						strokeWidth: 3,
+						strokeDash: [4, 4],
+						handle: {
+							symbol: 'circle',
+							size: 300,
+							fill: isDark ? '#ffeb3b' : '#ff9800',
+							stroke: isDark ? '#00bcd4' : '#1976d2',
+							strokeWidth: 2,
+						},
+					},
+				},
 				views: ['view_11'],
 			},
 		],

@@ -36,36 +36,38 @@ function setTheme(theme) {
 // Add platform-specific (macOS) App menu for About, Preferences, and Quit
 function getPlatformAppMenu(mainWindow) {
 	if (process.platform === 'darwin') {
-		return [{
-			label: app.name,
-			submenu: [
-				{
-					label: 'About',
-					role: 'about',
-					click: () => {
-						const win = BrowserWindow.getFocusedWindow() || mainWindow;
-						if (win && win.webContents) win.webContents.send('menu-about');
+		return [
+			{
+				label: app.name,
+				submenu: [
+					{
+						label: 'About',
+						role: 'about',
+						click: () => {
+							const win = BrowserWindow.getFocusedWindow() || mainWindow;
+							if (win && win.webContents) win.webContents.send('menu-about');
+						},
 					},
-				},
-				{ type: 'separator' },
-				{
-					label: 'Preferences...',
-					accelerator: 'CmdOrCtrl+,',
-					click: () => {
-						const win = BrowserWindow.getFocusedWindow() || mainWindow;
-						if (win && win.webContents) win.webContents.send('menu-preferences');
+					{ type: 'separator' },
+					{
+						label: 'Preferences...',
+						accelerator: 'CmdOrCtrl+,',
+						click: () => {
+							const win = BrowserWindow.getFocusedWindow() || mainWindow;
+							if (win && win.webContents) win.webContents.send('menu-preferences');
+						},
 					},
-				},
-				{ type: 'separator' },
-				{ role: 'services', submenu: [] },
-				{ type: 'separator' },
-				{ role: 'hide' },
-				{ role: 'hideothers' },
-				{ role: 'unhide' },
-				{ type: 'separator' },
-				{ role: 'quit' },
-			],
-		}];
+					{ type: 'separator' },
+					{ role: 'services', submenu: [] },
+					{ type: 'separator' },
+					{ role: 'hide' },
+					{ role: 'hideothers' },
+					{ role: 'unhide' },
+					{ type: 'separator' },
+					{ role: 'quit' },
+				],
+			},
+		];
 	} else {
 		// For Windows/Linux, add About and Preferences to Help menu
 		return [];
@@ -81,11 +83,7 @@ function getPlatformAppMenu(mainWindow) {
  * @param {string} [currentTheme=null] - The current theme of the application, used to set the checked state of theme radio buttons.
  * @param {string|null} [loadedFitFilePath=null] - The path of the loaded FIT file, used to enable/disable the Summary Columns menu item.
  */
-function buildAppMenu(
-	mainWindow,
-	currentTheme = null,
-	loadedFitFilePath = null,
-) {
+function buildAppMenu(mainWindow, currentTheme = null, loadedFitFilePath = null) {
 	const theme = currentTheme || getTheme();
 	const recentFiles = loadRecentFiles();
 	const recentMenuItems =
@@ -98,7 +96,7 @@ function buildAppMenu(
 							mainWindow.webContents.send('open-recent-file', file);
 						}
 					},
-			  }))
+				}))
 			: [{ label: 'No Recent Files', enabled: false }];
 
 	const decoderOptions = getDecoderOptions();
@@ -261,20 +259,101 @@ function buildAppMenu(
 						{
 							label: '🔡 Font Size',
 							submenu: [
-								{ label: '🅰️ Extra Small', type: 'radio', checked: store.get('fontSize', 'medium') === 'xsmall', click: () => { store.set('fontSize', 'xsmall'); const win = BrowserWindow.getFocusedWindow() || mainWindow; if (win && win.webContents) win.webContents.send('set-font-size', 'xsmall'); } },
-								{ label: '🔠 Small', type: 'radio', checked: store.get('fontSize', 'medium') === 'small', click: () => { store.set('fontSize', 'small'); const win = BrowserWindow.getFocusedWindow() || mainWindow; if (win && win.webContents) win.webContents.send('set-font-size', 'small'); } },
-								{ label: '🔤 Medium', type: 'radio', checked: store.get('fontSize', 'medium') === 'medium', click: () => { store.set('fontSize', 'medium'); const win = BrowserWindow.getFocusedWindow() || mainWindow; if (win && win.webContents) win.webContents.send('set-font-size', 'medium'); } },
-								{ label: '🔡 Large', type: 'radio', checked: store.get('fontSize', 'medium') === 'large', click: () => { store.set('fontSize', 'large'); const win = BrowserWindow.getFocusedWindow() || mainWindow; if (win && win.webContents) win.webContents.send('set-font-size', 'large'); } },
-								{ label: '🅰️ Extra Large', type: 'radio', checked: store.get('fontSize', 'medium') === 'xlarge', click: () => { store.set('fontSize', 'xlarge'); const win = BrowserWindow.getFocusedWindow() || mainWindow; if (win && win.webContents) win.webContents.send('set-font-size', 'xlarge'); } },
+								{
+									label: '🅰️ Extra Small',
+									type: 'radio',
+									checked: store.get('fontSize', 'medium') === 'xsmall',
+									click: () => {
+										store.set('fontSize', 'xsmall');
+										const win = BrowserWindow.getFocusedWindow() || mainWindow;
+										if (win && win.webContents) win.webContents.send('set-font-size', 'xsmall');
+									},
+								},
+								{
+									label: '🔠 Small',
+									type: 'radio',
+									checked: store.get('fontSize', 'medium') === 'small',
+									click: () => {
+										store.set('fontSize', 'small');
+										const win = BrowserWindow.getFocusedWindow() || mainWindow;
+										if (win && win.webContents) win.webContents.send('set-font-size', 'small');
+									},
+								},
+								{
+									label: '🔤 Medium',
+									type: 'radio',
+									checked: store.get('fontSize', 'medium') === 'medium',
+									click: () => {
+										store.set('fontSize', 'medium');
+										const win = BrowserWindow.getFocusedWindow() || mainWindow;
+										if (win && win.webContents) win.webContents.send('set-font-size', 'medium');
+									},
+								},
+								{
+									label: '🔡 Large',
+									type: 'radio',
+									checked: store.get('fontSize', 'medium') === 'large',
+									click: () => {
+										store.set('fontSize', 'large');
+										const win = BrowserWindow.getFocusedWindow() || mainWindow;
+										if (win && win.webContents) win.webContents.send('set-font-size', 'large');
+									},
+								},
+								{
+									label: '🅰️ Extra Large',
+									type: 'radio',
+									checked: store.get('fontSize', 'medium') === 'xlarge',
+									click: () => {
+										store.set('fontSize', 'xlarge');
+										const win = BrowserWindow.getFocusedWindow() || mainWindow;
+										if (win && win.webContents) win.webContents.send('set-font-size', 'xlarge');
+									},
+								},
 							],
 						},
 						{
 							label: '🎨 High Contrast Mode',
 							submenu: [
-								{ label: '⬛ Black (Default)', type: 'radio', checked: store.get('highContrast', 'black') === 'black', click: () => { store.set('highContrast', 'black'); const win = BrowserWindow.getFocusedWindow() || mainWindow; if (win && win.webContents) win.webContents.send('set-high-contrast', 'black'); } },
-								{ label: '⬜ White', type: 'radio', checked: store.get('highContrast', 'black') === 'white', click: () => { store.set('highContrast', 'white'); const win = BrowserWindow.getFocusedWindow() || mainWindow; if (win && win.webContents) win.webContents.send('set-high-contrast', 'white'); } },
-								{ label: '🟨 Yellow', type: 'radio', checked: store.get('highContrast', 'black') === 'yellow', click: () => { store.set('highContrast', 'yellow'); const win = BrowserWindow.getFocusedWindow() || mainWindow; if (win && win.webContents) win.webContents.send('set-high-contrast', 'yellow'); } },
-								{ label: '🚫 Off', type: 'radio', checked: !store.get('highContrast', false) || store.get('highContrast', 'black') === 'off', click: () => { store.set('highContrast', 'off'); const win = BrowserWindow.getFocusedWindow() || mainWindow; if (win && win.webContents) win.webContents.send('set-high-contrast', 'off'); } },
+								{
+									label: '⬛ Black (Default)',
+									type: 'radio',
+									checked: store.get('highContrast', 'black') === 'black',
+									click: () => {
+										store.set('highContrast', 'black');
+										const win = BrowserWindow.getFocusedWindow() || mainWindow;
+										if (win && win.webContents) win.webContents.send('set-high-contrast', 'black');
+									},
+								},
+								{
+									label: '⬜ White',
+									type: 'radio',
+									checked: store.get('highContrast', 'black') === 'white',
+									click: () => {
+										store.set('highContrast', 'white');
+										const win = BrowserWindow.getFocusedWindow() || mainWindow;
+										if (win && win.webContents) win.webContents.send('set-high-contrast', 'white');
+									},
+								},
+								{
+									label: '🟨 Yellow',
+									type: 'radio',
+									checked: store.get('highContrast', 'black') === 'yellow',
+									click: () => {
+										store.set('highContrast', 'yellow');
+										const win = BrowserWindow.getFocusedWindow() || mainWindow;
+										if (win && win.webContents) win.webContents.send('set-high-contrast', 'yellow');
+									},
+								},
+								{
+									label: '🚫 Off',
+									type: 'radio',
+									checked: !store.get('highContrast', false) || store.get('highContrast', 'black') === 'off',
+									click: () => {
+										store.set('highContrast', 'off');
+										const win = BrowserWindow.getFocusedWindow() || mainWindow;
+										if (win && win.webContents) win.webContents.send('set-high-contrast', 'off');
+									},
+								},
 							],
 						},
 					],

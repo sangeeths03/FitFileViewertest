@@ -5,10 +5,7 @@ const path = require('path');
 const fs = require('fs');
 const { autoUpdater } = require('electron-updater');
 
-const {
-	loadRecentFiles,
-	addRecentFile,
-} = require('./utils/recentFiles');
+const { loadRecentFiles, addRecentFile } = require('./utils/recentFiles');
 const { buildAppMenu } = require('./utils/buildAppMenu');
 
 let loadedFitFilePath = null;
@@ -82,10 +79,7 @@ app.whenReady().then(() => {
 	async function updateMenuWithCurrentTheme(win) {
 		let theme = 'dark';
 		try {
-			theme =
-				(await win.webContents.executeJavaScript(
-					'localStorage.getItem("ffv-theme")',
-				)) || 'dark';
+			theme = (await win.webContents.executeJavaScript('localStorage.getItem("ffv-theme")')) || 'dark';
 		} catch (err) {
 			console.error('Failed to get theme from renderer:', err);
 		}
@@ -134,10 +128,7 @@ app.whenReady().then(() => {
 			const win = BrowserWindow.getFocusedWindow() || mainWindow;
 			let theme = 'dark';
 			try {
-				theme =
-					(await win.webContents.executeJavaScript(
-						'localStorage.getItem("ffv-theme")',
-					)) || 'dark';
+				theme = (await win.webContents.executeJavaScript('localStorage.getItem("ffv-theme")')) || 'dark';
 			} catch (err) {
 				console.error('Failed to get theme from renderer:', err);
 			}
@@ -173,10 +164,7 @@ app.whenReady().then(() => {
 		const win = BrowserWindow.getFocusedWindow() || mainWindow;
 		let theme = 'dark';
 		try {
-			theme =
-				(await win.webContents.executeJavaScript(
-					'localStorage.getItem("ffv-theme")',
-				)) || 'dark';
+			theme = (await win.webContents.executeJavaScript('localStorage.getItem("ffv-theme")')) || 'dark';
 		} catch (err) {
 			console.error('Failed to get theme from renderer:', err);
 		}
@@ -290,7 +278,10 @@ app.whenReady().then(() => {
 		const { canceled, filePath } = await dialog.showSaveDialog(win, {
 			title: 'Save As',
 			defaultPath: loadedFitFilePath,
-			filters: [{ name: 'FIT Files', extensions: ['fit'] }, { name: 'All Files', extensions: ['*'] }],
+			filters: [
+				{ name: 'FIT Files', extensions: ['fit'] },
+				{ name: 'All Files', extensions: ['*'] },
+			],
 		});
 		if (!canceled && filePath) {
 			try {

@@ -6,15 +6,17 @@ export function setupListeners({
 	showNotification,
 	handleOpenFile,
 	showUpdateNotification,
-	showAboutModal
+	showAboutModal,
 }) {
 	// Open File button click
-	openFileBtn.addEventListener('click', () => handleOpenFile({
-		isOpeningFileRef,
-		openFileBtn,
-		setLoading,
-		showNotification,
-	}));
+	openFileBtn.addEventListener('click', () =>
+		handleOpenFile({
+			isOpeningFileRef,
+			openFileBtn,
+			setLoading,
+			showNotification,
+		})
+	);
 
 	// Recent Files Context Menu
 	openFileBtn.addEventListener('contextmenu', async (event) => {
@@ -51,10 +53,7 @@ export function setupListeners({
 		const items = [];
 		recentFiles.forEach((file, idx) => {
 			const parts = file.split(/\\|\//g);
-			const shortName =
-				parts.length >= 2
-					? `${parts[parts.length - 2]}\\${parts[parts.length - 1]}`
-					: parts[parts.length - 1];
+			const shortName = parts.length >= 2 ? `${parts[parts.length - 2]}\\${parts[parts.length - 1]}` : parts[parts.length - 1];
 			const item = document.createElement('div');
 			item.textContent = shortName;
 			item.title = file;
@@ -175,16 +174,17 @@ export function setupListeners({
 			if (window.globalData && window.globalData.cachedFilePath) {
 				const filePath = window.globalData.cachedFilePath;
 				setLoading(true);
-				window.electronAPI.readFile(filePath)
-					.then(arrayBuffer => window.electronAPI.parseFitFile(arrayBuffer))
-					.then(result => {
+				window.electronAPI
+					.readFile(filePath)
+					.then((arrayBuffer) => window.electronAPI.parseFitFile(arrayBuffer))
+					.then((result) => {
 						if (result && result.error) {
 							showNotification(`Error: ${result.error}\n${result.details || ''}`, 'error');
 						} else {
 							window.showFitData(result, filePath);
 						}
 					})
-					.catch(err => {
+					.catch((err) => {
 						showNotification(`Error reloading file: ${err}`, 'error');
 					})
 					.finally(() => setLoading(false));
@@ -209,13 +209,15 @@ export function setupListeners({
 					}, 100);
 				}
 			} else if (ext === 'gpx') {
-				if (window.createExportGPXButton && window.globalData.recordMesgs && Array.isArray(window.globalData.recordMesgs) && window.globalData.recordMesgs.length > 0) {
+				if (
+					window.createExportGPXButton &&
+					window.globalData.recordMesgs &&
+					Array.isArray(window.globalData.recordMesgs) &&
+					window.globalData.recordMesgs.length > 0
+				) {
 					const coords = window.globalData.recordMesgs
 						.filter((row) => row.positionLat != null && row.positionLong != null)
-						.map((row) => [
-							Number((row.positionLat / 2 ** 31) * 180),
-							Number((row.positionLong / 2 ** 31) * 180),
-						]);
+						.map((row) => [Number((row.positionLat / 2 ** 31) * 180), Number((row.positionLong / 2 ** 31) * 180)]);
 					if (coords.length > 0) {
 						let gpx = `<?xml version="1.0" encoding="UTF-8"?>\n<gpx version="1.1" creator="FitFileViewer">\n<trk><name>Exported Track</name><trkseg>`;
 						coords.forEach((c) => {
@@ -256,20 +258,13 @@ export function setupListeners({
 			if (window.electronAPI.send) window.electronAPI.send('menu-export');
 		});
 		window.electronAPI.onIpc('menu-about', async () => {
-			const [
-				version,
-				electronVersion,
-				nodeVersion,
-				chromeVersion,
-				platformInfo,
-				license
-			] = await Promise.all([
+			const [version, electronVersion, nodeVersion, chromeVersion, platformInfo, license] = await Promise.all([
 				window.electronAPI.getAppVersion ? window.electronAPI.getAppVersion() : 'Unknown',
 				window.electronAPI.getElectronVersion ? window.electronAPI.getElectronVersion() : 'Unknown',
 				window.electronAPI.getNodeVersion ? window.electronAPI.getNodeVersion() : 'Unknown',
 				window.electronAPI.getChromeVersion ? window.electronAPI.getChromeVersion() : 'Unknown',
 				window.electronAPI.getPlatformInfo ? window.electronAPI.getPlatformInfo() : { platform: 'Unknown', arch: 'Unknown' },
-				window.electronAPI.getLicenseInfo ? window.electronAPI.getLicenseInfo() : 'Unknown'
+				window.electronAPI.getLicenseInfo ? window.electronAPI.getLicenseInfo() : 'Unknown',
 			]);
 			const author = 'Nick2bad4u';
 			const aboutMsg = `
@@ -326,7 +321,12 @@ export function setupListeners({
 			}
 		});
 		window.electronAPI.onUpdateEvent('update-downloaded', () => {
-			showUpdateNotification('Update downloaded! Restart to install the update now, or choose Later to finish your work.', 'success', 0, 'update-downloaded');
+			showUpdateNotification(
+				'Update downloaded! Restart to install the update now, or choose Later to finish your work.',
+				'success',
+				0,
+				'update-downloaded'
+			);
 		});
 	}
 

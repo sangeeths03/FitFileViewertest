@@ -175,7 +175,9 @@ body.theme-light {
    Base Layout & Typography
    ===================================================== */
 body {
-	font-family: Open Sans, sans-serif;
+	font-family:
+		Open Sans,
+		sans-serif;
 	padding: 10px;
 	font-size: 14px;
 	background-color: var(--color-bg);
@@ -231,7 +233,9 @@ h2 {
 	margin-right: 5px;
 	color: var(--color-fg);
 	font-weight: 600;
-	transition: background 0.3s, box-shadow 0.3s;
+	transition:
+		background 0.3s,
+		box-shadow 0.3s;
 	box-shadow: 0 2px 4px #00000033;
 	text-align: center;
 	font-size: 1rem;
@@ -252,7 +256,9 @@ h2 {
 	color: var(--color-fg-alt);
 	outline: none;
 	filter: brightness(1.2);
-	transition: background 0.3s, box-shadow 0.3s;
+	transition:
+		background 0.3s,
+		box-shadow 0.3s;
 }
 
 .tab-button.tab-disabled {
@@ -269,12 +275,8 @@ h2 {
 }
 
 /* Ensure tab content fills the screen in fullscreen mode */
-.tab-content:fullscreen:not(
-		.tab-content:-webkit-full-screen
-	),
-.tab-content:-webkit-full-screen:not(
-		.tab-content:-webkit-full-screen
-	) {
+.tab-content:fullscreen:not(.tab-content:-webkit-full-screen),
+.tab-content:-webkit-full-screen:not(.tab-content:-webkit-full-screen) {
 	width: 100vw !important;
 	height: 100vh !important;
 	max-width: 100vw !important;
@@ -289,8 +291,8 @@ h2 {
 }
 
 /* Make all direct children of tab-content also fill fullscreen */
-.tab-content:fullscreen > *:not([id^="content"] > button),
-.tab-content:-webkit-full-screen > *:not([id^="content"] > button) {
+.tab-content:fullscreen > *:not([id^='content'] > button),
+.tab-content:-webkit-full-screen > *:not([id^='content'] > button) {
 	width: 100% !important;
 	height: 100% !important;
 	max-width: 100vw !important;
@@ -443,7 +445,9 @@ tr:hover {
 	min-width: 0;
 	max-width: 100%;
 	flex: 0 1 auto;
-	transition: max-width 0.3s, flex 0.3s;
+	transition:
+		max-width 0.3s,
+		flex 0.3s;
 }
 
 #activeFileNameContainer:not(.has-file) {
@@ -490,7 +494,9 @@ tr:hover {
 	cursor: pointer;
 	display: flex;
 	align-items: center;
-	transition: color 0.2s, background 0.2s;
+	transition:
+		color 0.2s,
+		background 0.2s;
 	border-radius: 50%;
 	outline: none;
 	width: 36px;
@@ -550,9 +556,7 @@ tr:hover {
 	color: var(--color-fg) !important;
 }
 
-.dataTables_wrapper
-	.dataTables_paginate
-	.paginate_button.current {
+.dataTables_wrapper .dataTables_paginate .paginate_button.current {
 	background: var(--color-accent) !important;
 	color: var(--color-fg-alt) !important;
 }
@@ -624,8 +628,7 @@ table.dataTable.display > tbody > tr:hover td {
 
 #leaflet-map {
 	/* Adjusts map colors for dark mode using inversion, hue rotation, brightness, and contrast. */
-	filter: invert(0.92) hue-rotate(180deg) brightness(0.9)
-		contrast(1.1);
+	filter: invert(0.92) hue-rotate(180deg) brightness(0.9) contrast(1.1);
 	background: var(--color-bg-alt);
 	border-radius: 4px;
 	height: 85%;
@@ -689,7 +692,7 @@ body .custom-maptype-btn {
 	display: none;
 }
 
-#vg-tooltip-element  {
+#vg-tooltip-element {
 	padding: 2px !important;
 	background: var(--color-bg-alt) !important;
 	color: var(--color-fg) !important;
@@ -704,164 +707,167 @@ body .custom-maptype-btn {
 }
 
 .vega-embed {
-  position: relative;
-  display: inline-block;
-  box-sizing: border-box;
-  background: transparent;
-  color: var(--color-fg);
+	position: relative;
+	display: inline-block;
+	box-sizing: border-box;
+	background: transparent;
+	color: var(--color-fg);
 }
 .vega-embed.has-actions {
-  padding-right: 38px;
+	padding-right: 38px;
 }
 .vega-embed details:not([open]) > :not(summary) {
-  display: none !important;
+	display: none !important;
 }
 .vega-embed summary {
-  list-style: none;
-  position: absolute;
-  top: 0;
-  right: 0;
-  padding: 6px;
-  z-index: 1000;
-  background: var(--color-bg-alt);
-  box-shadow: 1px 1px 3px rgb(0 0 0 / 10%);
-  color: var(--color-fg);
-  border: 1px solid var(--color-border);
-  border-radius: 999px;
-  opacity: 20%;
-  transition: opacity 0.4s ease-in;
-  cursor: pointer;
-  line-height: 0px;
+	list-style: none;
+	position: absolute;
+	top: 0;
+	right: 0;
+	padding: 6px;
+	z-index: 1000;
+	background: var(--color-bg-alt);
+	box-shadow: 1px 1px 3px rgb(0 0 0 / 10%);
+	color: var(--color-fg);
+	border: 1px solid var(--color-border);
+	border-radius: 999px;
+	opacity: 20%;
+	transition: opacity 0.4s ease-in;
+	cursor: pointer;
+	line-height: 0px;
 }
 .vega-embed summary::-webkit-details-marker {
-  display: none;
+	display: none;
 }
 .vega-embed summary:active {
-  box-shadow: var(--color-border) 0 0 0 1px inset;
+	box-shadow: var(--color-border) 0 0 0 1px inset;
 }
 .vega-embed summary svg {
-  width: 14px;
-  height: 14px;
-  fill: var(--color-fg);
+	width: 14px;
+	height: 14px;
+	fill: var(--color-fg);
 }
 .vega-embed details[open] summary {
-  opacity: 70%;
+	opacity: 70%;
 }
-.vega-embed:hover summary, .vega-embed:focus-within summary {
-  opacity: 100% !important;
-  transition: opacity 0.2s ease;
+.vega-embed:hover summary,
+.vega-embed:focus-within summary {
+	opacity: 100% !important;
+	transition: opacity 0.2s ease;
 }
 .vega-embed .vega-actions {
-  position: absolute;
-  z-index: 1001;
-  top: 35px;
-  right: -9px;
-  display: flex;
-  flex-direction: column;
-  padding-bottom: 8px;
-  padding-top: 8px;
-  border-radius: 4px;
-  box-shadow: 0 2px 8px 0 rgb(0 0 0 / 20%);
-  border: 1px solid var(--color-border);
-  background: var(--color-bg-alt);
-  animation-duration: 0.15s;
-  animation-name: scale-in;
-  animation-timing-function: cubic-bezier(0.2, 0, 0.13, 1.5);
-  text-align: left;
+	position: absolute;
+	z-index: 1001;
+	top: 35px;
+	right: -9px;
+	display: flex;
+	flex-direction: column;
+	padding-bottom: 8px;
+	padding-top: 8px;
+	border-radius: 4px;
+	box-shadow: 0 2px 8px 0 rgb(0 0 0 / 20%);
+	border: 1px solid var(--color-border);
+	background: var(--color-bg-alt);
+	animation-duration: 0.15s;
+	animation-name: scale-in;
+	animation-timing-function: cubic-bezier(0.2, 0, 0.13, 1.5);
+	text-align: left;
 }
 .vega-embed .vega-actions a {
-  padding: 8px 16px;
-  font-family: inherit;
-  font-size: 14px;
-  font-weight: 600;
-  white-space: nowrap;
-  color: var(--color-fg);
-  text-decoration: none;
-  border-radius: 3px;
-  transition: background 0.2s, color 0.2s;
+	padding: 8px 16px;
+	font-family: inherit;
+	font-size: 14px;
+	font-weight: 600;
+	white-space: nowrap;
+	color: var(--color-fg);
+	text-decoration: none;
+	border-radius: 3px;
+	transition:
+		background 0.2s,
+		color 0.2s;
 }
-.vega-embed .vega-actions a:hover, .vega-embed .vega-actions a:focus {
-  background-color: var(--color-btn-hover);
-  color: var(--color-fg-alt);
+.vega-embed .vega-actions a:hover,
+.vega-embed .vega-actions a:focus {
+	background-color: var(--color-btn-hover);
+	color: var(--color-fg-alt);
 }
-.vega-embed .vega-actions::before, .vega-embed .vega-actions::after {
-  content: "";
-  display: inline-block;
-  position: absolute;
+.vega-embed .vega-actions::before,
+.vega-embed .vega-actions::after {
+	content: '';
+	display: inline-block;
+	position: absolute;
 }
 .vega-embed .vega-actions::before {
-  left: auto;
-  right: 14px;
-  top: -16px;
-  border: 8px solid rgb(0 0 0 / 0%);
-  border-bottom-color: var(--color-border);
+	left: auto;
+	right: 14px;
+	top: -16px;
+	border: 8px solid rgb(0 0 0 / 0%);
+	border-bottom-color: var(--color-border);
 }
 .vega-embed .vega-actions::after {
-  left: auto;
-  right: 15px;
-  top: -14px;
-  border: 7px solid rgb(0 0 0 / 0%);
-  border-bottom-color: var(--color-bg-alt);
+	left: auto;
+	right: 15px;
+	top: -14px;
+	border: 7px solid rgb(0 0 0 / 0%);
+	border-bottom-color: var(--color-bg-alt);
 }
 .vega-embed .chart-wrapper.fit-x {
-  width: 100%;
+	width: 100%;
 }
 .vega-embed .chart-wrapper.fit-y {
-  height: 100%;
+	height: 100%;
 }
 
 .vega-embed-wrapper {
-  max-width: 100%;
-  overflow: auto;
-  padding-right: 14px;
+	max-width: 100%;
+	overflow: auto;
+	padding-right: 14px;
 }
 
 @keyframes scale-in {
-  from {
-	opacity: 0%;
-	transform: scale(0.6);
-  }
-  to {
-	opacity: 100%;
-	transform: scale(1);
-  }
+	from {
+		opacity: 0%;
+		transform: scale(0.6);
+	}
+	to {
+		opacity: 100%;
+		transform: scale(1);
+	}
 }
-
 
 /* Light theme overrides */
 body.theme-light #vg-tooltip-element {
-  background: var(--color-bg-alt) !important;
-  color: var(--color-fg) !important;
-  border: 1px solid var(--color-border) !important;
+	background: var(--color-bg-alt) !important;
+	color: var(--color-fg) !important;
+	border: 1px solid var(--color-border) !important;
 }
 body.theme-light #vg-tooltip-element table tr td.key {
-  color: var(--color-accent) !important;
+	color: var(--color-accent) !important;
 }
 body.theme-light .vega-embed summary {
-  background: var(--color-bg-alt);
-  color: var(--color-fg);
-  border: 1px solid var(--color-border);
+	background: var(--color-bg-alt);
+	color: var(--color-fg);
+	border: 1px solid var(--color-border);
 }
 body.theme-light .vega-embed .vega-actions {
-  background: var(--color-bg-alt);
-  color: var(--color-fg);
-  border: 1px solid var(--color-border);
+	background: var(--color-bg-alt);
+	color: var(--color-fg);
+	border: 1px solid var(--color-border);
 }
 body.theme-light .vega-embed .vega-actions a {
-  color: var(--color-fg);
+	color: var(--color-fg);
 }
 body.theme-light .vega-embed .vega-actions a:hover,
 body.theme-light .vega-embed .vega-actions a:focus {
-  background: var(--color-btn-hover);
-  color: var(--color-fg-alt);
+	background: var(--color-btn-hover);
+	color: var(--color-fg-alt);
 }
 body.theme-light .vega-embed .vega-actions::before {
-  border-bottom-color: var(--color-border);
+	border-bottom-color: var(--color-border);
 }
 body.theme-light .vega-embed .vega-actions::after {
-  border-bottom-color: var(--color-bg-alt);
+	border-bottom-color: var(--color-bg-alt);
 }
-
 
 /* =====================================================
    Custom Zoom Slider Bar
@@ -1014,7 +1020,10 @@ body.theme-light .custom-lap-control select {
 	padding: 2px 8px;
 	border-radius: 4px;
 	cursor: pointer;
-	transition: background 0.2s, color 0.2s, border 0.2s;
+	transition:
+		background 0.2s,
+		color 0.2s,
+		border 0.2s;
 	outline: none;
 	box-shadow: none;
 	display: flex;
@@ -1086,7 +1095,10 @@ body.theme-dark .custom-fullscreen-bar button:focus {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	transition: background 0.2s, box-shadow 0.2s, transform 0.2s;
+	transition:
+		background 0.2s,
+		box-shadow 0.2s,
+		transform 0.2s;
 	cursor: pointer;
 	outline: none;
 }
@@ -1129,7 +1141,7 @@ body.theme-dark .custom-fullscreen-bar button:focus {
 
 .tab-content:fullscreen #vega-container > div > canvas,
 .tab-content:-webkit-full-screen #vega-container > div > canvas {
-    width: 100% !important;
+	width: 100% !important;
 }
 
 /* =====================================================
@@ -1153,7 +1165,10 @@ body.theme-dark .custom-fullscreen-bar button:focus {
 	cursor: pointer;
 	margin-bottom: 18px;
 	margin-right: 10px;
-	transition: background 0.3s, color 0.3s, box-shadow 0.3s;
+	transition:
+		background 0.3s,
+		color 0.3s,
+		box-shadow 0.3s;
 	box-shadow: 0 2px 4px #00000033;
 	width: auto !important;
 	height: auto !important;
@@ -1333,7 +1348,10 @@ body.theme-dark .custom-fullscreen-bar button:focus {
 	cursor: pointer;
 	margin-bottom: 18px;
 	margin-right: 10px;
-	transition: background 0.3s, color 0.3s, box-shadow 0.3s;
+	transition:
+		background 0.3s,
+		color 0.3s,
+		box-shadow 0.3s;
 	box-shadow: 0 2px 4px #00000033;
 }
 
@@ -1423,7 +1441,9 @@ body.theme-dark .custom-fullscreen-bar button:focus {
 	outline: none;
 	vertical-align: middle;
 	opacity: 65%;
-	transition: opacity 0.2s, color 0.2s;
+	transition:
+		opacity 0.2s,
+		color 0.2s;
 	cursor: pointer;
 	display: flex;
 	align-items: center;
@@ -1440,7 +1460,9 @@ body.theme-dark .custom-fullscreen-bar button:focus {
 	box-shadow: none;
 	outline: none;
 	cursor: pointer;
-	transition: opacity 0.2s, color 0.2s;
+	transition:
+		opacity 0.2s,
+		color 0.2s;
 }
 
 /* =====================================================
@@ -1468,7 +1490,9 @@ body.theme-dark .custom-fullscreen-bar button:focus {
 	font-size: 1rem;
 	font-family: inherit;
 	outline: none;
-	transition: border 0.2s, box-shadow 0.2s;
+	transition:
+		border 0.2s,
+		box-shadow 0.2s;
 	box-shadow: 0 1px 4px #0002;
 	appearance: none;
 	cursor: pointer;
@@ -1477,7 +1501,9 @@ body.theme-dark .custom-fullscreen-bar button:focus {
 .summary-filter-bar select:focus {
 	border-color: var(--color-accent);
 	box-shadow: 0 0 0 2px var(--color-accent) 33;
-	transition: border-color 0.2s, box-shadow 0.2s;
+	transition:
+		border-color 0.2s,
+		box-shadow 0.2s;
 	outline: none;
 }
 
@@ -1518,13 +1544,17 @@ footer {
 	margin: 0 2px;
 	font-weight: 600;
 	font-size: 0.9rem;
-	transition: color 0.3s, text-decoration 0.3s;
+	transition:
+		color 0.3s,
+		text-decoration 0.3s;
 }
 
 .credits-section a:hover {
 	text-decoration: underline;
 	color: var(--color-accent);
-	transition: color 0.3s, text-decoration 0.3s;
+	transition:
+		color 0.3s,
+		text-decoration 0.3s;
 }
 
 /* =====================================================
@@ -1562,7 +1592,9 @@ footer {
 	width: 28px;
 	height: 28px;
 	border-radius: 4px;
-	transition: background 0.2s, color 0.2s;
+	transition:
+		background 0.2s,
+		color 0.2s;
 }
 
 .exit-multilap-btn:hover,
@@ -1628,7 +1660,10 @@ footer {
 	display: flex;
 	align-items: center;
 	gap: 8px;
-	transition: background 0.2s, color 0.2s, border 0.2s;
+	transition:
+		background 0.2s,
+		color 0.2s,
+		border 0.2s;
 	outline: none;
 	min-width: 0;
 	-webkit-user-select: none;
@@ -1759,62 +1794,62 @@ body.theme-dark .map-action-btn.disabled {
 	line-height: 1;
 	cursor: pointer;
 	z-index: 10;
-  }
-  .measure-label-content {
+}
+.measure-label-content {
 	position: relative;
 	padding-right: 20px;
-  }
-  .deselect-all-btn {
+}
+.deselect-all-btn {
 	display: none;
-  }
-  .lap-label {
+}
+.lap-label {
 	margin: 0 4px 0 0;
-  }
-  .inline-svg {
+}
+.inline-svg {
 	display: inline-block;
 	vertical-align: middle;
-  }
-  .margin-horizontal {
+}
+.margin-horizontal {
 	margin: 0 8px;
-  }
-  .text-red {
+}
+.text-red {
 	color: red;
-  }
-  .text-green {
+}
+.text-green {
 	color: green;
-  }
+}
 
 /* =====================================================
    Drag-and-Drop Overlay
    ===================================================== */
 #drop-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgb(30 34 54 / 85%);
-  z-index: 10050;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  pointer-events: none;
-  transition: opacity 0.2s;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	background: rgb(30 34 54 / 85%);
+	z-index: 10050;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	pointer-events: none;
+	transition: opacity 0.2s;
 }
 #drop-overlay .drop-overlay-content {
-  background: rgb(40 44 64 / 98%);
-  color: #fff;
-  padding: 48px 64px;
-  border-radius: 18px;
-  box-shadow: 0 4px 32px #000a;
-  font-size: 2.2rem;
-  font-weight: 700;
-  text-align: center;
-  border: 2px dashed #2196f3;
-  opacity: 98%;
-  pointer-events: auto;
+	background: rgb(40 44 64 / 98%);
+	color: #fff;
+	padding: 48px 64px;
+	border-radius: 18px;
+	box-shadow: 0 4px 32px #000a;
+	font-size: 2.2rem;
+	font-weight: 700;
+	text-align: center;
+	border: 2px dashed #2196f3;
+	opacity: 98%;
+	pointer-events: auto;
 }
-#drop-overlay[style*="display: none"] {
-  opacity: 0%;
-  pointer-events: none;
+#drop-overlay[style*='display: none'] {
+	opacity: 0%;
+	pointer-events: none;
 }

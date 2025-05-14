@@ -18,18 +18,10 @@ export function createExportGPXButton() {
 		'<svg class="icon" viewBox="0 0 20 20" width="18" height="18"><path d="M10 2v12M10 14l-4-4m4 4l4-4" stroke="#1976d2" stroke-width="2" fill="none"/><rect x="4" y="16" width="12" height="2" rx="1" fill="#1976d2"/></svg> <span>Export GPX</span>';
 	exportBtn.title = 'Export the current track as a GPX file';
 	exportBtn.onclick = () => {
-		if (
-			!window.globalData ||
-			!window.globalData.recordMesgs ||
-			!Array.isArray(window.globalData.recordMesgs)
-		)
-			return;
+		if (!window.globalData || !window.globalData.recordMesgs || !Array.isArray(window.globalData.recordMesgs)) return;
 		const coords = window.globalData.recordMesgs
 			.filter((row) => row.positionLat != null && row.positionLong != null)
-			.map((row) => [
-				Number((row.positionLat / 2 ** 31) * 180),
-				Number((row.positionLong / 2 ** 31) * 180),
-			]);
+			.map((row) => [Number((row.positionLat / 2 ** 31) * 180), Number((row.positionLong / 2 ** 31) * 180)]);
 		let gpx = `<?xml version="1.0" encoding="UTF-8"?>\n<gpx version="1.1" creator="FitFileViewer">\n<trk><name>Exported Track</name><trkseg>`;
 		coords.forEach((c) => {
 			gpx += `\n<trkpt lat="${c[0]}" lon="${c[1]}"/>`;
@@ -66,11 +58,7 @@ export function createElevationProfileButton() {
 			];
 		}
 		const isDark = document.body.classList.contains('theme-dark');
-		const chartWin = window.open(
-			'',
-			'Elevation Profile',
-			'width=900,height=600',
-		);
+		const chartWin = window.open('', 'Elevation Profile', 'width=900,height=600');
 		let chartHtml = `
 		<html>
 		<head>
@@ -123,9 +111,7 @@ export function createElevationProfileButton() {
 					margin-bottom: 12px;
 					font-size: 1.13em;
 					color: inherit;
-					text-shadow: ${
-						isDark ? '0 0 2px #000, 0 0 1px #000' : '0 0 2px #fff, 0 0 1px #fff'
-					};
+					text-shadow: ${isDark ? '0 0 2px #000, 0 0 1px #000' : '0 0 2px #fff, 0 0 1px #fff'};
 					letter-spacing: 0.01em;
 					display: flex;
 					align-items: center;
@@ -173,9 +159,7 @@ export function createElevationProfileButton() {
 		<body class="${isDark ? 'theme-dark' : 'theme-light'}">
 			<header>
 				<h2 style="margin:0;font-size:1.5em;font-weight:700;letter-spacing:0.01em;">Elevation Profiles</h2>
-				<span style="font-size:1.1em;opacity:0.7;">${fitFiles.length} file${
-			fitFiles.length > 1 ? 's' : ''
-		}</span>
+				<span style="font-size:1.1em;opacity:0.7;">${fitFiles.length} file${fitFiles.length > 1 ? 's' : ''}</span>
 			</header>
 			<div id="elevChartsContainer"></div>
 			<script>
@@ -185,21 +169,14 @@ export function createElevationProfileButton() {
 						altitudes:
 							f.data && f.data.recordMesgs
 								? f.data.recordMesgs
-										.filter(
-											(r) =>
-												r.positionLat != null &&
-												r.positionLong != null &&
-												r.altitude != null,
-										)
+										.filter((r) => r.positionLat != null && r.positionLong != null && r.altitude != null)
 										.map((r, i) => ({ x: i, y: r.altitude }))
 								: [],
 						color:
 							window.opener && window.opener.overlayColorPalette
-								? window.opener.overlayColorPalette[
-										idx % window.opener.overlayColorPalette.length
-								  ]
+								? window.opener.overlayColorPalette[idx % window.opener.overlayColorPalette.length]
 								: '#1976d2',
-					})),
+					}))
 				)};
 				const isDark = ${isDark};
 				const container = document.getElementById('elevChartsContainer');
@@ -356,8 +333,7 @@ export function createAddFitFileToMapButton() {
 	addOverlayBtn.className = 'map-action-btn';
 	addOverlayBtn.innerHTML =
 		'<svg class="icon" viewBox="0 0 20 20" width="18" height="18"><path d="M10 2v16M2 10h16" stroke="#1976d2" stroke-width="2" fill="none"/></svg> <span>Add FIT File(s) to Map</span>';
-	addOverlayBtn.title =
-		'Overlay one or more FIT files on the map (points and tooltips will be shown)';
+	addOverlayBtn.title = 'Overlay one or more FIT files on the map (points and tooltips will be shown)';
 	addOverlayBtn.onclick = () => {
 		const input = document.createElement('input');
 		input.type = 'file';
@@ -372,27 +348,15 @@ export function createAddFitFileToMapButton() {
 				let loaded = 0;
 				const invalidFiles = [];
 				for (const file of files) {
-					showLoadingOverlay(
-						'Loading ' + (loaded + 1) + ' / ' + files.length + ' files...',
-						file.name,
-					);
+					showLoadingOverlay('Loading ' + (loaded + 1) + ' / ' + files.length + ' files...', file.name);
 					const reader = new FileReader();
 					await new Promise((resolve) => {
 						reader.onload = async function (event) {
 							const arrayBuffer = event.target.result;
-							if (
-								arrayBuffer &&
-								window.electronAPI &&
-								window.electronAPI.decodeFitFile
-							) {
-								const fitData = await window.electronAPI.decodeFitFile(
-									arrayBuffer,
-								);
+							if (arrayBuffer && window.electronAPI && window.electronAPI.decodeFitFile) {
+								const fitData = await window.electronAPI.decodeFitFile(arrayBuffer);
 								if (fitData && !fitData.error) {
-									if (
-										!window.loadedFitFiles ||
-										window.loadedFitFiles.length === 0
-									) {
+									if (!window.loadedFitFiles || window.loadedFitFiles.length === 0) {
 										if (window.globalData && window.globalData.recordMesgs) {
 											window.loadedFitFiles = [
 												{
@@ -402,51 +366,29 @@ export function createAddFitFileToMapButton() {
 											];
 										}
 									}
-									if (
-										!window.loadedFitFiles.some(
-											(f) =>
-												f.filePath?.toLowerCase() === file.name.toLowerCase(),
-										)
-									) {
+									if (!window.loadedFitFiles.some((f) => f.filePath?.toLowerCase() === file.name.toLowerCase())) {
 										const validLocationCount = Array.isArray(fitData.recordMesgs)
-											? fitData.recordMesgs.filter(r => typeof r.positionLat === 'number' && typeof r.positionLong === 'number').length
+											? fitData.recordMesgs.filter((r) => typeof r.positionLat === 'number' && typeof r.positionLong === 'number').length
 											: 0;
-										if (
-											fitData &&
-											Array.isArray(fitData.recordMesgs) &&
-											fitData.recordMesgs.length > 0 &&
-											validLocationCount > 0
-										) {
+										if (fitData && Array.isArray(fitData.recordMesgs) && fitData.recordMesgs.length > 0 && validLocationCount > 0) {
 											window.loadedFitFiles.push({
 												data: fitData,
 												filePath: file.name,
 											});
 											if (window.renderMap) window.renderMap();
-											if (window.updateShownFilesList)
-												window.updateShownFilesList();
+											if (window.updateShownFilesList) window.updateShownFilesList();
 										} else {
 											invalidFiles.push(file.name);
 										}
 									} else {
-										alert(
-											'This FIT file is already added as an overlay: ' +
-												file.name,
-										);
+										alert('This FIT file is already added as an overlay: ' + file.name);
 									}
 								} else {
-									alert(
-										'Failed to parse FIT file: ' +
-											file.name +
-											' - ' +
-											(fitData.error || 'Unknown error'),
-									);
+									alert('Failed to parse FIT file: ' + file.name + ' - ' + (fitData.error || 'Unknown error'));
 								}
 							}
 							loaded++;
-							showLoadingOverlay(
-								'Loading ' + loaded + ' / ' + files.length + ' files...',
-								file.name,
-							);
+							showLoadingOverlay('Loading ' + loaded + ' / ' + files.length + ' files...', file.name);
 							resolve();
 						};
 						reader.readAsArrayBuffer(file);
@@ -454,11 +396,7 @@ export function createAddFitFileToMapButton() {
 				}
 				hideLoadingOverlay();
 				if (invalidFiles.length > 0) {
-					alert(
-						`The following files have no valid location data:\n${invalidFiles.join(
-							'\n'
-						)}`
-					);
+					alert(`The following files have no valid location data:\n${invalidFiles.join('\n')}`);
 				}
 			}
 		};
@@ -531,14 +469,11 @@ export function createShownFilesList() {
 	container.style.maxWidth = '350px';
 	container.style.overflow = 'auto';
 	container.style.maxHeight = '80px';
-	container.innerHTML =
-		'<b>Extra Files shown on map:</b><ul id="shown-files-ul" style="margin:0; padding-left:18px;"></ul>';
+	container.innerHTML = '<b>Extra Files shown on map:</b><ul id="shown-files-ul" style="margin:0; padding-left:18px;"></ul>';
 
 	function applyTheme() {
 		const isDark = document.body.classList.contains('theme-dark');
-		container.style.background = isDark
-			? 'rgba(30,34,40,0.92)'
-			: 'rgba(255,255,255,0.92)';
+		container.style.background = isDark ? 'rgba(30,34,40,0.92)' : 'rgba(255,255,255,0.92)';
 		container.style.color = isDark ? '#eee' : '#222';
 		container.style.border = isDark ? '1px solid #444' : '1px solid #bbb';
 	}
@@ -608,16 +543,13 @@ export function createShownFilesList() {
 				const isDark = document.body.classList.contains('theme-dark');
 				let filter = '';
 				if (isDark) {
-					filter =
-						'invert(0.92) hue-rotate(180deg) brightness(0.9) contrast(1.1)';
+					filter = 'invert(0.92) hue-rotate(180deg) brightness(0.9) contrast(1.1)';
 					li.style.filter = filter;
 				}
 				const bg = isDark ? 'rgb(30,34,40)' : '#fff';
 				li.style.color = color;
 				li.style.filter = filter;
-				li.style.textShadow = isDark
-					? '0 0 2px #000, 0 0 1px #000, 0 0 1px #000'
-					: '0 0 2px #fff, 0 0 1px #fff, 0 0 1px #fff';
+				li.style.textShadow = isDark ? '0 0 2px #000, 0 0 1px #000, 0 0 1px #000' : '0 0 2px #fff, 0 0 1px #fff, 0 0 1px #fff';
 				// Improved: check accessibility using the filtered color as actually rendered
 				let filteredColor = color;
 				if (filter) {
@@ -665,7 +597,7 @@ export function createShownFilesList() {
 						// Remove any lingering tooltips from the DOM after overlays are cleared
 						setTimeout(() => {
 							const tooltips = document.querySelectorAll('.overlay-filename-tooltip');
-							tooltips.forEach(t => t.parentNode && t.parentNode.removeChild(t));
+							tooltips.forEach((t) => t.parentNode && t.parentNode.removeChild(t));
 						}, 10);
 					}
 				};
@@ -682,16 +614,10 @@ export function createShownFilesList() {
 						const polyElem = polyline.getElement && polyline.getElement();
 						if (polyElem) {
 							polyElem.style.transition = 'filter 0.2s';
-							polyElem.style.filter =
-								'drop-shadow(0 0 16px ' +
-								(polyline.options.color || '#1976d2') +
-								')';
+							polyElem.style.filter = 'drop-shadow(0 0 16px ' + (polyline.options.color || '#1976d2') + ')';
 							setTimeout(() => {
 								if (window._highlightedOverlayIdx === idx) {
-									polyElem.style.filter =
-										'drop-shadow(0 0 8px ' +
-										(polyline.options.color || '#1976d2') +
-										')';
+									polyElem.style.filter = 'drop-shadow(0 0 8px ' + (polyline.options.color || '#1976d2') + ')';
 								}
 							}, 250);
 							// Center and fit map to this overlay
@@ -715,7 +641,7 @@ export function createShownFilesList() {
 					if (window._overlayTooltipTimeout) clearTimeout(window._overlayTooltipTimeout);
 					// Remove any existing tooltip immediately
 					const oldTooltips = document.querySelectorAll('.overlay-filename-tooltip');
-					oldTooltips.forEach(t => t.parentNode && t.parentNode.removeChild(t));
+					oldTooltips.forEach((t) => t.parentNode && t.parentNode.removeChild(t));
 					if (li._tooltipRemover) li._tooltipRemover();
 
 					window._overlayTooltipTimeout = setTimeout(() => {
@@ -743,10 +669,8 @@ export function createShownFilesList() {
 							const pad = 12;
 							let x = evt.clientX + pad;
 							let y = evt.clientY + pad;
-							if (x + tooltip.offsetWidth > window.innerWidth)
-								x = window.innerWidth - tooltip.offsetWidth - pad;
-							if (y + tooltip.offsetHeight > window.innerHeight)
-								y = window.innerHeight - tooltip.offsetHeight - pad;
+							if (x + tooltip.offsetWidth > window.innerWidth) x = window.innerWidth - tooltip.offsetWidth - pad;
+							if (y + tooltip.offsetHeight > window.innerHeight) y = window.innerHeight - tooltip.offsetHeight - pad;
 							tooltip.style.left = x + 'px';
 							tooltip.style.top = y + 'px';
 						};
@@ -770,16 +694,13 @@ export function createShownFilesList() {
 					// Remove any lingering tooltips from the DOM
 					setTimeout(() => {
 						const tooltips = document.querySelectorAll('.overlay-filename-tooltip');
-						tooltips.forEach(t => t.parentNode && t.parentNode.removeChild(t));
+						tooltips.forEach((t) => t.parentNode && t.parentNode.removeChild(t));
 					}, 10);
 				};
 				ul.appendChild(li);
 			});
 			// Add Clear All button if overlays exist
-			if (
-				anyOverlays &&
-				!ul.parentNode.querySelector('.overlay-clear-all-btn')
-			) {
+			if (anyOverlays && !ul.parentNode.querySelector('.overlay-clear-all-btn')) {
 				const clearAll = document.createElement('button');
 				clearAll.textContent = 'Clear All';
 				clearAll.className = 'overlay-clear-all-btn';
@@ -802,7 +723,7 @@ export function createShownFilesList() {
 						// Remove any lingering tooltips from the DOM after overlays are cleared
 						setTimeout(() => {
 							const tooltips = document.querySelectorAll('.overlay-filename-tooltip');
-							tooltips.forEach(t => t.parentNode && t.parentNode.removeChild(t));
+							tooltips.forEach((t) => t.parentNode && t.parentNode.removeChild(t));
 						}, 10);
 					}
 				};
@@ -821,11 +742,7 @@ export function createShownFilesList() {
 }
 
 export function getOverlayFileName(idx) {
-	if (
-		window.loadedFitFiles &&
-		window.loadedFitFiles[idx] &&
-		window.loadedFitFiles[idx].filePath
-	) {
+	if (window.loadedFitFiles && window.loadedFitFiles[idx] && window.loadedFitFiles[idx].filePath) {
 		return window.loadedFitFiles[idx].filePath;
 	}
 	return '';

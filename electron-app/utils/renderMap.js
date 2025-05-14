@@ -67,9 +67,7 @@ export function renderMap() {
 	window._leafletMapInstance = map;
 
 	// eslint-disable-next-line no-unused-vars
-	const layersControl = L.control
-		.layers(baseLayers, null, { position: 'topright', collapsed: true })
-		.addTo(map);
+	const layersControl = L.control.layers(baseLayers, null, { position: 'topright', collapsed: true }).addTo(map);
 
 	// Add a custom floating label/button to indicate map type selection
 	const mapTypeBtn = document.createElement('div');
@@ -98,14 +96,8 @@ export function renderMap() {
 	// When the user clicks outside the control, collapse it
 	document.addEventListener('mousedown', (e) => {
 		const layersControlEl = document.querySelector('.leaflet-control-layers');
-		if (
-			layersControlEl &&
-			layersControlEl.classList.contains('leaflet-control-layers-expanded')
-		) {
-			if (
-				!layersControlEl.contains(e.target) &&
-				!mapTypeBtn.contains(e.target)
-			) {
+		if (layersControlEl && layersControlEl.classList.contains('leaflet-control-layers-expanded')) {
+			if (!layersControlEl.contains(e.target) && !mapTypeBtn.contains(e.target)) {
 				layersControlEl.classList.remove('leaflet-control-layers-expanded');
 				layersControlEl.style.zIndex = '';
 			}
@@ -117,21 +109,15 @@ export function renderMap() {
 	zoomSliderBar.className = 'custom-zoom-slider-bar';
 	const minZoom = map.getMinZoom();
 	const maxZoom = map.getMaxZoom();
-	const zoomToPercent = (zoom) =>
-		((zoom - minZoom) / (maxZoom - minZoom)) * 100;
-	const percentToZoom = (percent) =>
-		minZoom + ((maxZoom - minZoom) * percent) / 100;
+	const zoomToPercent = (zoom) => ((zoom - minZoom) / (maxZoom - minZoom)) * 100;
+	const percentToZoom = (percent) => minZoom + ((maxZoom - minZoom) * percent) / 100;
 	zoomSliderBar.innerHTML = `
 		<div class="custom-zoom-slider-label">Zoom</div>
-		<input type="range" min="0" max="100" value="${zoomToPercent(
-			map.getZoom(),
-		)}" step="1" id="zoom-slider-input">
+		<input type="range" min="0" max="100" value="${zoomToPercent(map.getZoom())}" step="1" id="zoom-slider-input">
 		<div class="custom-zoom-slider-values">
 			<span id="zoom-slider-min">0%</span>
 				<span class="margin-horizontal">|</span>
-			<span id="zoom-slider-current">${Math.round(
-				zoomToPercent(map.getZoom()),
-			)}%</span>
+			<span id="zoom-slider-current">${Math.round(zoomToPercent(map.getZoom()))}%</span>
 				<span class="margin-horizontal">|</span>
 			<span id="zoom-slider-max">100%</span>
 		</div>
@@ -161,7 +147,7 @@ export function renderMap() {
 			isDragging = true;
 			const percent = Number(e.target.value);
 			zoomSliderCurrent.textContent = `${percent}%`;
-		}, 100), // Adjust debounce delay as needed
+		}, 100) // Adjust debounce delay as needed
 	);
 	zoomSlider.addEventListener('change', (e) => {
 		const percent = Number(e.target.value);
@@ -188,9 +174,7 @@ export function renderMap() {
 	updateZoomSlider();
 	document.getElementById('leaflet-map').appendChild(zoomSliderBar);
 
-	L.control
-		.scale({ position: 'bottomleft', metric: true, imperial: true })
-		.addTo(map);
+	L.control.scale({ position: 'bottomleft', metric: true, imperial: true }).addTo(map);
 
 	// --- Fullscreen control (if plugin loaded) ---
 	if (L.control.fullscreen) {
@@ -199,9 +183,7 @@ export function renderMap() {
 
 	// --- Locate user button ---
 	if (L.control.locate) {
-		L.control
-			.locate({ position: 'topleft', flyTo: true, keepCurrentZoomLevel: true })
-			.addTo(map);
+		L.control.locate({ position: 'topleft', flyTo: true, keepCurrentZoomLevel: true }).addTo(map);
 	}
 
 	// --- Print/export button ---
@@ -216,7 +198,7 @@ export function renderMap() {
 				drawMapForLapWrapper('all');
 			}
 			if (window.updateShownFilesList) window.updateShownFilesList();
-		}),
+		})
 	);
 	addSimpleMeasureTool(map, controlsDiv);
 	controlsDiv.appendChild(createAddFitFileToMapButton());
@@ -254,21 +236,14 @@ export function renderMap() {
 			getLapNumForIdx,
 		});
 	}
-	addLapSelector(
-		map,
-		document.getElementById('leaflet-map'),
-		drawMapForLapWrapper,
-	);
+	addLapSelector(map, document.getElementById('leaflet-map'), drawMapForLapWrapper);
 
 	// --- Minimap (if plugin available) ---
 	if (window.L && L.Control && L.Control.MiniMap) {
 		// Always use a standard tile layer for the minimap
-		const miniMapLayer = L.tileLayer(
-			'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-			{
-				attribution: '',
-			},
-		);
+		const miniMapLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+			attribution: '',
+		});
 		new L.Control.MiniMap(miniMapLayer, {
 			toggleDisplay: true,
 		}).addTo(map);
@@ -300,11 +275,7 @@ export function renderMap() {
 	}
 
 	// --- Overlay logic ---
-	if (
-		window.loadedFitFiles &&
-		Array.isArray(window.loadedFitFiles) &&
-		window.loadedFitFiles.length > 0
-	) {
+	if (window.loadedFitFiles && Array.isArray(window.loadedFitFiles) && window.loadedFitFiles.length > 0) {
 		// Clear overlay polylines tracking before drawing
 		window._overlayPolylines = {};
 		let allBounds = null;

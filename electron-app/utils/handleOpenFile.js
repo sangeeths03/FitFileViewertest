@@ -1,24 +1,10 @@
 // Utility for handling file open logic
-export async function handleOpenFile({
-	isOpeningFileRef,
-	openFileBtn,
-	setLoading,
-	showNotification,
-}) {
+export async function handleOpenFile({ isOpeningFileRef, openFileBtn, setLoading, showNotification }) {
 	if (isOpeningFileRef.value) return;
 	isOpeningFileRef.value = true;
 	try {
-		if (
-			!window.electronAPI ||
-			!window.electronAPI.openFile ||
-			!window.electronAPI.readFile ||
-			!window.electronAPI.parseFitFile
-		) {
-			showNotification(
-				'Electron API not available. Please restart the app.',
-				'error',
-				7000,
-			);
+		if (!window.electronAPI || !window.electronAPI.openFile || !window.electronAPI.readFile || !window.electronAPI.parseFitFile) {
+			showNotification('Electron API not available. Please restart the app.', 'error', 7000);
 			openFileBtn.disabled = false;
 			setLoading(false);
 			isOpeningFileRef.value = false;
@@ -57,10 +43,7 @@ export async function handleOpenFile({
 				return;
 			}
 			if (result && result.error) {
-				showNotification(
-					`Error: ${result.error}\n${result.details || ''}`,
-					'error',
-				);
+				showNotification(`Error: ${result.error}\n${result.details || ''}`, 'error');
 			} else {
 				if (typeof process !== 'undefined' && process.env && process.env.NODE_ENV !== 'production') {
 					console.log('[DEBUG] FIT parse result:', result);

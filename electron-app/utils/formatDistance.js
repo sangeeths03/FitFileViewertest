@@ -8,13 +8,7 @@ const METERS_PER_KILOMETER = 1000;
 const METERS_PER_MILE = 1609.34;
 
 export function formatDistance(meters) {
-	if (
-		meters === null ||
-		meters === undefined ||
-		Number.isNaN(meters) ||
-		meters < 0
-	)
-		return '';
+	if (meters === null || meters === undefined || Number.isNaN(meters) || meters < 0) return '';
 	const kilometers = (meters / METERS_PER_KILOMETER).toFixed(2);
 	const miles = (meters / METERS_PER_MILE).toFixed(2);
 	const kilometersText = `${kilometers} km`;

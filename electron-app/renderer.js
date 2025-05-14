@@ -2,10 +2,10 @@
 
 // Use window.utils if available, fallback to global
 const rendererUtils = window.rendererUtils || {};
-const setLoading = rendererUtils.setLoading || function(){};
+const setLoading = rendererUtils.setLoading || function () {};
 const themeUtils = window.theme || {};
-const applyTheme = themeUtils.applyTheme || function(){};
-const listenForThemeChange = themeUtils.listenForThemeChange || function(){};
+const applyTheme = themeUtils.applyTheme || function () {};
+const listenForThemeChange = themeUtils.listenForThemeChange || function () {};
 
 // --- Ensure copyTableAsCSV is available globally for export ---
 import { copyTableAsCSV as copyTableAsCSVUtil } from './utils/copyTableAsCSV.js';
@@ -16,7 +16,7 @@ import { showUpdateNotification } from './utils/showUpdateNotification.js';
 import { setupListeners } from './utils/listeners.js';
 import { showAboutModal } from './utils/aboutModal.js';
 
-window.copyTableAsCSV = function({ container, data }) {
+window.copyTableAsCSV = function ({ container, data }) {
 	// Find the first table in the container
 	const tableEl = container && container.querySelector('table');
 	if (!tableEl) return '';
@@ -28,8 +28,8 @@ window.copyTableAsCSV = function({ container, data }) {
 		// Fallback: parse table rows
 		let csv = '';
 		const rows = Array.from(tableEl.rows);
-		rows.forEach(row => {
-			const cells = Array.from(row.cells).map(cell => '"' + cell.innerText.replace(/"/g, '""') + '"');
+		rows.forEach((row) => {
+			const cells = Array.from(row.cells).map((cell) => '"' + cell.innerText.replace(/"/g, '""') + '"');
 			csv += cells.join(',') + '\n';
 		});
 		return csv;

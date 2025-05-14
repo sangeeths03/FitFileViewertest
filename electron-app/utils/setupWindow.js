@@ -1,14 +1,6 @@
 /* global acquireVsCodeApi */
 
-export function setupWindowOnload({
-	toggleTabVisibility,
-	setActiveTab,
-	setupTabButton,
-	displayTables,
-	renderChart,
-	renderMap,
-	renderSummary,
-}) {
+export function setupWindowOnload({ toggleTabVisibility, setActiveTab, setupTabButton, displayTables, renderChart, renderMap, renderSummary }) {
 	window.onload = () => {
 		// Signal to the extension that the webview is ready (only if available)
 		let vscode;
@@ -16,9 +8,7 @@ export function setupWindowOnload({
 			vscode = acquireVsCodeApi();
 			vscode.postMessage({ type: 'ready' });
 		} else {
-			console.warn(
-				'acquireVsCodeApi is not available. Messages will be logged locally.',
-			);
+			console.warn('acquireVsCodeApi is not available. Messages will be logged locally.');
 			vscode = {
 				postMessage: (message) => {
 					console.log('Message logged locally:', message);
@@ -35,8 +25,7 @@ export function setupWindowOnload({
 				id: 'tab-data',
 				content: 'content-data',
 				handler: () => {
-					if (document.getElementById('tab-data').classList.contains('active'))
-						return;
+					if (document.getElementById('tab-data').classList.contains('active')) return;
 					toggleTabVisibility('content-data');
 					setActiveTab('tab-data');
 					// If data is pre-rendered in background, move it to visible container
@@ -56,8 +45,7 @@ export function setupWindowOnload({
 				id: 'tab-chart',
 				content: 'content-chart',
 				handler: () => {
-					if (document.getElementById('tab-chart').classList.contains('active'))
-						return;
+					if (document.getElementById('tab-chart').classList.contains('active')) return;
 					toggleTabVisibility('content-chart');
 					setActiveTab('tab-chart');
 					// If chart is pre-rendered in background, move it to visible container
@@ -79,8 +67,7 @@ export function setupWindowOnload({
 				id: 'tab-map',
 				content: 'content-map',
 				handler: () => {
-					if (document.getElementById('tab-map').classList.contains('active'))
-						return;
+					if (document.getElementById('tab-map').classList.contains('active')) return;
 					toggleTabVisibility('content-map');
 					setActiveTab('tab-map');
 					window.renderMap();
@@ -90,10 +77,7 @@ export function setupWindowOnload({
 				id: 'tab-summary',
 				content: 'content-summary',
 				handler: () => {
-					if (
-						document.getElementById('tab-summary').classList.contains('active')
-					)
-						return;
+					if (document.getElementById('tab-summary').classList.contains('active')) return;
 					toggleTabVisibility('content-summary');
 					setActiveTab('tab-summary');
 					if (window.globalData && Object.keys(window.globalData).length > 0) {
@@ -105,10 +89,7 @@ export function setupWindowOnload({
 				id: 'tab-altfit',
 				content: 'content-altfit',
 				handler: () => {
-					if (
-						document.getElementById('tab-altfit').classList.contains('active')
-					)
-						return;
+					if (document.getElementById('tab-altfit').classList.contains('active')) return;
 					toggleTabVisibility('content-altfit');
 					setActiveTab('tab-altfit');
 					// Dynamically set iframe src when tab is activated
@@ -146,8 +127,7 @@ export function setupWindowOnload({
 				try {
 					// Placeholder: open file dialog and parse using selected lib/method
 					if (!window.electronAPI || !window.electronAPI.openFileDialog) {
-						resultDiv.innerHTML =
-							'<span class="text-red">Electron API not available.</span>';
+						resultDiv.innerHTML = '<span class="text-red">Electron API not available.</span>';
 						return;
 					}
 					const file = await window.electronAPI.openFileDialog();
@@ -165,11 +145,7 @@ export function setupWindowOnload({
 					if (result && result.error) {
 						resultDiv.innerHTML = `<span class='text-red'>Error: ${result.error}</span>`;
 					} else {
-						resultDiv.innerHTML = `<pre>${JSON.stringify(
-							result,
-							null,
-							2,
-						)}</pre>`;
+						resultDiv.innerHTML = `<pre>${JSON.stringify(result, null, 2)}</pre>`;
 					}
 				} catch (err) {
 					resultDiv.innerHTML = `<span class='text-red'>Error: ${err}</span>`;

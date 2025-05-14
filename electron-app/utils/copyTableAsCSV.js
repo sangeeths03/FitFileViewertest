@@ -35,18 +35,13 @@ export function copyTableAsCSV(table, title) {
 	});
 	const flattenedTable = window.aq.from(rows);
 	const csvString = flattenedTable.toCSV({ header: true });
-	if (
-		navigator.clipboard &&
-		typeof navigator.clipboard.writeText === 'function'
-	) {
+	if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
 		navigator.clipboard
 			.writeText(csvString)
 			.then(() => console.log('Copied CSV to clipboard!'))
 			.catch((err) => console.error('Failed to copy CSV:', err));
 	} else {
-		console.warn(
-			'navigator.clipboard.writeText is not supported. Using fallback.',
-		);
+		console.warn('navigator.clipboard.writeText is not supported. Using fallback.');
 		// Fallback mechanism
 		const textarea = document.createElement('textarea');
 		textarea.value = csvString;

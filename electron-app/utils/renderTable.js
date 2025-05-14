@@ -87,9 +87,7 @@ export function renderTable(container, title, table, index) {
 			}, 100);
 		});
 	} else {
-		console.warn(
-			'[WARNING] jQuery is not available. Falling back to native DOM methods.',
-		);
+		console.warn('[WARNING] jQuery is not available. Falling back to native DOM methods.');
 		setTimeout(() => {
 			const tableElement = document.getElementById(tableId);
 			if (tableElement) {

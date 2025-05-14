@@ -32,25 +32,17 @@ export function loadTheme() {
  * @param {(theme: string) => void} onThemeChange
  */
 export function listenForThemeChange(onThemeChange) {
-	if (
-		window.electronAPI &&
-		typeof window.electronAPI.onSetTheme === 'function' &&
-		typeof window.electronAPI.sendThemeChanged === 'function'
-	) {
+	if (window.electronAPI && typeof window.electronAPI.onSetTheme === 'function' && typeof window.electronAPI.sendThemeChanged === 'function') {
 		// The callback receives a 'theme' parameter, which is expected to be a string ('dark' or 'light').
 		window.electronAPI.onSetTheme((theme) => {
 			onThemeChange(theme);
 			if (typeof window.electronAPI.sendThemeChanged === 'function') {
 				window.electronAPI.sendThemeChanged(theme);
 			} else {
-				console.warn(
-					'sendThemeChanged method is not available on electronAPI.',
-				);
+				console.warn('sendThemeChanged method is not available on electronAPI.');
 			}
 		});
 	} else {
-		console.warn(
-			'Electron API is not available. Theme change listener is not active.',
-		);
+		console.warn('Electron API is not available. Theme change listener is not active.');
 	}
 }

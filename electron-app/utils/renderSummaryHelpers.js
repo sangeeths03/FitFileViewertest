@@ -20,7 +20,9 @@ export function getStorageKey(data) {
 export function saveColPrefs(key, visibleColumns) {
 	try {
 		localStorage.setItem(key, JSON.stringify(visibleColumns));
-	} catch {/* intentionally ignore errors */}
+	} catch {
+		/* intentionally ignore errors */
+	}
 }
 
 export function loadColPrefs(key) {
@@ -32,7 +34,9 @@ export function loadColPrefs(key) {
 				return arr;
 			}
 		}
-	} catch {/* intentionally ignore errors */}
+	} catch {
+		/* intentionally ignore errors */
+	}
 	return null;
 }
 
@@ -61,7 +65,7 @@ export function renderTable({ container, data, visibleColumns, setVisibleColumns
 	filterSelect.innerHTML = '<option value="All">All</option><option value="Summary">Summary</option>';
 	if (data.lapMesgs && data.lapMesgs.length > 0) {
 		for (let i = 0; i < data.lapMesgs.length; ++i) {
-			filterSelect.innerHTML += `<option value="Lap ${i+1}">Lap ${i+1}</option>`;
+			filterSelect.innerHTML += `<option value="Lap ${i + 1}">Lap ${i + 1}</option>`;
 		}
 	}
 	// --- Persist filter value on container ---
@@ -72,21 +76,25 @@ export function renderTable({ container, data, visibleColumns, setVisibleColumns
 		renderTable({ container, data, visibleColumns, setVisibleColumns, gearBtn });
 	};
 	// Add scroll wheel support for changing selection
-	filterSelect.addEventListener('wheel', (e) => {
-		e.preventDefault();
-		const options = Array.from(filterSelect.options);
-		let idx = options.findIndex(opt => opt.value === filterSelect.value);
-		if (e.deltaY > 0 && idx < options.length - 1) {
-			idx++;
-		} else if (e.deltaY < 0 && idx > 0) {
-			idx--;
-		}
-		if (options[idx]) {
-			filterSelect.value = options[idx].value;
-			container._summaryFilterValue = filterSelect.value;
-			renderTable({ container, data, visibleColumns, setVisibleColumns, gearBtn });
-		}
-	}, { passive: false });
+	filterSelect.addEventListener(
+		'wheel',
+		(e) => {
+			e.preventDefault();
+			const options = Array.from(filterSelect.options);
+			let idx = options.findIndex((opt) => opt.value === filterSelect.value);
+			if (e.deltaY > 0 && idx < options.length - 1) {
+				idx++;
+			} else if (e.deltaY < 0 && idx > 0) {
+				idx--;
+			}
+			if (options[idx]) {
+				filterSelect.value = options[idx].value;
+				container._summaryFilterValue = filterSelect.value;
+				renderTable({ container, data, visibleColumns, setVisibleColumns, gearBtn });
+			}
+		},
+		{ passive: false }
+	);
 	filterLabel.appendChild(filterSelect);
 	filterBar.appendChild(filterLabel);
 	section.appendChild(filterBar);
@@ -103,11 +111,11 @@ export function renderTable({ container, data, visibleColumns, setVisibleColumns
 	copyBtn.onclick = () => {
 		const rows = [];
 		const sortedVisible = [LABEL_COL, ...visibleColumns];
-		rows.push(sortedVisible.map(k => k === LABEL_COL ? 'Type' : k).join(','));
+		rows.push(sortedVisible.map((k) => (k === LABEL_COL ? 'Type' : k)).join(','));
 		// Summary row
 		if (filterValue === 'All' || filterValue === 'Summary') {
 			const summaryRows = getSummaryRows(data);
-			rows.push(sortedVisible.map(k => k === LABEL_COL ? 'Summary' : (summaryRows[0][k] !== undefined ? summaryRows[0][k] : '')).join(','));
+			rows.push(sortedVisible.map((k) => (k === LABEL_COL ? 'Summary' : summaryRows[0][k] !== undefined ? summaryRows[0][k] : '')).join(','));
 		}
 		// Lap rows
 		if (data.lapMesgs && data.lapMesgs.length > 0 && (filterValue === 'All' || filterValue.startsWith('Lap'))) {
@@ -117,8 +125,8 @@ export function renderTable({ container, data, visibleColumns, setVisibleColumns
 				return patched;
 			});
 			patchedLaps.forEach((lap, i) => {
-				if (filterValue === 'All' || filterValue === `Lap ${i+1}`) {
-					rows.push(sortedVisible.map(k => k === LABEL_COL ? `Lap ${i+1}` : (lap[k] !== undefined ? lap[k] : '')).join(','));
+				if (filterValue === 'All' || filterValue === `Lap ${i + 1}`) {
+					rows.push(sortedVisible.map((k) => (k === LABEL_COL ? `Lap ${i + 1}` : lap[k] !== undefined ? lap[k] : '')).join(','));
 				}
 			});
 		}
@@ -145,7 +153,7 @@ export function renderTable({ container, data, visibleColumns, setVisibleColumns
 		const summaryRow = document.createElement('tr');
 		sortedVisible.forEach((key, idx) => {
 			const td = document.createElement('td');
-			td.textContent = key === LABEL_COL ? 'Summary' : (summaryRows[0][key] !== undefined ? summaryRows[0][key] : '');
+			td.textContent = key === LABEL_COL ? 'Summary' : summaryRows[0][key] !== undefined ? summaryRows[0][key] : '';
 			if (idx === 0) td.classList.add('summary-row');
 			summaryRow.appendChild(td);
 		});
@@ -159,12 +167,12 @@ export function renderTable({ container, data, visibleColumns, setVisibleColumns
 			return patched;
 		});
 		patchedLaps.forEach((lap, i) => {
-			if (filterValue === 'All' || filterValue === `Lap ${i+1}`) {
+			if (filterValue === 'All' || filterValue === `Lap ${i + 1}`) {
 				const lapRow = document.createElement('tr');
 				sortedVisible.forEach((key) => {
 					const td = document.createElement('td');
 					if (key === LABEL_COL) {
-						td.textContent = `Lap ${i+1}`;
+						td.textContent = `Lap ${i + 1}`;
 					} else if (key === 'timestamp' && lap.startTime) {
 						td.textContent = lap.startTime;
 					} else {
@@ -211,8 +219,7 @@ function getSummaryRows(data) {
 			stats.duration = sec;
 		}
 		if (table.columnNames().includes('speed')) {
-			const avg =
-				table.array('speed').reduce((a, b) => a + b, 0) / table.numRows();
+			const avg = table.array('speed').reduce((a, b) => a + b, 0) / table.numRows();
 			const max = Math.max(...table.array('speed'));
 			stats.avg_speed = avg;
 			stats.max_speed = max;
@@ -276,9 +283,9 @@ export function showColModal({ allKeys, visibleColumns: initialVisibleColumns, s
 					for (let i = start; i <= end; ++i) {
 						const k = allKeys[i];
 						if (shouldCheck && !newCols.includes(k)) newCols.push(k);
-						if (!shouldCheck && newCols.includes(k)) newCols = newCols.filter(x => x !== k);
+						if (!shouldCheck && newCols.includes(k)) newCols = newCols.filter((x) => x !== k);
 					}
-					newCols = allKeys.filter(k => newCols.includes(k));
+					newCols = allKeys.filter((k) => newCols.includes(k));
 					updateVisibleColumns(newCols);
 					updateColList();
 					renderTable();
@@ -294,7 +301,7 @@ export function showColModal({ allKeys, visibleColumns: initialVisibleColumns, s
 				} else {
 					newCols = newCols.filter((k) => k !== key);
 				}
-				newCols = allKeys.filter(k => newCols.includes(k));
+				newCols = allKeys.filter((k) => newCols.includes(k));
 				updateVisibleColumns(newCols);
 				selectAllBtn.textContent = newCols.length === allKeys.length ? 'Deselect All' : 'Select All';
 				updateColList();

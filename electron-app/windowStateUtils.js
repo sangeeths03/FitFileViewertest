@@ -40,4 +40,9 @@ function createWindow() {
 	return win;
 }
 
-module.exports = { getWindowState, saveWindowState, settingsPath, createWindow };
+module.exports = {
+	getWindowState,
+	saveWindowState,
+	settingsPath,
+	createWindow,
+};

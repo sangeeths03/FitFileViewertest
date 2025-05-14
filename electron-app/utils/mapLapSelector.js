@@ -32,7 +32,7 @@ export function addLapSelector(map, container, drawMapForLap) {
 
 	function getMultiLapIcon(on) {
 		if (on) {
-			 // Stacked layers icon for multi-lap active
+			// Stacked layers icon for multi-lap active
 			return `<svg class="icon" viewBox="0 0 16 16" width="16" height="16"><polygon points="8,2 14,5 8,8 2,5" fill="#2196f3" stroke="#1976d2" stroke-width="1.2"/><polygon points="8,6 14,9 8,12 2,9" fill="#90caf9" stroke="#1976d2" stroke-width="1.2"/><polygon points="8,10 14,13 8,16 2,13" fill="#e3f2fd" stroke="#1976d2" stroke-width="1.2"/></svg>`;
 		} else {
 			// Multi-lap mode icon (layers/checkboxes)
@@ -59,10 +59,7 @@ export function addLapSelector(map, container, drawMapForLap) {
 			multiLapToggle.innerHTML = getMultiLapIcon(false);
 			multiLapToggle.title = 'Enable multi-lap mode: select multiple laps by clicking or dragging. Click again to return to single-lap mode.';
 			// If more than one selected, reset to 'all'
-			if (
-				lapSelect.selectedOptions.length > 1 ||
-				(lapSelect.selectedOptions.length === 1 && lapSelect.selectedOptions[0].value !== 'all')
-			) {
+			if (lapSelect.selectedOptions.length > 1 || (lapSelect.selectedOptions.length === 1 && lapSelect.selectedOptions[0].value !== 'all')) {
 				lapSelect.selectedIndex = 0;
 				lapSelect.dispatchEvent(new Event('change'));
 			}
@@ -78,10 +75,10 @@ export function addLapSelector(map, container, drawMapForLap) {
 	multiLapToggle.onclick = () => setMultiSelectMode(!multiSelectMode);
 
 	lapSelect.addEventListener('change', () => {
-		let selected = Array.from(lapSelect.selectedOptions).map(opt => opt.value);
+		let selected = Array.from(lapSelect.selectedOptions).map((opt) => opt.value);
 		if (multiSelectMode) {
 			if (selected.includes('all') && selected.length > 1) {
-				for (let opt of lapSelect.options) opt.selected = (opt.value === 'all');
+				for (let opt of lapSelect.options) opt.selected = opt.value === 'all';
 				selected = ['all'];
 			}
 			if (!selected.length) {
@@ -113,7 +110,7 @@ export function addLapSelector(map, container, drawMapForLap) {
 			const opt = e.target;
 			dragSelectValue = !opt.selected;
 			if (opt.value === 'all') {
-				for (let o of lapSelect.options) o.selected = (o.value === 'all');
+				for (let o of lapSelect.options) o.selected = o.value === 'all';
 			} else {
 				opt.selected = dragSelectValue;
 				lapSelect.options[0].selected = false;

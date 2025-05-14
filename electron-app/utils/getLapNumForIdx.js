@@ -18,12 +18,7 @@
 export function getLapNumForIdx(idx, lapMesgs) {
 	for (let i = 0; i < lapMesgs.length; i++) {
 		const lap = lapMesgs[i];
-		if (
-			lap.start_index !== null &&
-			lap.end_index !== null &&
-			idx >= lap.start_index &&
-			idx <= lap.end_index
-		) {
+		if (lap.start_index !== null && lap.end_index !== null && idx >= lap.start_index && idx <= lap.end_index) {
 			return i + 1;
 		}
 	}

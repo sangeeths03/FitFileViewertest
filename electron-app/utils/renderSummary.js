@@ -1,12 +1,7 @@
 import { patchSummaryFields } from './patchSummaryFields.js';
 import { formatDistance } from './formatDistance.js';
 import { formatDuration } from './formatDuration.js';
-import {
-	getStorageKey,
-	loadColPrefs,
-	renderTable,
-	showColModal
-} from './renderSummaryHelpers.js';
+import { getStorageKey, loadColPrefs, renderTable, showColModal } from './renderSummaryHelpers.js';
 
 /**
  * Renders a summary of activity data, including main summary and lap summary tables,
@@ -61,19 +56,10 @@ export function renderSummary(data) {
 			stats.duration = formatDuration(sec);
 		}
 		if (table.columnNames().includes('speed')) {
-			const avg =
-				table.array('speed').reduce((a, b) => a + b, 0) / table.numRows();
+			const avg = table.array('speed').reduce((a, b) => a + b, 0) / table.numRows();
 			const max = Math.max(...table.array('speed'));
-			stats.avg_speed =
-				(avg * 3.6).toFixed(2) +
-				' km/h / ' +
-				(avg * 2.23694).toFixed(2) +
-				' mph';
-			stats.max_speed =
-				(max * 3.6).toFixed(2) +
-				' km/h / ' +
-				(max * 2.23694).toFixed(2) +
-				' mph';
+			stats.avg_speed = (avg * 3.6).toFixed(2) + ' km/h / ' + (avg * 2.23694).toFixed(2) + ' mph';
+			stats.max_speed = (max * 3.6).toFixed(2) + ' km/h / ' + (max * 2.23694).toFixed(2) + ' mph';
 		}
 		if (table.columnNames().includes('altitude')) {
 			const min = Math.min(...table.array('altitude'));
@@ -97,28 +83,26 @@ export function renderSummary(data) {
 				val !== null &&
 				val !== undefined &&
 				val !== '' &&
-				!(
-					(typeof val === 'number' && val === 0) ||
-					(typeof val === 'string' &&
-						/^(0+(\.0+)?|0*\.\d*0+)$/.test(val.trim()))
-				) &&
+				!((typeof val === 'number' && val === 0) || (typeof val === 'string' && /^(0+(\.0+)?|0*\.\d*0+)$/.test(val.trim()))) &&
 				!(typeof val === 'number' && isNaN(val))
 			);
 		});
-		summaryRows[0] = Object.fromEntries(
-			filteredKeys.map((k) => [k, summaryRows[0][k]]),
-		);
+		summaryRows[0] = Object.fromEntries(filteredKeys.map((k) => [k, summaryRows[0][k]]));
 	}
 
 	// Use helpers for the rest
 	let allKeys = Object.keys(summaryRows[0]);
 	if (data.sessionMesgs && data.sessionMesgs.length > 0) {
-		data.sessionMesgs.forEach(row => {
-			Object.keys(row).forEach(k => { if (!allKeys.includes(k)) allKeys.push(k); });
+		data.sessionMesgs.forEach((row) => {
+			Object.keys(row).forEach((k) => {
+				if (!allKeys.includes(k)) allKeys.push(k);
+			});
 		});
 	} else if (data.recordMesgs && data.recordMesgs.length > 0) {
-		data.recordMesgs.forEach(row => {
-			Object.keys(row).forEach(k => { if (!allKeys.includes(k)) allKeys.push(k); });
+		data.recordMesgs.forEach((row) => {
+			Object.keys(row).forEach((k) => {
+				if (!allKeys.includes(k)) allKeys.push(k);
+			});
 		});
 	}
 	let visibleColumns = loadColPrefs(getStorageKey(data, allKeys), allKeys) || allKeys.slice();
@@ -133,15 +117,20 @@ export function renderSummary(data) {
 			container,
 			allKeys,
 			visibleColumns,
-			setVisibleColumns: (cols) => { visibleColumns = cols; },
-			renderTable: () => renderTable({
-				container,
-				data,
-				allKeys,
-				visibleColumns,
-				setVisibleColumns: (cols) => { visibleColumns = cols; },
-				gearBtn
-			})
+			setVisibleColumns: (cols) => {
+				visibleColumns = cols;
+			},
+			renderTable: () =>
+				renderTable({
+					container,
+					data,
+					allKeys,
+					visibleColumns,
+					setVisibleColumns: (cols) => {
+						visibleColumns = cols;
+					},
+					gearBtn,
+				}),
 		});
 	};
 
@@ -150,7 +139,9 @@ export function renderSummary(data) {
 		data,
 		allKeys,
 		visibleColumns,
-		setVisibleColumns: (cols) => { visibleColumns = cols; },
-		gearBtn
+		setVisibleColumns: (cols) => {
+			visibleColumns = cols;
+		},
+		gearBtn,
 	});
 }

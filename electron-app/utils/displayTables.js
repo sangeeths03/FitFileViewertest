@@ -19,19 +19,14 @@ export function displayTables(dataFrames, containerOverride) {
 		return;
 	}
 
-	const container =
-		containerOverride || document.getElementById('content-data');
+	const container = containerOverride || document.getElementById('content-data');
 	if (!container) {
-		console.error(
-			'[ERROR] Container element with id "content-data" not found.',
-		);
+		console.error('[ERROR] Container element with id "content-data" not found.');
 		return;
 	}
 
 	container.innerHTML = '';
-	const keys = Object.keys(dataFrames).filter((key) =>
-		Array.isArray(dataFrames[key]),
-	);
+	const keys = Object.keys(dataFrames).filter((key) => Array.isArray(dataFrames[key]));
 	console.log('[DEBUG] Table keys:', keys);
 
 	// Debug: print first row of each table
@@ -52,10 +47,7 @@ export function displayTables(dataFrames, containerOverride) {
 	keys.forEach((key, index) => {
 		try {
 			const table = aq.from(dataFrames[key]);
-			console.log(
-				`[DEBUG] Rendering table for key: ${key}, rows:`,
-				table.numRows(),
-			);
+			console.log(`[DEBUG] Rendering table for key: ${key}, rows:`, table.numRows());
 			renderTable(container, key, table, index);
 		} catch (e) {
 			console.error(`[ERROR] Failed to render table for key: ${key}`, e);

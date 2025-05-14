@@ -9,17 +9,24 @@ export function addSimpleMeasureTool(map, controlsDiv) {
 
 	function clearMeasure() {
 		measurePoints = [];
-		if (measureLine) { map.removeLayer(measureLine); measureLine = null; }
-		measureMarkers.forEach(m => map.removeLayer(m));
+		if (measureLine) {
+			map.removeLayer(measureLine);
+			measureLine = null;
+		}
+		measureMarkers.forEach((m) => map.removeLayer(m));
 		measureMarkers = [];
-		if (measureLabel) { map.removeLayer(measureLabel); measureLabel = null; }
+		if (measureLabel) {
+			map.removeLayer(measureLabel);
+			measureLabel = null;
+		}
 	}
 
 	function disableMeasure(measureBtn) {
 		measuring = false;
 		map.off('click', onMapClickMeasure);
 		if (measureBtn) {
-			measureBtn.innerHTML = '<svg class="icon" viewBox="0 0 20 20" width="18" height="18"><rect x="2" y="9" width="16" height="2" rx="1" fill="#1976d2"/><rect x="2" y="5" width="2" height="10" rx="1" fill="#1976d2"/><rect x="16" y="5" width="2" height="10" rx="1" fill="#1976d2"/></svg> <span>Measure</span>';
+			measureBtn.innerHTML =
+				'<svg class="icon" viewBox="0 0 20 20" width="18" height="18"><rect x="2" y="9" width="16" height="2" rx="1" fill="#1976d2"/><rect x="2" y="5" width="2" height="10" rx="1" fill="#1976d2"/><rect x="16" y="5" width="2" height="10" rx="1" fill="#1976d2"/></svg> <span>Measure</span>';
 			measureBtn.title = 'Click, then click two points on the map to measure distance';
 		}
 	}
@@ -56,18 +63,15 @@ export function addSimpleMeasureTool(map, controlsDiv) {
 			const dist = map.distance(measurePoints[0], measurePoints[1]);
 			const distKm = dist / 1000;
 			const distMi = dist / 1609.344;
-			const mid = L.latLng(
-				(measurePoints[0].lat + measurePoints[1].lat) / 2,
-				(measurePoints[0].lng + measurePoints[1].lng) / 2
-			);
+			const mid = L.latLng((measurePoints[0].lat + measurePoints[1].lat) / 2, (measurePoints[0].lng + measurePoints[1].lng) / 2);
 			measureLabel = L.marker(mid, {
 				icon: L.divIcon({
 					className: 'measure-label',
-					html: `<div class="measure-label-content">${createExitButton()}${dist >= 1000 ? distKm.toFixed(2) + ' km' : dist.toFixed(1) + ' m'}<br>${distMi.toFixed(2)} mi</div>`
+					html: `<div class="measure-label-content">${createExitButton()}${dist >= 1000 ? distKm.toFixed(2) + ' km' : dist.toFixed(1) + ' m'}<br>${distMi.toFixed(2)} mi</div>`,
 				}),
 				iconSize: [120, 38],
 				iconAnchor: [60, 19],
-				interactive: true
+				interactive: true,
 			}).addTo(map);
 			// Add click handler for exit button
 			const labelEl = measureLabel.getElement();
@@ -84,14 +88,16 @@ export function addSimpleMeasureTool(map, controlsDiv) {
 		measuring = true;
 		map.on('click', onMapClickMeasure);
 		if (measureBtn) {
-			measureBtn.innerHTML = '<svg class="icon" viewBox="0 0 20 20" width="18" height="18"><circle cx="10" cy="10" r="8" fill="none" stroke="#b71c1c" stroke-width="2"/><line x1="6" y1="6" x2="14" y2="14" stroke="#b71c1c" stroke-width="2"/><line x1="14" y1="6" x2="6" y2="14" stroke="#b71c1c" stroke-width="2"/></svg> <span>Cancel</span>';
+			measureBtn.innerHTML =
+				'<svg class="icon" viewBox="0 0 20 20" width="18" height="18"><circle cx="10" cy="10" r="8" fill="none" stroke="#b71c1c" stroke-width="2"/><line x1="6" y1="6" x2="14" y2="14" stroke="#b71c1c" stroke-width="2"/><line x1="14" y1="6" x2="6" y2="14" stroke="#b71c1c" stroke-width="2"/></svg> <span>Cancel</span>';
 			measureBtn.title = 'Cancel measurement mode';
 		}
 	}
 
 	const measureBtn = document.createElement('button');
 	measureBtn.className = 'map-action-btn';
-	measureBtn.innerHTML = '<svg class="icon" viewBox="0 0 20 20" width="18" height="18"><rect x="2" y="9" width="16" height="2" rx="1" fill="#1976d2"/><rect x="2" y="5" width="2" height="10" rx="1" fill="#1976d2"/><rect x="16" y="5" width="2" height="10" rx="1" fill="#1976d2"/></svg> <span>Measure</span>';
+	measureBtn.innerHTML =
+		'<svg class="icon" viewBox="0 0 20 20" width="18" height="18"><rect x="2" y="9" width="16" height="2" rx="1" fill="#1976d2"/><rect x="2" y="5" width="2" height="10" rx="1" fill="#1976d2"/><rect x="16" y="5" width="2" height="10" rx="1" fill="#1976d2"/></svg> <span>Measure</span>';
 	measureBtn.title = 'Click, then click two points on the map to measure distance';
 	let measureBtnRef = measureBtn;
 	measureBtn.onclick = () => {
@@ -99,7 +105,9 @@ export function addSimpleMeasureTool(map, controlsDiv) {
 			clearMeasure();
 			enableSimpleMeasure(measureBtn);
 			measureBtn.disabled = true;
-			setTimeout(() => { measureBtn.disabled = false; }, 2000);
+			setTimeout(() => {
+				measureBtn.disabled = false;
+			}, 2000);
 		} else {
 			clearMeasure();
 			disableMeasure(measureBtn);

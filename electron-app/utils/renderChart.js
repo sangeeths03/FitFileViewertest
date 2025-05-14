@@ -34,17 +34,13 @@ export function renderChart(targetContainer) {
 			: targetContainer
 		: document.getElementById('content-chart');
 	if (!chartContainer) {
-		console.error(
-			'[ERROR] Target container not found. Skipping chart rendering.',
-		);
+		console.error('[ERROR] Target container not found. Skipping chart rendering.');
 		return;
 	}
 	chartContainer.innerHTML = '<div id="vega-container"></div>';
 	if (window.globalData && window.globalData.recordMesgs && Array.isArray(window.globalData.recordMesgs)) {
 		if (!window.aq) {
-			console.error(
-				'[ERROR] Arquero library (window.aq) is not loaded. Skipping chart rendering.',
-			);
+			console.error('[ERROR] Arquero library (window.aq) is not loaded. Skipping chart rendering.');
 			return;
 		}
 		const recordTable = window.aq.from(window.globalData.recordMesgs);
@@ -64,18 +60,11 @@ export function renderChart(targetContainer) {
 			'resistance',
 			'temperature',
 		];
-		const columnsToFold = recordTable
-			.columnNames()
-			.filter((col) => col !== 'timestamp' && allowedChartFields.includes(col));
+		const columnsToFold = recordTable.columnNames().filter((col) => col !== 'timestamp' && allowedChartFields.includes(col));
 		if (columnsToFold.length === 0) {
-			console.info(
-				'[INFO] No suitable numeric data available for chart. Available columns: ' +
-					recordTable.columnNames().join(', '),
-			);
+			console.info('[INFO] No suitable numeric data available for chart. Available columns: ' + recordTable.columnNames().join(', '));
 			chartContainer.innerHTML =
-				'<p>No suitable numeric data available for chart.<br>Available columns: ' +
-				recordTable.columnNames().join(', ') +
-				'</p>';
+				'<p>No suitable numeric data available for chart.<br>Available columns: ' + recordTable.columnNames().join(', ') + '</p>';
 			return;
 		}
 		const folded = recordTable.fold(columnsToFold, { as: ['key', 'value'] });
@@ -93,7 +82,9 @@ export function renderChart(targetContainer) {
 			} else if (document.body.classList.contains('theme-light')) {
 				theme = 'light';
 			}
-		} catch {/* intentionally ignore errors */}
+		} catch {
+			/* intentionally ignore errors */
+		}
 
 		const spec = getChartSpec(folded.objects(), theme);
 		const vegaContainer = chartContainer.querySelector('#vega-container');
@@ -137,16 +128,12 @@ export function renderChart(targetContainer) {
 				})
 				.catch((error) => {
 					console.error(error);
-					chartContainer.innerHTML =
-						'<p>Failed to render the chart. Please try again later.</p>';
+					chartContainer.innerHTML = '<p>Failed to render the chart. Please try again later.</p>';
 				});
 		} else {
-			console.warn(
-				'[WARNING] #vega-container element is missing. Skipping chart rendering.',
-			);
+			console.warn('[WARNING] #vega-container element is missing. Skipping chart rendering.');
 		}
 	} else {
-		chartContainer.innerHTML =
-			'<p>No recordMesgs data available for chart.</p>';
+		chartContainer.innerHTML = '<p>No recordMesgs data available for chart.</p>';
 	}
 }
