@@ -12,10 +12,12 @@ import { getActiveTabContent } from './utils/getActiveTabContent.js';
 import { setupTabButton } from './utils/setupTabButton.js';
 import { setupFullscreenListeners, setupDOMContentLoaded } from './utils/addFullScreenButton.js';
 import { setupWindowOnload } from './utils/setupWindow.js';
+import { renderChartJS } from './utils/renderChartJS.js';
 
 window.globalData = window.globalData || null; // will hold all data received from the extension
 
 window.showFitData = showFitData;
+window.renderChartJS = renderChartJS;
 
 // When a FIT file is opened, always send it to the iframe (even if not active)
 window.sendFitFileToAltFitReader = async function (arrayBuffer) {

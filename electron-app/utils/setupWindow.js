@@ -64,6 +64,18 @@ export function setupWindowOnload({ toggleTabVisibility, setActiveTab, setupTabB
 				},
 			},
 			{
+				id: 'tab-chartjs',
+				content: 'content-chartjs',
+				handler: () => {
+					if (document.getElementById('tab-chartjs').classList.contains('active')) return;
+					toggleTabVisibility('content-chartjs');
+					setActiveTab('tab-chartjs');
+					if (window.renderChartJS) {
+						window.renderChartJS('chartjs-chart-container');
+					}
+				},
+			},
+			{
 				id: 'tab-map',
 				content: 'content-map',
 				handler: () => {

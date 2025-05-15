@@ -8,6 +8,7 @@ export function toggleTabVisibility(visibleTabId) {
 	const tabContentIds = [
 		'content-data',
 		'content-chart',
+		'content-chartjs', // Add this line for Charts v2
 		'content-map',
 		'content-summary',
 		'content-altfit', // Added altfit tab content
