@@ -322,6 +322,36 @@ export function renderMap() {
 		drawMapForLapWrapper('all');
 	}
 
+	// Restore highlight after overlays are drawn, if any
+	if (window.updateOverlayHighlights) {
+		console.log('[FFV] [renderMap] Calling updateOverlayHighlights, highlightedOverlayIdx:', window._highlightedOverlayIdx);
+		window.updateOverlayHighlights();
+	}
+	if (window.updateShownFilesList) {
+		console.log('[FFV] [renderMap] Calling updateShownFilesList after overlays drawn');
+		window.updateShownFilesList();
+		if (window.setupOverlayFileNameMapActions) {
+			console.log('[FFV] [renderMap] Calling setupOverlayFileNameMapActions after updateShownFilesList');
+			window.setupOverlayFileNameMapActions();
+			if (window.setupActiveFileNameMapActions) {
+				console.log('[FFV] [renderMap] Calling setupActiveFileNameMapActions after overlays drawn');
+				window.setupActiveFileNameMapActions();
+			}
+		}
+	}
+	// Enable/disable lap selector based on number of loaded files
+	function updateLapSelectorEnabledState() {
+		const lapSelect = document.getElementById('lap-select');
+		if (lapSelect) {
+			if (window.loadedFitFiles && window.loadedFitFiles.length > 1) {
+				lapSelect.disabled = true;
+			} else {
+				lapSelect.disabled = false;
+			}
+		}
+	}
+	updateLapSelectorEnabledState();
+
 	// --- Theme support (dark/light) ---
 	if (document.getElementById('leaflet-map')) {
 		updateMapTheme();
