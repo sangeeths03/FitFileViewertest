@@ -190,7 +190,7 @@ jobs:
         continue-on-error: true
 
       - name: Install dependencies
-        run: npm ci
+        run: npm install
         continue-on-error: true
 
       # - name: Install electron-builder
