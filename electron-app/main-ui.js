@@ -153,30 +153,35 @@ window.addEventListener('DOMContentLoaded', () => {
 
 // --- Enhanced Drag and Drop UI and Global Handling ---
 (function () {
-	const dropOverlay = document.getElementById('drop-overlay');
 	let dragCounter = 0;
 
 	function showDropOverlay() {
+		const dropOverlay = document.getElementById('drop-overlay');
 		if (dropOverlay) dropOverlay.style.display = 'flex';
 		const iframe = document.getElementById('altfit-iframe');
 		if (iframe) iframe.style.pointerEvents = 'none';
 	}
 	function hideDropOverlay() {
+		const dropOverlay = document.getElementById('drop-overlay');
 		if (dropOverlay) dropOverlay.style.display = 'none';
 		const iframe = document.getElementById('altfit-iframe');
 		if (iframe) iframe.style.pointerEvents = '';
 	}
 
 	// Show overlay on dragenter, hide on dragleave/drop
-	window.addEventListener('dragenter', () => {
-		dragCounter++;
-		showDropOverlay();
+	window.addEventListener('dragenter', (e) => {
+		if (e.target === document || e.target === document.body) {
+			dragCounter++;
+			showDropOverlay();
+		}
 	});
-	window.addEventListener('dragleave', () => {
-		dragCounter--;
-		if (dragCounter <= 0) {
-			hideDropOverlay();
-			dragCounter = 0;
+	window.addEventListener('dragleave', (e) => {
+		if (e.target === document || e.target === document.body) {
+			dragCounter--;
+			if (dragCounter <= 0) {
+				hideDropOverlay();
+				dragCounter = 0;
+			}
 		}
 	});
 	window.addEventListener('dragover', (e) => {
@@ -188,39 +193,54 @@ window.addEventListener('DOMContentLoaded', () => {
 		dragCounter = 0;
 		hideDropOverlay();
 		e.preventDefault();
-		if (!e.dataTransfer || !e.dataTransfer.files || e.dataTransfer.files.length === 0) return;
+		if (!e.dataTransfer || !e.dataTransfer.files || e.dataTransfer.files.length === 0) {
+			alert('No valid files detected. Please drop a .fit file.');
+			return;
+		}
 		const file = e.dataTransfer.files[0];
 		if (file && file.name.toLowerCase().endsWith('.fit')) {
 			const reader = new FileReader();
 			reader.onload = async function (event) {
 				const arrayBuffer = event.target.result;
 				if (arrayBuffer) {
-					const fitData = await window.electronAPI.decodeFitFile(arrayBuffer);
-					if (fitData && !fitData.error) {
-						showFitData(fitData, file.name);
-						window.sendFitFileToAltFitReader(arrayBuffer);
+					if (window.electronAPI && typeof window.electronAPI.decodeFitFile === 'function') {
+						try {
+							const fitData = await window.electronAPI.decodeFitFile(arrayBuffer);
+							if (fitData && !fitData.error) {
+								showFitData(fitData, file.name);
+								window.sendFitFileToAltFitReader(arrayBuffer);
+							} else {
+								alert('Unable to process the FIT file. Please try again or check the file format. Details: ' + (fitData.error || 'Unknown error'));
+							}
+						} catch (error) {
+							console.error('Error decoding FIT file:', error);
+							alert('An unexpected error occurred while decoding the FIT file.');
+						}
 					} else {
-						alert('Failed to parse FIT file: ' + (fitData.error || 'Unknown error'));
+						alert('FIT file decoding is not supported in this environment.');
 					}
 				}
 			};
 			reader.readAsArrayBuffer(file);
 		} else {
-			alert('Please drop a .fit file.');
+			alert('Only .fit files are supported. Please drop a valid .fit file.');
 		}
 	});
 
-	// Prevent iframe from blocking drag/drop events
-	const iframe = document.getElementById('altfit-iframe');
-	if (iframe) {
-		iframe.addEventListener('dragover', (e) => {
-			e.preventDefault();
-			showDropOverlay();
-		});
-		iframe.addEventListener('drop', (e) => {
-			e.preventDefault();
-			hideDropOverlay();
-		});
+	// Prevent iframe from blocking drag/drop events if drag-and-drop is enabled
+	if (window.enableDragAndDrop) {
+		const iframe = document.getElementById('altfit-iframe');
+		if (iframe) {
+			iframe.addEventListener('dragover', (e) => {
+				e.preventDefault();
+				showDropOverlay();
+			});
+			iframe.addEventListener('drop', (e) => {
+				e.preventDefault();
+				hideDropOverlay();
+				alert('Please drop files outside the iframe to process them.');
+			});
+		}
 	}
 })();
 
