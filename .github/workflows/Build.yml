@@ -457,7 +457,7 @@ jobs:
           body: |
             ## 🚀 Release Notes
 
-            ${{ steps.release_notes.outputs.notes }}
+            ${{ github.event.head_commit.message }}
 
             ---
 
@@ -466,7 +466,7 @@ jobs:
 
             **Message:**
             ```
-            ${{ github.event.head_commit.message }}
+            ${{ steps.release_notes.outputs.notes }}
             ```
 
             **Commit SHA:** `${{ github.sha }}`

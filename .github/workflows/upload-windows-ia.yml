@@ -30,13 +30,7 @@ jobs:
           access-key: ${{ secrets.IA_ACCESS_KEY }}
           secret-key: ${{ secrets.IA_SECRET_KEY }}
           identifier: fitfileviewer-windows-${{ steps.download_windows.outputs.tag_name }}
-          files: |
-            release-dist/Fit-File-Viewer-win32-*.exe
-            release-dist/Fit-File-Viewer-win32-*.msi
-            release-dist/Fit-File-Viewer-windows-*.exe
-            release-dist/Fit-File-Viewer-windows-*.msi
-            release-dist/Fit-File-Viewer-windows-*.zip
-            release-dist/latest-windows.yml
+          files: release-dist/Fit-File-Viewer-win32-*.exe release-dist/Fit-File-Viewer-win32-*.msi release-dist/Fit-File-Viewer-windows-*.exe release-dist/Fit-File-Viewer-windows-*.msi release-dist/Fit-File-Viewer-windows-*.zip release-dist/latest-windows.yml
         continue-on-error: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

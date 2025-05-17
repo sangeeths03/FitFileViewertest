@@ -30,12 +30,7 @@ jobs:
           access-key: ${{ secrets.IA_ACCESS_KEY }}
           secret-key: ${{ secrets.IA_SECRET_KEY }}
           identifier: fitfileviewer-macos-${{ steps.download_macos.outputs.tag_name }}
-          files: |
-            release-dist/Fit-File-Viewer-mac-*.dmg
-            release-dist/Fit-File-Viewer-mac-*.zip
-            release-dist/Fit-File-Viewer-macos-*.dmg
-            release-dist/Fit-File-Viewer-macos-*.zip
-            release-dist/latest-mac.yml
+          files: release-dist/Fit-File-Viewer-mac-*.dmg release-dist/Fit-File-Viewer-mac-*.zip release-dist/Fit-File-Viewer-macos-*.dmg release-dist/Fit-File-Viewer-macos-*.zip release-dist/latest-mac.yml
         continue-on-error: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

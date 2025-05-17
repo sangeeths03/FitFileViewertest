@@ -30,15 +30,7 @@ jobs:
           access-key: ${{ secrets.IA_ACCESS_KEY }}
           secret-key: ${{ secrets.IA_SECRET_KEY }}
           identifier: fitfileviewer-linux-${{ steps.download_linux.outputs.tag_name }}
-          files: |
-            release-dist/Fit-File-Viewer-linux-*.tar.bz2
-            release-dist/Fit-File-Viewer-linux-*.tar.gz
-            release-dist/Fit-File-Viewer-linux-*.tar.xz
-            release-dist/Fit-File-Viewer-linux-*.zip
-            release-dist/Fit-File-Viewer-pacman-*.pacman
-            release-dist/Fit-File-Viewer-rpm-*.rpm
-            release-dist/Fit-File-Viewer-snap-*.snap
-            release-dist/latest-linux.yml
+          files: release-dist/Fit-File-Viewer-linux-*.tar.bz2 release-dist/Fit-File-Viewer-linux-*.tar.gz release-dist/Fit-File-Viewer-linux-*.tar.xz release-dist/Fit-File-Viewer-linux-*.zip release-dist/Fit-File-Viewer-pacman-*.pacman release-dist/Fit-File-Viewer-rpm-*.rpm release-dist/Fit-File-Viewer-snap-*.snap release-dist/latest-linux.yml
         continue-on-error: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
