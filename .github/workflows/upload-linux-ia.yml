@@ -24,13 +24,36 @@ jobs:
           out-file-path: release-dist
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Upload distributables to archive.org
-        uses: palewire/internet-archive-upload@v1
-        with:
-          access-key: ${{ secrets.IA_ACCESS_KEY }}
-          secret-key: ${{ secrets.IA_SECRET_KEY }}
-          identifier: fitfileviewer-linux-${{ steps.download_linux.outputs.tag_name }}
-          files: release-dist/Fit-File-Viewer-linux-*.tar.bz2 release-dist/Fit-File-Viewer-linux-*.tar.gz release-dist/Fit-File-Viewer-linux-*.tar.xz release-dist/Fit-File-Viewer-linux-*.zip release-dist/Fit-File-Viewer-pacman-*.pacman release-dist/Fit-File-Viewer-rpm-*.rpm release-dist/Fit-File-Viewer-snap-*.snap release-dist/latest-linux.yml
-        continue-on-error: true
+      - name: List all Linux distributables
+        id: list_files
+        run: |
+          files=()
+          for pattern in \
+            "release-dist/Fit-File-Viewer-linux-*.tar.bz2" \
+            "release-dist/Fit-File-Viewer-linux-*.tar.gz" \
+            "release-dist/Fit-File-Viewer-linux-*.tar.xz" \
+            "release-dist/Fit-File-Viewer-linux-*.zip" \
+            "release-dist/Fit-File-Viewer-pacman-*.pacman" \
+            "release-dist/Fit-File-Viewer-rpm-*.rpm" \
+            "release-dist/Fit-File-Viewer-snap-*.snap" \
+            "release-dist/latest-linux.yml"
+          do
+            for f in $pattern; do
+              [ -e "$f" ] && files+=("$f")
+            done
+          done
+          printf '%s\n' "${files[@]}" > linux-ia-files.txt
+
+      - name: Upload each distributable to archive.org
+        run: |
+          set -e
+          while IFS= read -r file; do
+            echo "Uploading $file to archive.org..."
+            gh workflow run palewire/internet-archive-upload@v1 \
+              --with access-key=${{ secrets.IA_ACCESS_KEY }} \
+              --with secret-key=${{ secrets.IA_SECRET_KEY }} \
+              --with identifier=fitfileviewer-linux-${{ steps.download_linux.outputs.tag_name }} \
+              --with files="$file" || true
+          done < linux-ia-files.txt
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
