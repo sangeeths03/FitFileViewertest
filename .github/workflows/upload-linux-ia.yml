@@ -1,0 +1,61 @@
+name: Upload Linux Distributables to Archive.org
+
+on:
+  workflow_dispatch:
+  workflow_run:
+    workflows: ["Build and Release Electron App"]
+    types:
+      - completed
+
+concurrency:
+  group: IALINUX-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  upload-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download all Linux release assets
+        id: download_linux
+        uses: robinraju/release-downloader@v1.12
+        with:
+          latest: true
+          fileName: |
+            Fit-File-Viewer-apk-*.apk
+            Fit-File-Viewer-appimage-*.AppImage
+            Fit-File-Viewer-deb-*.deb
+            Fit-File-Viewer-freebsd-*.freebsd
+            Fit-File-Viewer-linux-*.tar.bz2
+            Fit-File-Viewer-linux-*.tar.gz
+            Fit-File-Viewer-linux-*.tar.xz
+            Fit-File-Viewer-linux-*.zip
+            Fit-File-Viewer-pacman-*.pacman
+            Fit-File-Viewer-rpm-*.rpm
+            Fit-File-Viewer-snap-*.snap
+            latest-linux.yml
+          out-file-path: release-dist
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Check if version already uploaded
+        id: check_version
+        run: |
+          VERSION="${{ steps.download_linux.outputs.tag_name }}"
+          IDENTIFIER="fitfileviewer-linux-$VERSION"
+          if curl --silent --fail "https://archive.org/metadata/$IDENTIFIER" > /dev/null; then
+            echo "Version already uploaded. Skipping."
+            echo "skip=true" >> $GITHUB_OUTPUT
+          else
+            echo "skip=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Upload distributables to archive.org
+        if: steps.check_version.outputs.skip != 'true'
+        uses: palewire/internet-archive-upload@v1
+        with:
+          access-key: ${{ secrets.IA_ACCESS_KEY }}
+          secret-key: ${{ secrets.IA_SECRET_KEY }}
+          identifier: fitfileviewer-linux-${{ steps.download_linux.outputs.tag_name }}
+          files: release-dist/
+        continue-on-error: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

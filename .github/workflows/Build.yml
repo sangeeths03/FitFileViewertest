@@ -31,6 +31,7 @@ jobs:
       - name: Debug Step - Show git diff for electron-app
         run: |
           echo "--- GIT DIFF OUTPUT (since last tag) ---"
+          git fetch --tags --force
           LAST_REF=$(git describe --tags --match "v*" --abbrev=0 2>/dev/null || git rev-list --max-parents=0 HEAD)
           git diff --name-status "$LAST_REF" -- "electron-app/"
           echo "--- END GIT DIFF OUTPUT ---"
@@ -458,16 +459,5 @@ jobs:
           draft: false
           prerelease: false
           make_latest: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Upload distributables to archive.org
-        uses: palewire/internet-archive-upload@v1
-        with:
-          access-key: ${{ secrets.IA_ACCESS_KEY }}
-          secret-key: ${{ secrets.IA_SECRET_KEY }}
-          identifier: fitfileviewer-v${{ needs.bump-version.outputs.new_version }}
-          files: release-dist/
-        continue-on-error: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
