@@ -15,22 +15,12 @@ jobs:
   upload-windows:
     runs-on: windows-latest
     steps:
-      - name: Download all Windows release assets
+      - name: Download all release assets
         id: download_windows
         uses: robinraju/release-downloader@v1.12
         with:
           latest: true
-          fileName: |
-            Fit-File-Viewer-msi-*.7z
-            Fit-File-Viewer-msi-*.msi
-            Fit-File-Viewer-msi-*.tar.bz2
-            Fit-File-Viewer-msi-*.tar.gz
-            Fit-File-Viewer-msi-*.tar.xz
-            Fit-File-Viewer-msi-*.zip
-            Fit-File-Viewer-nsis-*.exe
-            Fit-File-Viewer-nsis-*.exe.blockmap
-            Fit-File-Viewer-portable-*.exe
-            latest.yml
+          fileName: "*"
           out-file-path: release-dist
           token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -53,7 +43,13 @@ jobs:
           access-key: ${{ secrets.IA_ACCESS_KEY }}
           secret-key: ${{ secrets.IA_SECRET_KEY }}
           identifier: fitfileviewer-windows-${{ steps.download_windows.outputs.tag_name }}
-          files: release-dist/
+          files: |
+            release-dist/Fit-File-Viewer-win32-*.exe
+            release-dist/Fit-File-Viewer-win32-*.msi
+            release-dist/Fit-File-Viewer-windows-*.exe
+            release-dist/Fit-File-Viewer-windows-*.msi
+            release-dist/Fit-File-Viewer-windows-*.zip
+            release-dist/latest-windows.yml
         continue-on-error: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -15,24 +15,12 @@ jobs:
   upload-linux:
     runs-on: ubuntu-latest
     steps:
-      - name: Download all Linux release assets
+      - name: Download all release assets
         id: download_linux
         uses: robinraju/release-downloader@v1.12
         with:
           latest: true
-          fileName: |
-            Fit-File-Viewer-apk-*.apk
-            Fit-File-Viewer-appimage-*.AppImage
-            Fit-File-Viewer-deb-*.deb
-            Fit-File-Viewer-freebsd-*.freebsd
-            Fit-File-Viewer-linux-*.tar.bz2
-            Fit-File-Viewer-linux-*.tar.gz
-            Fit-File-Viewer-linux-*.tar.xz
-            Fit-File-Viewer-linux-*.zip
-            Fit-File-Viewer-pacman-*.pacman
-            Fit-File-Viewer-rpm-*.rpm
-            Fit-File-Viewer-snap-*.snap
-            latest-linux.yml
+          fileName: "*"
           out-file-path: release-dist
           token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -55,7 +43,15 @@ jobs:
           access-key: ${{ secrets.IA_ACCESS_KEY }}
           secret-key: ${{ secrets.IA_SECRET_KEY }}
           identifier: fitfileviewer-linux-${{ steps.download_linux.outputs.tag_name }}
-          files: release-dist/
+          files: |
+            release-dist/Fit-File-Viewer-linux-*.tar.bz2
+            release-dist/Fit-File-Viewer-linux-*.tar.gz
+            release-dist/Fit-File-Viewer-linux-*.tar.xz
+            release-dist/Fit-File-Viewer-linux-*.zip
+            release-dist/Fit-File-Viewer-pacman-*.pacman
+            release-dist/Fit-File-Viewer-rpm-*.rpm
+            release-dist/Fit-File-Viewer-snap-*.snap
+            release-dist/latest-linux.yml
         continue-on-error: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
