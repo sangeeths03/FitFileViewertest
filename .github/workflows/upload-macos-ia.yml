@@ -15,24 +15,6 @@ jobs:
   upload-macos:
     runs-on: ubuntu-latest
     steps:
-      - name: Download macOS release assets (mac-)
-        id: download_mac
-        uses: robinraju/release-downloader@v1.12
-        with:
-          latest: true
-          fileName: "Fit-File-Viewer-mac-*"
-          out-file-path: release-dist
-          token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Download macOS release assets (macos-)
-        id: download_macos
-        uses: robinraju/release-downloader@v1.12
-        with:
-          latest: true
-          fileName: "Fit-File-Viewer-macos-*"
-          out-file-path: release-dist
-          token: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Download macOS release assets (darwin-)
         id: download_darwin
         uses: robinraju/release-downloader@v1.12
