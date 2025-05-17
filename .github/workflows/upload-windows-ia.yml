@@ -15,43 +15,40 @@ jobs:
   upload-windows:
     runs-on: ubuntu-latest
     steps:
-      - name: Download all release assets
+      - name: Download Windows release assets (win32-)
+        id: download_win32
+        uses: robinraju/release-downloader@v1.12
+        with:
+          latest: true
+          fileName: "Fit-File-Viewer-win32-*"
+          out-file-path: release-dist
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Download Windows release assets (windows-)
         id: download_windows
         uses: robinraju/release-downloader@v1.12
         with:
           latest: true
-          fileName: "*"
+          fileName: "Fit-File-Viewer-windows-*"
           out-file-path: release-dist
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: List all Windows distributables
-        id: list_files
-        run: |
-          files=()
-          for pattern in \
-            "release-dist/Fit-File-Viewer-win32-*.exe" \
-            "release-dist/Fit-File-Viewer-win32-*.msi" \
-            "release-dist/Fit-File-Viewer-windows-*.exe" \
-            "release-dist/Fit-File-Viewer-windows-*.msi" \
-            "release-dist/Fit-File-Viewer-windows-*.zip" \
-            "release-dist/latest-windows.yml"
-          do
-            for f in $pattern; do
-              [ -e "$f" ] && files+=("$f")
-            done
-          done
-          printf '%s\n' "${files[@]}" > windows-ia-files.txt
+      - name: Download Windows release assets (latest-windows.yml)
+        id: download_latest
+        uses: robinraju/release-downloader@v1.12
+        with:
+          latest: true
+          fileName: "latest-windows.yml"
+          out-file-path: release-dist
+          token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Upload each distributable to archive.org
-        run: |
-          set -e
-          while IFS= read -r file; do
-            echo "Uploading $file to archive.org..."
-            gh workflow run palewire/internet-archive-upload@v1 \
-              --with access-key=${{ secrets.IA_ACCESS_KEY }} \
-              --with secret-key=${{ secrets.IA_SECRET_KEY }} \
-              --with identifier=fitfileviewer-windows-${{ steps.download_windows.outputs.tag_name }} \
-              --with files="$file" || true
-          done < windows-ia-files.txt
+      - name: Upload Windows distributables to archive.org
+        uses: palewire/internet-archive-upload@v1
+        with:
+          access-key: ${{ secrets.IA_ACCESS_KEY }}
+          secret-key: ${{ secrets.IA_SECRET_KEY }}
+          identifier: fitfileviewer-windows-${{ steps.download_windows.outputs.tag_name }}
+          files: release-dist/
+        continue-on-error: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

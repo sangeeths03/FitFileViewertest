@@ -15,45 +15,58 @@ jobs:
   upload-linux:
     runs-on: ubuntu-latest
     steps:
-      - name: Download all release assets
+      - name: Download Linux release assets (linux-)
         id: download_linux
         uses: robinraju/release-downloader@v1.12
         with:
           latest: true
-          fileName: "*"
+          fileName: "Fit-File-Viewer-linux-*"
           out-file-path: release-dist
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: List all Linux distributables
-        id: list_files
-        run: |
-          files=()
-          for pattern in \
-            "release-dist/Fit-File-Viewer-linux-*.tar.bz2" \
-            "release-dist/Fit-File-Viewer-linux-*.tar.gz" \
-            "release-dist/Fit-File-Viewer-linux-*.tar.xz" \
-            "release-dist/Fit-File-Viewer-linux-*.zip" \
-            "release-dist/Fit-File-Viewer-pacman-*.pacman" \
-            "release-dist/Fit-File-Viewer-rpm-*.rpm" \
-            "release-dist/Fit-File-Viewer-snap-*.snap" \
-            "release-dist/latest-linux.yml"
-          do
-            for f in $pattern; do
-              [ -e "$f" ] && files+=("$f")
-            done
-          done
-          printf '%s\n' "${files[@]}" > linux-ia-files.txt
+      - name: Download Linux release assets (pacman-)
+        id: download_pacman
+        uses: robinraju/release-downloader@v1.12
+        with:
+          latest: true
+          fileName: "Fit-File-Viewer-pacman-*"
+          out-file-path: release-dist
+          token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Upload each distributable to archive.org
-        run: |
-          set -e
-          while IFS= read -r file; do
-            echo "Uploading $file to archive.org..."
-            gh workflow run palewire/internet-archive-upload@v1 \
-              --with access-key=${{ secrets.IA_ACCESS_KEY }} \
-              --with secret-key=${{ secrets.IA_SECRET_KEY }} \
-              --with identifier=fitfileviewer-linux-${{ steps.download_linux.outputs.tag_name }} \
-              --with files="$file" || true
-          done < linux-ia-files.txt
+      - name: Download Linux release assets (rpm-)
+        id: download_rpm
+        uses: robinraju/release-downloader@v1.12
+        with:
+          latest: true
+          fileName: "Fit-File-Viewer-rpm-*"
+          out-file-path: release-dist
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Download Linux release assets (snap-)
+        id: download_snap
+        uses: robinraju/release-downloader@v1.12
+        with:
+          latest: true
+          fileName: "Fit-File-Viewer-snap-*"
+          out-file-path: release-dist
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Download Linux release assets (latest-linux.yml)
+        id: download_latest
+        uses: robinraju/release-downloader@v1.12
+        with:
+          latest: true
+          fileName: "latest-linux.yml"
+          out-file-path: release-dist
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Linux distributables to archive.org
+        uses: palewire/internet-archive-upload@v1
+        with:
+          access-key: ${{ secrets.IA_ACCESS_KEY }}
+          secret-key: ${{ secrets.IA_SECRET_KEY }}
+          identifier: fitfileviewer-linux-${{ steps.download_linux.outputs.tag_name }}
+          files: release-dist/
+        continue-on-error: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
