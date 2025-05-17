@@ -1,0 +1,57 @@
+# This workflow scans distributable files in release-dist/ with VirusTotal after every push to main or manual dispatch.
+# It uses the crazy-max/ghaction-virustotal action and your provided API key (should be stored as a secret in production).
+
+name: VirusTotal Scan
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  virustotal:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4.2.2
+      - name: Download distributables artifact
+        uses: actions/download-artifact@v4.3.0
+        with:
+          name: dist-ubuntu-latest-x64
+          path: release-dist
+        continue-on-error: true
+      - name: Download distributables artifact (macOS)
+        uses: actions/download-artifact@v4.3.0
+        with:
+          name: dist-macos-latest-x64
+          path: release-dist
+        continue-on-error: true
+      - name: Download distributables artifact (windows)
+        uses: actions/download-artifact@v4.3.0
+        with:
+          name: dist-windows-latest-x64
+          path: release-dist
+        continue-on-error: true
+      - name: VirusTotal Scan
+        uses: crazy-max/ghaction-virustotal@v4.2.0
+        with:
+          vt_api_key: ${{ secrets.VT_API_KEY }}
+          files: |
+            release-dist/**/*.exe
+            release-dist/**/*.msi
+            release-dist/**/*.dmg
+            release-dist/**/*.AppImage
+            release-dist/**/*.zip
+            release-dist/**/*.tar.*
+            release-dist/**/*.pacman
+            release-dist/**/*.rpm
+            release-dist/**/*.snap
+            release-dist/**/*.deb
+            release-dist/**/*.freebsd
+            release-dist/**/*.flatpak
+            release-dist/**/*.yml
+        continue-on-error: true

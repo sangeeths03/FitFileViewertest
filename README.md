@@ -36,6 +36,9 @@
 [![StyleLint](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/stylelint.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/stylelint.yml) 🎨
 [![Summarize new issues](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/summary.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/summary.yml) 📋
 [![TruffleHog Secret Scan](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/trufflehog.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/trufflehog.yml) 🔑
+[![Upload Linux Distributables to Archive.org](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/upload-linux-ia.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/upload-linux-ia.yml) 🐧
+[![Upload Mac Distributables to Archive.org](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/upload-macos-ia.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/upload-macos-ia.yml) 🍏
+[![Upload Windows Distributables to Archive.org](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/upload-windows-ia.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/upload-windows-ia.yml) 🪟
 [![VSCode Version Matrix](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/vscode-version.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/vscode-version.yml) 📅
 [![npm audit](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/npm-audit.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/npm-audit.yml) 🔍
 [![pages-build-deployment](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/pages/pages-build-deployment) 🌐

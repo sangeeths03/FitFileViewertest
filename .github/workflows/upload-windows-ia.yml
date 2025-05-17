@@ -9,11 +9,11 @@ on:
 
 concurrency:
   group: IAWINDOWS-${{ github.ref }}
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   upload-windows:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
       - name: Download all release assets
         id: download_windows
@@ -29,11 +29,12 @@ jobs:
         run: |
           VERSION="${{ steps.download_windows.outputs.tag_name }}"
           IDENTIFIER="fitfileviewer-windows-$VERSION"
-          if curl --silent --fail "https://archive.org/metadata/$IDENTIFIER" > /dev/null; then
+          JSON=$(curl --silent "https://archive.org/metadata/$IDENTIFIER")
+          if [ -z "$JSON" ] || echo "$JSON" | grep -q '"error"'; then
+            echo "skip=false" >> $GITHUB_OUTPUT
+          else
             echo "Version already uploaded. Skipping."
             echo "skip=true" >> $GITHUB_OUTPUT
-          else
-            echo "skip=false" >> $GITHUB_OUTPUT
           fi
 
       - name: Upload distributables to archive.org
