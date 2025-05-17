@@ -6,8 +6,55 @@ concurrency:
 
 on:
   push:
-    branches:
-      - main
+    paths:
+      - "**.js"
+      - "**.mjs"
+      - "**.css"
+      - "**.html"
+      - "**.yml"
+      - "**.md"
+      - "**/package.json"
+      - "**/vitest.config.js"
+      - "**/eslint.config.mjs"
+      - "**/stylelint.config.js"
+      - "**/prettier*"
+      - "**/LICENSE*"
+      - "**/README.md"
+      - "**/SECURITY.md"
+      - "**/CHANGELOG.md"
+      - "**/sitemap.xml"
+      - "**/CNAME"
+      - "**/copilot-instructions.md"
+      - "**/metrics.repository.svg"
+      - "**/electron-app/**"
+      - "**/libs/**"
+      - "**/tests/**"
+      - "**/utils/**"
+  pull_request:
+    paths:
+      - "**.js"
+      - "**.mjs"
+      - "**.css"
+      - "**.html"
+      - "**.yml"
+      - "**.md"
+      - "**/package.json"
+      - "**/vitest.config.js"
+      - "**/eslint.config.mjs"
+      - "**/stylelint.config.js"
+      - "**/prettier*"
+      - "**/LICENSE*"
+      - "**/README.md"
+      - "**/SECURITY.md"
+      - "**/CHANGELOG.md"
+      - "**/sitemap.xml"
+      - "**/CNAME"
+      - "**/copilot-instructions.md"
+      - "**/metrics.repository.svg"
+      - "**/electron-app/**"
+      - "**/libs/**"
+      - "**/tests/**"
+      - "**/utils/**"
   workflow_dispatch:
 
 jobs:

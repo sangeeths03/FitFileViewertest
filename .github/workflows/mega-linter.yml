@@ -64,14 +64,30 @@ concurrency:
 jobs:
   megalinter:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: electron-app
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
       - name: MegaLinter
         id: megalinter
-        uses: oxsecurity/megalinter@v8
+        uses: oxsecurity/megalinter@v8.7.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DISABLE_LINTERS: REPOSITORY_GIT_DIFF
-          FILTER_REGEX_INCLUDE: ^electron-app/
-          WORKING_DIRECTORY: electron-app
+          EXCLUDED_DIRECTORIES: libs, tests, screenshots, node_modules, icons
+          SHOW_ELAPSED_TIME: true
+          GITHUB_STATUS_REPORTER: true
+          FILEIO_REPORTER: true
+          GITHUB_COMMENT_REPORTER: true
+          JSON_REPORTER: true
+          JSON_REPORTER_OUTPUT_DETAIL: true
+          MARKDOWN_SUMMARY_REPORTER: true
+          SARIF_REPORTER: true
+          TAP_REPORTER: true
+          TAP_REPORTER_OUTPUT_DETAIL: true
+          DISABLE_ERRORS: true
+          JAVASCRIPT_DEFAULT_STYLE: prettier
+          PRINT_ALL_FILES: true
