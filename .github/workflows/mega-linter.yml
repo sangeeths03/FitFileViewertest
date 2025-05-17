@@ -71,4 +71,5 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DISABLE_LINTERS: REPOSITORY_GIT_DIFF
+          FILTER_REGEX_INCLUDE: ^electron-app/
           WORKING_DIRECTORY: electron-app
