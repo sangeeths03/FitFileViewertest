@@ -15,21 +15,30 @@ jobs:
   upload-windows:
     runs-on: ubuntu-latest
     steps:
-      - name: Download Windows release assets (win32-)
-        id: download_win32
+      - name: Download Windows release assets (msi-)
+        id: download_msi
         uses: robinraju/release-downloader@v1.12
         with:
           latest: true
-          fileName: "Fit-File-Viewer-win32-*"
+          fileName: "Fit-File-Viewer-msi-*"
           out-file-path: release-dist
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Download Windows release assets (windows-)
-        id: download_windows
+      - name: Download Windows release assets (nsis-)
+        id: download_nsis
         uses: robinraju/release-downloader@v1.12
         with:
           latest: true
-          fileName: "Fit-File-Viewer-windows-*"
+          fileName: "Fit-File-Viewer-nsis-*"
+          out-file-path: release-dist
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Download Windows release assets (portable-)
+        id: download_portable
+        uses: robinraju/release-downloader@v1.12
+        with:
+          latest: true
+          fileName: "Fit-File-Viewer-portable-*"
           out-file-path: release-dist
           token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -47,7 +56,7 @@ jobs:
         with:
           access-key: ${{ secrets.IA_ACCESS_KEY }}
           secret-key: ${{ secrets.IA_SECRET_KEY }}
-          identifier: fitfileviewer-windows-${{ steps.download_windows.outputs.tag_name }}
+          identifier: fitfileviewer-windows-${{ steps.download_msi.outputs.tag_name }}
           files: release-dist/
         continue-on-error: true
         env:

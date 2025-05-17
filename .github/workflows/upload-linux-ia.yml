@@ -24,6 +24,24 @@ jobs:
           out-file-path: release-dist
           token: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Download Linux release assets (appimage-)
+        id: download_appimage
+        uses: robinraju/release-downloader@v1.12
+        with:
+          latest: true
+          fileName: "Fit-File-Viewer-appimage-*"
+          out-file-path: release-dist
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Download Linux release assets (deb-)
+        id: download_deb
+        uses: robinraju/release-downloader@v1.12
+        with:
+          latest: true
+          fileName: "Fit-File-Viewer-deb-*"
+          out-file-path: release-dist
+          token: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Download Linux release assets (pacman-)
         id: download_pacman
         uses: robinraju/release-downloader@v1.12
@@ -48,6 +66,24 @@ jobs:
         with:
           latest: true
           fileName: "Fit-File-Viewer-snap-*"
+          out-file-path: release-dist
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Download Linux release assets (freebsd-)
+        id: download_freebsd
+        uses: robinraju/release-downloader@v1.12
+        with:
+          latest: true
+          fileName: "Fit-File-Viewer-freebsd-*"
+          out-file-path: release-dist
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Download Linux release assets (apk-)
+        id: download_apk
+        uses: robinraju/release-downloader@v1.12
+        with:
+          latest: true
+          fileName: "Fit-File-Viewer-apk-*"
           out-file-path: release-dist
           token: ${{ secrets.GITHUB_TOKEN }}
 
