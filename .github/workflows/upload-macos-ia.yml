@@ -24,21 +24,7 @@ jobs:
           out-file-path: release-dist
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Check if version already uploaded
-        id: check_version
-        run: |
-          VERSION="${{ steps.download_macos.outputs.tag_name }}"
-          IDENTIFIER="fitfileviewer-macos-$VERSION"
-          JSON=$(curl --silent "https://archive.org/metadata/$IDENTIFIER")
-          if [ -z "$JSON" ] || echo "$JSON" | grep -q '"error"'; then
-            echo "skip=false" >> $GITHUB_OUTPUT
-          else
-            echo "Version already uploaded. Skipping."
-            echo "skip=true" >> $GITHUB_OUTPUT
-          fi
-
       - name: Upload distributables to archive.org
-        if: steps.check_version.outputs.skip != 'true'
         uses: palewire/internet-archive-upload@v1
         with:
           access-key: ${{ secrets.IA_ACCESS_KEY }}

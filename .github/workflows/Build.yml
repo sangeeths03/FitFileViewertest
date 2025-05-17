@@ -454,7 +454,27 @@ jobs:
         with:
           tag_name: v${{ needs.bump-version.outputs.new_version }}
           name: FitFileViewer v${{ needs.bump-version.outputs.new_version }}
-          body: ${{ steps.release_notes.outputs.notes }}
+          body: |
+            ## 🚀 Release Notes
+
+            ${{ steps.release_notes.outputs.notes }}
+
+            ---
+
+            <details>
+              <summary><strong>🔍 Merge Commit Details</strong></summary>
+
+            **Message:**
+            ```
+            ${{ github.event.head_commit.message }}
+            ```
+
+            **Commit SHA:** `${{ github.sha }}`
+            </details>
+
+            ---
+
+            _Thank you for using **FitFileViewer**!_
           files: release-dist/**/*
           draft: false
           prerelease: false
