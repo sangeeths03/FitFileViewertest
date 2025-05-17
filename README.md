@@ -28,8 +28,6 @@
 [![Greetings](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/greetings.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/greetings.yml) 👋
 [![Lint Code Base](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/superlinter.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/superlinter.yml) 🧹
 [![Mark stale issues and pull requests](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/stale.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/stale.yml) 💤
-[![Microsoft Defender for DevOps](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/defender.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/defender.yml) 🛡️
-[![OSSAR](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/ossar.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/ossar.yml) 🏅
 [![OSV-Scanner](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/osv-scanner.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/osv-scanner.yml) 🔎
 [![Prettier](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/prettier.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/prettier.yml) 🎨
 [![Scorecard supply-chain security](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/scorecards.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/scorecards.yml) 📊
@@ -42,6 +40,14 @@
 [![VSCode Version Matrix](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/vscode-version.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/vscode-version.yml) 📅
 [![npm audit](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/npm-audit.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/npm-audit.yml) 🔍
 [![pages-build-deployment](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/pages/pages-build-deployment) 🌐
+[![GitLeaks Scan](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/gitleaks.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/gitleaks.yml) 🔑
+[![Automatic Rebase](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/rebase.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/rebase.yml) 🔄
+[![MegaLinter](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/mega-linter.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/mega-linter.yml) 🧹
+[![Microsoft Security DevOps](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/security-devops.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/security-devops.yml) 🛡️
+[![PSSecretScanner](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/pssecret-scanner.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/pssecret-scanner.yml) 🔑
+[![Spell Check (typos)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/typos.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/typos.yml) 🔤
+[![Spellcheck Action](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/spelling_action.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/spelling_action.yml) 📖
+[![VirusTotal Scan](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/VirusTotal.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/VirusTotal.yml) 🦠
 
 <div align="center">
     <img

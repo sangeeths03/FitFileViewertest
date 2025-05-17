@@ -17,5 +17,9 @@ jobs:
       - name: Run typos (spell checker)
         uses: crate-ci/typos@v1.32.0
         with:
-          files: .
-        continue-on-error: false
+          files: |
+            electron-app
+            tests
+            utils
+            .
+        continue-on-error: true

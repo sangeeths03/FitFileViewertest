@@ -1,4 +1,4 @@
-name: gitleaks
+name: GitLeaks Scan
 on:
   pull_request:
   push:
@@ -17,3 +17,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # GITLEAKS_LICENSE: ${{ secrets.GITLEAKS_LICENSE }} # Uncomment if using in an organization
+concurrency:
+  group: gitleaks-${{ github.ref }}
+  cancel-in-progress: false

@@ -12,6 +12,9 @@ jobs:
         contains(github.event.comment.body, '/rebase') ||
         contains(github.event.comment.body, '/autosquash')
       )
+    concurrency:
+      group: rebase-${{ github.ref }}
+      cancel-in-progress: false
     steps:
       - name: Checkout the latest code
         uses: actions/checkout@v3

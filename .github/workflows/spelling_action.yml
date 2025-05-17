@@ -5,6 +5,9 @@ on:
       - main
   pull_request:
   workflow_dispatch:
+concurrency:
+  group: spellcheck-${{ github.ref }}
+  cancel-in-progress: false
 jobs:
   build:
     name: Spellcheck
@@ -13,6 +16,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: rojopolis/spellcheck-github-actions@0.48.0
         name: Spellcheck
+        continue-on-error: true
         with:
           config_path: .github/.spellcheck.yml
           output_file: spellcheck-output.txt

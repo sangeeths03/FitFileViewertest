@@ -10,6 +10,10 @@ on:
 permissions:
   security-events: write
 
+concurrency:
+  group: msdo-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   msdo:
     runs-on: ubuntu-latest

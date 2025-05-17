@@ -5,12 +5,17 @@ name: VirusTotal Scan
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - main
+  workflow_run:
+    workflows: ["Build and Release Electron App"]
+    types:
+      - completed
 
 permissions:
   contents: read
+
+concurrency:
+  group: virustotal-${{ github.ref }}
+  cancel-in-progress: false
 
 jobs:
   virustotal:
@@ -18,24 +23,10 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4.2.2
-      - name: Download distributables artifact
+      - name: Download all distributable artifacts
         uses: actions/download-artifact@v4.3.0
         with:
-          name: dist-ubuntu-latest-x64
           path: release-dist
-        continue-on-error: true
-      - name: Download distributables artifact (macOS)
-        uses: actions/download-artifact@v4.3.0
-        with:
-          name: dist-macos-latest-x64
-          path: release-dist
-        continue-on-error: true
-      - name: Download distributables artifact (windows)
-        uses: actions/download-artifact@v4.3.0
-        with:
-          name: dist-windows-latest-x64
-          path: release-dist
-        continue-on-error: true
       - name: VirusTotal Scan
         uses: crazy-max/ghaction-virustotal@v4.2.0
         with:
