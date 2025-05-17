@@ -42,12 +42,12 @@ jobs:
           out-file-path: release-dist
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Download Windows release assets (latest-windows.yml)
+      - name: Download Windows release assets (latest.yml)
         id: download_latest
         uses: robinraju/release-downloader@v1.12
         with:
           latest: true
-          fileName: "latest-windows.yml"
+          fileName: "latest.yml"
           out-file-path: release-dist
           token: ${{ secrets.GITHUB_TOKEN }}
 
