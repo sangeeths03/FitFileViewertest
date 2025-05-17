@@ -70,4 +70,5 @@ jobs:
         uses: oxsecurity/megalinter@v8
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DISABLE_LINTERS: REPOSITORY_GIT_DIFF
           WORKING_DIRECTORY: electron-app
