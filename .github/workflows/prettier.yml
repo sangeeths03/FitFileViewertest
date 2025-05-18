@@ -1,10 +1,19 @@
 name: Prettier
 
 on:
-  pull_request:
   push:
-    branches:
-      - main
+    paths-ignore:
+      - "*"
+      - "*/**"
+      - "!electron-app/**"
+      - "!electron-app"
+  pull_request:
+    paths-ignore:
+      - "*"
+      - "*/**"
+      - "!electron-app/**"
+      - "!electron-app"
+  workflow_dispatch:
 
 concurrency:
   group: prettier-${{ github.ref }}

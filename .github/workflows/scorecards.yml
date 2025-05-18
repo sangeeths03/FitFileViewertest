@@ -38,6 +38,14 @@ on:
     - cron: "20 7 * * 2"
   push:
     branches: ["main"]
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      # To allow the user to trigger the workflow manually.
+      run_analysis:
+        description: "Run Scorecard analysis"
+        required: true
+        type: boolean
 
 # Declare default permissions as read only.
 permissions: read-all

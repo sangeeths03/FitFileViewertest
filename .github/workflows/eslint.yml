@@ -22,12 +22,18 @@ name: ESLint
 
 on:
   push:
-    branches: ["main"]
+    paths-ignore:
+      - "*"
+      - "*/**"
+      - "!electron-app/**"
+      - "!electron-app"
   pull_request:
-    # The branches below must be a subset of the branches above
-    branches: ["main"]
-  schedule:
-    - cron: "25 12 * * 6"
+    paths-ignore:
+      - "*"
+      - "*/**"
+      - "!electron-app/**"
+      - "!electron-app"
+  workflow_dispatch:
 
 permissions:
   contents: read

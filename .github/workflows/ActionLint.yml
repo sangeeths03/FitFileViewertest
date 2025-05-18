@@ -20,7 +20,11 @@ concurrency:
   cancel-in-progress: false
 on:
   push:
-
+    paths:
+      - ".github/**"
+  pull_request:
+    paths:
+      - ".github/**"
   workflow_dispatch:
 
 permissions:

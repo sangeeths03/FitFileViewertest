@@ -30,11 +30,19 @@
 name: Lint Code Base
 
 on:
-  workflow_dispatch:
   push:
-    branches: ["main"]
+    paths-ignore:
+      - "*"
+      - "*/**"
+      - "!electron-app/**"
+      - "!electron-app"
   pull_request:
-    branches: ["main"]
+    paths-ignore:
+      - "*"
+      - "*/**"
+      - "!electron-app/**"
+      - "!electron-app"
+  workflow_dispatch:
 permissions:
   contents: write
 

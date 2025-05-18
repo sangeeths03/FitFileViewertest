@@ -3,7 +3,7 @@ name: Metrics - Repository Stats
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 0 * * *" # Runs daily at midnight (UTC)
+    - cron: "53 4 * * *" # Runs daily at 4:53 AM (UTC)
 
 jobs:
   metrics:
