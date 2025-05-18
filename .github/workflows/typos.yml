@@ -8,6 +8,10 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: typos-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   typos:
     runs-on: ubuntu-latest
