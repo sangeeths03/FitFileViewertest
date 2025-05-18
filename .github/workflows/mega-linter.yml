@@ -16,8 +16,7 @@ on:
       - "!electron-app"
   workflow_dispatch:
 
-permissions:
-  contents: read
+permissions: write-all
 
 concurrency:
   group: megalinter-${{ github.ref }}
