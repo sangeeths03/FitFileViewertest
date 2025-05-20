@@ -2,13 +2,8 @@
 
 let lastFocusedElement = null;
 
-function ensureAboutModal() {
-	if (document.getElementById('about-modal')) return;
-	const modal = document.createElement('div');
-	modal.id = 'about-modal';
-	modal.className = 'modal';
-	modal.style.display = 'none';
-	modal.innerHTML = `
+function getAboutModalContent() {
+	return `
 		<div class="modal-content">
 			<button id="about-modal-close" class="modal-close" tabindex="0" aria-label="Close About dialog">&times;</button>
 			<h2>About Fit File Viewer</h2>
@@ -16,9 +11,22 @@ function ensureAboutModal() {
 			<p id="about-modal-body"></p>
 		</div>
 	`;
+}
+
+function ensureAboutModal() {
+	const existingModal = document.getElementById('about-modal');
+	if (existingModal) return;
+	const modal = document.createElement('div');
+	modal.id = 'about-modal';
+	modal.className = 'modal';
+	modal.style.display = 'none';
+	modal.innerHTML = getAboutModalContent();
 	document.body.appendChild(modal);
 
-	// Add hover effect for the close button
+	// Add the escape key listener once during initialization
+	document.addEventListener('keydown', handleEscapeKey, true);
+
+	// Define hover styles for the close button to improve user experience
 	const style = document.createElement('style');
 	style.textContent = `
 	  #about-modal .modal-close {
@@ -64,16 +72,14 @@ function handleEscapeKey(e) {
 export function showAboutModal(html) {
 	ensureAboutModal();
 	const modal = document.getElementById('about-modal');
-	const body = document.getElementById('about-modal-body');
-	const closeBtn = document.getElementById('about-modal-close');
-	if (modal && body && closeBtn) {
+	if (modal) {
+		const body = document.getElementById('about-modal-body');
+		const closeBtn = document.getElementById('about-modal-close');
+		if (body && closeBtn) {
 		body.innerHTML = html;
 		modal.style.display = 'flex';
 
 		// Prevent duplicate listeners by removing any existing ones
-		closeBtn.onclick = null;
-		closeBtn.onkeydown = null;
-		modal.onclick = null;
 
 		closeBtn.onclick = () => {
 			hideAboutModal();
@@ -82,6 +88,7 @@ export function showAboutModal(html) {
 			if (e.key === 'Enter' || e.key === ' ') hideAboutModal();
 		};
 		modal.onclick = (e) => {
+			// Close the modal only when clicking outside the modal content
 			if (e.target === modal) hideAboutModal();
 		};
 
@@ -89,7 +96,5 @@ export function showAboutModal(html) {
 		lastFocusedElement = document.activeElement;
 		closeBtn.focus();
 
-		document.removeEventListener('keydown', handleEscapeKey, true);
-		document.addEventListener('keydown', handleEscapeKey, true);
 	}
-}
+}}

@@ -109,9 +109,8 @@ function buildAppMenu(mainWindow, currentTheme = null, loadedFitFilePath = null)
 		includeUnknownData: '❓',
 		mergeHeartRates: '❤️',
 	};
-	const decoderOptionsMenu = {
-		label: '💿 Decoder Options',
-		submenu: Object.keys(decoderOptionDefaults).map((key) => ({
+	function createDecoderOptionMenuItems(decoderOptions, decoderOptionEmojis, mainWindow) {
+		return Object.keys(decoderOptionDefaults).map((key) => ({
 			label: `${decoderOptionEmojis[key] || ''} ${key}`.trim(),
 			type: 'checkbox',
 			checked: !!decoderOptions[key],
@@ -122,7 +121,12 @@ function buildAppMenu(mainWindow, currentTheme = null, loadedFitFilePath = null)
 					win.webContents.send('decoder-options-changed', newOptions);
 				}
 			},
-		})),
+		}));
+	}
+
+	const decoderOptionsMenu = {
+		label: '💿 Decoder Options',
+		submenu: createDecoderOptionMenuItems(decoderOptions, decoderOptionEmojis, mainWindow),
 	};
 
 	/**
@@ -369,7 +373,7 @@ function buildAppMenu(mainWindow, currentTheme = null, loadedFitFilePath = null)
 						{
 							label: '🌑 Dark',
 							type: 'radio',
-							checked: theme === 'dark',
+							checked: theme === 'dark' || !theme,
 							click: () => {
 								setTheme('dark');
 								const win = BrowserWindow.getFocusedWindow() || mainWindow;
@@ -381,7 +385,7 @@ function buildAppMenu(mainWindow, currentTheme = null, loadedFitFilePath = null)
 						{
 							label: '🌕 Light',
 							type: 'radio',
-							checked: theme === 'light',
+							checked: theme === 'light' || !theme,
 							click: () => {
 								setTheme('light');
 								const win = BrowserWindow.getFocusedWindow() || mainWindow;
@@ -456,7 +460,7 @@ function buildAppMenu(mainWindow, currentTheme = null, loadedFitFilePath = null)
 					},
 				},
 				{
-					label: '🔄 Restart && Update',
+					label: '🔄 Restart and Update',
 					enabled: false, // Will be enabled via IPC when update is downloaded
 					id: 'restart-update',
 					click: () => {

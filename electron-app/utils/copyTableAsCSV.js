@@ -9,7 +9,7 @@
  *
  * @throws {Error} Logs an error if the table object does not have an `objects()` method.
  */
-export function copyTableAsCSV(table, title) {
+export function copyTableAsCSV(table) {
 	if (typeof table.objects !== 'function') {
 		console.error('Invalid table object: missing objects method');
 		return;

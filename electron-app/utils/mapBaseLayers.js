@@ -1,20 +1,32 @@
 /* global L */
-// Leaflet baseLayers configuration for map backgrounds
+// The global variable `L` is provided by the Leaflet library.
+// Ensure that the Leaflet library is included in your project, typically via a script tag or a module import.
+/**
+ * A collection of base layers for Leaflet maps, providing various map styles and data sources.
+ * Each key represents a map style, and its value is a Leaflet layer configuration.
+ *
+ * Usage:
+ * Import this object and use it to add layers to a Leaflet map instance.
+ * Example:
+ *   import { baseLayers } from './mapBaseLayers';
+ *   const map = L.map('map').setView([51.505, -0.09], 13);
+ *   baseLayers.OpenStreetMap.addTo(map);
+ */
 export const baseLayers = {
 	OpenStreetMap: L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-		attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+		attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a> contributors',
 	}),
 	Satellite: L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-		attribution: 'Tiles &copy; Esri',
+		attribution: 'Tiles &copy; <a href="https://www.esri.com" target="_blank" rel="noopener noreferrer">Esri</a>',
 	}),
 	Topo: L.tileLayer('https://tile.opentopomap.org/{z}/{x}/{y}.png', {
-		attribution: 'Map data: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (CC-BY-SA)',
+		attribution: 'Map data: &copy; <a href="https://opentopomap.org" target="_blank" rel="noopener noreferrer">OpenTopoMap</a> (CC-BY-SA)',
 	}),
 	CartoDB_Positron: L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-		attribution: '&copy; <a href="https://carto.com/attributions">CARTO</a>',
+		attribution: '&copy; <a href="https://carto.com/attributions" target="_blank" rel="noopener noreferrer">CARTO</a>',
 	}),
 	CartoDB_DarkMatter: L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-		attribution: '&copy; <a href="https://carto.com/attributions">CARTO</a>',
+		attribution: '&copy; <a href="https://carto.com/attributions" target="_blank" rel="noopener noreferrer">CARTO</a>',
 	}),
 	Esri_Topo: L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
 		attribution:
@@ -62,14 +74,17 @@ export const baseLayers = {
 	CyclOSM: L.tileLayer('https://{s}.tile-cyclosm.openstreetmap.fr/cyclosm/{z}/{x}/{y}.png', {
 		attribution:
 			'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="https://www.cyclosm.org/">CyclOSM</a>',
+		subdomains: ['a', 'b', 'c'],
 	}),
-	Thunderforest_Cycle: L.tileLayer('https://tile.thunderforest.com/cycle/{z}/{x}/{y}.png', {
+	Thunderforest_Cycle: L.tileLayer('https://{s}.tile.thunderforest.com/cycle/{z}/{x}/{y}.png', {
 		attribution:
 			'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="https://www.thunderforest.com/">Thunderforest</a>',
+		subdomains: ['a', 'b', 'c'],
 	}),
-	Thunderforest_Transport: L.tileLayer('https://tile.thunderforest.com/transport/{z}/{x}/{y}.png', {
+	Thunderforest_Transport: L.tileLayer('https://{s}.tile.thunderforest.com/transport/{z}/{x}/{y}.png', {
 		attribution:
 			'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="https://www.thunderforest.com/">Thunderforest</a>',
+		subdomains: ['a', 'b', 'c'],
 	}),
 	OpenRailwayMap: L.tileLayer('https://{s}.tiles.openrailwaymap.org/standard/{z}/{x}/{y}.png', {
 		attribution:
@@ -90,6 +105,8 @@ export const baseLayers = {
 		attribution:
 			'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="https://slopes.waymarkedtrails.org/">Waymarked Trails Riding</a>',
 	}),
+	// The OpenFreeMap_* layers use L.maplibreGL for rendering vector tiles with MapLibre GL styles,
+	// while other layers use L.tileLayer for raster tile layers.
 	OpenFreeMap_Liberty: L.maplibreGL({
 		style: 'https://tiles.openfreemap.org/styles/liberty',
 	}),
@@ -108,11 +125,11 @@ export const baseLayers = {
 	Humanitarian: L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
 		attribution:
 			'Tiles &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="https://www.openstreetmap.fr/fonds-de-carte/">Humanitarian OSM</a>',
-		subdomains: 'ab',
+		subdomains: ['a', 'b', 'c'],
 	}),
 	OSM_France: L.tileLayer('https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png', {
 		attribution:
 			'Tiles &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="https://www.openstreetmap.fr/fonds-de-carte/">OSM France</a>',
-		subdomains: 'abc',
+		subdomains: ['a', 'b', 'c'],
 	}),
 };

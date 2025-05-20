@@ -1,4 +1,7 @@
-// Utility for lap color selection
+// Utility function to map lap indices to specific colors from a predefined palette.
+// Accepts a lap index (number or 'all') and returns a corresponding color.
+// Special case: if 'all' is passed, it returns the color 'blue'.
+// Throws an error if the input is not a valid number or 'all'.
 export function getLapColor(lapIdx) {
 	const palette = [
 		'#ff5722',
@@ -24,7 +27,6 @@ export function getLapColor(lapIdx) {
 		'#8d6e63',
 		'#c2185b',
 		'#1976d2',
-		'#388e3c',
 		'#f57c00',
 		'#7b1fa2',
 		'#0288d1',
@@ -34,5 +36,9 @@ export function getLapColor(lapIdx) {
 		'#f57c00',
 	];
 	if (lapIdx === 'all') return 'blue';
-	return palette[Number(lapIdx) % palette.length];
+	const lapIndex = Number(lapIdx);
+	if (isNaN(lapIndex)) {
+		throw new Error(`Invalid lapIdx: ${lapIdx}`);
+	}
+	return palette[lapIndex % palette.length];
 }

@@ -6,10 +6,7 @@ const ICON_ANCHOR = [16, 32];
 const POPUP_ANCHOR = [0, -32];
 
 // Base path for asset URLs
-let ASSET_BASE_PATH = 'libs/assets/icons';
-if (!ASSET_BASE_PATH.endsWith('/')) {
-	ASSET_BASE_PATH += '/';
-}
+const ASSET_BASE_PATH = 'libs/assets/icons'.endsWith('/') ? 'libs/assets/icons' : 'libs/assets/icons/';
 
 /**
  * Creates a Leaflet icon for the start marker.

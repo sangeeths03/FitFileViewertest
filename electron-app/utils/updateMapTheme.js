@@ -15,4 +15,10 @@ if (!window._mapThemeListener) {
 		}
 	};
 	document.body.addEventListener('themechange', window._mapThemeListener);
+
+	// Cleanup logic to remove the event listener
+	window.addEventListener('beforeunload', () => {
+		document.body.removeEventListener('themechange', window._mapThemeListener);
+		delete window._mapThemeListener;
+	});
 }

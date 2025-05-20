@@ -4,7 +4,7 @@ import { removeExitFullscreenOverlay } from './removeExitFullscreenOverlay.js';
 
 const screenfull = window.screenfull;
 
-export function addFullScreenButton(tabContentId) {
+export function addFullScreenButton() {
 	// Only add one global fullscreen button
 	if (document.getElementById('global-fullscreen-btn-wrapper')) return;
 
@@ -25,6 +25,7 @@ export function addFullScreenButton(tabContentId) {
 		<span class="fullscreen-icon" aria-hidden="true">
 			<!-- Material Design Enter Fullscreen Icon -->
 			<svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" class="inline-svg">
+				<title>Enter Fullscreen</title>
 				<path d="M5 9V5H9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 				<path d="M19 5H23V9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 				<path d="M23 19V23H19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -37,7 +38,7 @@ export function addFullScreenButton(tabContentId) {
 	btn.onclick = (e) => {
 		e.stopPropagation();
 		const activeContent = getActiveTabContent();
-		if (!activeContent || !screenfull.isEnabled) return;
+		if (!activeContent || !screenfull || !screenfull.isEnabled) return;
 		if (!screenfull.isFullscreen) {
 			screenfull.request(activeContent);
 		} else {
@@ -52,60 +53,73 @@ export function addFullScreenButton(tabContentId) {
 export function setupFullscreenListeners() {
 	if (!screenfull.isEnabled) return;
 	screenfull.on('change', () => {
-		const activeContent = getActiveTabContent && getActiveTabContent();
+		const activeContent = getActiveTabContent();
 		const btn = activeContent && document.getElementById(activeContent.id + '-fullscreen-btn');
 		if (screenfull.isFullscreen) {
 			if (activeContent) addExitFullscreenOverlay(activeContent);
 			if (btn) {
 				btn.title = 'Exit Full Screen';
-				btn.querySelector('.fullscreen-icon').textContent = '🗗';
+				const icon = btn.querySelector('.fullscreen-icon');
+				if (icon) {
+					icon.textContent = '🗗';
+				}
 			}
 		} else {
 			if (activeContent) removeExitFullscreenOverlay(activeContent);
 			if (btn) {
 				btn.title = 'Toggle Full Screen';
-				btn.querySelector('.fullscreen-icon').textContent = '⛶';
+				const icon = btn.querySelector('.fullscreen-icon');
+				if (icon) {
+					icon.textContent = '⛶';
+				} else {
+					console.warn('Fullscreen icon element not found.');
+				}
 			}
 		}
 	});
 
-	window.addEventListener('keydown', (e) => {
-		if (e.key === 'F11') {
-			e.preventDefault();
-			const activeContent = getActiveTabContent && getActiveTabContent();
-			if (activeContent && screenfull.isEnabled) {
-				if (!screenfull.isFullscreen) {
-					screenfull.request(activeContent);
-				} else {
-					screenfull.exit();
-				}
+	function handleF11Key(e) {
+		e.preventDefault();
+		const activeContent = getActiveTabContent && getActiveTabContent();
+		if (activeContent && screenfull.isEnabled) {
+			if (!screenfull.isFullscreen) {
+				screenfull.request(activeContent);
+			} else {
+				screenfull.exit();
 			}
 		}
-		if (e.key === 'Escape') {
-			e.preventDefault();
-			if (screenfull.isFullscreen) {
-				screenfull.exit();
-			} else {
-				// If not in browser fullscreen, check for tab pseudo-fullscreen
-				const tabContents = document.querySelectorAll('.tab-content');
-				let exited = false;
-				for (const el of tabContents) {
-					if (el.classList.contains('fullscreen')) {
-						el.classList.remove('fullscreen');
-						removeExitFullscreenOverlay(el);
-						exited = true;
-					}
+	}
+
+
+	window.addEventListener('keydown', (e) => {
+		if (e.key === 'F11') {
+			handleF11Key(e);
+		}
+	});
+
+	window.addEventListener('DOMContentLoaded', () => {
+		if (window.electronAPI && typeof window.electronAPI.setFullScreen === 'function') {
+			window.electronAPI.setFullScreen(false);
+		}
+		try {
+			const requiredElements = ['content-data', 'content-chart', 'content-map', 'content-summary', 'content-altfit'];
+			requiredElements.forEach((id) => {
+				if (document.getElementById(id)) {
+					addFullScreenButton();
+				} else {
+					console.warn(`Element with ID '${id}' not found in the DOM.`);
 				}
-				if (!exited && window.electronAPI && typeof window.electronAPI.setFullScreen === 'function') {
-					window.electronAPI.setFullScreen(false);
-				}
-			}
+			});
+		} catch (error) {
+			console.error('Error during DOMContentLoaded setup:', error);
 		}
 	});
 }
 
 export function setupDOMContentLoaded() {
 	window.addEventListener('DOMContentLoaded', () => {
-		['content-data', 'content-chart', 'content-map', 'content-summary', 'content-altfit'].forEach(addFullScreenButton);
+		if (['content-data', 'content-chart', 'content-map', 'content-summary', 'content-altfit'].some((id) => document.getElementById(id))) {
+			addFullScreenButton();
+		}
 	});
 }
