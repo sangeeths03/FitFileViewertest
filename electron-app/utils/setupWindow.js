@@ -1,9 +1,12 @@
 /* global acquireVsCodeApi */
 
+// Configuration constants
+const ZWIFT_MAP_URL = 'https://zwiftmap.com/';
+
 export function setupWindowOnload({ toggleTabVisibility, setActiveTab, setupTabButton, displayTables, renderChart, renderMap, renderSummary }) {
 	window.onload = () => {
 		// Signal to the extension that the webview is ready (only if available)
-		let vscode;
+		let vscode = null;
 		if (typeof acquireVsCodeApi === 'function') {
 			vscode = acquireVsCodeApi();
 			vscode.postMessage({ type: 'ready' });
@@ -35,7 +38,7 @@ export function setupWindowOnload({ toggleTabVisibility, setActiveTab, setupTabB
 						visible.innerHTML = '';
 						while (bg.firstChild) visible.appendChild(bg.firstChild);
 					} else {
-						if (window.globalData && Object.keys(window.globalData).length > 0) {
+						if (typeof window.globalData === 'object' && window.globalData !== null && Object.keys(window.globalData).length > 0) {
 							window.displayTables(window.globalData);
 						}
 					}
@@ -70,7 +73,7 @@ export function setupWindowOnload({ toggleTabVisibility, setActiveTab, setupTabB
 					if (document.getElementById('tab-chartjs').classList.contains('active')) return;
 					toggleTabVisibility('content-chartjs');
 					setActiveTab('tab-chartjs');
-					if (window.renderChartJS) {
+					if (typeof window.renderChartJS === 'function') {
 						window.renderChartJS('chartjs-chart-container');
 					}
 				},
@@ -82,7 +85,10 @@ export function setupWindowOnload({ toggleTabVisibility, setActiveTab, setupTabB
 					if (document.getElementById('tab-map').classList.contains('active')) return;
 					toggleTabVisibility('content-map');
 					setActiveTab('tab-map');
-					window.renderMap();
+					if (!window.isMapRendered) {
+						window.renderMap();
+						window.isMapRendered = true;
+					}
 				},
 			},
 			{
@@ -93,7 +99,12 @@ export function setupWindowOnload({ toggleTabVisibility, setActiveTab, setupTabB
 					toggleTabVisibility('content-summary');
 					setActiveTab('tab-summary');
 					if (window.globalData && Object.keys(window.globalData).length > 0) {
-						window.renderSummary(window.globalData);
+						if (!window.previousGlobalData || JSON.stringify(window.previousGlobalData) !== JSON.stringify(window.globalData)) {
+							window.previousGlobalData = JSON.parse(JSON.stringify(window.globalData));
+							setTimeout(() => {
+								window.renderSummary(window.globalData);
+							}, 0);
+						}
 					}
 				},
 			},
@@ -111,22 +122,35 @@ export function setupWindowOnload({ toggleTabVisibility, setActiveTab, setupTabB
 					}
 				},
 			},
+			{
+				id: 'tab-zwift',
+				content: 'content-zwift',
+				handler: () => {
+					console.debug('[Zwift Tab] Handler called');
+					const tab = document.getElementById('tab-zwift');
+					const content = document.getElementById('content-zwift');
+					console.debug(`[Zwift Tab] tab and content:`, { tab, content });
+					// Return early if the tab is already active to avoid redundant operations
+					if (tab && tab.classList.contains('active')) {
+						console.debug('[Zwift Tab] Already active, returning');
+						return;
+					}
+					toggleTabVisibility('content-zwift');
+					console.debug('[Zwift Tab] Called toggleTabVisibility');
+					setActiveTab('tab-zwift');
+					console.debug('[Zwift Tab] Called setActiveTab');
+					const zwiftIframe = document.getElementById('zwift-iframe');
+					console.debug('[Zwift Tab] zwiftIframe:', zwiftIframe);
+					if (zwiftIframe && zwiftIframe.src !== ZWIFT_MAP_URL) {
+						zwiftIframe.src = ZWIFT_MAP_URL;
+						console.debug('[Zwift Tab] Set zwiftIframe.src');
+					}
+				},
+			},
 		];
 
 		// Refactor tabConfig.forEach to use a reusable function
 		tabConfig.forEach(({ id, handler }) => setupTabButton(id, handler));
-
-		// After tabConfig.forEach
-		// Ensure iframe src is cleared when switching away from altfit tab
-		const allTabButtons = document.querySelectorAll('.tab-button');
-		allTabButtons.forEach((btn) => {
-			btn.addEventListener('click', () => {
-				if (btn.id !== 'tab-altfit') {
-					const iframe = document.getElementById('altfit-iframe');
-					if (iframe) iframe.src = '';
-				}
-			});
-		});
 
 		// Alt FIT Reader logic
 		const altFitBtn = document.getElementById('altfit-open-btn');

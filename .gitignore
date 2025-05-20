@@ -343,3 +343,6 @@ src/test/*.fit
 .DS_Store
 vis
 vscode-extension/*
+
+#Ignore vscode AI rules
+.github\copilot-instructions.md

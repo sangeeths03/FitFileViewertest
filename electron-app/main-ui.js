@@ -160,12 +160,16 @@ window.addEventListener('DOMContentLoaded', () => {
 		if (dropOverlay) dropOverlay.style.display = 'flex';
 		const iframe = document.getElementById('altfit-iframe');
 		if (iframe) iframe.style.pointerEvents = 'none';
+		const zwiftIframe = document.getElementById('zwift-iframe');
+		if (zwiftIframe) zwiftIframe.style.pointerEvents = 'none';
 	}
 	function hideDropOverlay() {
 		const dropOverlay = document.getElementById('drop-overlay');
 		if (dropOverlay) dropOverlay.style.display = 'none';
 		const iframe = document.getElementById('altfit-iframe');
 		if (iframe) iframe.style.pointerEvents = '';
+		const zwiftIframe = document.getElementById('zwift-iframe');
+		if (zwiftIframe) zwiftIframe.style.pointerEvents = '';
 	}
 
 	// Show overlay on dragenter, hide on dragleave/drop
@@ -239,6 +243,18 @@ window.addEventListener('DOMContentLoaded', () => {
 				e.preventDefault();
 				hideDropOverlay();
 				alert('Please drop files outside the iframe to process them.');
+			});
+		}
+		const zwiftIframe = document.getElementById('zwift-iframe');
+		if (zwiftIframe) {
+			zwiftIframe.addEventListener('dragover', (e) => {
+				e.preventDefault();
+				showDropOverlay();
+			});
+			zwiftIframe.addEventListener('drop', (e) => {
+				e.preventDefault();
+				hideDropOverlay();
+				alert('Please drop files outside the ZwiftMap iframe to process them.');
 			});
 		}
 	}

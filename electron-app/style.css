@@ -300,6 +300,10 @@ h2 {
 	box-sizing: border-box;
 }
 
+.tab-content.active {
+	display: block;
+}
+
 /* =====================================================
    Card & Section Containers
    ===================================================== */
@@ -1713,7 +1717,6 @@ body.theme-dark .map-action-btn:focus {
 	border-color: #ccc !important;
 	cursor: not-allowed !important;
 	opacity: 70%;
-	box-shadow: none;
 }
 
 body.theme-dark .map-action-btn:disabled,
@@ -1823,6 +1826,7 @@ body.theme-dark .map-action-btn.disabled {
    Drag-and-Drop Overlay
    ===================================================== */
 #drop-overlay {
+	display: none;
 	position: fixed;
 	top: 0;
 	left: 0;
@@ -1852,4 +1856,18 @@ body.theme-dark .map-action-btn.disabled {
 #drop-overlay[style*='display: none'] {
 	opacity: 0%;
 	pointer-events: none;
+}
+
+#tab-zwift {
+	/* Add custom styles for Zwift tab if needed */
+}
+#content-zwift {
+	display: none;
+	/* Add custom styles for Zwift content if needed */
+}
+
+#zwift-iframe {
+    width: 100%;
+    height: 80vh;
+    border: none;
 }

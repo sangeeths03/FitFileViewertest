@@ -63,6 +63,7 @@ if (process.env.RECENT_FILES_PATH) {
 		RECENT_FILES_PATH = path.join(process.cwd(), 'recent-files-test.json');
 	}
 }
+// Maximum number of recent files to retain
 const MAX_RECENT_FILES = 10;
 
 /**
@@ -101,16 +102,25 @@ function saveRecentFiles(list) {
 
 /**
  * Adds a file path to the list of recent files.
- * If the file already exists in the list, it is moved to the top.
- * The updated list is then saved.
+ * If the file already exists in the list, it is moved to the top of the list.
+ * The updated list is then saved to disk.
  *
  * @param {string} filePath - The path of the file to add to the recent files list.
  */
 function addRecentFile(filePath) {
 	let list = loadRecentFiles();
-	list = list.filter((f) => f !== filePath);
+	if (!Array.isArray(list)) {
+		console.warn('Invalid recent files list, resetting to an empty array.');
+		list = [];
+	}
+	const originalList = [...list];
+	if (list.includes(filePath)) {
+		list = list.filter((f) => f !== filePath);
+	}
 	list.unshift(filePath);
-	saveRecentFiles(list);
+	if (JSON.stringify(originalList) !== JSON.stringify(list)) {
+		saveRecentFiles(list);
+	}
 }
 
 /**
@@ -120,6 +130,10 @@ function addRecentFile(filePath) {
  * @returns {string} The base name of the file.
  */
 function getShortRecentName(file) {
+	if (!file) {
+		console.warn('Invalid file path provided to getShortRecentName.');
+		return '';
+	}
 	return path.basename(file);
 }
 
