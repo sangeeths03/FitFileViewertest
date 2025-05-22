@@ -53,3 +53,4 @@ jobs:
           plugin_repositories: yes
           plugin_repositories_order: featured, pinned, starred, random
           repositories_forks: yes
+          users_ignored: none
