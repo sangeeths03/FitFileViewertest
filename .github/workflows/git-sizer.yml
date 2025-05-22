@@ -1,0 +1,42 @@
+name: Git Sizer
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  git-sizer:
+    name: Run git-sizer
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download git-sizer
+        run: |
+          GITSIZER_VERSION=$(curl -s https://api.github.com/repos/github/git-sizer/releases/latest | grep tag_name | cut -d '"' -f4)
+          wget "https://github.com/github/git-sizer/releases/download/${GITSIZER_VERSION}/git-sizer-${GITSIZER_VERSION#v}-linux-amd64.tar.gz"
+          tar -xzf git-sizer-*-linux-amd64.tar.gz
+          sudo mv git-sizer-*/git-sizer /usr/local/bin/
+          git-sizer --version
+
+      - name: Run git-sizer (human readable)
+        run: |
+          git-sizer --verbose
+
+      - name: Run git-sizer (JSON output)
+        run: |
+          git-sizer --json > git-sizer-report.json
+          cat git-sizer-report.json
+
+      - name: Run git-sizer (fail on critical issues)
+        run: |
+          set +e
+          git-sizer --critical > critical.txt
+          cat critical.txt
+          if grep -q "|" critical.txt; then
+            echo "Critical issues found by git-sizer!" >&2
+            exit 1
+          fi
+        shell: bash
