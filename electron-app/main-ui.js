@@ -14,7 +14,7 @@ import { setupFullscreenListeners, setupDOMContentLoaded } from './utils/addFull
 import { setupWindowOnload } from './utils/setupWindow.js';
 import { renderChartJS } from './utils/renderChartJS.js';
 
-window.globalData = window.globalData || null; // will hold all data received from the extension
+window.globalData = window.globalData || {}; // will hold all data received from the extension
 
 window.showFitData = showFitData;
 window.renderChartJS = renderChartJS;
@@ -30,7 +30,7 @@ window.sendFitFileToAltFitReader = async function (arrayBuffer) {
 				iframe.contentWindow.postMessage({ type: 'fit-file', base64 }, '*');
 			}
 		};
-		if (iframe.src && !iframe.src.includes('libs/ffv/index.html')) {
+		if (iframe.src != null && !iframe.src.includes('libs/ffv/index.html')) {
 			iframe.src = 'libs/ffv/index.html';
 			iframe.onload = postToIframe;
 		} else if (iframe.contentWindow && iframe.src) {
@@ -261,17 +261,34 @@ window.addEventListener('DOMContentLoaded', () => {
 })();
 
 // Move event listener setup to utility functions
+// Sets up event listeners to handle fullscreen mode toggling for the application.
 setupFullscreenListeners();
+
+// Sets up event listeners to handle DOMContentLoaded events for initializing UI components.
 setupDOMContentLoaded();
-setupWindowOnload({
+// Define smaller chunks for better readability and maintainability
+const tabFunctions = {
 	toggleTabVisibility,
 	setActiveTab,
 	setupTabButton,
+};
+
+const renderFunctions = {
 	displayTables,
 	renderChart,
 	renderMap,
 	renderSummary,
+};
+
+const utilityFunctions = {
 	getActiveTabContent,
 	arrayBufferToBase64,
 	showFitData,
+};
+
+// Pass the smaller chunks to setupWindowOnload
+setupWindowOnload({
+	...tabFunctions,
+	...renderFunctions,
+	...utilityFunctions,
 });

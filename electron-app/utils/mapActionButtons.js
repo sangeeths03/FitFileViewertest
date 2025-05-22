@@ -826,12 +826,12 @@ export function createMarkerCountSelector(onChange) {
 		let idx = select.selectedIndex;
 		if (e.deltaY > 0 && idx < options.length - 1) {
 			select.selectedIndex = idx + 1;
-			select.dispatchEvent(new Event('change'));
+			select.dispatchEvent(new Event('change', { bubbles: false, cancelable: true, composed: false }));
 		} else if (e.deltaY < 0 && idx > 0) {
 			select.selectedIndex = idx - 1;
-			select.dispatchEvent(new Event('change'));
+			select.dispatchEvent(new Event('change', { bubbles: false, cancelable: true, composed: false }));
 		}
-	});
+	}, { passive: false });
 
 	container.appendChild(label);
 	container.appendChild(select);

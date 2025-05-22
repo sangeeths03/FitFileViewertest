@@ -22,7 +22,7 @@ export function addLapSelector(map, container, drawMapForLap) {
 		</div>
 	`;
 	lapControl.addEventListener('mousedown', (e) => e.stopPropagation());
-	lapControl.addEventListener('touchstart', (e) => e.stopPropagation());
+	lapControl.addEventListener('touchstart', (e) => e.stopPropagation(), { passive: true });
 	container.appendChild(lapControl);
 
 	const lapSelect = lapControl.querySelector('#lap-select');
@@ -146,7 +146,7 @@ export function addLapSelector(map, container, drawMapForLap) {
 			lapSelect.selectedIndex = idx - 1;
 		}
 		lapSelect.dispatchEvent(new Event('change'));
-	});
+	}, { passive: false });
 
 	// Initialize in single-select mode
 	setMultiSelectMode(false);

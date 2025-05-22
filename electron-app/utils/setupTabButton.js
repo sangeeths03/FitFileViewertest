@@ -6,7 +6,7 @@
  * @throws {void} Logs a warning if the button with the given `id` is not found.
  */
 export function setupTabButton(id, handler) {
-	if (id === null || id === undefined || typeof id !== 'string' || id.trim() === '') {
+	if (id == null || typeof id !== 'string' || id.trim() === '') {
 		console.warn('Invalid button id provided.');
 		return;
 	}
@@ -19,12 +19,6 @@ export function setupTabButton(id, handler) {
 	const cache = setupTabButton.cache || (setupTabButton.cache = new Map());
 	let btn = cache.get(id);
 
-	// Clean up cache if the button is no longer in the DOM
-	if (btn && !document.body.contains(btn)) {
-		cache.delete(id);
-		btn = null;
-	}
-			console.warn(`Button with id "${id}" not found in the DOM.`);
 	if (!btn) {
 		btn = document.getElementById(id);
 		if (btn) {
@@ -35,12 +29,5 @@ export function setupTabButton(id, handler) {
 		}
 	}
 
-	if (!btn._eventHandlers) {
-		btn._eventHandlers = new Map();
-	}
-
-	if (!btn._eventHandlers.has('click') || btn._eventHandlers.get('click') !== handler) {
-		btn.addEventListener('click', handler);
-		btn._eventHandlers.set('click', handler);
-	}
+	btn.addEventListener('click', handler);
 }

@@ -127,7 +127,7 @@ export function renderMap() {
 	zoomSliderBar.style.pointerEvents = 'auto';
 	zoomSlider.style.pointerEvents = 'auto';
 	zoomSlider.addEventListener('mousedown', (e) => e.stopPropagation());
-	zoomSlider.addEventListener('touchstart', (e) => e.stopPropagation());
+	zoomSlider.addEventListener('touchstart', (e) => e.stopPropagation(), { passive: true });
 
 	// Fix jank: Only update map zoom on change, and update slider on zoomend
 	let isDragging = false;

@@ -215,7 +215,7 @@ function ensureChartSettingsDropdowns(targetContainer) {
 					if (newIdx >= opt.options.length) newIdx = opt.options.length - 1;
 					dropdown.value = opt.options[newIdx];
 					dropdown.dispatchEvent(new Event('change'));
-				});
+				}, { passive: false });
 			}
 			dropdown.addEventListener('change', (e) => {
 				localStorage.setItem('chartjs_' + opt.id, e.target.value);

@@ -330,6 +330,25 @@ app.whenReady().then(() => {
 	});
 });
 
+// Prevent navigation to untrusted URLs
+app.on('web-contents-created', (event, contents) => {
+	contents.on('will-navigate', (event, navigationUrl) => {
+		const allowedOrigins = ['file://', 'about:blank'];
+		if (!allowedOrigins.some((origin) => navigationUrl.startsWith(origin))) {
+			event.preventDefault();
+		}
+	});
+
+	// Prevent new windows from opening untrusted URLs
+	contents.setWindowOpenHandler(({ url }) => {
+		const allowedOrigins = ['file://', 'about:blank'];
+		if (!allowedOrigins.some((origin) => url.startsWith(origin))) {
+			return { action: 'deny' };
+		}
+		return { action: 'allow' };
+	});
+});
+
 // Gracefully quit the app on all windows closed (except macOS)
 app.on('window-all-closed', function () {
 	if (process.platform !== 'darwin') app.quit();

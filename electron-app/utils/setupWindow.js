@@ -1,24 +1,8 @@
-/* global acquireVsCodeApi */
-
 // Configuration constants
 const ZWIFT_MAP_URL = 'https://zwiftmap.com/';
 
 export function setupWindowOnload({ toggleTabVisibility, setActiveTab, setupTabButton, displayTables, renderChart, renderMap, renderSummary }) {
 	window.onload = () => {
-		// Signal to the extension that the webview is ready (only if available)
-		let vscode = null;
-		if (typeof acquireVsCodeApi === 'function') {
-			vscode = acquireVsCodeApi();
-			vscode.postMessage({ type: 'ready' });
-		} else {
-			console.warn('acquireVsCodeApi is not available. Messages will be logged locally.');
-			vscode = {
-				postMessage: (message) => {
-					console.log('Message logged locally:', message);
-				},
-			};
-		}
-
 		// Default: show the Map tab
 		toggleTabVisibility('content-map');
 

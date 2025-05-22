@@ -37,6 +37,8 @@ export function showFitData(data, filePath) {
 		if (window.electronAPI && window.electronAPI.send) {
 			window.electronAPI.send('fit-file-loaded', filePath);
 		}
+		// Dispatch event for Chart.js and other listeners
+		window.dispatchEvent(new Event('fitfile-loaded'));
 	}
 
 	// Optionally, update UI with data (tables, charts, etc.)
