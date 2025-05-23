@@ -4,12 +4,22 @@ on:
   schedule:
     - cron: '44 2 * * 0' # Runs on Sundays at 2:44 AM UTC; https://crontab.guru/#44_2_*_*_0
   push:
+    paths-ignore:
+      - "*"
+      - "*/**"
+      - "!electron-app/**"
+      - "!electron-app"
   pull_request:
+    paths-ignore:
+      - "*"
+      - "*/**"
+      - "!electron-app/**"
+      - "!electron-app"
   workflow_dispatch:
 
 jobs:
   run-git-sizer:
-    name: git-sizer - ${{ github.event.inputs.repo }}
+    name: git-sizer - ${{ github.repository }}
     runs-on: ubuntu-latest
     steps:
       - name: Run git-sizer

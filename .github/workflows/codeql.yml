@@ -13,16 +13,20 @@ name: "CodeQL"
 
 on:
   push:
-    branches: ["main"]
     paths-ignore:
-      - electron-app/libs/**
+      - "*"
+      - "*/**"
+      - "!electron-app/**"
+      - "!electron-app"
   pull_request:
-    # The branches below must be a subset of the branches above
-    branches: ["main"]
     paths-ignore:
-      - electron-app/libs/**
+      - "*"
+      - "*/**"
+      - "!electron-app/**"
+      - "!electron-app"
+  workflow_dispatch:
   schedule:
-    - cron: "0 0 * * 1"
+    - cron: "44 2 * * 4" # run once a week on Thursday at 2:44 AM UTC
 
 permissions:
   contents: read
