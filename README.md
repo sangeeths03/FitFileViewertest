@@ -110,6 +110,10 @@ Enjoy an intuitive interface designed for seamless `.fit` file exploration.
 
 ---
 
+## 📜 Changelog
+
+For a detailed list of changes, bug fixes, and new features, please refer to the [CHANGELOG.md](CHANGELOG.md) file in the repository.
+
 ## 🧑‍💻 Development
 
 To set up a development environment:
@@ -140,31 +144,31 @@ This project uses the following libraries and tools:
 
 - <a href="https://www.harryonline.net/" class="italic ms-2 "><img alt="HarryOnline logo" src="https://raw.githubusercontent.com/Nick2bad4u/FitFileViewer/refs/heads/main/electron-app/screenshots/HarryOnlineLogo.png" class="ms-2 h-3 inline-block" width="14" height="12"><span> HarryOnline</span></a> 🌍
 
-- [Garmin FIT JavaScript SDK](https://github.com/garmin/fit-javascript-sdk) (FIT Protocol License Agreement - This project complies with the terms of the FIT Protocol License Agreement.) ⌚
+- [Garmin FIT JavaScript SDK](https://github.com/garmin/fit-javascript-sdk) ([FIT Protocol License Agreement](https://developer.garmin.com/fit/download/)) ⌚
 
-- [Leaflet.js](https://leafletjs.com) (BSD-2-Clause license) 🗺️
+- [Leaflet.js](https://leafletjs.com) ([BSD-2-Clause License](https://github.com/Leaflet/Leaflet/blob/main/LICENSE)) 🗺️
 
-- [Vega-Lite](https://vega.github.io/vega-lite/) (BSD-3-Clause license) 📊
+- [Vega-Lite](https://vega.github.io/vega-lite/) ([BSD-3-Clause License](https://github.com/vega/vega-lite/blob/main/LICENSE)) 📊
 
-- [Vega-Embed](https://github.com/vega/vega-embed) (BSD-3-Clause license) 📈
+- [Vega-Embed](https://github.com/vega/vega-embed) ([BSD-3-Clause License](https://github.com/vega/vega-embed/blob/main/LICENSE)) 📈
 
-- [Chart.js](https://www.chartjs.org/) (MIT license) 📉
+- [Chart.js](https://www.chartjs.org/) ([MIT License](https://github.com/chartjs/Chart.js/blob/master/LICENSE.md)) 📉
 
-- [jQuery](https://jquery.com/) (MIT license) 🧑‍💻
+- [jQuery](https://jquery.com/) ([MIT License](https://jquery.org/license/)) 🧑‍💻
 
-- [Electron](https://www.electronjs.org/) (MIT license) ⚡
+- [Electron](https://www.electronjs.org/) ([MIT License](https://github.com/electron/electron/blob/main/LICENSE)) ⚡
 
-- [Node.js](https://nodejs.org/) (MIT license) 🖥️
+- [Node.js](https://nodejs.org/) ([MIT License](https://github.com/nodejs/node/blob/main/LICENSE)) 🖥️
 
-- [Electron Builder](https://www.electron.build/) (MIT license) 🏗️
+- [Electron Builder](https://www.electron.build/) ([MIT License](https://github.com/electron-userland/electron-builder/blob/master/LICENSE)) 🏗️
 
-- [GitHub Actions](https://github.com/features/actions) (MIT license) 🔧
+- [GitHub Actions](https://github.com/features/actions) ([MIT License](https://github.com/actions/runner/blob/main/LICENSE)) 🔧
 
-- [GitHub Pages](https://pages.github.com/) (MIT license) 🌐
+- [GitHub Pages](https://pages.github.com/) ([MIT License](https://github.com/github/pages-gem/blob/master/LICENSE.txt)) 🌐
 
-- [GitHub API](https://docs.github.com/en/rest) (MIT license) 🔌
+- [GitHub API](https://docs.github.com/en/rest) ([MIT License](https://github.com/octokit/octokit.rb/blob/master/LICENSE.txt)) 🔌
 
-- [GitHub Copilot](https://github.com/features/copilot) (MIT license) 🤖
+- [GitHub Copilot](https://github.com/features/copilot) ([MIT License](https://github.com/github/copilot-docs/blob/main/LICENSE)) 🤖
 
 ---
 
