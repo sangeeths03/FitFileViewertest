@@ -11,14 +11,9 @@ on:
       - "*/**"
       - "!electron-app/**"
       - "!electron-app"
-  pull_request:
-    paths-ignore:
-      - "*"
-      - "*/**"
-      - "!electron-app/**"
-      - "!electron-app"
   workflow_dispatch:
 
+permissions: write-all
 jobs:
   bump-version:
     runs-on: ubuntu-latest
