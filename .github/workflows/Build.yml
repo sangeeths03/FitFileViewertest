@@ -483,6 +483,10 @@ jobs:
 
             ---
 
+            **[📄 View Full Changelog](https://github.com/${{ github.repository }}/blob/main/CHANGELOG.md)**
+
+            ---
+
             _Thank you for using **FitFileViewer**!_
           files: release-dist/**/*
           draft: false
