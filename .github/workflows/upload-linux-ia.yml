@@ -102,7 +102,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload Linux distributables to archive.org
-        uses: Nick2bad4u/internet-archive-upload@v1.2 # v1
+        uses: Nick2bad4u/internet-archive-upload@v1.3 # v1.3
         with:
           access-key: ${{ secrets.IA_ACCESS_KEY }}
           secret-key: ${{ secrets.IA_SECRET_KEY }}
