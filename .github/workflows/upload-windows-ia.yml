@@ -57,7 +57,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload Windows distributables to archive.org
-        uses: Nick2bad4u/internet-archive-upload@ecf1bdea26a78610d394e48c4162759fc00c1308 # v1.4
+        uses: Nick2bad4u/internet-archive-upload@79b45e1106a9ac95be87ba5eb660f487437d8d6e # v1.5
         with:
           access-key: ${{ secrets.IA_ACCESS_KEY }}
           secret-key: ${{ secrets.IA_SECRET_KEY }}
