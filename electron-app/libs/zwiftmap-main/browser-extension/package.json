@@ -10,10 +10,10 @@
   },
   "devDependencies": {
     "@types/adm-zip": "0.5.7",
-    "@types/chrome": "0.0.318",
-    "@types/leaflet": "1.9.17",
+    "@types/chrome": "0.0.326",
+    "@types/leaflet": "1.9.18",
     "adm-zip": "0.5.16",
-    "esbuild": "0.25.3"
+    "esbuild": "0.25.5"
   },
   "dependencies": {
     "zwift-data": "1.43.0"
