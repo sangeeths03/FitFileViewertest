@@ -42,7 +42,7 @@ jobs:
         with:
           audit_level: moderate
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          issue_assignees: oke-py
+          issue_assignees: nick2bad4u
           issue_labels: vulnerability,test
           dedupe_issues: true
           working_directory: electron-app
