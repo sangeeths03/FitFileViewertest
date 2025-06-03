@@ -7,7 +7,7 @@
       width="100%"
     />
 </div>
-
+<!-- markdownlint-disable MD033 MD013 -->
 <p align="center">
   <a href="https://github.com/nick2bad4u/fitfileviewer/pulls" title="View or submit pull requests">
     <img alt="Badge: PRs Welcome (green, flat-square style)" src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square&logo=github" title="PRs Welcome">
@@ -54,7 +54,7 @@
 	offering at-a-glance insight into the project's health checks and automation processes.
 -->
 <details><summary>CI Badges</summary>
-	
+
 [![ActionLint](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/ActionLint.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/ActionLint.yml) 🧹
 [![Build and Release Electron App](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/Build.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/Build.yml) 🏗️
 [![CodeQL-Advanced](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/codeql.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/codeql.yml) 🛡️
@@ -88,7 +88,6 @@
 [![Spell Check (typos)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/typos.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/typos.yml) 🔤
 [![Spellcheck Action](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/spelling_action.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/spelling_action.yml) 📖
 [![VirusTotal Scan](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/VirusTotal.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/VirusTotal.yml) 🦠
-
 <div align="center">
     <img
       src="https://github.com/Nick2bad4u/Nick2bad4u/blob/main/assets/GitHubProfileLines%20(2).gif?raw=true"
