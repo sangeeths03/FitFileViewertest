@@ -49,19 +49,19 @@
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
       "runAfterFinish": true,
-      "artifactName": "Fit-File-Viewer-nsis-${platform}-${version}.${ext}"
+      "artifactName": "Fit-File-Viewer-nsis-${arch}-${version}.${ext}"
     },
     "nsisWeb": {
-      "artifactName": "Fit-File-Viewer-nsis-web-${platform}-${version}.${ext}"
+      "artifactName": "Fit-File-Viewer-nsis-web-${arch}-${version}.${ext}"
     },
     "portable": {
-      "artifactName": "Fit-File-Viewer-portable-${platform}-${version}.${ext}"
+      "artifactName": "Fit-File-Viewer-portable-${arch}-${version}.${ext}"
     },
     "squirrelWindows": {
-      "artifactName": "Fit-File-Viewer-squirrel-${platform}-${version}.${ext}"
+      "artifactName": "Fit-File-Viewer-squirrel-${arch}-${version}.${ext}"
     },
     "msi": {
-      "artifactName": "Fit-File-Viewer-msi-${platform}-${version}.${ext}"
+      "artifactName": "Fit-File-Viewer-msi-${arch}-${version}.${ext}"
     },
     "appImage": {
       "artifactName": "Fit-File-Viewer-appimage-${version}.${ext}"
