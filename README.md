@@ -113,6 +113,20 @@
     />
 </div>
 
+## 📑 Table of Contents
+
+- [Overview](#overview) 📖
+- [Screenshots](#screenshots) 🖼️
+- [Installation](#%EF%B8%8F-installation) 🛠️
+- [Usage](#-usage) 🚀
+- [Changelog](#-changelog) 📝
+- [Supported Builds](#%EF%B8%8F-supported-builds) 🏗️
+- [Development](#-development) 👨‍💻
+- [Credits](#credits-) 🙏
+- [License](#-license) 📄
+
+## Overview
+
 Open `.fit` files, a popular file format used for recording activity data from fitness devices such as GPS watches and cycling computers, and explore their data with ease. This standalone application offers:
 
 - Interactive maps for visualizing activity routes. 🗺️
@@ -122,6 +136,8 @@ Open `.fit` files, a popular file format used for recording activity data from f
 Enjoy an intuitive interface designed for seamless `.fit` file exploration.
 
 <div align="center">
+
+## Screenshots
 
 ![Map](https://raw.githubusercontent.com/Nick2bad4u/FitFileViewer/refs/heads/main/electron-app/screenshots/MapsV2.png)
 *Interactive map displaying the activity route.*
@@ -140,6 +156,8 @@ Enjoy an intuitive interface designed for seamless `.fit` file exploration.
 2. Download the latest installer or zip for your operating system (Windows, macOS, or Linux).
 3. Extract the archive if needed, then run the installer or executable to launch Fit File Viewer.
 
+*See the [Supported Builds](#%EF%B8%8F-supported-builds) section below for available formats and filenames.*
+
 ---
 
 ## 🚀 Usage
@@ -154,6 +172,46 @@ Enjoy an intuitive interface designed for seamless `.fit` file exploration.
 ## 📜 Changelog
 
 For a detailed list of changes, bug fixes, and new features, please refer to the [CHANGELOG.md](CHANGELOG.md) file in the repository.
+
+---
+
+## 🏗️ Supported Builds
+
+| Platform   | Architecture | Format      | Filename Example                                 |
+|------------|--------------|-------------|--------------------------------------------------|
+| Windows    | x64          | NSIS EXE    | Fit-File-Viewer-nsis-x64-<version>.exe           |
+| Windows    | ia32         | NSIS EXE    | Fit-File-Viewer-nsis-ia32-<version>.exe          |
+| Windows    | x64          | MSI         | Fit-File-Viewer-msi-x64-<version>.msi            |
+| Windows    | ia32         | MSI         | Fit-File-Viewer-msi-ia32-<version>.msi           |
+| Windows    | x64          | Portable    | Fit-File-Viewer-portable-x64-<version>.exe       |
+| Windows    | ia32         | Portable    | Fit-File-Viewer-portable-ia32-<version>.exe      |
+| Windows    | x64          | NSIS Web    | Fit-File-Viewer-nsis-web-x64-<version>.exe       |
+| Windows    | ia32         | NSIS Web    | Fit-File-Viewer-nsis-web-ia32-<version>.exe      |
+| Windows    | x64          | 7z Archive  | fitfileviewer-<version>-x64.nsis.7z              |
+| Windows    | ia32         | 7z Archive  | fitfileviewer-<version>-ia32.nsis.7z             |
+| macOS      | x64/arm64    | DMG         | Fit-File-Viewer-dmg-<version>.dmg                |
+| macOS      | x64/arm64    | PKG         | Fit-File-Viewer-pkg-<version>.pkg                |
+| macOS      | x64/arm64    | ZIP         | Fit-File-Viewer-darwin-<version>.zip             |
+| macOS      | x64/arm64    | TAR.BZ2     | Fit-File-Viewer-darwin-<version>.tar.bz2         |
+| macOS      | x64/arm64    | TAR.GZ      | Fit-File-Viewer-darwin-<version>.tar.gz          |
+| macOS      | x64/arm64    | TAR.XZ      | Fit-File-Viewer-darwin-<version>.tar.xz          |
+| Linux      | x64/arm64    | AppImage    | Fit-File-Viewer-appimage-<version>.AppImage      |
+| Linux      | x64/arm64    | DEB         | Fit-File-Viewer-deb-<version>.deb                |
+| Linux      | x64/arm64    | RPM         | Fit-File-Viewer-rpm-<version>.rpm                |
+| Linux      | x64/arm64    | PACMAN      | Fit-File-Viewer-pacman-<version>.pacman          |
+| Linux      | x64/arm64    | SNAP        | Fit-File-Viewer-snap-<version>.snap              |
+| Linux      | x64/arm64    | TAR.BZ2     | Fit-File-Viewer-linux-<version>.tar.bz2          |
+| Linux      | x64/arm64    | TAR.GZ      | Fit-File-Viewer-linux-<version>.tar.gz           |
+| Linux      | x64/arm64    | TAR.XZ      | Fit-File-Viewer-linux-<version>.tar.xz           |
+| Linux      | x64/arm64    | ZIP         | Fit-File-Viewer-linux-<version>.zip              |
+| FreeBSD    | x64/arm64    | FreeBSD     | Fit-File-Viewer-freebsd-<version>.freebsd        |
+| Android    | arm64        | APK         | Fit-File-Viewer-apk-<version>.apk                |
+
+<sub>Replace <version> with the actual release version, e.g. 14.8.0</sub>
+
+[➡️ **Go to the Latest Release**](https://github.com/Nick2bad4u/FitFileViewer/releases/latest)
+
+---
 
 ## 🧑‍💻 Development
 

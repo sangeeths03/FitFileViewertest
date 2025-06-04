@@ -526,6 +526,33 @@ jobs:
             ${{ github.event.head_commit.message }}
 
             ---
+            ### 📦 Download FitFileViewer
+
+            | Platform | Installer         | Download Link |
+            |----------|-------------------|---------------|
+            | Windows  | EXE (NSIS, x64)   | [Fit-File-Viewer-nsis-x64.exe](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-nsis-x64-${{ needs.bump-version.outputs.new_version }}.exe) |
+            | Windows  | EXE (NSIS, 32-bit)| [Fit-File-Viewer-nsis-ia32.exe](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-nsis-ia32-${{ needs.bump-version.outputs.new_version }}.exe) |
+            | Windows  | MSI (x64)         | [Fit-File-Viewer-msi-x64.msi](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-msi-x64-${{ needs.bump-version.outputs.new_version }}.msi) |
+            | Windows  | MSI (32-bit)      | [Fit-File-Viewer-msi-ia32.msi](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-msi-ia32-${{ needs.bump-version.outputs.new_version }}.msi) |
+            | Windows  | Portable (x64)    | [Fit-File-Viewer-portable-x64.exe](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-portable-x64-${{ needs.bump-version.outputs.new_version }}.exe) |
+            | Windows  | Portable (32-bit) | [Fit-File-Viewer-portable-ia32.exe](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-portable-ia32-${{ needs.bump-version.outputs.new_version }}.exe) |
+            | macOS    | DMG               | [Fit-File-Viewer-dmg.dmg](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-dmg-${{ needs.bump-version.outputs.new_version }}.dmg) |
+            | macOS    | PKG               | [Fit-File-Viewer-pkg.pkg](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-pkg-${{ needs.bump-version.outputs.new_version }}.pkg) |
+            | macOS    | ZIP               | [Fit-File-Viewer-darwin.zip](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-darwin-${{ needs.bump-version.outputs.new_version }}.zip) |
+            | macOS    | TAR.BZ2           | [Fit-File-Viewer-darwin.tar.bz2](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-darwin-${{ needs.bump-version.outputs.new_version }}.tar.bz2) |
+            | macOS    | TAR.GZ            | [Fit-File-Viewer-darwin.tar.gz](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-darwin-${{ needs.bump-version.outputs.new_version }}.tar.gz) |
+            | macOS    | TAR.XZ            | [Fit-File-Viewer-darwin.tar.xz](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-darwin-${{ needs.bump-version.outputs.new_version }}.tar.xz) |
+            | Linux    | AppImage          | [Fit-File-Viewer-appimage.AppImage](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-appimage-${{ needs.bump-version.outputs.new_version }}.AppImage) |
+            | Linux    | DEB               | [Fit-File-Viewer-deb.deb](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-deb-${{ needs.bump-version.outputs.new_version }}.deb) |
+            | Linux    | RPM               | [Fit-File-Viewer-rpm.rpm](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-rpm-${{ needs.bump-version.outputs.new_version }}.rpm) |
+            | Linux    | TAR.BZ2           | [Fit-File-Viewer-linux.tar.bz2](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-linux-${{ needs.bump-version.outputs.new_version }}.tar.bz2) |
+            | Linux    | TAR.GZ            | [Fit-File-Viewer-linux.tar.gz](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-linux-${{ needs.bump-version.outputs.new_version }}.tar.gz) |
+            | Linux    | TAR.XZ            | [Fit-File-Viewer-linux.tar.xz](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-linux-${{ needs.bump-version.outputs.new_version }}.tar.xz) |
+            | Linux    | ZIP               | [Fit-File-Viewer-linux.zip](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-linux-${{ needs.bump-version.outputs.new_version }}.zip) |
+
+            _See below for full release notes and all available builds._
+
+            ---
 
             <details>
               <summary><strong>🔍 Merge Commit Details</strong></summary>
