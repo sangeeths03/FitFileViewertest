@@ -13,8 +13,8 @@ updates:
     directory: /
     schedule:
       interval: weekly
-      time: 04:30
-      timezone: America/Detroit
+      time: "04:30"
+      timezone: "America/Detroit"
     reviewers: ["Nick2bad4u"]
     assignees: ["Nick2bad4u"]
     versioning-strategy: increase
