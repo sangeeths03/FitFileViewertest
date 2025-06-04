@@ -34,7 +34,6 @@ jobs:
       - name: Checkout code
         id: checkout_code
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
-        continue-on-error: true
 
       - name: Debug Step - Show git diff for electron-app
         id: git_diff
@@ -68,7 +67,6 @@ jobs:
           fi
           jq --arg v "$NEW_VERSION" '.version = $v' package.json > tmp.json && mv tmp.json package.json
           echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
-        continue-on-error: true
 
       - name: Tag new version
         id: tag_version
@@ -79,8 +77,6 @@ jobs:
           git tag -a "v${{ steps.bump.outputs.new_version }}" -m "Release v${{ steps.bump.outputs.new_version }}"
           git push origin "v${{ steps.bump.outputs.new_version }}"
         working-directory: electron-app
-        continue-on-error: true
-
       - name: Commit and push version bump
         uses: EndBug/add-and-commit@a94899bca583c204427a224a7af87c02f9b325d5 # v9.1.4
         with:
@@ -89,14 +85,12 @@ jobs:
           cwd: electron-app
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        continue-on-error: true
 
       - name: Upload bumped package.json
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: bumped-package-json
           path: electron-app/package.json
-        continue-on-error: true
 
   build:
     needs: bump-version
@@ -127,25 +121,21 @@ jobs:
 
       - name: Checkout code
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
-        continue-on-error: true
 
       - name: Download bumped package.json
         uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
         with:
           name: bumped-package-json
           path: ./electron-app
-        continue-on-error: true
 
       - name: Setup Node.js
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: 20
-        continue-on-error: true
 
       - name: Install Linux build dependencies
         id: install_linux_deps
         if: runner.os == 'Linux'
-        continue-on-error: true
         run: |
           sudo apt-get update
           sudo apt-get install -y rpm dpkg fakeroot xz-utils flatpak flatpak-builder ruby ruby-dev build-essential zlib1g-dev
@@ -160,7 +150,6 @@ jobs:
         if: runner.os == 'macOS'
         run: |
           brew install rpm dpkg xz gnu-tar
-        continue-on-error: true
 
       - name: Install dmg-license workaround
         id: install_dmg_license
@@ -173,7 +162,6 @@ jobs:
         if: runner.os == 'Windows'
         run: |
           choco install -y 7zip.install
-        continue-on-error: true
 
       - name: Cache node modules (Windows)
         id: cache_node_modules_windows
@@ -279,10 +267,10 @@ jobs:
             electron-app/dist/Fit-File-Viewer-*
             electron-app/dist/latest*.yml
           include-hidden-files: true
-        continue-on-error: true
 
   release:
     needs: [build, bump-version]
+    if: ${{ needs.build.result == 'success' && needs.bump-version.result == 'success' }}
     runs-on: ubuntu-latest
     steps:
       - name: Harden the runner (Audit all outbound calls)
