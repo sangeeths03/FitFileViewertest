@@ -1,5 +1,5 @@
 # FitFileViewer by Nick2bad4u / Typpi ☠️ - README
-
+<!-- markdownlint-disable MD033 MD013 -->
 <div align="center">
     <img
       src="https://github.com/Nick2bad4u/Nick2bad4u/blob/main/assets/GitHubProfileLines.gif?raw=true"
@@ -7,7 +7,7 @@
       width="100%"
     />
 </div>
-<!-- markdownlint-disable MD033 MD013 -->
+
 <p align="center">
   <a href="https://github.com/nick2bad4u/fitfileviewer/pulls" title="View or submit pull requests">
     <img alt="Badge: PRs Welcome (green, flat-square style)" src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square&logo=github" title="PRs Welcome">

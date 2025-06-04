@@ -2,6 +2,6 @@
 export default {
     extends: "stylelint-config-standard",
     rules: {
-        "block-no-empty": true
+        "block-no-empty": true,
     }
 };

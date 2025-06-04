@@ -49,19 +49,19 @@
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
       "runAfterFinish": true,
-      "artifactName": "Fit-File-Viewer-nsis-${version}.${ext}"
+      "artifactName": "Fit-File-Viewer-nsis-${platform}-${version}.${ext}"
     },
     "nsisWeb": {
-      "artifactName": "Fit-File-Viewer-nsis-web-${version}.${ext}"
+      "artifactName": "Fit-File-Viewer-nsis-web-${platform}-${version}.${ext}"
     },
     "portable": {
-      "artifactName": "Fit-File-Viewer-portable-${version}.${ext}"
+      "artifactName": "Fit-File-Viewer-portable-${platform}-${version}.${ext}"
     },
     "squirrelWindows": {
-      "artifactName": "Fit-File-Viewer-squirrel-${version}.${ext}"
+      "artifactName": "Fit-File-Viewer-squirrel-${platform}-${version}.${ext}"
     },
     "msi": {
-      "artifactName": "Fit-File-Viewer-msi-${version}.${ext}"
+      "artifactName": "Fit-File-Viewer-msi-${platform}-${version}.${ext}"
     },
     "appImage": {
       "artifactName": "Fit-File-Viewer-appimage-${version}.${ext}"
@@ -263,7 +263,7 @@
     "@types/jest": "^29.5.14",
     "@types/mocha": "10.0.10",
     "cross-env": "^7.0.3",
-    "electron": "36.3.2",
+    "electron": "36.4.0",
     "electron-builder": "26.0.16",
     "electron-builder-squirrel-windows": "26.0.16",
     "eslint": "^9.28.0",

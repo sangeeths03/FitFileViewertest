@@ -472,8 +472,6 @@ export function renderChartJS(targetContainer) {
 					}
 					// Prevent click-through: if swatch bar is hovered and click is on a swatch, stop event propagation
 					let barX = x + 60;
-					let barW = allSwatchesWidth;
-					let barH = swatchSize;
 					let barY = y + (dropdownHeight - swatchSize) / 2;
 					if ((eventType === 'click' || eventType === 'touchend') && this._isHovered) {
 						let swatchX = barX;

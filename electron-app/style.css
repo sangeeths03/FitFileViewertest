@@ -1,8 +1,12 @@
-/* stylelint-disable selector-no-vendor-prefix -- electron app*/
+/* stylelint-disable no-descending-specificity */
+/* stylelint-disable selector-class-pattern */
+/* stylelint-disable selector-id-pattern */
+/* stylelint-disable selector-no-vendor-prefix -- electron app */
+
 /* =====================================================
    Theme Variables
    ===================================================== */
-@import 'https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap';
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap');
 
 /*
   Add CSS variables for dark and light themes, and use them throughout the file.
@@ -43,14 +47,14 @@ body.theme-light {
 	--color-table-row-even: #fafafa;
 	--color-table-row-odd: #b6b6b6;
 	--color-table-hover: #e3f2fd;
-	--color-title: #ffffff;
+	--color-title: #fff;
 	--color-border: #ccc;
 	--color-btn-bg: #fff;
 	--color-btn-hover: #e3f2fd;
 	--color-modal-bg: #fff;
 	--color-modal-fg: #23263a;
 	--color-credits: #555;
-	--color-filename: #000000;
+	--color-filename: #000;
 }
 
 /* =====================================================
@@ -158,7 +162,7 @@ body.theme-light {
 }
 
 .high-contrast-yellow {
-	background: #ffff00 !important;
+	background: #ff0 !important;
 	color: #000 !important;
 }
 
@@ -167,7 +171,7 @@ body.theme-light {
 .high-contrast-yellow input,
 .high-contrast-yellow select {
 	color: #000 !important;
-	background: #ffff00 !important;
+	background: #ff0 !important;
 	border-color: #000 !important;
 }
 
@@ -175,9 +179,7 @@ body.theme-light {
    Base Layout & Typography
    ===================================================== */
 body {
-	font-family:
-		Open Sans,
-		sans-serif;
+	font-family: 'Open Sans', sans-serif;
 	padding: 10px;
 	font-size: 14px;
 	background-color: var(--color-bg);
@@ -196,7 +198,9 @@ h2 {
 .app-header {
 	text-align: center;
 	padding: 32px 0 10px;
+
 	/* background: var(--color-header); */
+
 	/* Disabled to keep the header transparent for better design consistency */
 }
 
@@ -233,10 +237,8 @@ h2 {
 	margin-right: 5px;
 	color: var(--color-fg);
 	font-weight: 600;
-	transition:
-		background 0.3s,
-		box-shadow 0.3s;
-	box-shadow: 0 2px 4px #00000033;
+	transition: background 0.3s, box-shadow 0.3s;
+	box-shadow: 0 2px 4px #0003;
 	text-align: center;
 	font-size: 1rem;
 	font-family: inherit;
@@ -252,17 +254,15 @@ h2 {
 .tab-button:hover,
 .tab-button.active {
 	background: var(--color-btn-hover);
-	box-shadow: 0 2px 4px #00000066;
+	box-shadow: 0 2px 4px #0006;
 	color: var(--color-fg-alt);
 	outline: none;
 	filter: brightness(1.2);
-	transition:
-		background 0.3s,
-		box-shadow 0.3s;
+	transition: background 0.3s, box-shadow 0.3s;
 }
 
 .tab-button.tab-disabled {
-	opacity: 50%;
+	opacity: 0.5;
 	filter: grayscale(0.7);
 	cursor: not-allowed !important;
 	pointer-events: none;
@@ -449,9 +449,7 @@ tr:hover {
 	min-width: 0;
 	max-width: 100%;
 	flex: 0 1 auto;
-	transition:
-		max-width 0.3s,
-		flex 0.3s;
+	transition: max-width 0.3s, flex 0.3s;
 }
 
 #activeFileNameContainer:not(.has-file) {
@@ -498,9 +496,7 @@ tr:hover {
 	cursor: pointer;
 	display: flex;
 	align-items: center;
-	transition:
-		color 0.2s,
-		background 0.2s;
+	transition: color 0.2s, background 0.2s;
 	border-radius: 50%;
 	outline: none;
 	width: 36px;
@@ -509,12 +505,14 @@ tr:hover {
 	flex: 0 0 auto;
 	z-index: 1;
 }
+
 #unloadFileBtn svg {
 	width: 24px;
 	height: 24px;
 	fill: #d32f2f;
 	transition: fill 0.2s;
 }
+
 #unloadFileBtn:hover svg {
 	fill: #b71c1c;
 	background: #ffeaea;
@@ -717,12 +715,15 @@ body .custom-maptype-btn {
 	background: transparent;
 	color: var(--color-fg);
 }
+
 .vega-embed.has-actions {
 	padding-right: 38px;
 }
+
 .vega-embed details:not([open]) > :not(summary) {
 	display: none !important;
 }
+
 .vega-embed summary {
 	list-style: none;
 	position: absolute;
@@ -735,30 +736,36 @@ body .custom-maptype-btn {
 	color: var(--color-fg);
 	border: 1px solid var(--color-border);
 	border-radius: 999px;
-	opacity: 20%;
+	opacity: 0.2;
 	transition: opacity 0.4s ease-in;
 	cursor: pointer;
 	line-height: 0px;
 }
+
 .vega-embed summary::-webkit-details-marker {
 	display: none;
 }
+
 .vega-embed summary:active {
 	box-shadow: var(--color-border) 0 0 0 1px inset;
 }
+
 .vega-embed summary svg {
 	width: 14px;
 	height: 14px;
 	fill: var(--color-fg);
 }
+
 .vega-embed details[open] summary {
-	opacity: 70%;
+	opacity: 0.7;
 }
+
 .vega-embed:hover summary,
 .vega-embed:focus-within summary {
-	opacity: 100% !important;
+	opacity: 1 !important;
 	transition: opacity 0.2s ease;
 }
+
 .vega-embed .vega-actions {
 	position: absolute;
 	z-index: 1001;
@@ -777,6 +784,7 @@ body .custom-maptype-btn {
 	animation-timing-function: cubic-bezier(0.2, 0, 0.13, 1.5);
 	text-align: left;
 }
+
 .vega-embed .vega-actions a {
 	padding: 8px 16px;
 	font-family: inherit;
@@ -786,21 +794,22 @@ body .custom-maptype-btn {
 	color: var(--color-fg);
 	text-decoration: none;
 	border-radius: 3px;
-	transition:
-		background 0.2s,
-		color 0.2s;
+	transition: background 0.2s, color 0.2s;
 }
+
 .vega-embed .vega-actions a:hover,
 .vega-embed .vega-actions a:focus {
 	background-color: var(--color-btn-hover);
 	color: var(--color-fg-alt);
 }
+
 .vega-embed .vega-actions::before,
 .vega-embed .vega-actions::after {
 	content: '';
 	display: inline-block;
 	position: absolute;
 }
+
 .vega-embed .vega-actions::before {
 	left: auto;
 	right: 14px;
@@ -808,6 +817,7 @@ body .custom-maptype-btn {
 	border: 8px solid rgb(0 0 0 / 0%);
 	border-bottom-color: var(--color-border);
 }
+
 .vega-embed .vega-actions::after {
 	left: auto;
 	right: 15px;
@@ -815,9 +825,11 @@ body .custom-maptype-btn {
 	border: 7px solid rgb(0 0 0 / 0%);
 	border-bottom-color: var(--color-bg-alt);
 }
+
 .vega-embed .chart-wrapper.fit-x {
 	width: 100%;
 }
+
 .vega-embed .chart-wrapper.fit-y {
 	height: 100%;
 }
@@ -830,11 +842,12 @@ body .custom-maptype-btn {
 
 @keyframes scale-in {
 	from {
-		opacity: 0%;
+		opacity: 0;
 		transform: scale(0.6);
 	}
+
 	to {
-		opacity: 100%;
+		opacity: 1;
 		transform: scale(1);
 	}
 }
@@ -845,30 +858,37 @@ body.theme-light #vg-tooltip-element {
 	color: var(--color-fg) !important;
 	border: 1px solid var(--color-border) !important;
 }
+
 body.theme-light #vg-tooltip-element table tr td.key {
 	color: var(--color-accent) !important;
 }
+
 body.theme-light .vega-embed summary {
 	background: var(--color-bg-alt);
 	color: var(--color-fg);
 	border: 1px solid var(--color-border);
 }
+
 body.theme-light .vega-embed .vega-actions {
 	background: var(--color-bg-alt);
 	color: var(--color-fg);
 	border: 1px solid var(--color-border);
 }
+
 body.theme-light .vega-embed .vega-actions a {
 	color: var(--color-fg);
 }
+
 body.theme-light .vega-embed .vega-actions a:hover,
 body.theme-light .vega-embed .vega-actions a:focus {
 	background: var(--color-btn-hover);
 	color: var(--color-fg-alt);
 }
+
 body.theme-light .vega-embed .vega-actions::before {
 	border-bottom-color: var(--color-border);
 }
+
 body.theme-light .vega-embed .vega-actions::after {
 	border-bottom-color: var(--color-bg-alt);
 }
@@ -888,7 +908,6 @@ body.theme-light .vega-embed .vega-actions::after {
 	font-size: 15px;
 	font-weight: bold;
 	color: #222;
-	-webkit-user-select: none;
 	user-select: none;
 	display: flex;
 	flex-direction: column;
@@ -920,7 +939,7 @@ body.theme-light .vega-embed .vega-actions::after {
 
 body .custom-zoom-slider-bar {
 	background: #f1f1f1;
-	color: #000000;
+	color: #000;
 	border: 1px solid #888;
 }
 
@@ -940,7 +959,6 @@ body .custom-zoom-slider-bar input[type='range'] {
 	border-top: none;
 	line-height: 1.1;
 	white-space: nowrap;
-	-moz-box-sizing: border-box;
 	box-sizing: border-box;
 }
 
@@ -1024,10 +1042,7 @@ body.theme-light .custom-lap-control select {
 	padding: 2px 8px;
 	border-radius: 4px;
 	cursor: pointer;
-	transition:
-		background 0.2s,
-		color 0.2s,
-		border 0.2s;
+	transition: background 0.2s, color 0.2s, border 0.2s;
 	outline: none;
 	box-shadow: none;
 	display: flex;
@@ -1043,7 +1058,7 @@ body.theme-light .custom-lap-control select {
 
 body.theme-dark .custom-fullscreen-bar.leaflet-bar {
 	background: #f1f1f1;
-	color: #000000;
+	color: #000;
 	border: 1px solid #888;
 	position: absolute;
 	top: 60px;
@@ -1099,10 +1114,7 @@ body.theme-dark .custom-fullscreen-bar button:focus {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	transition:
-		background 0.2s,
-		box-shadow 0.2s,
-		transform 0.2s;
+	transition: background 0.2s, box-shadow 0.2s, transform 0.2s;
 	cursor: pointer;
 	outline: none;
 }
@@ -1156,7 +1168,6 @@ body.theme-dark .custom-fullscreen-bar button:focus {
 	top: 24px;
 	right: 24px;
 	z-index: 2000;
-	-webkit-user-select: none;
 	user-select: none;
 	margin-left: 10px;
 	padding: 10px 24px;
@@ -1169,16 +1180,14 @@ body.theme-dark .custom-fullscreen-bar button:focus {
 	cursor: pointer;
 	margin-bottom: 18px;
 	margin-right: 10px;
-	transition:
-		background 0.3s,
-		color 0.3s,
-		box-shadow 0.3s;
-	box-shadow: 0 2px 4px #00000033;
+	transition: background 0.3s, color 0.3s, box-shadow 0.3s;
+	box-shadow: 0 2px 4px #0003;
 	width: auto !important;
 	height: auto !important;
 	max-width: none !important;
 	max-height: none !important;
 }
+
 .exit-fullscreen-btn {
 	margin-left: 10px;
 }
@@ -1352,11 +1361,8 @@ body.theme-dark .custom-fullscreen-bar button:focus {
 	cursor: pointer;
 	margin-bottom: 18px;
 	margin-right: 10px;
-	transition:
-		background 0.3s,
-		color 0.3s,
-		box-shadow 0.3s;
-	box-shadow: 0 2px 4px #00000033;
+	transition: background 0.3s, color 0.3s, box-shadow 0.3s;
+	box-shadow: 0 2px 4px #0003;
 }
 
 .themed-btn:hover,
@@ -1384,9 +1390,10 @@ body.theme-dark .custom-fullscreen-bar button:focus {
 	color: var(--color-fg);
 	box-shadow: var(--color-box-shadow);
 	text-align: center;
-	opacity: 97%;
+	opacity: 0.97;
 	transition: opacity 0.3s;
 	display: none;
+
 	/* Ensures hidden by default */
 }
 
@@ -1403,6 +1410,7 @@ body.theme-dark .custom-fullscreen-bar button:focus {
 /* =====================================================
    Summary & Lap Section
    ===================================================== */
+
 /* Summary and Lap Section Styling (moved from inline JS) */
 .summary-section {
 	margin-bottom: 18px;
@@ -1444,10 +1452,8 @@ body.theme-dark .custom-fullscreen-bar button:focus {
 	box-shadow: none;
 	outline: none;
 	vertical-align: middle;
-	opacity: 65%;
-	transition:
-		opacity 0.2s,
-		color 0.2s;
+	opacity: 0.65;
+	transition: opacity 0.2s, color 0.2s;
 	cursor: pointer;
 	display: flex;
 	align-items: center;
@@ -1459,14 +1465,12 @@ body.theme-dark .custom-fullscreen-bar button:focus {
 .summary-gear-btn:hover,
 .summary-gear-btn:focus {
 	color: var(--color-accent);
-	opacity: 100%;
+	opacity: 1;
 	background: none;
 	box-shadow: none;
 	outline: none;
 	cursor: pointer;
-	transition:
-		opacity 0.2s,
-		color 0.2s;
+	transition: opacity 0.2s, color 0.2s;
 }
 
 /* =====================================================
@@ -1494,9 +1498,7 @@ body.theme-dark .custom-fullscreen-bar button:focus {
 	font-size: 1rem;
 	font-family: inherit;
 	outline: none;
-	transition:
-		border 0.2s,
-		box-shadow 0.2s;
+	transition: border 0.2s, box-shadow 0.2s;
 	box-shadow: 0 1px 4px #0002;
 	appearance: none;
 	cursor: pointer;
@@ -1505,9 +1507,7 @@ body.theme-dark .custom-fullscreen-bar button:focus {
 .summary-filter-bar select:focus {
 	border-color: var(--color-accent);
 	box-shadow: 0 0 0 2px var(--color-accent) 33;
-	transition:
-		border-color 0.2s,
-		box-shadow 0.2s;
+	transition: border-color 0.2s, box-shadow 0.2s;
 	outline: none;
 }
 
@@ -1548,17 +1548,13 @@ footer {
 	margin: 0 2px;
 	font-weight: 600;
 	font-size: 0.9rem;
-	transition:
-		color 0.3s,
-		text-decoration 0.3s;
+	transition: color 0.3s, text-decoration 0.3s;
 }
 
 .credits-section a:hover {
 	text-decoration: underline;
 	color: var(--color-accent);
-	transition:
-		color 0.3s,
-		text-decoration 0.3s;
+	transition: color 0.3s, text-decoration 0.3s;
 }
 
 /* =====================================================
@@ -1577,6 +1573,8 @@ footer {
 	box-shadow: 0 2px 6px #0002;
 	display: inline-block;
 	text-align: center;
+	position: relative;
+	padding-right: 20px;
 }
 
 /* =====================================================
@@ -1596,9 +1594,7 @@ footer {
 	width: 28px;
 	height: 28px;
 	border-radius: 4px;
-	transition:
-		background 0.2s,
-		color 0.2s;
+	transition: background 0.2s, color 0.2s;
 }
 
 .exit-multilap-btn:hover,
@@ -1664,13 +1660,9 @@ footer {
 	display: flex;
 	align-items: center;
 	gap: 8px;
-	transition:
-		background 0.2s,
-		color 0.2s,
-		border 0.2s;
+	transition: background 0.2s, color 0.2s, border 0.2s;
 	outline: none;
 	min-width: 0;
-	-webkit-user-select: none;
 	user-select: none;
 }
 
@@ -1716,7 +1708,7 @@ body.theme-dark .map-action-btn:focus {
 	color: #888 !important;
 	border-color: #ccc !important;
 	cursor: not-allowed !important;
-	opacity: 70%;
+	opacity: 0.7;
 }
 
 body.theme-dark .map-action-btn:disabled,
@@ -1725,7 +1717,7 @@ body.theme-dark .map-action-btn.disabled {
 	color: #555 !important;
 	border-color: #33374d !important;
 	cursor: not-allowed !important;
-	opacity: 60%;
+	opacity: 0.6;
 }
 
 /* ===========================
@@ -1767,6 +1759,7 @@ body.theme-dark .map-action-btn.disabled {
 	max-height: 100%;
 	box-sizing: border-box;
 }
+
 .no-border {
 	border: none;
 }
@@ -1778,9 +1771,11 @@ body.theme-dark .map-action-btn.disabled {
 	list-style: none;
 	padding: 0;
 }
+
 .shortcut-list-item {
 	margin-bottom: 8px;
 }
+
 .shortcut-key {
 	color: #2196f3;
 }
@@ -1798,26 +1793,29 @@ body.theme-dark .map-action-btn.disabled {
 	cursor: pointer;
 	z-index: 10;
 }
-.measure-label-content {
-	position: relative;
-	padding-right: 20px;
-}
+
+/* stylelint-disable-next-line no-duplicate-selectors */
 .deselect-all-btn {
 	display: none;
 }
+
 .lap-label {
 	margin: 0 4px 0 0;
 }
+
 .inline-svg {
 	display: inline-block;
 	vertical-align: middle;
 }
+
 .margin-horizontal {
 	margin: 0 8px;
 }
+
 .text-red {
 	color: red;
 }
+
 .text-green {
 	color: green;
 }
@@ -1826,7 +1824,6 @@ body.theme-dark .map-action-btn.disabled {
    Drag-and-Drop Overlay
    ===================================================== */
 #drop-overlay {
-	display: none;
 	position: fixed;
 	top: 0;
 	left: 0;
@@ -1840,6 +1837,7 @@ body.theme-dark .map-action-btn.disabled {
 	pointer-events: none;
 	transition: opacity 0.2s;
 }
+
 #drop-overlay .drop-overlay-content {
 	background: rgb(40 44 64 / 98%);
 	color: #fff;
@@ -1850,24 +1848,29 @@ body.theme-dark .map-action-btn.disabled {
 	font-weight: 700;
 	text-align: center;
 	border: 2px dashed #2196f3;
-	opacity: 98%;
+	opacity: 0.98;
 	pointer-events: auto;
 }
+
 #drop-overlay[style*='display: none'] {
-	opacity: 0%;
+	opacity: 0;
 	pointer-events: none;
 }
 
-#tab-zwift {
-	/* Add custom styles for Zwift tab if needed */
-}
+/* Removed empty #tab-zwift ruleset */
+
+/* #tab-zwift {
+	
+} */
+
 #content-zwift {
 	display: none;
+
 	/* Add custom styles for Zwift content if needed */
 }
 
 #zwift-iframe {
-    width: 100%;
-    height: 80vh;
-    border: none;
+	width: 100%;
+	height: 80vh;
+	border: none;
 }
