@@ -8,6 +8,7 @@
 [changelog]
 # template for the changelog header
 header = """
+<!-- markdownlint-disable -->
 # Changelog\n
 All notable changes to this project will be documented in this file.\n
 """
@@ -24,7 +25,7 @@ body = """
     {% for commit in commits %}
         - {% if commit.scope %}*({{ commit.scope }})* {% endif %}\
             {% if commit.breaking %}[**breaking**] {% endif %}\
-            {{ commit.message | upper_first }}\
+            {{ commit.message | upper_first | replace(from="\n", to="\n    ") }}
     {% endfor %}
 {% endfor %}\n
 """
@@ -35,6 +36,8 @@ footer = """
 # remove the leading and trailing s
 trim = true
 # postprocessors
+render_always = true
+protect_breaking_commits = false
 postprocessors = [
   # { pattern = '<REPO>', replace = "https://github.com/orhun/git-cliff" }, # replace repository URL
 ]
@@ -47,10 +50,14 @@ postprocessors = [
 # parse the commits based on https://www.conventionalcommits.org
 conventional_commits = true
 # filter out the commits that are not conventional
-filter_unconventional = true
+filter_unconventional = false
 # process each line of a commit as an individual commit
 split_commits = false
 # regex for preprocessing the commit messages
+use_branch_tags = false
+# use branch tags to group commits
+recurse_submodules = true
+# recurse into submodules to find commits
 commit_preprocessors = [
   # Replace issue numbers
   #{ pattern = '\((\w+\s)?#([0-9]+)\)', replace = "([#${2}](<REPO>/issues/${2}))"},
@@ -62,23 +69,29 @@ commit_preprocessors = [
 commit_parsers = [
   { message = "^feat", group = "<!-- 0 -->🚀 Features" },
   { message = "^fix", group = "<!-- 1 -->🐛 Bug Fixes" },
+  { message = "^refactor", group = "<!-- 2 -->🚜 Refactor" },
   { message = "^doc", group = "<!-- 3 -->📚 Documentation" },
   { message = "^perf", group = "<!-- 4 -->⚡ Performance" },
-  { message = "^refactor", group = "<!-- 2 -->🚜 Refactor" },
   { message = "^style", group = "<!-- 5 -->🎨 Styling" },
   { message = "^test", group = "<!-- 6 -->🧪 Testing" },
-  { message = "^chore\\(release\\): prepare for", skip = true },
-  { message = "^chore\\(deps.*\\)", skip = true },
-  { message = "^chore\\(pr\\)", skip = true },
-  { message = "^chore\\(pull\\)", skip = true },
+  { message = "^chore\\(release\\): prepare for", group = "<!-- 7 -->⚙️ Miscellaneous Tasks" },
+  { message = "^chore\\(deps.*\\)", group = "<!-- 7 -->⚙️ Miscellaneous Tasks" },
+  { message = "^chore\\(pr\\)", group = "<!-- 7 -->⚙️ Miscellaneous Tasks" },
+  { message = "^chore\\(pull\\)", group = "<!-- 7 -->⚙️ Miscellaneous Tasks" },
   { message = "^chore|^ci", group = "<!-- 7 -->⚙️ Miscellaneous Tasks" },
+  { message = "^bump the", group = "<!-- 8 -->🛡️ Security" },
+  { message = "^Bump the", group = "<!-- 8 -->🛡️ Security" },
   { body = ".*security", group = "<!-- 8 -->🛡️ Security" },
   { message = "^revert", group = "<!-- 9 -->◀️ Revert" },
-  { message = ".*", group = "<!-- 10 -->💼 Other" },
+  { message = "^bump", group = "<!-- 10 -->🆕 New Version Number" },
+  { message = "^Bump", group = "<!-- 10 -->🆕 New Version Number" },
+  { message = ".*\\.yml", group = "<!-- 12 -->🛠️ GitHub Actions" },
+  { message = ".*", group = "<!-- 13 -->💼 Other", body = ".*" },
+  { message = ".*", group = "<!-- 13 -->💼 Other" },
 ]
 # filter out the commits that are not matched by commit parsers
 filter_commits = false
 # sort the tags topologically
-topo_order = false
+topo_order = true
 # sort the commits inside sections by oldest/newest order
 sort_commits = "oldest"

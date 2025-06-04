@@ -1,3 +1,0 @@
-User-Agent: *
-Allow: /
-Sitemap: https://zwiftmap.com/sitemap.txt

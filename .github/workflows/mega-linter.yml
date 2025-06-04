@@ -39,7 +39,7 @@ jobs:
 
       - name: MegaLinter
         id: megalinter
-        uses: oxsecurity/megalinter@5a91fb06c83d0e69fbd23756d47438aa723b4a5a # v8.7.0
+        uses: oxsecurity/megalinter/flavors/cupcake@985a3e35072d0e82d956cbb6a0ecd258cf11de8e # beta
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DISABLE_LINTERS: SPELL_CSPELL
@@ -56,7 +56,6 @@ jobs:
           TAP_REPORTER_OUTPUT_DETAIL: true
           DISABLE_ERRORS: true
           JAVASCRIPT_DEFAULT_STYLE: prettier
-          PRINT_ALL_FILES: true
 
       # Upload MegaLinter artifacts
       - name: Archive production artifacts
