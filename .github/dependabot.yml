@@ -13,7 +13,10 @@ updates:
     directory: /
     schedule:
       interval: weekly
+    time: 04:30
     timezone: America/Detroit
+    reviewers: Nick2bad4u
+    assignees: Nick2bad4u
     versioning-strategy: increase
     allow:
       # Allow both direct and indirect updates for all packages
@@ -30,7 +33,10 @@ updates:
     directory: /electron-app
     schedule:
       interval: weekly
+    time: 04:30
     timezone: America/Detroit
+    reviewers: Nick2bad4u
+    assignees: Nick2bad4u
     versioning-strategy: increase
     allow:
       # Allow both direct and indirect updates for all packages
