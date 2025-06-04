@@ -13,6 +13,7 @@ updates:
     directory: /
     schedule:
       interval: weekly
+    timezone: America/Detroit
     versioning-strategy: increase
     allow:
       # Allow both direct and indirect updates for all packages
@@ -29,6 +30,7 @@ updates:
     directory: /electron-app
     schedule:
       interval: weekly
+    timezone: America/Detroit
     versioning-strategy: increase
     allow:
       # Allow both direct and indirect updates for all packages
