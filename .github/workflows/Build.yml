@@ -26,15 +26,18 @@ jobs:
       new_version: ${{ steps.bump.outputs.new_version }}
     steps:
       - name: Harden the runner (Audit all outbound calls)
+        id: harden_runner
         uses: step-security/harden-runner@0634a2670c59f64b4a01f0f96f84700a4088b9f0 # v2.12.0
         with:
           egress-policy: audit
 
       - name: Checkout code
+        id: checkout_code
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         continue-on-error: true
 
       - name: Debug Step - Show git diff for electron-app
+        id: git_diff
         run: |
           echo "--- GIT DIFF OUTPUT (since last tag) ---"
           git fetch --tags --force
@@ -68,6 +71,7 @@ jobs:
         continue-on-error: true
 
       - name: Tag new version
+        id: tag_version
         if: steps.bump.outputs.new_version != ''
         run: |
           git config user.name "github-actions"
@@ -139,6 +143,7 @@ jobs:
         continue-on-error: true
 
       - name: Install Linux build dependencies
+        id: install_linux_deps
         if: runner.os == 'Linux'
         continue-on-error: true
         run: |
@@ -151,23 +156,27 @@ jobs:
           sudo apt-get install -y pacman
 
       - name: Install macOS build dependencies
+        id: install_macos_deps
         if: runner.os == 'macOS'
         run: |
           brew install rpm dpkg xz gnu-tar
         continue-on-error: true
 
       - name: Install dmg-license workaround
+        id: install_dmg_license
         if: runner.os == 'macOS'
         run: npm install --save-dev dmg-license
         working-directory: electron-app
 
       - name: Install Windows build dependencies
+        id: install_windows_deps
         if: runner.os == 'Windows'
         run: |
           choco install -y 7zip.install
         continue-on-error: true
 
       - name: Cache node modules (Windows)
+        id: cache_node_modules_windows
         if: runner.os == 'Windows'
         uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
         with:
@@ -186,6 +195,7 @@ jobs:
         continue-on-error: true
 
       - name: Cache node modules (non-Windows)
+        id: cache_node_modules_non_windows
         if: runner.os != 'Windows'
         uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
         with:
@@ -197,6 +207,7 @@ jobs:
         continue-on-error: true
 
       - name: Install dependencies
+        id: install_dependencies
         run: npm install
         continue-on-error: true
 
@@ -204,6 +215,7 @@ jobs:
       #   run: npm install -D electron-builder
 
       - name: Build Electron app
+        id: build_app
         run: |
           npx electron-builder --${{ matrix.os == 'windows-latest' && 'win' || matrix.os == 'macos-latest' && 'mac' || 'linux' }} --${{ matrix.arch }}
         env:
@@ -211,6 +223,7 @@ jobs:
         continue-on-error: true
 
       - name: Print distributable hash (debug, Windows)
+        id: print_hash_windows
         if: runner.os == 'Windows'
         shell: pwsh
         run: |
@@ -227,6 +240,7 @@ jobs:
           }
         continue-on-error: true
       - name: Print distributable hash (debug, Linux)
+        id: print_hash_linux
         if: runner.os == 'Linux'
         shell: bash
         run: |
@@ -237,6 +251,7 @@ jobs:
           done
         continue-on-error: true
       - name: Print distributable hash (debug, macOS)
+        id: print_hash_macos
         if: runner.os == 'macOS'
         shell: bash
         run: |
@@ -247,7 +262,16 @@ jobs:
           done
         continue-on-error: true
 
+      - name: Rename 32-bit latest.yml to latest-win32.yml
+        id: rename_latest_yml_win32
+        if: matrix.arch == 'ia32'
+        run: |
+          if (Test-Path "electron-app/dist/latest.yml") { Rename-Item "electron-app/dist/latest.yml" "electron-app/dist/latest-win32.yml" }
+        shell: pwsh
+        continue-on-error: true
+
       - name: Upload distributable files as artifact
+        id: upload_artifact
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: dist-${{ matrix.os }}-${{ matrix.arch }}
@@ -275,6 +299,7 @@ jobs:
           path: ./artifacts
 
       - name: Print artifact hash (debug, Windows)
+        id: print_artifact_hash_windows
         if: runner.os == 'Windows'
         shell: pwsh
         run: |
@@ -290,6 +315,7 @@ jobs:
             Write-Host "$($file.FullName): $b64"
           }
       - name: Print artifact hash (debug, Linux)
+        id: print_artifact_hash_linux
         if: runner.os == 'Linux'
         shell: bash
         run: |
@@ -299,6 +325,7 @@ jobs:
             echo "$file: $b64"
           done
       - name: Print artifact hash (debug, macOS)
+        id: print_artifact_hash_macos
         if: runner.os == 'macOS'
         shell: bash
         run: |
@@ -334,9 +361,11 @@ jobs:
           echo "EOF" >> $GITHUB_OUTPUT
 
       - name: List artifacts
+        id: list_artifacts
         run: ls -R ./artifacts
 
       - name: Organize distributables by platform and arch
+        id: organize_distributables
         run: |
           mkdir -p release-dist
           for artifact_dir in ./artifacts/dist-*; do
@@ -348,6 +377,7 @@ jobs:
           done
 
       - name: Fix all sha512 in latest*.yml files
+        id: fix_sha512
         shell: bash
         run: |
           set -e
@@ -422,6 +452,7 @@ jobs:
           done
 
       - name: Print artifact hash (debug, Windows)
+        id: print_artifact_hash_debug_windows
         if: runner.os == 'Windows'
         shell: pwsh
         run: |
@@ -437,6 +468,7 @@ jobs:
             Write-Host "$($file.FullName): $b64"
           }
       - name: Print artifact hash (debug, Linux)
+        id: print_artifact_hash_debug_linux
         if: runner.os == 'Linux'
         shell: bash
         run: |
@@ -446,6 +478,7 @@ jobs:
             echo "$file: $b64"
           done
       - name: Print artifact hash (debug, macOS)
+        id: print_artifact_hash_debug_macos
         if: runner.os == 'macOS'
         shell: bash
         run: |
@@ -455,7 +488,23 @@ jobs:
             echo "$file: $b64"
           done
 
+      - name: List and dedupe release-dist files
+        id: list-dedupe
+        run: |
+          echo "Listing all files in release-dist before deduplication:"
+          find release-dist -type f | sort
+          echo "\nDeduplicating files in release-dist..."
+          find release-dist -type f | sort | uniq -d | while read dup; do
+            echo "Duplicate file: $dup"
+            # Optionally, remove or rename duplicates here
+          done
+          echo "\nFinal file list in release-dist:"
+          find release-dist -type f | sort
+        shell: bash
+        continue-on-error: true
+
       - name: Create or update release with distributable builds
+        id: release
         uses: softprops/action-gh-release@da05d552573ad5aba039eaac05058a918a7bf631 # v2.2.2
         with:
           tag_name: v${{ needs.bump-version.outputs.new_version }}

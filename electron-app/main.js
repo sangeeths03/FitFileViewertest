@@ -14,6 +14,15 @@ let loadedFitFilePath = null;
 function setupAutoUpdater(mainWindow) {
 	// Set feed URL if needed (autoUpdater will use GitHub by default if configured in package.json)
 	autoUpdater.autoDownload = true;
+
+	// Custom feed URL for Windows 32-bit (ia32)
+	if (process.platform === 'win32' && process.arch === 'ia32') {
+		autoUpdater.setFeedURL({
+			url: 'https://github.com/Nick2bad4u/FitFileViewer/releases/latest/download/latest-win32.yml',
+			provider: 'generic'
+		});
+	}
+
 	try {
 		const log = require('electron-log');
 		if (log) {
