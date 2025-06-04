@@ -202,12 +202,13 @@ jobs:
       # - name: Install electron-builder
       #   run: npm install -D electron-builder
 
-      - name: Build Electron app
+      - name: Build Electron app (debug)
         id: build_app
         run: |
           npx electron-builder --${{ matrix.os == 'windows-latest' && 'win' || matrix.os == 'macos-latest' && 'mac' || 'linux' }} --${{ matrix.arch }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DEBUG_DEMB: ${{ matrix.os == 'macos-latest' && 'true' || '' }}
         continue-on-error: true
 
       - name: Print distributable hash (debug, Windows)
