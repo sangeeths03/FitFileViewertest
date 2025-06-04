@@ -10,6 +10,7 @@ jobs:
     permissions:
       issues: write
       contents: read
+      models: write
     concurrency:
       group: summary-${{ github.ref }}
       cancel-in-progress: false
