@@ -250,27 +250,6 @@ jobs:
           done
         continue-on-error: true
 
-      - name: Rename 32-bit latest.yml to latest-win32.yml
-        id: rename_latest_yml_win32
-        if: matrix.arch == 'ia32'
-        run: |
-          if (Test-Path "electron-app/dist/latest.yml") { Rename-Item "electron-app/dist/latest.yml" "electron-app/dist/latest-win32.yml" }
-        shell: pwsh
-        continue-on-error: true
-
-      - name: Rename nsis-web and squirrel-windows latest.yml files (Windows)
-        id: rename_latest_ymls
-        if: runner.os == 'Windows'
-        run: |
-          $nsisSrc = "electron-app\dist\nsis-web\latest.yml"
-          $nsisDst = "electron-app\dist\nsis-web\latest-nsis-web.yml"
-          if (Test-Path $nsisSrc) { Rename-Item $nsisSrc $nsisDst -Force }
-          $squirrelSrc = "electron-app\dist\squirrel-windows\latest.yml"
-          $squirrelDst = "electron-app\dist\squirrel-windows\latest-squirrel.yml"
-          if (Test-Path $squirrelSrc) { Rename-Item $squirrelSrc $squirrelDst -Force }
-        shell: pwsh
-        continue-on-error: true
-
       - name: Upload distributable files as artifact
         id: upload_artifact
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
@@ -279,7 +258,7 @@ jobs:
           path: |
             electron-app/dist/Fit-File-Viewer-*
             electron-app/dist/latest*.yml
-            electron-app/dist/squirrel-windows/*
+            electron-app/dist/squirrel*/*
             electron-app/dist/nsis-web/*
           include-hidden-files: true
         continue-on-error: true
@@ -367,6 +346,36 @@ jobs:
       - name: List artifacts
         id: list_artifacts
         run: ls -R ./artifacts
+
+      - name: Rename Windows latest.yml files for unique arch/platform
+        id: rename_windows_latest_yml
+        shell: bash
+        run: |
+          echo "Renaming nsis-web and root latest.yml files for Windows builds..."
+          for arch in ia32 x64; do
+            # nsis-web
+            nsis_file="release-dist/windows-latest-$arch/nsis-web/latest.yml"
+            if [ -f "$nsis_file" ]; then
+              if [ "$arch" = "ia32" ]; then
+                newfile="$(dirname "$nsis_file")/latest-nsis-web-win32.yml"
+                mv "$nsis_file" "$newfile"
+                echo "Renamed $nsis_file -> $newfile"
+              elif [ "$arch" = "x64" ]; then
+                newfile="$(dirname "$nsis_file")/latest-nsis-web.yml"
+                mv "$nsis_file" "$newfile"
+                echo "Renamed $nsis_file -> $newfile"
+              fi
+            fi
+            # root latest.yml
+            root_file="release-dist/windows-latest-$arch/latest.yml"
+            if [ -f "$root_file" ]; then
+              if [ "$arch" = "ia32" ]; then
+                newfile="$(dirname "$root_file")/latest-win32.yml"
+                mv "$root_file" "$newfile"
+                echo "Renamed $root_file -> $newfile"
+              fi
+            fi
+          done
 
       - name: Organize distributables by platform and arch
         id: organize_distributables
@@ -492,7 +501,7 @@ jobs:
             echo "$file: $b64"
           done
 
-      - name: List and dedupe release-dist files
+      - name: List release-dist files
         id: list-dedupe
         run: |
           echo "Listing all files in release-dist before deduplication:"
