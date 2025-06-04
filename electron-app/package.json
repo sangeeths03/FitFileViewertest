@@ -95,7 +95,6 @@
     },
     "mac": {
       "icon": "icons/favicon-512x512.icns",
-      "fileSystem": "hfs",
       "target": [
         "dmg",
         "zip",
