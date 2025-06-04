@@ -8,15 +8,15 @@
 # - Grouping updates by ecosystem with specific patterns for version updates.
 
 version: 2
+time: 04:30
+timezone: America/Detroit
 updates:
   - package-ecosystem: github-actions
     directory: /
     schedule:
       interval: weekly
-    time: 04:30
-    timezone: America/Detroit
-    reviewers: Nick2bad4u
-    assignees: Nick2bad4u
+    reviewers: ["Nick2bad4u"]
+    assignees: ["Nick2bad4u"]
     versioning-strategy: increase
     allow:
       # Allow both direct and indirect updates for all packages
@@ -33,10 +33,8 @@ updates:
     directory: /electron-app
     schedule:
       interval: weekly
-    time: 04:30
-    timezone: America/Detroit
-    reviewers: Nick2bad4u
-    assignees: Nick2bad4u
+    reviewers: ["Nick2bad4u"]
+    assignees: ["Nick2bad4u"]
     versioning-strategy: increase
     allow:
       # Allow both direct and indirect updates for all packages
