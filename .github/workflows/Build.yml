@@ -352,31 +352,24 @@ jobs:
         id: rename_windows_latest_yml
         shell: bash
         run: |
-          echo "Renaming nsis-web and root latest.yml files for Windows builds..."
-          for arch in ia32 x64; do
-            # nsis-web
-            nsis_file="release-dist/windows-latest-$arch/nsis-web/latest.yml"
-            if [ -f "$nsis_file" ]; then
-              if [ "$arch" = "ia32" ]; then
-                newfile="$(dirname "$nsis_file")/latest-nsis-web-win32.yml"
-                mv "$nsis_file" "$newfile"
-                echo "Renamed $nsis_file -> $newfile"
-              elif [ "$arch" = "x64" ]; then
-                newfile="$(dirname "$nsis_file")/latest-nsis-web.yml"
-                mv "$nsis_file" "$newfile"
-                echo "Renamed $nsis_file -> $newfile"
-              fi
-            fi
-            # root latest.yml
-            root_file="release-dist/windows-latest-$arch/latest.yml"
-            if [ -f "$root_file" ]; then
-              if [ "$arch" = "ia32" ]; then
-                newfile="$(dirname "$root_file")/latest-win32.yml"
-                mv "$root_file" "$newfile"
-                echo "Renamed $root_file -> $newfile"
-              fi
-            fi
-          done
+          echo "Renaming nsis-web and root latest.yml files for Windows builds in ./artifacts..."
+          # 32-bit (ia32)
+          ia32_root="./artifacts/dist-windows-latest-ia32/latest.yml"
+          ia32_nsis="./artifacts/dist-windows-latest-ia32/nsis-web/latest.yml"
+          if [ -f "$ia32_root" ]; then
+            mv "$ia32_root" "./artifacts/dist-windows-latest-ia32/latest-win32.yml"
+            echo "Renamed $ia32_root -> ./artifacts/dist-windows-latest-ia32/latest-win32.yml"
+          fi
+          if [ -f "$ia32_nsis" ]; then
+            mv "$ia32_nsis" "./artifacts/dist-windows-latest-ia32/nsis-web/latest-nsis-web-win32.yml"
+            echo "Renamed $ia32_nsis -> ./artifacts/dist-windows-latest-ia32/nsis-web/latest-nsis-web-win32.yml"
+          fi
+          # 64-bit (x64)
+          x64_nsis="./artifacts/dist-windows-latest-x64/nsis-web/latest.yml"
+          if [ -f "$x64_nsis" ]; then
+            mv "$x64_nsis" "./artifacts/dist-windows-latest-x64/nsis-web/latest-nsis-web.yml"
+            echo "Renamed $x64_nsis -> ./artifacts/dist-windows-latest-x64/nsis-web/latest-nsis-web.yml"
+          fi
 
       - name: Organize distributables by platform and arch
         id: organize_distributables
@@ -388,6 +381,12 @@ jobs:
             platform_arch=${artifact_name#dist-}
             mkdir -p "release-dist/$platform_arch"
             cp -v $artifact_dir/Fit-File-Viewer-* $artifact_dir/*.yml "release-dist/$platform_arch/" 2>/dev/null || true
+            for subdir in nsis-web squirrel-windows*; do
+              if [ -d "$artifact_dir/$subdir" ]; then
+                mkdir -p "release-dist/$platform_arch/$subdir"
+                cp -vr "$artifact_dir/$subdir/"* "release-dist/$platform_arch/$subdir/" 2>/dev/null || true
+              fi
+            done
           done
 
       - name: Fix all sha512 in latest*.yml files
