@@ -209,6 +209,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DEBUG_DEMB: true
+          CI: true
         continue-on-error: true
 
       - name: Print distributable hash (debug, Windows)
