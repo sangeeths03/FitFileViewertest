@@ -13,6 +13,7 @@ updates:
     directory: /
     schedule:
       interval: weekly
+    versioning-strategy: increase
     allow:
       # Allow both direct and indirect updates for all packages
       - dependency-type: "all"
@@ -28,6 +29,7 @@ updates:
     directory: /electron-app
     schedule:
       interval: weekly
+    versioning-strategy: increase
     allow:
       # Allow both direct and indirect updates for all packages
       - dependency-type: "all"
