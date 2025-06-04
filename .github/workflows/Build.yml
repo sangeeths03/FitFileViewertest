@@ -6,8 +6,6 @@ concurrency:
 
 on:
   push:
-    branches:
-      - main
     paths-ignore:
       - "*"
       - "*/**"
@@ -208,7 +206,7 @@ jobs:
           npx electron-builder --${{ matrix.os == 'windows-latest' && 'win' || matrix.os == 'macos-latest' && 'mac' || 'linux' }} --${{ matrix.arch }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          DEBUG_DEMB: ${{ matrix.os == 'macos-latest' && 'true' || '' }}
+          DEBUG_DEMB: true
         continue-on-error: true
 
       - name: Print distributable hash (debug, Windows)
