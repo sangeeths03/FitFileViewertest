@@ -209,7 +209,7 @@ jobs:
       - name: Build Electron app (debug)
         id: build_app
         run: |
-          npx electron-builder --${{ matrix.os == 'windows-latest' && 'win' || matrix.os == 'macos-latest' && 'mac' || 'linux' }} --${{ matrix.arch }}
+          npx electron-builder --${{ startsWith(matrix.os, 'macos') && 'mac' || matrix.os == 'windows-latest' && 'win' || 'linux' }} --${{ matrix.arch }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DEBUG_DEMB: true
