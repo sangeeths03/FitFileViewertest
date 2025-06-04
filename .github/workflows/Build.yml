@@ -258,6 +258,19 @@ jobs:
         shell: pwsh
         continue-on-error: true
 
+      - name: Rename nsis-web and squirrel-windows latest.yml files (Windows)
+        id: rename_latest_ymls
+        if: runner.os == 'Windows'
+        run: |
+          $nsisSrc = "electron-app\dist\nsis-web\latest.yml"
+          $nsisDst = "electron-app\dist\nsis-web\latest-nsis-web.yml"
+          if (Test-Path $nsisSrc) { Rename-Item $nsisSrc $nsisDst -Force }
+          $squirrelSrc = "electron-app\dist\squirrel-windows\latest.yml"
+          $squirrelDst = "electron-app\dist\squirrel-windows\latest-squirrel.yml"
+          if (Test-Path $squirrelSrc) { Rename-Item $squirrelSrc $squirrelDst -Force }
+        shell: pwsh
+        continue-on-error: true
+
       - name: Upload distributable files as artifact
         id: upload_artifact
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
@@ -266,7 +279,10 @@ jobs:
           path: |
             electron-app/dist/Fit-File-Viewer-*
             electron-app/dist/latest*.yml
+            electron-app/dist/squirrel-windows/*
+            electron-app/dist/nsis-web/*
           include-hidden-files: true
+        continue-on-error: true
 
   release:
     needs: [build, bump-version]
