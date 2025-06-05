@@ -3,16 +3,13 @@ name: Show Release Stats
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 0 * * 0' # weekly
+    - cron: '47 4 * * 0' # weekly
 
 jobs:
   release-stats:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Set up GitHub CLI
-        uses: github/cli-action@v3
-
       - name: Fetch release info and output summary
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -44,7 +41,7 @@ jobs:
           done
           all_asset_total_mb=$(echo "scale=2; $all_asset_total/1024/1024" | bc)
 
-          # Output summary markdown
+          # Output summary markdown (fancy!)
           {
             echo "## 🚀 Release Stats"
             echo ""
@@ -60,5 +57,4 @@ jobs:
             echo "- Total release asset size: **$all_asset_total_mb MB**"
           } >> $GITHUB_STEP_SUMMARY
 
-          # Optional: echo to logs too for visibility
           cat $GITHUB_STEP_SUMMARY
