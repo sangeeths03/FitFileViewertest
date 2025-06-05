@@ -103,6 +103,8 @@ jobs:
           # Exclude macOS with ia32 architecture as it is not supported by Electron
           - os: macos-latest
             arch: ia32
+          - os: macos-latest
+            arch: arm64
           - os: macos-15
             arch: ia32
           - os: macos-15
