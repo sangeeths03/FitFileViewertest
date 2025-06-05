@@ -31,11 +31,11 @@ jobs:
         with:
           egress-policy: audit
 
-      - name: Checkout code
+      - name: Checkout Repo code
         id: checkout_code
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
-      - name: Debug Step - Show git diff for electron-app
+      - name: Show git diff for electron-app (debug)
         id: git_diff
         run: |
           echo "--- GIT DIFF OUTPUT (since last tag) ---"
@@ -45,7 +45,7 @@ jobs:
           echo "--- END GIT DIFF OUTPUT ---"
         continue-on-error: true
 
-      - name: Bump version
+      - name: Bump package.json version number
         id: bump
         run: |
           if [ ! -f package.json ]; then
@@ -68,7 +68,7 @@ jobs:
           jq --arg v "$NEW_VERSION" '.version = $v' package.json > tmp.json && mv tmp.json package.json
           echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
 
-      - name: Tag new version
+      - name: Create new Tag for new version of app
         id: tag_version
         if: steps.bump.outputs.new_version != ''
         run: |
@@ -77,7 +77,7 @@ jobs:
           git tag -a "v${{ steps.bump.outputs.new_version }}" -m "Release v${{ steps.bump.outputs.new_version }}"
           git push origin "v${{ steps.bump.outputs.new_version }}"
         working-directory: electron-app
-      - name: Commit and push version bump
+      - name: Commit and push version bump to repo
         uses: EndBug/add-and-commit@a94899bca583c204427a224a7af87c02f9b325d5 # v9.1.4
         with:
           message: "Bump version to ${{ steps.bump.outputs.new_version }}"
@@ -86,7 +86,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Upload bumped package.json
+      - name: Upload bumped package.json to repo
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: bumped-package-json
@@ -141,16 +141,16 @@ jobs:
         with:
           egress-policy: audit
 
-      - name: Checkout code
+      - name: Checkout Repo code
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
-      - name: Download bumped package.json
+      - name: Download bumped package.json from bump-version job
         uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
         with:
           name: bumped-package-json
           path: ./electron-app
 
-      - name: Setup Node.js
+      - name: Setup Node.js environment (v20)
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: 20
@@ -173,13 +173,13 @@ jobs:
         run: |
           brew install rpm dpkg xz gnu-tar
 
-      - name: Install dmg-license workaround
+      - name: Install dmg-license workaround for Mac Builder
         id: install_dmg_license
         if: runner.os == 'macOS'
         run: npm install --save-dev dmg-license
         working-directory: electron-app
 
-      - name: Install Windows build dependencies
+      - name: Install Windows build dependencies (Chocolatey)
         id: install_windows_deps
         if: runner.os == 'Windows'
         run: |
@@ -216,7 +216,7 @@ jobs:
           enableCrossOsArchive: true
         continue-on-error: true
 
-      - name: Install dependencies
+      - name: Install NPM dependencies (electron-app package.json)
         id: install_dependencies
         run: npm install
         continue-on-error: true
@@ -259,12 +259,12 @@ jobs:
           CI: true
         continue-on-error: true
 
-      - name: Print distributable hash (debug, Windows)
+      - name: Print Windows distributable hash (debug, Windows)
         id: print_hash_windows
         if: runner.os == 'Windows'
         shell: pwsh
         run: |
-          $patterns = @('*.exe','.nupkg','*.dmg','*.AppImage','*.snap','*.zip','*.yml','*.blockmap','*.msi','*.deb','*.rpm','*.7z','*.pkg','*.mas','*.apk','*.p5p','*.pacman','*.freebsd','*.flatpak','*.tar.xz','*.tar.gz','*.tar.bz2')
+          $patterns = @('*.exe','*.nupkg','*.dmg','*.AppImage','*.snap','*.zip','*.yml','*.blockmap','*.msi','*.deb','*.rpm','*.7z','*.pkg','*.mas','*.apk','*.p5p','*.pacman','*.freebsd','*.flatpak','*.tar.xz','*.tar.gz','*.tar.bz2')
           $files = @()
           foreach ($pattern in $patterns) {
             $files += Get-ChildItem -Path dist -Recurse -Include $pattern -ErrorAction SilentlyContinue
@@ -276,7 +276,7 @@ jobs:
             Write-Host "$($file.FullName): $b64"
           }
         continue-on-error: true
-      - name: Print distributable hash (debug, Linux)
+      - name: Print Linux distributable hash (debug, Linux)
         id: print_hash_linux
         if: runner.os == 'Linux'
         shell: bash
@@ -287,7 +287,7 @@ jobs:
             echo "$file: $b64"
           done
         continue-on-error: true
-      - name: Print distributable hash (debug, macOS)
+      - name: Print Mac distributable hash (debug, macOS)
         id: print_hash_macos
         if: runner.os == 'macOS'
         shell: bash
@@ -299,7 +299,7 @@ jobs:
           done
         continue-on-error: true
 
-      - name: Upload distributable files as artifact
+      - name: Upload build dist files as artifact
         id: upload_artifact
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
@@ -322,20 +322,20 @@ jobs:
         with:
           egress-policy: audit
 
-      - name: Checkout code
+      - name: Checkout Repo code
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
-      - name: Download all build artifacts
+      - name: Download all build artifacts from build job
         uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
         with:
           path: ./artifacts
 
-      - name: Print artifact hash (debug, Windows)
+      - name: Print Windows artifact hash (debug, Windows)
         id: print_artifact_hash_windows
         if: runner.os == 'Windows'
         shell: pwsh
         run: |
-          $patterns = @('*.exe','.nupkg','*.dmg','*.AppImage','*.snap','*.zip','*.yml','*.blockmap','*.msi','*.deb','*.rpm','*.7z','*.pkg','*.mas','*.apk','*.p5p','*.pacman','*.freebsd','*.flatpak','*.tar.xz','*.tar.gz','*.tar.bz2')
+          $patterns = @('*.exe','*.nupkg','*.dmg','*.AppImage','*.snap','*.zip','*.yml','*.blockmap','*.msi','*.deb','*.rpm','*.7z','*.pkg','*.mas','*.apk','*.p5p','*.pacman','*.freebsd','*.flatpak','*.tar.xz','*.tar.gz','*.tar.bz2')
           $files = @()
           foreach ($pattern in $patterns) {
             $files += Get-ChildItem -Path artifacts -Recurse -Include $pattern -ErrorAction SilentlyContinue
@@ -346,7 +346,7 @@ jobs:
             $b64 = [Convert]::ToBase64String($bytes)
             Write-Host "$($file.FullName): $b64"
           }
-      - name: Print artifact hash (debug, Linux)
+      - name: Print Linux artifact hash (debug, Linux)
         id: print_artifact_hash_linux
         if: runner.os == 'Linux'
         shell: bash
@@ -356,7 +356,7 @@ jobs:
             b64=$(echo "$hash" | xxd -r -p | base64)
             echo "$file: $b64"
           done
-      - name: Print artifact hash (debug, macOS)
+      - name: Print MacOS artifact hash (debug, macOS)
         id: print_artifact_hash_macos
         if: runner.os == 'macOS'
         shell: bash
@@ -367,7 +367,7 @@ jobs:
             echo "$file: $b64"
           done
 
-      - name: Get previous tag
+      - name: Get previous tag created
         id: get_prev_tag
         run: |
           git fetch --tags
@@ -379,7 +379,7 @@ jobs:
           fi
           echo "prev_tag=$PREV_TAG" >> $GITHUB_OUTPUT
 
-      - name: Generate release notes
+      - name: Generate release notes for the new version
         id: release_notes
         run: |
           PREV_TAG="${{ steps.get_prev_tag.outputs.prev_tag }}"
@@ -392,7 +392,7 @@ jobs:
           echo -e "$NOTES" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
 
-      - name: List artifacts
+      - name: List artifacts (debug)
         id: list_artifacts
         run: ls -R ./artifacts
 
@@ -431,8 +431,7 @@ jobs:
             cp -v $artifact_dir/Fit-File-Viewer-* $artifact_dir/*.yml "release-dist/$platform_arch/" 2>/dev/null || true
             for subdir in nsis-web squirrel-windows*; do
               if [ -d "$artifact_dir/$subdir" ]; then
-                mkdir -p "release-dist/$platform_arch/$subdir"
-                cp -vr "$artifact_dir/$subdir/"* "release-dist/$platform_arch/$subdir/" 2>/dev/null || true
+                cp -r "$artifact_dir/$subdir" "release-dist/$platform_arch/"
               fi
             done
           done
@@ -517,7 +516,7 @@ jobs:
         if: runner.os == 'Windows'
         shell: pwsh
         run: |
-          $patterns = @('*.exe','.nupkg','*.dmg','*.AppImage','*.snap','*.zip','*.yml','*.blockmap','*.msi','*.deb','*.rpm','*.7z','*.pkg','*.mas','*.apk','*.p5p','*.pacman','*.freebsd','*.flatpak','*.tar.xz','*.tar.gz','*.tar.bz2')
+          $patterns = @('*.exe','*.nupkg','*.dmg','*.AppImage','*.snap','*.zip','*.yml','*.blockmap','*.msi','*.deb','*.rpm','*.7z','*.pkg','*.mas','*.apk','*.p5p','*.pacman','*.freebsd','*.flatpak','*.tar.xz','*.tar.gz','*.tar.bz2')
           $files = @()
           foreach ($pattern in $patterns) {
             $files += Get-ChildItem -Path artifacts -Recurse -Include $pattern -ErrorAction SilentlyContinue
@@ -549,7 +548,7 @@ jobs:
             echo "$file: $b64"
           done
 
-      - name: List release-dist files
+      - name: List release-dist files (debug)
         id: list-dedupe
         run: |
           echo "Listing all files in release-dist before deduplication:"
@@ -577,28 +576,63 @@ jobs:
 
             ---
             ### 📦 Download FitFileViewer
+            | Windows  | Builds       | Format           | Download Link | 
+            |----------|--------------|------------------|---------------|
+            | Windows  | x64          | Installer EXE    | [Fit-File-Viewer-nsis-x64-${{ needs.bump-version.outputs.new_version }}.exe](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-nsis-x64-${{ needs.bump-version.outputs.new_version }}.exe) |
+            | Windows  | x64          | Installer Web    | [Fit-File-Viewer-nsis-web-x64-${{ needs.bump-version.outputs.new_version }}.exe](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-nsis-web-x64-${{ needs.bump-version.outputs.new_version }}.exe) |
+            | Windows  | x64          | Installer 7z     | [fitfileviewer-${{ needs.bump-version.outputs.new_version }}-x64.nsis.7z](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/fitfileviewer-${{ needs.bump-version.outputs.new_version }}-x64.nsis.7z) |
+            | Windows  | x64          | Squirrel EXE     | [Fit-File-Viewer-squirrel-x64-${{ needs.bump-version.outputs.new_version }}.exe](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-squirrel-x64-${{ needs.bump-version.outputs.new_version }}.exe) |
+            | Windows  | x64          | MSI              | [Fit-File-Viewer-msi-x64-${{ needs.bump-version.outputs.new_version }}.msi](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-msi-x64-${{ needs.bump-version.outputs.new_version }}.msi) |
+            | Windows  | x64          | MSI 7z           | [Fit-File-Viewer-msi-x64-${{ needs.bump-version.outputs.new_version }}.7z](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-msi-x64-${{ needs.bump-version.outputs.new_version }}.7z) |
+            | Windows  | x64          | MSI TAR.BZ2      | [Fit-File-Viewer-msi-x64-${{ needs.bump-version.outputs.new_version }}.tar.bz2](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-msi-x64-${{ needs.bump-version.outputs.new_version }}.tar.bz2) |
+            | Windows  | x64          | MSI TAR.GZ       | [Fit-File-Viewer-msi-x64-${{ needs.bump-version.outputs.new_version }}.tar.gz](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-msi-x64-${{ needs.bump-version.outputs.new_version }}.tar.gz) |
+            | Windows  | x64          | MSI TAR.XZ       | [Fit-File-Viewer-msi-x64-${{ needs.bump-version.outputs.new_version }}.tar.xz](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-msi-x64-${{ needs.bump-version.outputs.new_version }}.tar.xz) |
+            | Windows  | x64          | MSI ZIP          | [Fit-File-Viewer-msi-x64-${{ needs.bump-version.outputs.new_version }}.zip](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-msi-x64-${{ needs.bump-version.outputs.new_version }}.zip) |
+            | Windows  | x64          | Portable         | [Fit-File-Viewer-portable-x64-${{ needs.bump-version.outputs.new_version }}.exe](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-portable-x64-${{ needs.bump-version.outputs.new_version }}.exe) |
+            | Windows  | x64          | Blockmap         | [Fit-File-Viewer-nsis-x64-${{ needs.bump-version.outputs.new_version }}.exe.blockmap](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-nsis-x64-${{ needs.bump-version.outputs.new_version }}.exe.blockmap) |
+            | Windows  | ia32 / win32 | Installer EXE    | [Fit-File-Viewer-nsis-ia32-${{ needs.bump-version.outputs.new_version }}.exe](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-nsis-ia32-${{ needs.bump-version.outputs.new_version }}.exe) |
+            | Windows  | ia32 / win32 | Installer Web    | [Fit-File-Viewer-nsis-web-ia32-${{ needs.bump-version.outputs.new_version }}.exe](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-nsis-web-ia32-${{ needs.bump-version.outputs.new_version }}.exe) |
+            | Windows  | ia32 / win32 | Installer 7z     | [fitfileviewer-${{ needs.bump-version.outputs.new_version }}-ia32.nsis.7z](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/fitfileviewer-${{ needs.bump-version.outputs.new_version }}-ia32.nsis.7z) |
+            | Windows  | ia32 / win32 | Squirrel EXE     | [Fit-File-Viewer-squirrel-ia32-${{ needs.bump-version.outputs.new_version }}.exe](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-squirrel-ia32-${{ needs.bump-version.outputs.new_version }}.exe) |
+            | Windows  | ia32 / win32 | MSI              | [Fit-File-Viewer-msi-ia32-${{ needs.bump-version.outputs.new_version }}.msi](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-msi-ia32-${{ needs.bump-version.outputs.new_version }}.msi) |
+            | Windows  | ia32 / win32 | MSI 7z           | [Fit-File-Viewer-msi-ia32-${{ needs.bump-version.outputs.new_version }}.7z](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-msi-ia32-${{ needs.bump-version.outputs.new_version }}.7z) |
+            | Windows  | ia32 / win32 | MSI TAR.BZ2      | [Fit-File-Viewer-msi-ia32-${{ needs.bump-version.outputs.new_version }}.tar.bz2](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-msi-ia32-${{ needs.bump-version.outputs.new_version }}.tar.bz2) |
+            | Windows  | ia32 / win32 | MSI TAR.GZ       | [Fit-File-Viewer-msi-ia32-${{ needs.bump-version.outputs.new_version }}.tar.gz](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-msi-ia32-${{ needs.bump-version.outputs.new_version }}.tar.gz) |
+            | Windows  | ia32 / win32 | MSI TAR.XZ       | [Fit-File-Viewer-msi-ia32-${{ needs.bump-version.outputs.new_version }}.tar.xz](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-msi-ia32-${{ needs.bump-version.outputs.new_version }}.tar.xz) |
+            | Windows  | ia32 / win32 | MSI ZIP          | [Fit-File-Viewer-msi-ia32-${{ needs.bump-version.outputs.new_version }}.zip](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-msi-ia32-${{ needs.bump-version.outputs.new_version }}.zip) |
+            | Windows  | ia32 / win32 | Portable         | [Fit-File-Viewer-portable-ia32-${{ needs.bump-version.outputs.new_version }}.exe](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-portable-ia32-${{ needs.bump-version.outputs.new_version }}.exe) |
+            | Windows  | ia32 / win32 | Blockmap         | [Fit-File-Viewer-nsis-ia32-${{ needs.bump-version.outputs.new_version }}.exe.blockmap](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-nsis-ia32-${{ needs.bump-version.outputs.new_version }}.exe.blockmap) |
 
-            | Platform | Installer         | Download Link |
-            |----------|-------------------|---------------|
-            | Windows  | EXE (NSIS, x64)   | [Fit-File-Viewer-nsis-x64.exe](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-nsis-x64-${{ needs.bump-version.outputs.new_version }}.exe) |
-            | Windows  | EXE (NSIS, 32-bit)| [Fit-File-Viewer-nsis-ia32.exe](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-nsis-ia32-${{ needs.bump-version.outputs.new_version }}.exe) |
-            | Windows  | MSI (x64)         | [Fit-File-Viewer-msi-x64.msi](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-msi-x64-${{ needs.bump-version.outputs.new_version }}.msi) |
-            | Windows  | MSI (32-bit)      | [Fit-File-Viewer-msi-ia32.msi](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-msi-ia32-${{ needs.bump-version.outputs.new_version }}.msi) |
-            | Windows  | Portable (x64)    | [Fit-File-Viewer-portable-x64.exe](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-portable-x64-${{ needs.bump-version.outputs.new_version }}.exe) |
-            | Windows  | Portable (32-bit) | [Fit-File-Viewer-portable-ia32.exe](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-portable-ia32-${{ needs.bump-version.outputs.new_version }}.exe) |
-            | macOS    | DMG               | [Fit-File-Viewer-dmg-x64.dmg](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-dmg-x64-${{ needs.bump-version.outputs.new_version }}.dmg) |
-            | macOS    | DMG (arm64)       | [Fit-File-Viewer-dmg-arm64.dmg](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-dmg-arm64-${{ needs.bump-version.outputs.new_version }}.dmg) |
-            | macOS    | PKG               | [Fit-File-Viewer-pkg-x64.pkg](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-pkg-x64-${{ needs.bump-version.outputs.new_version }}.pkg) |
-            | macOS    | PKG (arm64)       | [Fit-File-Viewer-pkg-arm64.pkg](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-pkg-arm64-${{ needs.bump-version.outputs.new_version }}.pkg) |
-            | Linux    | AppImage          | [Fit-File-Viewer-appimage.AppImage](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-appimage-${{ needs.bump-version.outputs.new_version }}.AppImage) |
-            | Linux    | DEB (x64)         | [Fit-File-Viewer-deb-x64.deb](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-deb-x64-${{ needs.bump-version.outputs.new_version }}.deb) |
-            | Linux    | DEB (arm64)       | [Fit-File-Viewer-deb-arm64.deb](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-deb-arm64-${{ needs.bump-version.outputs.new_version }}.deb) |
-            | Linux    | RPM (x64)         | [Fit-File-Viewer-rpm-x64.rpm](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-rpm-x64-${{ needs.bump-version.outputs.new_version }}.rpm) |
-            | Linux    | RPM (arm64)       | [Fit-File-Viewer-rpm-arm64.rpm](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-rpm-arm64-${{ needs.bump-version.outputs.new_version }}.rpm) |
-            | Linux    | TAR.BZ2           | [Fit-File-Viewer-linux.tar.bz2](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-linux-${{ needs.bump-version.outputs.new_version }}.tar.bz2) |
-            | Linux    | TAR.GZ            | [Fit-File-Viewer-linux.tar.gz](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-linux-${{ needs.bump-version.outputs.new_version }}.tar.gz) |
-            | Linux    | TAR.XZ            | [Fit-File-Viewer-linux.tar.xz](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-linux-${{ needs.bump-version.outputs.new_version }}.tar.xz) |
-            | Linux    | ZIP               | [Fit-File-Viewer-linux.zip](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-linux-${{ needs.bump-version.outputs.new_version }}.zip) |
+            | Mac      | Builds       | Format           | Download Link | 
+            |----------|--------------|------------------|---------------|
+            | macOS    | x64          | DMG              | [Fit-File-Viewer-dmg-x64-${{ needs.bump-version.outputs.new_version }}.dmg](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-dmg-x64-${{ needs.bump-version.outputs.new_version }}.dmg) |
+            | macOS    | x64          | DMG Blockmap     | [Fit-File-Viewer-dmg-x64-${{ needs.bump-version.outputs.new_version }}.dmg.blockmap](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-dmg-x64-${{ needs.bump-version.outputs.new_version }}.dmg.blockmap) |
+            | macOS    | x64          | PKG              | [Fit-File-Viewer-pkg-x64-${{ needs.bump-version.outputs.new_version }}.pkg](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-pkg-x64-${{ needs.bump-version.outputs.new_version }}.pkg) |
+            | macOS    | x64          | TAR.BZ2          | [Fit-File-Viewer-darwin-${{ needs.bump-version.outputs.new_version }}.tar.bz2](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-darwin-${{ needs.bump-version.outputs.new_version }}.tar.bz2) |
+            | macOS    | x64          | TAR.GZ           | [Fit-File-Viewer-darwin-${{ needs.bump-version.outputs.new_version }}.tar.gz](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-darwin-${{ needs.bump-version.outputs.new_version }}.tar.gz) |
+            | macOS    | x64          | TAR.XZ           | [Fit-File-Viewer-darwin-${{ needs.bump-version.outputs.new_version }}.tar.xz](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-darwin-${{ needs.bump-version.outputs.new_version }}.tar.xz) |
+            | macOS    | universal    | DMG              | [Fit-File-Viewer-dmg-universal-${{ needs.bump-version.outputs.new_version }}.dmg](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-dmg-universal-${{ needs.bump-version.outputs.new_version }}.dmg) |
+            | macOS    | universal    | DMG Blockmap     | [Fit-File-Viewer-dmg-universal-${{ needs.bump-version.outputs.new_version }}.dmg.blockmap](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-dmg-universal-${{ needs.bump-version.outputs.new_version }}.dmg.blockmap) |
+            | macOS    | universal    | PKG              | [Fit-File-Viewer-pkg-universal-${{ needs.bump-version.outputs.new_version }}.pkg](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-pkg-universal-${{ needs.bump-version.outputs.new_version }}.pkg) |
+            | macOS    | universal    | ZIP              | [Fit-File-Viewer-darwin-${{ needs.bump-version.outputs.new_version }}.zip](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-darwin-${{ needs.bump-version.outputs.new_version }}.zip) |
+            | macOS    | universal    | ZIP Blockmap     | [Fit-File-Viewer-darwin-${{ needs.bump-version.outputs.new_version }}.zip.blockmap](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-darwin-${{ needs.bump-version.outputs.new_version }}.zip.blockmap) |
+            | macOS    | arm64        | DMG              | [Fit-File-Viewer-dmg-arm64-${{ needs.bump-version.outputs.new_version }}.dmg](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-dmg-arm64-${{ needs.bump-version.outputs.new_version }}.dmg) |
+            | macOS    | arm64        | DMG Blockmap     | [Fit-File-Viewer-dmg-arm64-${{ needs.bump-version.outputs.new_version }}.dmg.blockmap](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-dmg-arm64-${{ needs.bump-version.outputs.new_version }}.dmg.blockmap) |
+            | macOS    | arm64        | PKG              | [Fit-File-Viewer-pkg-arm64-${{ needs.bump-version.outputs.new_version }}.pkg](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-pkg-arm64-${{ needs.bump-version.outputs.new_version }}.pkg) |
+
+            | Linux    | Builds       | Format           | Download Link |
+            |----------|--------------|------------------|---------------|
+            | Linux    | x64          | AppImage         | [Fit-File-Viewer-appimage-x86_64-${{ needs.bump-version.outputs.new_version }}.AppImage](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-appimage-x86_64-${{ needs.bump-version.outputs.new_version }}.AppImage) |
+            | Linux    | x64          | DEB              | [Fit-File-Viewer-deb-amd64-${{ needs.bump-version.outputs.new_version }}.deb](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-deb-amd64-${{ needs.bump-version.outputs.new_version }}.deb) |
+            | Linux    | x64          | RPM              | [Fit-File-Viewer-rpm-x86_64-${{ needs.bump-version.outputs.new_version }}.rpm](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-rpm-x86_64-${{ needs.bump-version.outputs.new_version }}.rpm) |
+            | Linux    | x64          | PACMAN           | [Fit-File-Viewer-pacman-x64-${{ needs.bump-version.outputs.new_version }}.pacman](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-pacman-x64-${{ needs.bump-version.outputs.new_version }}.pacman) |
+            | Linux    | x64          | SNAP             | [Fit-File-Viewer-snap-amd64-${{ needs.bump-version.outputs.new_version }}.snap](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-snap-amd64-${{ needs.bump-version.outputs.new_version }}.snap) |
+            | Linux    | x64          | TAR.BZ2          | [Fit-File-Viewer-linux-${{ needs.bump-version.outputs.new_version }}.tar.bz2](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-linux-${{ needs.bump-version.outputs.new_version }}.tar.bz2) |
+            | Linux    | x64          | TAR.GZ           | [Fit-File-Viewer-linux-${{ needs.bump-version.outputs.new_version }}.tar.gz](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-linux-${{ needs.bump-version.outputs.new_version }}.tar.gz) |
+            | Linux    | x64          | TAR.XZ           | [Fit-File-Viewer-linux-${{ needs.bump-version.outputs.new_version }}.tar.xz](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-linux-${{ needs.bump-version.outputs.new_version }}.tar.xz) |
+            | Linux    | x64          | ZIP              | [Fit-File-Viewer-linux-${{ needs.bump-version.outputs.new_version }}.zip](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-linux-${{ needs.bump-version.outputs.new_version }}.zip) |
+            | Linux    | x64          | APK (Alpine)     | [Fit-File-Viewer-apk-x64-${{ needs.bump-version.outputs.new_version }}.apk](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-apk-x64-${{ needs.bump-version.outputs.new_version }}.apk) |
+            | Linux    | x64          | FreeBSD          | [Fit-File-Viewer-freebsd-x64-${{ needs.bump-version.outputs.new_version }}.freebsd](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-freebsd-x64-${{ needs.bump-version.outputs.new_version }}.freebsd) |
 
             _See below for full release notes and all available builds._
 

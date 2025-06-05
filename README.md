@@ -1,5 +1,7 @@
 # FitFileViewer by Nick2bad4u / Typpi ☠️ - README
+
 <!-- markdownlint-disable MD033 MD013 -->
+
 <div align="center">
     <img
       src="https://github.com/Nick2bad4u/Nick2bad4u/blob/main/assets/GitHubProfileLines.gif?raw=true"
@@ -9,6 +11,9 @@
 </div>
 
 <p align="center">
+  <a href="https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/Build.yml">
+    <img alt="Badge: Electron Builds (dynamic status, flat-square style)" src="https://img.shields.io/github/actions/workflow/status/Nick2bad4u/FitFileViewer/Build.yml?branch=main&style=flat-square&logo=electron&logoColor=white&logoSize=auto&label=Electron%20Builds&cacheSeconds=3600&link=https%3A%2F%2Fgithub.com%2FNick2bad4u%2FFitFileViewer%2Factions%2Fworkflows%2FBuild.yml" title="Electron Builds">
+  </a>
   <a href="https://github.com/nick2bad4u/fitfileviewer/pulls" title="View or submit pull requests">
     <img alt="Badge: PRs Welcome (green, flat-square style)" src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square&logo=github" title="PRs Welcome">
   </a>
@@ -53,6 +58,7 @@
 	Each badge provides a direct link to the corresponding workflow run,
 	offering at-a-glance insight into the project's health checks and automation processes.
 -->
+
 <details><summary>CI Badges</summary>
 
 [![ActionLint](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/ActionLint.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/ActionLint.yml) 🧹
@@ -88,6 +94,7 @@
 [![Spell Check (typos)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/typos.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/typos.yml) 🔤
 [![Spellcheck Action](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/spelling_action.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/spelling_action.yml) 📖
 [![VirusTotal Scan](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/VirusTotal.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/VirusTotal.yml) 🦠
+
 <div align="center">
     <img
       src="https://github.com/Nick2bad4u/Nick2bad4u/blob/main/assets/GitHubProfileLines%20(2).gif?raw=true"
@@ -115,17 +122,20 @@
 
 ## 📑 Table of Contents
 
-- [Overview](#overview) 📖
-- [Screenshots](#screenshots) 🖼️
+- [Overview](#-overview) 📖
+- [Screenshots](#-screenshots) 🖼️
 - [Installation](#%EF%B8%8F-installation) 🛠️
 - [Usage](#-usage) 🚀
 - [Changelog](#-changelog) 📝
 - [Supported Builds](#%EF%B8%8F-supported-builds) 🏗️
+  - [Windows Builds](#-windows-builds) 🪟
+  - [Mac Builds](#-mac-builds) 🍏
+  - [Linux Builds](#-linux-builds) 🐧
 - [Development](#-development) 👨‍💻
-- [Credits](#credits-) 🙏
+- [Credits](#-credits) 🙏
 - [License](#-license) 📄
 
-## Overview
+## 📜 Overview
 
 Open `.fit` files, a popular file format used for recording activity data from fitness devices such as GPS watches and cycling computers, and explore their data with ease. This standalone application offers:
 
@@ -135,9 +145,9 @@ Open `.fit` files, a popular file format used for recording activity data from f
 
 Enjoy an intuitive interface designed for seamless `.fit` file exploration.
 
-<div align="center">
+## 📸 Screenshots
 
-## Screenshots
+<div align="center">
 
 ![Map](https://raw.githubusercontent.com/Nick2bad4u/FitFileViewer/refs/heads/main/electron-app/screenshots/MapsV2.png)
 *Interactive map displaying the activity route.*
@@ -177,37 +187,79 @@ For a detailed list of changes, bug fixes, and new features, please refer to the
 
 ## 🏗️ Supported Builds
 
-| Platform   | Architecture | Format      | Filename Example                                 |
-|------------|--------------|-------------|--------------------------------------------------|
-| Windows    | x64          | NSIS EXE    | Fit-File-Viewer-nsis-x64-<version>.exe           |
-| Windows    | ia32         | NSIS EXE    | Fit-File-Viewer-nsis-ia32-<version>.exe          |
-| Windows    | x64          | MSI         | Fit-File-Viewer-msi-x64-<version>.msi            |
-| Windows    | ia32         | MSI         | Fit-File-Viewer-msi-ia32-<version>.msi           |
-| Windows    | x64          | Portable    | Fit-File-Viewer-portable-x64-<version>.exe       |
-| Windows    | ia32         | Portable    | Fit-File-Viewer-portable-ia32-<version>.exe      |
-| Windows    | x64          | NSIS Web    | Fit-File-Viewer-nsis-web-x64-<version>.exe       |
-| Windows    | ia32         | NSIS Web    | Fit-File-Viewer-nsis-web-ia32-<version>.exe      |
-| Windows    | x64          | 7z Archive  | fitfileviewer-<version>-x64.nsis.7z              |
-| Windows    | ia32         | 7z Archive  | fitfileviewer-<version>-ia32.nsis.7z             |
-| macOS      | x64/arm64    | DMG         | Fit-File-Viewer-dmg-<version>.dmg                |
-| macOS      | x64/arm64    | PKG         | Fit-File-Viewer-pkg-<version>.pkg                |
-| macOS      | x64/arm64    | ZIP         | Fit-File-Viewer-darwin-<version>.zip             |
-| macOS      | x64/arm64    | TAR.BZ2     | Fit-File-Viewer-darwin-<version>.tar.bz2         |
-| macOS      | x64/arm64    | TAR.GZ      | Fit-File-Viewer-darwin-<version>.tar.gz          |
-| macOS      | x64/arm64    | TAR.XZ      | Fit-File-Viewer-darwin-<version>.tar.xz          |
-| Linux      | x64/arm64    | AppImage    | Fit-File-Viewer-appimage-<version>.AppImage      |
-| Linux      | x64/arm64    | DEB         | Fit-File-Viewer-deb-<version>.deb                |
-| Linux      | x64/arm64    | RPM         | Fit-File-Viewer-rpm-<version>.rpm                |
-| Linux      | x64/arm64    | PACMAN      | Fit-File-Viewer-pacman-<version>.pacman          |
-| Linux      | x64/arm64    | SNAP        | Fit-File-Viewer-snap-<version>.snap              |
-| Linux      | x64/arm64    | TAR.BZ2     | Fit-File-Viewer-linux-<version>.tar.bz2          |
-| Linux      | x64/arm64    | TAR.GZ      | Fit-File-Viewer-linux-<version>.tar.gz           |
-| Linux      | x64/arm64    | TAR.XZ      | Fit-File-Viewer-linux-<version>.tar.xz           |
-| Linux      | x64/arm64    | ZIP         | Fit-File-Viewer-linux-<version>.zip              |
-| FreeBSD    | x64/arm64    | FreeBSD     | Fit-File-Viewer-freebsd-<version>.freebsd        |
-| Android    | arm64        | APK         | Fit-File-Viewer-apk-<version>.apk                |
+<!-- markdownlint-disable MD001 -->
 
-<sub>Replace <version> with the actual release version, e.g. 14.8.0</sub>
+- The following builds are available for download. Each build is tailored for specific platforms and architectures, ensuring compatibility and optimal performance
+
+- The filenames follow a consistent naming convention to indicate the platform, architecture, format, and version. Replace `X.X.X` with the actual release version (e.g., `14.8.0`)
+
+- [➡️ **Go to the Latest Release**](https://github.com/Nick2bad4u/FitFileViewer/releases/latest)
+
+### 🪟 Windows Builds
+
+| Platform | Architecture      | Format           | Filename Example                              |
+| :------- | :---------------- | :--------------- | :--------------------------------------------- |
+| Windows  | x64               | Installer EXE    | Fit-File-Viewer-nsis-x64-X.X.X.exe             |
+| Windows  | x64               | Installer Web    | Fit-File-Viewer-nsis-web-x64-X.X.X.exe         |
+| Windows  | x64               | Installer 7z     | fitfileviewer-X.X.X-x64.nsis.7z                |
+| Windows  | x64               | Squirrel EXE     | Fit-File-Viewer-squirrel-x64-X.X.X.exe         |
+| Windows  | x64               | MSI              | Fit-File-Viewer-msi-x64-X.X.X.msi              |
+| Windows  | x64               | MSI 7z           | Fit-File-Viewer-msi-x64-X.X.X.7z               |
+| Windows  | x64               | MSI TAR.BZ2      | Fit-File-Viewer-msi-x64-X.X.X.tar.bz2          |
+| Windows  | x64               | MSI TAR.GZ       | Fit-File-Viewer-msi-x64-X.X.X.tar.gz           |
+| Windows  | x64               | MSI TAR.XZ       | Fit-File-Viewer-msi-x64-X.X.X.tar.xz           |
+| Windows  | x64               | MSI ZIP          | Fit-File-Viewer-msi-x64-X.X.X.zip              |
+| Windows  | x64               | Portable         | Fit-File-Viewer-portable-x64-X.X.X.exe         |
+| Windows  | x64               | Blockmap         | Fit-File-Viewer-nsis-x64-X.X.X.exe.blockmap    |
+| Windows  | ia32 / win32      | Installer EXE    | Fit-File-Viewer-nsis-ia32-X.X.X.exe            |
+| Windows  | ia32 / win32      | Installer Web    | Fit-File-Viewer-nsis-web-ia32-X.X.X.exe        |
+| Windows  | ia32 / win32      | Installer 7z     | fitfileviewer-X.X.X-ia32.nsis.7z               |
+| Windows  | ia32 / win32      | Squirrel EXE     | Fit-File-Viewer-squirrel-ia32-X.X.X.exe        |
+| Windows  | ia32 / win32      | MSI              | Fit-File-Viewer-msi-ia32-X.X.X.msi             |
+| Windows  | ia32 / win32      | MSI 7z           | Fit-File-Viewer-msi-ia32-X.X.X.7z              |
+| Windows  | ia32 / win32      | MSI TAR.BZ2      | Fit-File-Viewer-msi-ia32-X.X.X.tar.bz2         |
+| Windows  | ia32 / win32      | MSI TAR.GZ       | Fit-File-Viewer-msi-ia32-X.X.X.tar.gz          |
+| Windows  | ia32 / win32      | MSI TAR.XZ       | Fit-File-Viewer-msi-ia32-X.X.X.tar.xz          |
+| Windows  | ia32 / win32      | MSI ZIP          | Fit-File-Viewer-msi-ia32-X.X.X.zip             |
+| Windows  | ia32 / win32      | Portable         | Fit-File-Viewer-portable-ia32-X.X.X.exe        |
+| Windows  | ia32 / win32      | Blockmap         | Fit-File-Viewer-nsis-ia32-X.X.X.exe.blockmap   |
+
+### 🍏 Mac Builds
+
+| Platform | Architecture   | Format         | Filename Example                                 |
+| :------- | :------------- | :------------- | :----------------------------------------------- |
+| macOS    | x64            | DMG            | Fit-File-Viewer-dmg-x64-X.X.X.dmg                |
+| macOS    | x64            | DMG Blockmap   | Fit-File-Viewer-dmg-x64-X.X.X.dmg.blockmap       |
+| macOS    | x64            | PKG            | Fit-File-Viewer-pkg-x64-X.X.X.pkg                |
+| macOS    | x64            | TAR.BZ2        | Fit-File-Viewer-darwin-X.X.X.tar.bz2             |
+| macOS    | x64            | TAR.GZ         | Fit-File-Viewer-darwin-X.X.X.tar.gz              |
+| macOS    | x64            | TAR.XZ         | Fit-File-Viewer-darwin-X.X.X.tar.xz              |
+| macOS    | universal      | DMG            | Fit-File-Viewer-dmg-universal-X.X.X.dmg          |
+| macOS    | universal      | DMG Blockmap   | Fit-File-Viewer-dmg-universal-X.X.X.dmg.blockmap |
+| macOS    | universal      | PKG            | Fit-File-Viewer-pkg-universal-X.X.X.pkg          |
+| macOS    | universal      | ZIP            | Fit-File-Viewer-darwin-X.X.X.zip                 |
+| macOS    | universal      | ZIP Blockmap   | Fit-File-Viewer-darwin-X.X.X.zip.blockmap        |
+| macOS    | arm64          | DMG            | Fit-File-Viewer-dmg-arm64-X.X.X.dmg              |
+| macOS    | arm64          | DMG Blockmap   | Fit-File-Viewer-dmg-arm64-X.X.X.dmg.blockmap     |
+| macOS    | arm64          | PKG            | Fit-File-Viewer-pkg-arm64-X.X.X.pkg              |
+
+### 🐧 Linux Builds
+
+| Platform | Architecture | Format         | Filename Example                                   |
+| :------- | :----------- | :------------- | :------------------------------------------------- |
+| Linux    | x64          | AppImage       | Fit-File-Viewer-appimage-x86_64-X.X.X.AppImage     |
+| Linux    | x64          | DEB            | Fit-File-Viewer-deb-amd64-X.X.X.deb                |
+| Linux    | x64          | RPM            | Fit-File-Viewer-rpm-x86_64-X.X.X.rpm               |
+| Linux    | x64          | PACMAN         | Fit-File-Viewer-pacman-x64-X.X.X.pacman            |
+| Linux    | x64          | SNAP           | Fit-File-Viewer-snap-amd64-X.X.X.snap              |
+| Linux    | x64          | TAR.BZ2        | Fit-File-Viewer-linux-X.X.X.tar.bz2                |
+| Linux    | x64          | TAR.GZ         | Fit-File-Viewer-linux-X.X.X.tar.gz                 |
+| Linux    | x64          | TAR.XZ         | Fit-File-Viewer-linux-X.X.X.tar.xz                 |
+| Linux    | x64          | ZIP            | Fit-File-Viewer-linux-X.X.X.zip                    |
+| Linux    | x64          | APK (Alpine)   | Fit-File-Viewer-apk-x64-X.X.X.apk                  |
+| Linux    | x64          | FreeBSD        | Fit-File-Viewer-freebsd-x64-X.X.X.freebsd          |
+
+`<sub>`Replace `X.X.X` with the actual release version, e.g. 16.3.0.`</sub>`
 
 [➡️ **Go to the Latest Release**](https://github.com/Nick2bad4u/FitFileViewer/releases/latest)
 
@@ -235,38 +287,24 @@ npm run build
 - For more details, see the [GitHub repository](https://github.com/Nick2bad4u/FitFileViewer).
 - Issues and feature requests: [GitHub Issues](https://github.com/Nick2bad4u/FitFileViewer/issues)
 
-## Credits 🙏
+## 🙏 Credits
 
 This project uses the following libraries and tools:
 
-- <a href="https://www.FitFileViewer.com/" class="italic ms-2 "><img alt="HarryOnline logo" src="https://raw.githubusercontent.com/Nick2bad4u/FitFileViewer/refs/heads/main/electron-app/screenshots/HarryOnlineLogo.png" class="ms-2 h-3 inline-block" width="14" height="12"><span> FitFileViewer.com</span></a> 🌐
-
-- <a href="https://www.harryonline.net/" class="italic ms-2 "><img alt="HarryOnline logo" src="https://raw.githubusercontent.com/Nick2bad4u/FitFileViewer/refs/heads/main/electron-app/screenshots/HarryOnlineLogo.png" class="ms-2 h-3 inline-block" width="14" height="12"><span> HarryOnline</span></a> 🌍
-
+- `<a href="https://www.FitFileViewer.com/" class="italic ms-2 "><img alt="HarryOnline logo" src="https://raw.githubusercontent.com/Nick2bad4u/FitFileViewer/refs/heads/main/electron-app/screenshots/HarryOnlineLogo.png" class="ms-2 h-3 inline-block" width="14" height="12">``<span>` FitFileViewer.com `</a>` 🌐
+- `<a href="https://www.harryonline.net/" class="italic ms-2 "><img alt="HarryOnline logo" src="https://raw.githubusercontent.com/Nick2bad4u/FitFileViewer/refs/heads/main/electron-app/screenshots/HarryOnlineLogo.png" class="ms-2 h-3 inline-block" width="14" height="12">``<span>` HarryOnline `</a>` 🌍
 - [Garmin FIT JavaScript SDK](https://github.com/garmin/fit-javascript-sdk) ([FIT Protocol License Agreement](https://developer.garmin.com/fit/download/)) ⌚
-
 - [Leaflet.js](https://leafletjs.com) ([BSD-2-Clause License](https://github.com/Leaflet/Leaflet/blob/main/LICENSE)) 🗺️
-
 - [Vega-Lite](https://vega.github.io/vega-lite/) ([BSD-3-Clause License](https://github.com/vega/vega-lite/blob/main/LICENSE)) 📊
-
 - [Vega-Embed](https://github.com/vega/vega-embed) ([BSD-3-Clause License](https://github.com/vega/vega-embed/blob/main/LICENSE)) 📈
-
 - [Chart.js](https://www.chartjs.org/) ([MIT License](https://github.com/chartjs/Chart.js/blob/master/LICENSE.md)) 📉
-
 - [jQuery](https://jquery.com/) ([MIT License](https://jquery.org/license/)) 🧑‍💻
-
 - [Electron](https://www.electronjs.org/) ([MIT License](https://github.com/electron/electron/blob/main/LICENSE)) ⚡
-
 - [Node.js](https://nodejs.org/) ([MIT License](https://github.com/nodejs/node/blob/main/LICENSE)) 🖥️
-
 - [Electron Builder](https://www.electron.build/) ([MIT License](https://github.com/electron-userland/electron-builder/blob/master/LICENSE)) 🏗️
-
 - [GitHub Actions](https://github.com/features/actions) ([MIT License](https://github.com/actions/runner/blob/main/LICENSE)) 🔧
-
 - [GitHub Pages](https://pages.github.com/) ([MIT License](https://github.com/github/pages-gem/blob/master/LICENSE.txt)) 🌐
-
 - [GitHub API](https://docs.github.com/en/rest) ([MIT License](https://github.com/octokit/octokit.rb/blob/master/LICENSE.txt)) 🔌
-
 - [GitHub Copilot](https://github.com/features/copilot) ([MIT License](https://github.com/github/copilot-docs/blob/main/LICENSE)) 🤖
 
 ---
