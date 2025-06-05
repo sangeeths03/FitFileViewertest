@@ -208,12 +208,30 @@ jobs:
 
       - name: Build Electron app (debug)
         id: build_app
+        shell: bash
         run: |
-          # Only add --x64 if not macos-latest or macos-15
-          if [[ "${{ matrix.os }}" == "macos-latest" || "${{ matrix.os }}" == "macos-15" ]]; then
-            npx electron-builder --${{ matrix.os == 'macos-15' && 'arm64' || matrix.os == 'macos-latest' && 'universal' || matrix.os == 'macos-13' && 'mac' || startsWith(matrix.os, 'macos') && 'mac' || matrix.os == 'windows-latest' && 'win' || 'linux' }}
+          if [[ "${{ runner.os }}" == "Windows" ]]; then
+            if [[ "${{ matrix.arch }}" == "x64" ]]; then
+              npx electron-builder --win
+            else
+              npx electron-builder --win --ia32
+            fi
+          elif [[ "${{ matrix.os }}" == "macos-15" ]]; then
+            npx electron-builder --arm64
+          elif [[ "${{ matrix.os }}" == "macos-latest" ]]; then
+            npx electron-builder --universal
+          elif [[ "${{ matrix.os }}" == "macos-13" ]]; then
+            npx electron-builder --mac --${{ matrix.arch }}
+          elif [[ "${{ matrix.os }}" == "windows-latest" ]]; then
+            if [[ "${{ matrix.arch }}" == "x64" ]]; then
+              npx electron-builder --win
+            else
+              npx electron-builder --win --ia32
+            fi
+          elif [[ "${{ matrix.os }}" == "ubuntu-latest" ]]; then
+            npx electron-builder --linux --${{ matrix.arch }}
           else
-            npx electron-builder --${{ matrix.os == 'macos-15' && 'arm64' || matrix.os == 'macos-latest' && 'universal' || matrix.os == 'macos-13' && 'mac' || startsWith(matrix.os, 'macos') && 'mac' || matrix.os == 'windows-latest' && 'win' || 'linux' }} --${{ matrix.arch }}
+            npx electron-builder --${{ matrix.arch }}
           fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
