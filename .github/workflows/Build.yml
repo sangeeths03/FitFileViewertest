@@ -588,10 +588,11 @@ jobs:
         shell: bash
         continue-on-error: true
 
-      - name: Rename Squirrel win32 nupkg for release
+      - name: Rename Squirrel win32 nupkg and RELEASES for release
         shell: bash
         run: |
-          ia32_nupkg="./release-dist/windows-latest-ia32/squirrel-windows-ia32/fitfileviewer-*-full.nupkg"
+          ia32_dir="./release-dist/windows-latest-ia32/squirrel-windows-ia32"
+          ia32_nupkg="$ia32_dir/fitfileviewer-*-full.nupkg"
           for file in $ia32_nupkg; do
             if [ -f "$file" ]; then
               new_nupkg="${file/-full.nupkg/-win32-full.nupkg}"
@@ -599,6 +600,11 @@ jobs:
               echo "Renamed $file -> $new_nupkg"
             fi
           done
+          # Also rename RELEASES to RELEASES-win32 if it exists
+          if [ -f "$ia32_dir/RELEASES" ]; then
+            mv "$ia32_dir/RELEASES" "$ia32_dir/RELEASES-win32"
+            echo "Renamed $ia32_dir/RELEASES -> $ia32_dir/RELEASES-win32"
+          fi
         continue-on-error: true
 
       - name: Create or update release with distributable builds
