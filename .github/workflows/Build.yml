@@ -97,8 +97,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-15, macos-latest, macos-13]
-        arch: [x64, ia32]
+        os: [ubuntu-latest, ubuntu-24.04-arm, windows-latest, macos-15, macos-latest, macos-13]
+        arch: [x64, ia32, arm64]
         exclude:
           # Exclude macOS with ia32 architecture as it is not supported by Electron
           - os: macos-latest
@@ -107,10 +107,20 @@ jobs:
             arch: ia32
           - os: macos-13
             arch: ia32
-          # Exclude Ubuntu with ia32 architecture as it is not commonly used and not officially supported
+          # Exclude Ubuntu with ia32 and arm64 architectures as they are not commonly used and not officially supported except for ubuntu-24.04-arm/arm64
           - os: ubuntu-latest
             arch: ia32
-          # Exclude Windows
+          - os: ubuntu-latest
+            arch: arm64
+          # Exclude ubuntu-24.04-arm with x64 and ia32
+          - os: ubuntu-24.04-arm
+            arch: x64
+          - os: ubuntu-24.04-arm
+            arch: ia32
+          # Exclude Windows with arm64 (not supported)
+          - os: windows-latest
+            arch: arm64
+          # Exclude Windows with ia32 (if not supported, uncomment)
           # - os: windows-latest
           #   arch: ia32
     defaults:
@@ -228,6 +238,8 @@ jobs:
             else
               npx electron-builder --win --ia32
             fi
+          elif [[ "${{ matrix.os }}" == "ubuntu-24.04-arm" ]]; then
+            npx electron-builder --linux --arm64
           elif [[ "${{ matrix.os }}" == "ubuntu-latest" ]]; then
             npx electron-builder --linux --${{ matrix.arch }}
           else
