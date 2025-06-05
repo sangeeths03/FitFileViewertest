@@ -18,7 +18,42 @@ function setupAutoUpdater(mainWindow) {
 	// Custom feed URL for Windows 32-bit (ia32)
 	if (process.platform === 'win32' && process.arch === 'ia32') {
 		autoUpdater.setFeedURL({
-			url: 'https://github.com/Nick2bad4u/FitFileViewer/releases/latest/download/latest-win32.yml',
+			url: 'https://github.com/Nick2bad4u/FitFileViewer/releases/latest/download/latest-nsis-web-win32.yml',
+			provider: 'generic'
+		});
+	}
+	// Custom feed URL for Windows 64-bit (x64)
+	else if (process.platform === 'win32' && process.arch === 'x64') {
+		autoUpdater.setFeedURL({
+			url: 'https://github.com/Nick2bad4u/FitFileViewer/releases/latest/download/latest-nsis-web-x64.yml',
+			provider: 'generic'
+		});
+	}
+	// Custom feed URL for macOS arm64
+	else if (process.platform === 'darwin' && process.arch === 'arm64') {
+		autoUpdater.setFeedURL({
+			url: 'https://github.com/Nick2bad4u/FitFileViewer/releases/latest/download/latest-mac-arm64.yml',
+			provider: 'generic'
+		});
+	}
+	// Custom feed URL for macOS x64
+	else if (process.platform === 'darwin' && process.arch === 'x64') {
+		autoUpdater.setFeedURL({
+			url: 'https://github.com/Nick2bad4u/FitFileViewer/releases/latest/download/latest-mac-x64.yml',
+			provider: 'generic'
+		});
+	}
+	// Custom feed URL for macOS universal (if you have one)
+	else if (process.platform === 'darwin' && process.arch === 'universal') {
+		autoUpdater.setFeedURL({
+			url: 'https://github.com/Nick2bad4u/FitFileViewer/releases/latest/download/latest-mac-universal.yml',
+			provider: 'generic'
+		});
+	}
+	// Custom feed URL for Linux x64 (if needed)
+	else if (process.platform === 'linux' && process.arch === 'x64') {
+		autoUpdater.setFeedURL({
+			url: 'https://github.com/Nick2bad4u/FitFileViewer/releases/latest/download/latest-linux-x64.yml',
 			provider: 'generic'
 		});
 	}
