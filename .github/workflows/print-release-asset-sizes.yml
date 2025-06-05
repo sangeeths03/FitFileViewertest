@@ -54,7 +54,21 @@ jobs:
           echo "\n**Total asset size across all releases:** $total_size bytes ($total_size_mb MB, $total_size_gb GB)" >> sizes.md
           echo "**Total downloads across all releases:** $total_downloads" >> sizes.md
       - name: Print summary table to GitHub Actions summary
-        run: cat sizes.md >> $GITHUB_STEP_SUMMARY
+        run: |
+          echo "## 🚀 Release Asset Size Report" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Release Tag | Size (MB) | Size (GB) | Downloads |" >> $GITHUB_STEP_SUMMARY
+          echo "|------------|-----------|-----------|-----------|" >> $GITHUB_STEP_SUMMARY
+          tail -n +3 sizes.md | grep -v '^\*\*Total' >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          total_size=$(grep -oP '(?<=Total asset size across all releases:\*\*)[0-9]+' sizes.md | head -1)
+          total_size_mb=$(grep -oP '(?<=\()[0-9.]+ MB' sizes.md | head -1)
+          total_size_gb=$(grep -oP '(?<=, )[0-9.]+ GB' sizes.md | head -1)
+          total_downloads=$(grep -oP '(?<=Total downloads across all releases:\*\*)[0-9]+' sizes.md | head -1)
+          echo "---" >> $GITHUB_STEP_SUMMARY
+          echo "### 📊 Totals" >> $GITHUB_STEP_SUMMARY
+          echo "- **Total asset size:** $total_size bytes ($total_size_mb, $total_size_gb)" >> $GITHUB_STEP_SUMMARY
+          echo "- **Total downloads:** $total_downloads" >> $GITHUB_STEP_SUMMARY
 
       - name: Upload sizes.md as artifact
         uses: actions/upload-artifact@v4
