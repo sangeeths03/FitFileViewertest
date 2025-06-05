@@ -22,6 +22,19 @@ All notable changes to this project will be documented in this file.
 
 - Bump version to 16.3.0
 
+- Bump version to 16.4.0
+
+- Bump version to 16.5.0
+
+- Bump version to 16.6.0
+
+
+### 💼 Other
+
+- Update changelogs and scripts: Add new version numbers, enhance GitHub Actions, and implement release cleanup script
+
+- Merge branch 'main' of https://github.com/Nick2bad4u/FitFileViewer
+
 
 ## [15.9.0] - 2025-06-05
 

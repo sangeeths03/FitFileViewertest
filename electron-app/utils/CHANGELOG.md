@@ -3,6 +3,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [unreleased]
+
+### 💼 Other
+
+- Update changelogs and scripts: Add new version numbers, enhance GitHub Actions, and implement release cleanup script
+
+
 ## [15.9.0] - 2025-06-05
 
 ### 💼 Other
