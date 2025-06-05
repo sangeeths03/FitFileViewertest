@@ -123,6 +123,8 @@ jobs:
             arch: x64
           - os: ubuntu-24.04-arm
             arch: ia32
+          - os: ubuntu-24.04-arm
+            arch: arm64
           # Exclude Windows with arm64 (not supported)
           - os: windows-latest
             arch: arm64
