@@ -439,12 +439,16 @@ jobs:
               cp "$artifact_dir/latest-mac.yml" "release-dist/$platform_arch/latest-mac-$platform_arch.yml"
               rm "$artifact_dir/latest-mac.yml"
             fi
-            for subdir in nsis-web squirrel*; do
+            for subdir in nsis-web squirrel-windows squirrel-windows-ia32; do
               if [ -d "$artifact_dir/$subdir" ]; then
                 echo "Copying $artifact_dir/$subdir to release-dist/$platform_arch/"
                 cp -r "$artifact_dir/$subdir" "release-dist/$platform_arch/"
               fi
             done
+            # Remove generic latest-mac.yml if it was copied, only keep the renamed one
+            if [ -f "release-dist/$platform_arch/latest-mac.yml" ]; then
+              rm "release-dist/$platform_arch/latest-mac.yml"
+            fi
           done
       
           echo "After copy, contents of release-dist:"
