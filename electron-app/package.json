@@ -1,7 +1,7 @@
 {
   "name": "fitfileviewer",
   "packageManager": "npm@11.4.1",
-  "version": "15.8.0",
+  "version": "15.9.0",
   "main": "main.js",
   "appid": "com.example.fitfileviewer",
   "displayName": "Fit File Viewer",
@@ -64,34 +64,34 @@
       "artifactName": "Fit-File-Viewer-msi-${arch}-${version}.${ext}"
     },
     "appImage": {
-      "artifactName": "Fit-File-Viewer-appimage-${version}.${ext}"
+      "artifactName": "Fit-File-Viewer-appimage-${arch}-${version}.${ext}"
     },
     "deb": {
-      "artifactName": "Fit-File-Viewer-deb-${version}.${ext}"
+      "artifactName": "Fit-File-Viewer-deb-${arch}-${version}.${ext}"
     },
     "rpm": {
-      "artifactName": "Fit-File-Viewer-rpm-${version}.${ext}"
+      "artifactName": "Fit-File-Viewer-rpm-${arch}-${version}.${ext}"
     },
     "snap": {
-      "artifactName": "Fit-File-Viewer-snap-${version}.${ext}"
+      "artifactName": "Fit-File-Viewer-snap-${arch}-${version}.${ext}"
     },
     "freebsd": {
-      "artifactName": "Fit-File-Viewer-freebsd-${version}.${ext}"
+      "artifactName": "Fit-File-Viewer-freebsd-${arch}-${version}.${ext}"
     },
     "pacman": {
-      "artifactName": "Fit-File-Viewer-pacman-${version}.${ext}"
+      "artifactName": "Fit-File-Viewer-pacman-${arch}-${version}.${ext}"
     },
     "p5p": {
-      "artifactName": "Fit-File-Viewer-p5p-${version}.${ext}"
+      "artifactName": "Fit-File-Viewer-p5p-${arch}-${version}.${ext}"
     },
     "apk": {
-      "artifactName": "Fit-File-Viewer-apk-${version}.${ext}"
+      "artifactName": "Fit-File-Viewer-apk-${arch}-${version}.${ext}"
     },
     "dmg": {
-      "artifactName": "Fit-File-Viewer-dmg-${version}.${ext}"
+      "artifactName": "Fit-File-Viewer-dmg-${arch}-${version}.${ext}"
     },
     "pkg": {
-      "artifactName": "Fit-File-Viewer-pkg-${version}.${ext}"
+      "artifactName": "Fit-File-Viewer-pkg-${arch}-${version}.${ext}"
     },
     "mac": {
       "icon": "icons/favicon-512x512.icns",
