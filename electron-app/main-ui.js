@@ -32,7 +32,6 @@ window.sendFitFileToAltFitReader = async function (arrayBuffer) {
 		};
 		if (iframe.src != null && !iframe.src.includes('libs/ffv/index.html')) {
 			iframe.src = 'libs/ffv/index.html';
-			iframe.onload = null; // Clear previous onload listener
 			iframe.onload = postToIframe;
 		} else if (iframe.contentWindow && iframe.src) {
 			postToIframe();
