@@ -429,9 +429,10 @@ jobs:
             platform_arch=${artifact_name#dist-}
             mkdir -p "release-dist/$platform_arch"
             cp -v $artifact_dir/Fit-File-Viewer-* $artifact_dir/*.yml "release-dist/$platform_arch/" 2>/dev/null || true
-            for subdir in nsis-web squirrel-windows*; do
+            for subdir in nsis-web squirrel*; do
               if [ -d "$artifact_dir/$subdir" ]; then
                 cp -r "$artifact_dir/$subdir" "release-dist/$platform_arch/"
+                echo "Copying $artifact_dir/$subdir to release-dist/$platform_arch/"
               fi
             done
           done
