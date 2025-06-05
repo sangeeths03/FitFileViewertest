@@ -1,0 +1,40 @@
+name: Update ChangeLogs
+
+on:
+  workflow_dispatch:
+
+jobs:
+  update_changelogs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install git-cliff
+        run: npm install -g git-cliff
+
+      - name: Generate CHANGELOG.md files
+        run: |
+          npx git-cliff --config cliff.toml --output CHANGELOG.md
+          cd electron-app && npx git-cliff --config ../cliff.toml --output CHANGELOG.md && cd ..
+          cd electron-app/icons && npx git-cliff --config ../../cliff.toml --output CHANGELOG.md && cd ../..
+          cd libs && npx git-cliff --config ../cliff.toml --output CHANGELOG.md && cd ..
+          cd screenshots && npx git-cliff --config ../cliff.toml --output CHANGELOG.md && cd ..
+          cd tests && npx git-cliff --config ../cliff.toml --output CHANGELOG.md && cd ..
+          cd utils && npx git-cliff --config ../cliff.toml --output CHANGELOG.md && cd ..
+
+      - name: Create Pull Request for changelogs
+        uses: peter-evans/create-pull-request@v6
+        with:
+          commit-message: "chore: update changelogs [skip ci]"
+          title: "chore: update changelogs"
+          body: "Automated changelog update via GitHub Actions.\n\nThis PR was created automatically and will not be merged automatically."
+          branch: "chore/update-changelogs"
+          add-paths: '**/CHANGELOG.md'
+          delete-branch: false
+          token: ${{ secrets.GITHUB_TOKEN }}

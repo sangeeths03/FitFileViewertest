@@ -29,23 +29,30 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           bash: bash
         run: |-
-          echo "| Release Tag | Size (MB) | Size (GB) |" > sizes.md
-          echo "|------------|-----------|-----------|" >> sizes.md
+          echo "| Release Tag | Size (MB) | Size (GB) | Downloads |" > sizes.md
+          echo "|------------|-----------|-----------|-----------|" >> sizes.md
           total_size=0
+          total_downloads=0
           for tag in $(gh release list --limit 1000 --json tagName -q '.[].tagName'); do
             assets_json=$(gh release view "$tag" --json assets)
             release_size=0
+            release_downloads=0
             for size in $(echo "$assets_json" | jq -r '.assets[].size'); do
               release_size=$((release_size + size))
               total_size=$((total_size + size))
             done
+            for count in $(echo "$assets_json" | jq -r '.assets[].downloadCount'); do
+              release_downloads=$((release_downloads + count))
+              total_downloads=$((total_downloads + count))
+            done
             release_size_mb=$(awk "BEGIN {printf \"%.2f\", $release_size/1024/1024}")
             release_size_gb=$(awk "BEGIN {printf \"%.3f\", $release_size/1024/1024/1024}")
-            echo "| $tag | $release_size_mb | $release_size_gb |" >> sizes.md
-            done
-            total_size_mb=$(awk "BEGIN {printf \"%.2f\", $total_size/1024/1024}")
-            total_size_gb=$(awk "BEGIN {printf \"%.3f\", $total_size/1024/1024/1024}")
-            echo "\n**Total asset size across all releases:** $total_size bytes ($total_size_mb MB, $total_size_gb GB)" >> sizes.md
+            echo "| $tag | $release_size_mb | $release_size_gb | $release_downloads |" >> sizes.md
+          done
+          total_size_mb=$(awk "BEGIN {printf \"%.2f\", $total_size/1024/1024}")
+          total_size_gb=$(awk "BEGIN {printf \"%.3f\", $total_size/1024/1024/1024}")
+          echo "\n**Total asset size across all releases:** $total_size bytes ($total_size_mb MB, $total_size_gb GB)" >> sizes.md
+          echo "**Total downloads across all releases:** $total_downloads" >> sizes.md
       - name: Print summary table to GitHub Actions summary
         run: cat sizes.md >> $GITHUB_STEP_SUMMARY
 

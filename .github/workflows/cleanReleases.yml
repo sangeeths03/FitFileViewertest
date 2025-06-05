@@ -1,0 +1,104 @@
+name: Clean Old Releases
+
+on:
+  workflow_dispatch:
+    inputs:
+      keep_last:
+        description: 'Number of most recent releases to keep'
+        required: false
+        default: '5'
+      delete_tags:
+        description: 'Also delete git tags (true/false)'
+        required: false
+        default: 'false'
+
+jobs:
+  clean_releases:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up git user
+      run: |
+        git config --global user.name "github-actions"
+        git config --global user.email "github-actions@github.com"
+
+    - name: Clean old releases and tags
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        KEEP_LAST: ${{ github.event.inputs.keep_last }}
+        DELETE_TAGS: ${{ github.event.inputs.delete_tags }}
+      run: |
+        KEEP_LAST=${KEEP_LAST:-5}
+        DELETE_TAGS=${DELETE_TAGS:-false}
+        echo "Keeping last $KEEP_LAST releases. Delete tags: $DELETE_TAGS"
+
+        releases=$(gh release list --limit 1000 --json tagName,publishedAt)
+        echo "RAW JSON OUTPUT:"
+        echo "$releases"
+        count=$(echo "$releases" | jq 'length')
+        echo "RELEASE COUNT: $count"
+        if [ "$count" -eq 0 ]; then
+          echo "No releases found after JSON parse."
+          exit 0
+        fi
+
+        # Filter out releases with missing publishedAt
+        releases=$(echo "$releases" | jq '[.[] | select(.publishedAt != null)]')
+        count=$(echo "$releases" | jq 'length')
+        echo "RELEASE COUNT after filter: $count"
+
+        # Sort by publishedAt
+        releases=$(echo "$releases" | jq 'sort_by(.publishedAt)')
+        echo "RELEASES after sort:"
+        echo "$releases" | jq -r '.[] | "\(.tagName) \(.publishedAt)"'
+
+        # Find first release for each major version
+        first_majors=$(echo "$releases" | jq -r '.[] | select(.tagName|test("^v?\\d+\\.")) | .tagName' | \
+          sed -E 's/^v?([0-9]+)\..*/\1 \0/' | sort -k1,1n | uniq -f1 | awk '{print $2}')
+        # Get last X releases
+        last_x=$(echo "$releases" | jq -r '.[-'"$KEEP_LAST"':] | .[].tagName')
+
+        # Combine tags to keep
+        keep_tags=$(echo -e "$first_majors\n$last_x" | sort | uniq)
+        echo "DEBUG: Keep tags: $keep_tags"
+
+        # Find releases to delete
+        to_delete=$(echo "$releases" | jq -r '.[] | .tagName' | grep -vxFf <(echo "$keep_tags"))
+        echo "DEBUG: To delete: $to_delete"
+
+        if [ -z "$to_delete" ]; then
+          echo "No releases to delete."
+          exit 0
+        fi
+
+        echo "The following releases will be deleted:"
+        echo "$to_delete"
+
+        for tag in $to_delete; do
+          echo "Deleting release $tag..."
+          gh release delete "$tag" --yes
+          if [ "$DELETE_TAGS" = "true" ]; then
+            echo "Deleting tag $tag..."
+            git tag -d "$tag" || true
+            git push origin ":refs/tags/$tag"
+          fi
+        done
+
+        if [ "$DELETE_TAGS" = "true" ]; then
+          # Delete orphan tags
+          all_tags=$(git tag)
+          release_tags=$(gh release list --limit 1000 --json tagName | jq -r '.[].tagName' | tr '[:upper:]' '[:lower:]')
+          for tag in $all_tags; do
+            tag_lc=$(echo "$tag" | tr '[:upper:]' '[:lower:]')
+            tag_nov=$(echo "$tag_lc" | sed 's/^v//')
+            if ! echo "$release_tags" | grep -qxF "$tag_lc" && ! echo "$release_tags" | grep -qxF "$tag_nov"; then
+              echo "Deleting orphan tag $tag"
+              git tag -d "$tag" || true
+              git push origin ":refs/tags/$tag"
+            fi
+          done
+        fi
+
+        echo "Deletion complete."
