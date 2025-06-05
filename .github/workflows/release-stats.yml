@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - name: Set up GitHub CLI
-        uses: cli/cli-action@v3
+        uses: github/cli-action@v3
 
       - name: Fetch release info and output summary
         env:
