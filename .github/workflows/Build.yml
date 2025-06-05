@@ -244,7 +244,7 @@ jobs:
         if: runner.os == 'Windows'
         shell: pwsh
         run: |
-          $patterns = @('*.exe','*.dmg','*.AppImage','*.snap','*.zip','*.yml','*.blockmap','*.msi','*.deb','*.rpm','*.7z','*.pkg','*.mas','*.apk','*.p5p','*.pacman','*.freebsd','*.flatpak','*.tar.xz','*.tar.gz','*.tar.bz2')
+          $patterns = @('*.exe','.nupkg','*.dmg','*.AppImage','*.snap','*.zip','*.yml','*.blockmap','*.msi','*.deb','*.rpm','*.7z','*.pkg','*.mas','*.apk','*.p5p','*.pacman','*.freebsd','*.flatpak','*.tar.xz','*.tar.gz','*.tar.bz2')
           $files = @()
           foreach ($pattern in $patterns) {
             $files += Get-ChildItem -Path dist -Recurse -Include $pattern -ErrorAction SilentlyContinue
@@ -315,7 +315,7 @@ jobs:
         if: runner.os == 'Windows'
         shell: pwsh
         run: |
-          $patterns = @('*.exe','*.dmg','*.AppImage','*.snap','*.zip','*.yml','*.blockmap','*.msi','*.deb','*.rpm','*.7z','*.pkg','*.mas','*.apk','*.p5p','*.pacman','*.freebsd','*.flatpak','*.tar.xz','*.tar.gz','*.tar.bz2')
+          $patterns = @('*.exe','.nupkg','*.dmg','*.AppImage','*.snap','*.zip','*.yml','*.blockmap','*.msi','*.deb','*.rpm','*.7z','*.pkg','*.mas','*.apk','*.p5p','*.pacman','*.freebsd','*.flatpak','*.tar.xz','*.tar.gz','*.tar.bz2')
           $files = @()
           foreach ($pattern in $patterns) {
             $files += Get-ChildItem -Path artifacts -Recurse -Include $pattern -ErrorAction SilentlyContinue
@@ -497,7 +497,7 @@ jobs:
         if: runner.os == 'Windows'
         shell: pwsh
         run: |
-          $patterns = @('*.exe','*.dmg','*.AppImage','*.snap','*.zip','*.yml','*.blockmap','*.msi','*.deb','*.rpm','*.7z','*.pkg','*.mas','*.apk','*.p5p','*.pacman','*.freebsd','*.flatpak','*.tar.xz','*.tar.gz','*.tar.bz2')
+          $patterns = @('*.exe','.nupkg','*.dmg','*.AppImage','*.snap','*.zip','*.yml','*.blockmap','*.msi','*.deb','*.rpm','*.7z','*.pkg','*.mas','*.apk','*.p5p','*.pacman','*.freebsd','*.flatpak','*.tar.xz','*.tar.gz','*.tar.bz2')
           $files = @()
           foreach ($pattern in $patterns) {
             $files += Get-ChildItem -Path artifacts -Recurse -Include $pattern -ErrorAction SilentlyContinue
