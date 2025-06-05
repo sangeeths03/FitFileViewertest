@@ -3,7 +3,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## [unreleased]
+## [15.9.0] - 2025-06-05
 
 ### 💼 Other
 
@@ -11,6 +11,11 @@ All notable changes to this project will be documented in this file.
 
 - Refactor code structure and improve readability; no functional changes made.
 Removed a ton of un-needed files.
+
+
+### ⚙️ Miscellaneous Tasks
+
+- Add changelog files for electron-app, tests, and utils
 
 
 ## [13.7.0] - 2025-06-03

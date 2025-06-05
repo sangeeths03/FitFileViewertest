@@ -3,6 +3,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [15.9.0] - 2025-06-05
+
+### ⚙️ Miscellaneous Tasks
+
+- Add changelog files for electron-app, tests, and utils
+
+
 ## [11.3.0] - 2025-05-15
 
 ### 💼 Other

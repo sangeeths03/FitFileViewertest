@@ -3,7 +3,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## [unreleased]
+## [15.9.0] - 2025-06-05
 
 ### 💼 Other
 
@@ -18,6 +18,11 @@ These improvements aim to make the app's interface more resilient to edge cases 
 Refines event listener options for better touch and scroll control, enhancing responsiveness and preventing unwanted behavior. Strengthens security by blocking navigation to untrusted URLs in new and existing windows. Simplifies tab setup logic and startup functions for maintainability. Excludes certain library files from automated workflows and linting to speed up CI. Small UI and code hygiene improvements.
 
 - Refactor build workflow and update artifact naming conventions; improve CSS stylelint rules and fix README formatting
+
+
+### ⚙️ Miscellaneous Tasks
+
+- Add changelog files for electron-app, tests, and utils
 
 
 ## [12.8.0] - 2025-05-20

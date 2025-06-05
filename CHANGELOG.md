@@ -7,6 +7,90 @@ All notable changes to this project will be documented in this file.
 
 ### 🆕 New Version Number
 
+- Bump version to 16.3.0
+
+
+### 🛠️ GitHub Actions
+
+- Create release-stats.yml
+
+- Update release-stats.yml
+
+- Update release-stats.yml
+
+- Update release-stats.yml
+
+
+### 💼 Other
+
+- Update metrics.repository.svg - [Skip GitHub Action]
+
+- Enhance README.md: Add CI badge for Electron Builds, improve formatting, and update supported builds section with detailed platform and architecture information.
+
+
+## [16.3.0] - 2025-06-05
+
+### 🆕 New Version Number
+
+- Bump version to 16.2.0
+
+
+### 🛠️ GitHub Actions
+
+- Update Build.yml
+
+- Update Build.yml
+
+
+## [16.2.0] - 2025-06-05
+
+### 🆕 New Version Number
+
+- Bump version to 16.1.0
+
+
+### 🛠️ GitHub Actions
+
+- Update Build.yml
+
+- Update Build.yml
+
+- Update Build.yml
+
+
+## [16.1.0] - 2025-06-05
+
+### 🐛 Bug Fixes
+
+- Update CI workflow to support additional architectures for Ubuntu and Windows
+
+
+### 🆕 New Version Number
+
+- Bump version to 16.0.0
+
+
+## [16.0.0] - 2025-06-05
+
+### 🐛 Bug Fixes
+
+- Update artifact naming conventions for macOS and Linux builds to include architecture
+
+
+### 🆕 New Version Number
+
+- Bump version to 15.9.0
+
+
+### 💼 Other
+
+- Merge branch 'main' of https://github.com/Nick2bad4u/FitFileViewer
+
+
+## [15.9.0] - 2025-06-05
+
+### 🆕 New Version Number
+
 - Bump version to 15.8.0
 
 
@@ -15,6 +99,11 @@ All notable changes to this project will be documented in this file.
 - Add '.nupkg' pattern to file matching in Windows build steps
 
 - Merge branch 'main' of https://github.com/Nick2bad4u/FitFileViewer
+
+
+### ⚙️ Miscellaneous Tasks
+
+- Add changelog files for electron-app, tests, and utils
 
 
 ## [15.8.0] - 2025-06-05

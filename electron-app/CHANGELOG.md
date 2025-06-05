@@ -5,6 +5,26 @@ All notable changes to this project will be documented in this file.
 
 ## [unreleased]
 
+### 🐛 Bug Fixes
+
+- Update artifact naming conventions for macOS and Linux builds to include architecture
+
+
+### 🆕 New Version Number
+
+- Bump version to 15.9.0
+
+- Bump version to 16.0.0
+
+- Bump version to 16.1.0
+
+- Bump version to 16.2.0
+
+- Bump version to 16.3.0
+
+
+## [15.9.0] - 2025-06-05
+
 ### 🆕 New Version Number
 
 - Bump version to 15.8.0
@@ -13,6 +33,11 @@ All notable changes to this project will be documented in this file.
 ### 💼 Other
 
 - Merge branch 'main' of https://github.com/Nick2bad4u/FitFileViewer
+
+
+### ⚙️ Miscellaneous Tasks
+
+- Add changelog files for electron-app, tests, and utils
 
 
 ## [15.8.0] - 2025-06-05
