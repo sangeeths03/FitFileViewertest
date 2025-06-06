@@ -48,7 +48,7 @@
     <img alt="Badge: Forks (dynamic count, flat-square style)" src="https://img.shields.io/github/forks/nick2bad4u/fitfileviewer?style=flat-square&logo=greasyfork" title="Forks">
   </a>
   <a href="https://nick2bad4u.github.io/fitfileviewer/" title="GitHub Pages Status">
-    <img alt="Badge: GitHub Pages Status (dynamic, flat-square style)" src="https://img.shields.io/website?url=https://fitfileviewer.typpi.online&up_message=Online&down_message=Offline&style=flat-square&logo=github&label=Github%20Pages&cacheSeconds=6000&link=https%3A%2F%2Fnick2bad4u.github.io%2Ffitfileviewer%2F" title="GitHub Pages Status">
+    <img alt="Badge: GitHub Pages Status (dynamic, flat-square style)" src="https://img.shields.io/website?url=https://fitfileviewer.typpi.online&up_message=Online&down_message=Offline&style=flat-square&logo=github&label=Github%20Pages&cacheSeconds=6000&link=https://fitfileviewer.typpi.online/" title="GitHub Pages Status">
   </a>
 </p>
 
