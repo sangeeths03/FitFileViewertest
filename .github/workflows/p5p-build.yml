@@ -1,0 +1,47 @@
+# GitHub Action to build a p5p Linux package using electron-builder
+# This workflow builds your Electron app as a p5p package using electron-builder.
+
+name: Build p5p Linux Package
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: p5p-build-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build-p5p:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Cache node modules
+        uses: actions/cache@v4
+        with:
+          path: electron-app/node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('electron-app/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install dependencies
+        run: |
+          cd electron-app
+          npm install
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Build p5p Linux package
+        run: |
+          cd electron-app
+          npx electron-builder --linux p5p
+
+      - name: Upload p5p package
+        uses: actions/upload-artifact@v4
+        with:
+          name: p5p-linux-bundle
+          path: electron-app/dist/*.p5p
