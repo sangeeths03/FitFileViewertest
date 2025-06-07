@@ -55,7 +55,6 @@ jobs:
           ls -l
           # Always build the dist repo to ensure it exists and is up-to-date
           flatpak-builder --repo=dist --force-clean build-dir flatpak-build.yml
-          flatpak-builder --install --force-clean --user dist flatpak-build.yml
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CI: true
