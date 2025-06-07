@@ -2,7 +2,7 @@ name: Build and Release Electron App
 
 concurrency:
   group: build-${{ github.ref }}
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 on:
   push:
