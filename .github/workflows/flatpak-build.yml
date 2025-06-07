@@ -36,11 +36,15 @@ jobs:
         run: |
           cd electron-app
           ls -l
-          flatpak-builder --install --force-clean --user dist electron-app/flatpak-build.yml
-        # Replace 'file.yml' with your actual Flatpak manifest file
+          flatpak-builder --install --force-clean --user dist flatpak-build.yml
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CI: true
+          DEBUG: "@malept/flatpak-bundler"
+        # Replace 'file.yml' with your actual FlatPak manifest file
 
-      # Optionally, upload the Flatpak bundle as an artifact
-      - name: Upload Flatpak bundle
+      # Optionally, upload the FlatPak bundle as an artifact
+      - name: Upload FlatPak bundle
         uses: actions/upload-artifact@v4
         with:
           name: flatpak-bundle
