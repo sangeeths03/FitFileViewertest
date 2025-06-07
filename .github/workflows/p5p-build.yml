@@ -29,7 +29,7 @@ jobs:
         run: |
           cd electron-app
           npm install
-          sudo apt-get install -y pkgutil
+          sudo pkg install pkg:/package/pkg
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
