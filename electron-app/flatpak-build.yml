@@ -1,0 +1,21 @@
+app-id: com.example.fitfileviewer
+runtime: org.freedesktop.Platform
+runtime-version: '23.08'
+sdk: org.freedesktop.Sdk
+command: electron
+finish-args:
+- --share=network
+- --socket=x11
+- --socket=wayland
+- --device=dri
+- --filesystem=host
+- --env=ELECTRON_IS_DEV=0
+modules:
+- name: app
+  buildsystem: simple
+  build-commands:
+  - npm ci
+  - npm run build || true
+  sources:
+  - type: dir
+    path: .

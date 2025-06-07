@@ -266,6 +266,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DEBUG_DEMB: true
           CI: true
+          DEBUG: "@malept/flatpak-bundler"
         continue-on-error: true
 
       - name: Print Windows distributable hash (debug, Windows)

@@ -1,0 +1,46 @@
+# GitHub Action to build Flatpak using flatpak-builder
+# This workflow builds your Electron app as a Flatpak using flatpak-builder directly.
+
+name: Build Flatpak
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: flatpak-build-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build-flatpak:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Flatpak and flatpak-builder
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y flatpak flatpak-builder elfutils
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: |
+          cd electron-app
+          npm ci
+
+      - name: Build Flatpak
+        run: |
+          cd electron-app
+          flatpak-builder --install --force-clean --user dist flatpack-build.yml
+        # Replace 'file.yml' with your actual Flatpak manifest file
+
+      # Optionally, upload the Flatpak bundle as an artifact
+      - name: Upload Flatpak bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: flatpak-bundle
+          path: electron-app/dist/*.flatpak
