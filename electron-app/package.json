@@ -165,9 +165,7 @@
         "zip",
         "tar.xz",
         "tar.gz",
-        "tar.bz2",
-        "flatpak",
-        "p5p"
+        "tar.bz2"
       ],
       "category": "Utility",
       "synopsis": "A cross-platform viewer for .fit activity files.",
