@@ -688,7 +688,45 @@ jobs:
             | Linux    | x64          | FreeBSD          | [Fit-File-Viewer-freebsd-x64-${{ needs.bump-version.outputs.new_version }}.freebsd](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-freebsd-x64-${{ needs.bump-version.outputs.new_version }}.freebsd) |
             <sub> - Most Linux users should download the "AppImage", "DEB" or "RPM" versions  </sub>
 
+            <details>
+            <summary><strong>🔍 Auto-Updater Files </strong></summary>
 
+            Windows Update Files
+
+            | Windows  | Builds       | Format           | Download Link |
+            |----------|--------------|------------------|---------------|
+            | Windows  | x64          | Squirrel EXE     | [Fit-File-Viewer-squirrel-x64-${{ needs.bump-version.outputs.new_version }}.exe](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-squirrel-x64-${{ needs.bump-version.outputs.new_version }}.exe) |
+            | Windows  | x64          | Squirrel Nupkg   | [fitfileviewer-${{ needs.bump-version.outputs.new_version }}-full.nupkg](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/fitfileviewer-${{ needs.bump-version.outputs.new_version }}-full.nupkg) |
+            | Windows  | x64          | Squirrel RELEASES| [RELEASES](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/RELEASES) |
+            | Windows  | x64          | Blockmap         | [Fit-File-Viewer-nsis-x64-${{ needs.bump-version.outputs.new_version }}.exe.blockmap](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-nsis-x64-${{ needs.bump-version.outputs.new_version }}.exe.blockmap) |
+            | Windows  | ia32 / win32 | Squirrel EXE     | [Fit-File-Viewer-squirrel-ia32-${{ needs.bump-version.outputs.new_version }}.exe](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-squirrel-ia32-${{ needs.bump-version.outputs.new_version }}.exe) |
+            | Windows  | ia32 / win32 | Squirrel Nupkg   | [fitfileviewer-${{ needs.bump-version.outputs.new_version }}-win32-full.nupkg](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/fitfileviewer-${{ needs.bump-version.outputs.new_version }}-win32-full.nupkg) |
+            | Windows  | ia32 / win32 | Squirrel RELEASES| [RELEASES-win32](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/RELEASES-win32) |
+            | Windows  | ia32 / win32 | Blockmap         | [Fit-File-Viewer-nsis-ia32-${{ needs.bump-version.outputs.new_version }}.exe.blockmap](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-nsis-ia32-${{ needs.bump-version.outputs.new_version }}.exe.blockmap) |
+
+            Mac Update Files
+
+            | Mac      | Builds       | Format           | Download Link |
+            |----------|--------------|------------------|---------------|
+            | macOS    | x64          | DMG Blockmap     | [Fit-File-Viewer-dmg-x64-${{ needs.bump-version.outputs.new_version }}.dmg.blockmap](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-dmg-x64-${{ needs.bump-version.outputs.new_version }}.dmg.blockmap) |
+            | macOS    | universal    | DMG Blockmap     | [Fit-File-Viewer-dmg-universal-${{ needs.bump-version.outputs.new_version }}.dmg.blockmap](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-dmg-universal-${{ needs.bump-version.outputs.new_version }}.dmg.blockmap) |
+            | macOS    | universal    | ZIP Blockmap     | [Fit-File-Viewer-darwin-universal-${{ needs.bump-version.outputs.new_version }}.zip.blockmap](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-darwin-universal-${{ needs.bump-version.outputs.new_version }}.zip.blockmap) |
+            | macOS    | arm64        | DMG Blockmap     | [Fit-File-Viewer-dmg-arm64-${{ needs.bump-version.outputs.new_version }}.dmg.blockmap](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-dmg-arm64-${{ needs.bump-version.outputs.new_version }}.dmg.blockmap) |
+
+            Latest Update Metadata Files
+
+            | Platform | Builds            | Format                           | Download Link |
+            |----------|-------------------|----------------------------------|---------------|
+            | Linux    | x64               | latest-linux.yml                 | [latest-linux.yml](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/latest-linux.yml) |
+            | Mac      | macos-13 x64      | latest-mac-macos-13-x64.yml      | [latest-mac-macos-13-x64.yml](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/latest-mac-macos-13-x64.yml) |
+            | Mac      | macos-15 arm64    | latest-mac-macos-15-arm64.yml    | [latest-mac-macos-15-arm64.yml](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/latest-mac-macos-15-arm64.yml) |
+            | Mac      | macos-latest x64  | latest-mac-macos-latest-x64.yml  | [latest-mac-macos-latest-x64.yml](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/latest-mac-macos-latest-x64.yml) |
+            | Windows  | ia32 / win32      | latest-win32.yml                 | [latest-win32.yml](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/latest-win32.yml) |
+            | Windows  | ia32 / win32      | latest-nsis-web-win32.yml        | [latest-nsis-web-win32.yml](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/latest-nsis-web-win32.yml) |
+            | Windows  | x64               | latest-nsis-web.yml              | [latest-nsis-web.yml](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/latest-nsis-web.yml) |
+            | Windows  | x64               | latest.yml                       | [latest.yml](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/latest.yml) |
+
+            </details>
             ---
 
             _See below for full release notes and all available assets._
