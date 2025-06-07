@@ -3,6 +3,68 @@
 
 All notable changes to this project will be documented in this file.
 
+## [unreleased]
+
+### 🐛 Bug Fixes
+
+- Update package.json for improved OS support and formatting consistency
+
+
+### 🆕 New Version Number
+
+- Bump version to 17.6.0
+
+
+### 💼 Other
+
+- Update README.md
+
+- Merge branch 'main' of https://github.com/Nick2bad4u/FitFileViewer
+
+
+### 📚 Documentation
+
+- Add user guidance for downloading Mac and Linux versions in Build.yml
+
+
+## [17.6.0] - 2025-06-06
+
+### 🆕 New Version Number
+
+- Bump version to 17.5.0
+
+
+## [17.5.0] - 2025-06-06
+
+### 🆕 New Version Number
+
+- Bump version to 17.4.0
+
+
+### 💼 Other
+
+- Update metrics.repository.svg - [Skip GitHub Action]
+
+
+## [17.4.0] - 2025-06-06
+
+### 🆕 New Version Number
+
+- Bump version to 17.3.0
+
+
+## [17.3.0] - 2025-06-05
+
+### 🆕 New Version Number
+
+- Bump version to 17.2.0
+
+
+### ⚙️ Miscellaneous Tasks
+
+- Update changelogs and scripts for versioning and GitHub Actions enhancements
+
+
 ## [17.2.0] - 2025-06-05
 
 ### 🆕 New Version Number

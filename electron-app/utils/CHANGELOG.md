@@ -56,6 +56,8 @@ Refines event listener options for better touch and scroll control, enhancing re
 
 - Add changelog files for electron-app, tests, and utils
 
+- Update changelogs and scripts for versioning and GitHub Actions enhancements
+
 
 ## [11.0.0] - 2025-05-14
 

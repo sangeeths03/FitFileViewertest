@@ -16,6 +16,8 @@ All notable changes to this project will be documented in this file.
 
 - Add changelog files for electron-app, tests, and utils
 
+- Update changelogs and scripts for versioning and GitHub Actions enhancements
+
 
 ## [8.0.0] - 2025-05-07
 

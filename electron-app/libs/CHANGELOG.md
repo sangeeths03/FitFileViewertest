@@ -79,6 +79,8 @@ Removed a ton of un-needed files.
 
 - Add changelog files for electron-app, tests, and utils
 
+- Update changelogs and scripts for versioning and GitHub Actions enhancements
+
 
 ### 🛡️ Security
 
