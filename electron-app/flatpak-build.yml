@@ -14,11 +14,12 @@ modules:
 - name: app
   buildsystem: simple
   build-commands:
+  - cp -r ./node_modules /app/
+  - install -Dm755 ./node_modules/electron/dist/electron /app/bin/electron
   - install -Dm755 ./main.js /app/main.js
   - install -Dm755 ./preload.js /app/preload.js
   - install -Dm755 ./renderer.js /app/renderer.js
   - install -Dm644 ./package.json /app/package.json
-  - cp -r ./node_modules /app/
   - cp -r ./icons /app/
   - cp -r ./libs /app/
   - cp -r ./utils /app/
