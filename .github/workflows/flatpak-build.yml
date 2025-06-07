@@ -35,7 +35,8 @@ jobs:
       - name: Build Flatpak
         run: |
           cd electron-app
-          flatpak-builder --install --force-clean --user dist flatpack-build.yml
+          ls -l
+          flatpak-builder --install --force-clean --user dist electron-app/flatpak-build.yml
         # Replace 'file.yml' with your actual Flatpak manifest file
 
       # Optionally, upload the Flatpak bundle as an artifact
