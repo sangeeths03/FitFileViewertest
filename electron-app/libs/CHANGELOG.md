@@ -5,417 +5,108 @@ All notable changes to this project will be documented in this file.
 
 ## [unreleased]
 
+### 🚀 Features
+
+- Update GitHub workflows for improved linting and scanning processes
+
+- Update GitHub workflows with concurrency settings and add new badges to README
+
+
 ### 💼 Other
 
-- Update changelogs and scripts: Add new version numbers, enhance GitHub Actions, and implement release cleanup script
+- Refactor GitHub Actions workflows and enhance application features
 
+- Updated ESLint workflow to remove unnecessary working directory specification.
+- Simplified Prettier workflow by removing SARIF conversion and upload steps, added continue-on-error option.
+- Cleaned up repo-stats workflow by removing redundant plugin configurations.
+- Enhanced README.md with additional visuals and badges for better project visibility.
+- Improved accessibility by adding title attributes to iframes in index.html.
+- Obfuscated API keys in index-CQWboq_8.js for security.
+- Added IPC handlers in main.js to retrieve app, Electron, Node.js, and Chrome versions.
+- Implemented tab button enabling/disabling functionality in main UI and utility functions.
+- Added hover effects and improved close button functionality in about modal.
+- Removed unnecessary tsconfig.json file.
+- Created enableTabButtons.js utility to manage tab button states.
 
-## [15.9.0] - 2025-06-05
+- Refactor code structure and remove redundant sections for improved readability and maintainability
 
-### 💼 Other
+- Enhances Charts and Libraries Integration
+
+Replaces outdated screenshots and descriptions in README
+Introduces new "Charts v2" tab with Chart.js support
+Adds Hammer.js for touch/pinch functionality in charts
+Updates dependencies, icons, and credits for improved clarity
+Refines tab visibility and loading behavior for better UX
+
+Enhances charts and updates documentation
+
+Introduces "Charts v2" tab with Chart.js and touch/pinch support
+Replaces outdated screenshots and descriptions in README
+Updates dependencies, icons, and credits for clarity
+Improves tab visibility and loading behavior for better UX
+
+Relates to #456
+
+- Merge pull request #79 from Nick2bad4u/dependabot/npm_and_yarn/electron-app/libs/zwiftmap-main/frontend/npm_and_yarn-0523d757ec
+
+Bump the npm_and_yarn group in /electron-app/libs/zwiftmap-main/frontend with 2 updates
+
+- Merge pull request #82 from Nick2bad4u/dependabot/npm_and_yarn/electron-app/libs/zwiftmap-main/backend/npm-all-3319742fda
+
+Bump the npm-all group in /electron-app/libs/zwiftmap-main/backend with 34 updates
+
+- Merge pull request #81 from Nick2bad4u/dependabot/npm_and_yarn/electron-app/libs/zwiftmap-main/browser-extension/npm-all-8289ba21ba
+
+Bump the npm-all group in /electron-app/libs/zwiftmap-main/browser-extension with 29 updates
+
+- Merge pull request #92 from Nick2bad4u/dependabot/npm_and_yarn/electron-app/libs/zwiftmap-main/frontend/npm_and_yarn-2f20eee292
+
+Bump the npm_and_yarn group in /electron-app/libs/zwiftmap-main/frontend with 1 update
 
 - Merge branch 'main' of https://github.com/Nick2bad4u/FitFileViewer
 
 - Refactor code structure and improve readability; no functional changes made.
 Removed a ton of un-needed files.
 
+- Update changelogs and scripts: Add new version numbers, enhance GitHub Actions, and implement release cleanup script
+
+- Update changelogs and version numbers for releases 16.4.0, 16.5.0, and 16.6.0; enhance GitHub Actions and implement release cleanup script
+
 
 ### ⚙️ Miscellaneous Tasks
 
+- Update GitHub Actions workflows and dependencies; fix badge link in README
+
 - Add changelog files for electron-app, tests, and utils
-
-
-## [13.7.0] - 2025-06-03
-
-### 💼 Other
-
-- Merge pull request #92 from Nick2bad4u/dependabot/npm_and_yarn/electron-app/libs/zwiftmap-main/frontend/npm_and_yarn-2f20eee292
-
-Bump the npm_and_yarn group in /electron-app/libs/zwiftmap-main/frontend with 1 update
-
-
-## [13.6.0] - 2025-06-03
-
-### 💼 Other
-
-- Merge pull request #81 from Nick2bad4u/dependabot/npm_and_yarn/electron-app/libs/zwiftmap-main/browser-extension/npm-all-8289ba21ba
-
-Bump the npm-all group in /electron-app/libs/zwiftmap-main/browser-extension with 29 updates
 
 
 ### 🛡️ Security
 
 - Bump the npm_and_yarn group
 
-Bumps the npm_and_yarn group in /electron-app/libs/zwiftmap-main/frontend with 2 updates:  and [tar-fs](https://github.com/mafintosh/tar-fs).
+Bumps the npm_and_yarn group in /electron-app/libs/zwiftmap-main/frontend with 2 updates: [fastify](https://github.com/fastify/fastify) and [netlify-cli](https://github.com/netlify/cli).
 
 
-Updates `tar-fs` from 2.1.2 to 3.0.9
-- [Commits](https://github.com/mafintosh/tar-fs/compare/v2.1.2...v3.0.9)
+Removes `fastify`
 
-Updates `tar-fs` from 3.0.8 to 3.0.9
-- [Commits](https://github.com/mafintosh/tar-fs/compare/v2.1.2...v3.0.9)
+Updates `netlify-cli` from 20.1.1 to 21.5.0
+- [Release notes](https://github.com/netlify/cli/releases)
+- [Changelog](https://github.com/netlify/cli/blob/main/CHANGELOG.md)
+- [Commits](https://github.com/netlify/cli/compare/v20.1.1...v21.5.0)
 
 ---
 updated-dependencies:
-- dependency-name: tar-fs
-  dependency-version: 3.0.9
+- dependency-name: fastify
+  dependency-version: 
   dependency-type: indirect
   dependency-group: npm_and_yarn
-- dependency-name: tar-fs
-  dependency-version: 3.0.9
-  dependency-type: indirect
+- dependency-name: netlify-cli
+  dependency-version: 21.5.0
+  dependency-type: direct:development
   dependency-group: npm_and_yarn
 ...
 
 Signed-off-by: dependabot[bot] <support@github.com>
-
-
-## [13.3.0] - 2025-06-01
-
-### 🛡️ Security
-
-- Bump the npm-all group
-
-Bumps the npm-all group in /electron-app/libs/zwiftmap-main/browser-extension with 29 updates:
-
-| Package | From | To |
-| --- | --- | --- |
-| [@types/chrome](https://github.com/DefinitelyTyped/DefinitelyTyped/tree/HEAD/types/chrome) | `0.0.318` | `0.0.326` |
-| [@types/leaflet](https://github.com/DefinitelyTyped/DefinitelyTyped/tree/HEAD/types/leaflet) | `1.9.17` | `1.9.18` |
-| [esbuild](https://github.com/evanw/esbuild) | `0.25.3` | `0.25.5` |
-| [@esbuild/aix-ppc64](https://github.com/evanw/esbuild) | `0.25.3` | `0.25.5` |
-| [@esbuild/android-arm](https://github.com/evanw/esbuild) | `0.25.3` | `0.25.5` |
-| [@esbuild/android-arm64](https://github.com/evanw/esbuild) | `0.25.3` | `0.25.5` |
-| [@esbuild/android-x64](https://github.com/evanw/esbuild) | `0.25.3` | `0.25.5` |
-| [@esbuild/darwin-arm64](https://github.com/evanw/esbuild) | `0.25.3` | `0.25.5` |
-| [@esbuild/darwin-x64](https://github.com/evanw/esbuild) | `0.25.3` | `0.25.5` |
-| [@esbuild/freebsd-arm64](https://github.com/evanw/esbuild) | `0.25.3` | `0.25.5` |
-| [@esbuild/freebsd-x64](https://github.com/evanw/esbuild) | `0.25.3` | `0.25.5` |
-| [@esbuild/linux-arm](https://github.com/evanw/esbuild) | `0.25.3` | `0.25.5` |
-| [@esbuild/linux-arm64](https://github.com/evanw/esbuild) | `0.25.3` | `0.25.5` |
-| [@esbuild/linux-ia32](https://github.com/evanw/esbuild) | `0.25.3` | `0.25.5` |
-| [@esbuild/linux-loong64](https://github.com/evanw/esbuild) | `0.25.3` | `0.25.5` |
-| [@esbuild/linux-mips64el](https://github.com/evanw/esbuild) | `0.25.3` | `0.25.5` |
-| [@esbuild/linux-ppc64](https://github.com/evanw/esbuild) | `0.25.3` | `0.25.5` |
-| [@esbuild/linux-riscv64](https://github.com/evanw/esbuild) | `0.25.3` | `0.25.5` |
-| [@esbuild/linux-s390x](https://github.com/evanw/esbuild) | `0.25.3` | `0.25.5` |
-| [@esbuild/linux-x64](https://github.com/evanw/esbuild) | `0.25.3` | `0.25.5` |
-| [@esbuild/netbsd-arm64](https://github.com/evanw/esbuild) | `0.25.3` | `0.25.5` |
-| [@esbuild/netbsd-x64](https://github.com/evanw/esbuild) | `0.25.3` | `0.25.5` |
-| [@esbuild/openbsd-arm64](https://github.com/evanw/esbuild) | `0.25.3` | `0.25.5` |
-| [@esbuild/openbsd-x64](https://github.com/evanw/esbuild) | `0.25.3` | `0.25.5` |
-| [@esbuild/sunos-x64](https://github.com/evanw/esbuild) | `0.25.3` | `0.25.5` |
-| [@esbuild/win32-arm64](https://github.com/evanw/esbuild) | `0.25.3` | `0.25.5` |
-| [@esbuild/win32-ia32](https://github.com/evanw/esbuild) | `0.25.3` | `0.25.5` |
-| [@esbuild/win32-x64](https://github.com/evanw/esbuild) | `0.25.3` | `0.25.5` |
-| [@types/node](https://github.com/DefinitelyTyped/DefinitelyTyped/tree/HEAD/types/node) | `22.15.3` | `22.15.29` |
-
-
-Updates `@types/chrome` from 0.0.318 to 0.0.326
-- [Release notes](https://github.com/DefinitelyTyped/DefinitelyTyped/releases)
-- [Commits](https://github.com/DefinitelyTyped/DefinitelyTyped/commits/HEAD/types/chrome)
-
-Updates `@types/leaflet` from 1.9.17 to 1.9.18
-- [Release notes](https://github.com/DefinitelyTyped/DefinitelyTyped/releases)
-- [Commits](https://github.com/DefinitelyTyped/DefinitelyTyped/commits/HEAD/types/leaflet)
-
-Updates `esbuild` from 0.25.3 to 0.25.5
-- [Release notes](https://github.com/evanw/esbuild/releases)
-- [Changelog](https://github.com/evanw/esbuild/blob/main/CHANGELOG.md)
-- [Commits](https://github.com/evanw/esbuild/compare/v0.25.3...v0.25.5)
-
-Updates `@esbuild/aix-ppc64` from 0.25.3 to 0.25.5
-- [Release notes](https://github.com/evanw/esbuild/releases)
-- [Changelog](https://github.com/evanw/esbuild/blob/main/CHANGELOG.md)
-- [Commits](https://github.com/evanw/esbuild/compare/v0.25.3...v0.25.5)
-
-Updates `@esbuild/android-arm` from 0.25.3 to 0.25.5
-- [Release notes](https://github.com/evanw/esbuild/releases)
-- [Changelog](https://github.com/evanw/esbuild/blob/main/CHANGELOG.md)
-- [Commits](https://github.com/evanw/esbuild/compare/v0.25.3...v0.25.5)
-
-Updates `@esbuild/android-arm64` from 0.25.3 to 0.25.5
-- [Release notes](https://github.com/evanw/esbuild/releases)
-- [Changelog](https://github.com/evanw/esbuild/blob/main/CHANGELOG.md)
-- [Commits](https://github.com/evanw/esbuild/compare/v0.25.3...v0.25.5)
-
-Updates `@esbuild/android-x64` from 0.25.3 to 0.25.5
-- [Release notes](https://github.com/evanw/esbuild/releases)
-- [Changelog](https://github.com/evanw/esbuild/blob/main/CHANGELOG.md)
-- [Commits](https://github.com/evanw/esbuild/compare/v0.25.3...v0.25.5)
-
-Updates `@esbuild/darwin-arm64` from 0.25.3 to 0.25.5
-- [Release notes](https://github.com/evanw/esbuild/releases)
-- [Changelog](https://github.com/evanw/esbuild/blob/main/CHANGELOG.md)
-- [Commits](https://github.com/evanw/esbuild/compare/v0.25.3...v0.25.5)
-
-Updates `@esbuild/darwin-x64` from 0.25.3 to 0.25.5
-- [Release notes](https://github.com/evanw/esbuild/releases)
-- [Changelog](https://github.com/evanw/esbuild/blob/main/CHANGELOG.md)
-- [Commits](https://github.com/evanw/esbuild/compare/v0.25.3...v0.25.5)
-
-Updates `@esbuild/freebsd-arm64` from 0.25.3 to 0.25.5
-- [Release notes](https://github.com/evanw/esbuild/releases)
-- [Changelog](https://github.com/evanw/esbuild/blob/main/CHANGELOG.md)
-- [Commits](https://github.com/evanw/esbuild/compare/v0.25.3...v0.25.5)
-
-Updates `@esbuild/freebsd-x64` from 0.25.3 to 0.25.5
-- [Release notes](https://github.com/evanw/esbuild/releases)
-- [Changelog](https://github.com/evanw/esbuild/blob/main/CHANGELOG.md)
-- [Commits](https://github.com/evanw/esbuild/compare/v0.25.3...v0.25.5)
-
-Updates `@esbuild/linux-arm` from 0.25.3 to 0.25.5
-- [Release notes](https://github.com/evanw/esbuild/releases)
-- [Changelog](https://github.com/evanw/esbuild/blob/main/CHANGELOG.md)
-- [Commits](https://github.com/evanw/esbuild/compare/v0.25.3...v0.25.5)
-
-Updates `@esbuild/linux-arm64` from 0.25.3 to 0.25.5
-- [Release notes](https://github.com/evanw/esbuild/releases)
-- [Changelog](https://github.com/evanw/esbuild/blob/main/CHANGELOG.md)
-- [Commits](https://github.com/evanw/esbuild/compare/v0.25.3...v0.25.5)
-
-Updates `@esbuild/linux-ia32` from 0.25.3 to 0.25.5
-- [Release notes](https://github.com/evanw/esbuild/releases)
-- [Changelog](https://github.com/evanw/esbuild/blob/main/CHANGELOG.md)
-- [Commits](https://github.com/evanw/esbuild/compare/v0.25.3...v0.25.5)
-
-Updates `@esbuild/linux-loong64` from 0.25.3 to 0.25.5
-- [Release notes](https://github.com/evanw/esbuild/releases)
-- [Changelog](https://github.com/evanw/esbuild/blob/main/CHANGELOG.md)
-- [Commits](https://github.com/evanw/esbuild/compare/v0.25.3...v0.25.5)
-
-Updates `@esbuild/linux-mips64el` from 0.25.3 to 0.25.5
-- [Release notes](https://github.com/evanw/esbuild/releases)
-- [Changelog](https://github.com/evanw/esbuild/blob/main/CHANGELOG.md)
-- [Commits](https://github.com/evanw/esbuild/compare/v0.25.3...v0.25.5)
-
-Updates `@esbuild/linux-ppc64` from 0.25.3 to 0.25.5
-- [Release notes](https://github.com/evanw/esbuild/releases)
-- [Changelog](https://github.com/evanw/esbuild/blob/main/CHANGELOG.md)
-- [Commits](https://github.com/evanw/esbuild/compare/v0.25.3...v0.25.5)
-
-Updates `@esbuild/linux-riscv64` from 0.25.3 to 0.25.5
-- [Release notes](https://github.com/evanw/esbuild/releases)
-- [Changelog](https://github.com/evanw/esbuild/blob/main/CHANGELOG.md)
-- [Commits](https://github.com/evanw/esbuild/compare/v0.25.3...v0.25.5)
-
-Updates `@esbuild/linux-s390x` from 0.25.3 to 0.25.5
-- [Release notes](https://github.com/evanw/esbuild/releases)
-- [Changelog](https://github.com/evanw/esbuild/blob/main/CHANGELOG.md)
-- [Commits](https://github.com/evanw/esbuild/compare/v0.25.3...v0.25.5)
-
-Updates `@esbuild/linux-x64` from 0.25.3 to 0.25.5
-- [Release notes](https://github.com/evanw/esbuild/releases)
-- [Changelog](https://github.com/evanw/esbuild/blob/main/CHANGELOG.md)
-- [Commits](https://github.com/evanw/esbuild/compare/v0.25.3...v0.25.5)
-
-Updates `@esbuild/netbsd-arm64` from 0.25.3 to 0.25.5
-- [Release notes](https://github.com/evanw/esbuild/releases)
-- [Changelog](https://github.com/evanw/esbuild/blob/main/CHANGELOG.md)
-- [Commits](https://github.com/evanw/esbuild/compare/v0.25.3...v0.25.5)
-
-Updates `@esbuild/netbsd-x64` from 0.25.3 to 0.25.5
-- [Release notes](https://github.com/evanw/esbuild/releases)
-- [Changelog](https://github.com/evanw/esbuild/blob/main/CHANGELOG.md)
-- [Commits](https://github.com/evanw/esbuild/compare/v0.25.3...v0.25.5)
-
-Updates `@esbuild/openbsd-arm64` from 0.25.3 to 0.25.5
-- [Release notes](https://github.com/evanw/esbuild/releases)
-- [Changelog](https://github.com/evanw/esbuild/blob/main/CHANGELOG.md)
-- [Commits](https://github.com/evanw/esbuild/compare/v0.25.3...v0.25.5)
-
-Updates `@esbuild/openbsd-x64` from 0.25.3 to 0.25.5
-- [Release notes](https://github.com/evanw/esbuild/releases)
-- [Changelog](https://github.com/evanw/esbuild/blob/main/CHANGELOG.md)
-- [Commits](https://github.com/evanw/esbuild/compare/v0.25.3...v0.25.5)
-
-Updates `@esbuild/sunos-x64` from 0.25.3 to 0.25.5
-- [Release notes](https://github.com/evanw/esbuild/releases)
-- [Changelog](https://github.com/evanw/esbuild/blob/main/CHANGELOG.md)
-- [Commits](https://github.com/evanw/esbuild/compare/v0.25.3...v0.25.5)
-
-Updates `@esbuild/win32-arm64` from 0.25.3 to 0.25.5
-- [Release notes](https://github.com/evanw/esbuild/releases)
-- [Changelog](https://github.com/evanw/esbuild/blob/main/CHANGELOG.md)
-- [Commits](https://github.com/evanw/esbuild/compare/v0.25.3...v0.25.5)
-
-Updates `@esbuild/win32-ia32` from 0.25.3 to 0.25.5
-- [Release notes](https://github.com/evanw/esbuild/releases)
-- [Changelog](https://github.com/evanw/esbuild/blob/main/CHANGELOG.md)
-- [Commits](https://github.com/evanw/esbuild/compare/v0.25.3...v0.25.5)
-
-Updates `@esbuild/win32-x64` from 0.25.3 to 0.25.5
-- [Release notes](https://github.com/evanw/esbuild/releases)
-- [Changelog](https://github.com/evanw/esbuild/blob/main/CHANGELOG.md)
-- [Commits](https://github.com/evanw/esbuild/compare/v0.25.3...v0.25.5)
-
-Updates `@types/node` from 22.15.3 to 22.15.29
-- [Release notes](https://github.com/DefinitelyTyped/DefinitelyTyped/releases)
-- [Commits](https://github.com/DefinitelyTyped/DefinitelyTyped/commits/HEAD/types/node)
-
----
-updated-dependencies:
-- dependency-name: "@types/chrome"
-  dependency-version: 0.0.326
-  dependency-type: direct:development
-  update-type: version-update:semver-patch
-  dependency-group: npm-all
-- dependency-name: "@types/leaflet"
-  dependency-version: 1.9.18
-  dependency-type: direct:development
-  update-type: version-update:semver-patch
-  dependency-group: npm-all
-- dependency-name: esbuild
-  dependency-version: 0.25.5
-  dependency-type: direct:development
-  update-type: version-update:semver-patch
-  dependency-group: npm-all
-- dependency-name: "@esbuild/aix-ppc64"
-  dependency-version: 0.25.5
-  dependency-type: indirect
-  update-type: version-update:semver-patch
-  dependency-group: npm-all
-- dependency-name: "@esbuild/android-arm"
-  dependency-version: 0.25.5
-  dependency-type: indirect
-  update-type: version-update:semver-patch
-  dependency-group: npm-all
-- dependency-name: "@esbuild/android-arm64"
-  dependency-version: 0.25.5
-  dependency-type: indirect
-  update-type: version-update:semver-patch
-  dependency-group: npm-all
-- dependency-name: "@esbuild/android-x64"
-  dependency-version: 0.25.5
-  dependency-type: indirect
-  update-type: version-update:semver-patch
-  dependency-group: npm-all
-- dependency-name: "@esbuild/darwin-arm64"
-  dependency-version: 0.25.5
-  dependency-type: indirect
-  update-type: version-update:semver-patch
-  dependency-group: npm-all
-- dependency-name: "@esbuild/darwin-x64"
-  dependency-version: 0.25.5
-  dependency-type: indirect
-  update-type: version-update:semver-patch
-  dependency-group: npm-all
-- dependency-name: "@esbuild/freebsd-arm64"
-  dependency-version: 0.25.5
-  dependency-type: indirect
-  update-type: version-update:semver-patch
-  dependency-group: npm-all
-- dependency-name: "@esbuild/freebsd-x64"
-  dependency-version: 0.25.5
-  dependency-type: indirect
-  update-type: version-update:semver-patch
-  dependency-group: npm-all
-- dependency-name: "@esbuild/linux-arm"
-  dependency-version: 0.25.5
-  dependency-type: indirect
-  update-type: version-update:semver-patch
-  dependency-group: npm-all
-- dependency-name: "@esbuild/linux-arm64"
-  dependency-version: 0.25.5
-  dependency-type: indirect
-  update-type: version-update:semver-patch
-  dependency-group: npm-all
-- dependency-name: "@esbuild/linux-ia32"
-  dependency-version: 0.25.5
-  dependency-type: indirect
-  update-type: version-update:semver-patch
-  dependency-group: npm-all
-- dependency-name: "@esbuild/linux-loong64"
-  dependency-version: 0.25.5
-  dependency-type: indirect
-  update-type: version-update:semver-patch
-  dependency-group: npm-all
-- dependency-name: "@esbuild/linux-mips64el"
-  dependency-version: 0.25.5
-  dependency-type: indirect
-  update-type: version-update:semver-patch
-  dependency-group: npm-all
-- dependency-name: "@esbuild/linux-ppc64"
-  dependency-version: 0.25.5
-  dependency-type: indirect
-  update-type: version-update:semver-patch
-  dependency-group: npm-all
-- dependency-name: "@esbuild/linux-riscv64"
-  dependency-version: 0.25.5
-  dependency-type: indirect
-  update-type: version-update:semver-patch
-  dependency-group: npm-all
-- dependency-name: "@esbuild/linux-s390x"
-  dependency-version: 0.25.5
-  dependency-type: indirect
-  update-type: version-update:semver-patch
-  dependency-group: npm-all
-- dependency-name: "@esbuild/linux-x64"
-  dependency-version: 0.25.5
-  dependency-type: indirect
-  update-type: version-update:semver-patch
-  dependency-group: npm-all
-- dependency-name: "@esbuild/netbsd-arm64"
-  dependency-version: 0.25.5
-  dependency-type: indirect
-  update-type: version-update:semver-patch
-  dependency-group: npm-all
-- dependency-name: "@esbuild/netbsd-x64"
-  dependency-version: 0.25.5
-  dependency-type: indirect
-  update-type: version-update:semver-patch
-  dependency-group: npm-all
-- dependency-name: "@esbuild/openbsd-arm64"
-  dependency-version: 0.25.5
-  dependency-type: indirect
-  update-type: version-update:semver-patch
-  dependency-group: npm-all
-- dependency-name: "@esbuild/openbsd-x64"
-  dependency-version: 0.25.5
-  dependency-type: indirect
-  update-type: version-update:semver-patch
-  dependency-group: npm-all
-- dependency-name: "@esbuild/sunos-x64"
-  dependency-version: 0.25.5
-  dependency-type: indirect
-  update-type: version-update:semver-patch
-  dependency-group: npm-all
-- dependency-name: "@esbuild/win32-arm64"
-  dependency-version: 0.25.5
-  dependency-type: indirect
-  update-type: version-update:semver-patch
-  dependency-group: npm-all
-- dependency-name: "@esbuild/win32-ia32"
-  dependency-version: 0.25.5
-  dependency-type: indirect
-  update-type: version-update:semver-patch
-  dependency-group: npm-all
-- dependency-name: "@esbuild/win32-x64"
-  dependency-version: 0.25.5
-  dependency-type: indirect
-  update-type: version-update:semver-patch
-  dependency-group: npm-all
-- dependency-name: "@types/node"
-  dependency-version: 22.15.29
-  dependency-type: indirect
-  update-type: version-update:semver-patch
-  dependency-group: npm-all
-...
-
-Signed-off-by: dependabot[bot] <support@github.com>
-
-
-## [13.4.0] - 2025-06-01
-
-### 💼 Other
-
-- Merge pull request #82 from Nick2bad4u/dependabot/npm_and_yarn/electron-app/libs/zwiftmap-main/backend/npm-all-3319742fda
-
-Bump the npm-all group in /electron-app/libs/zwiftmap-main/backend with 34 updates
-
-
-### 🛡️ Security
 
 - Bump the npm-all group
 
@@ -780,138 +471,363 @@ updated-dependencies:
 
 Signed-off-by: dependabot[bot] <support@github.com>
 
+- Bump the npm-all group
 
-## [13.2.0] - 2025-05-31
+Bumps the npm-all group in /electron-app/libs/zwiftmap-main/browser-extension with 29 updates:
 
-### 💼 Other
+| Package | From | To |
+| --- | --- | --- |
+| [@types/chrome](https://github.com/DefinitelyTyped/DefinitelyTyped/tree/HEAD/types/chrome) | `0.0.318` | `0.0.326` |
+| [@types/leaflet](https://github.com/DefinitelyTyped/DefinitelyTyped/tree/HEAD/types/leaflet) | `1.9.17` | `1.9.18` |
+| [esbuild](https://github.com/evanw/esbuild) | `0.25.3` | `0.25.5` |
+| [@esbuild/aix-ppc64](https://github.com/evanw/esbuild) | `0.25.3` | `0.25.5` |
+| [@esbuild/android-arm](https://github.com/evanw/esbuild) | `0.25.3` | `0.25.5` |
+| [@esbuild/android-arm64](https://github.com/evanw/esbuild) | `0.25.3` | `0.25.5` |
+| [@esbuild/android-x64](https://github.com/evanw/esbuild) | `0.25.3` | `0.25.5` |
+| [@esbuild/darwin-arm64](https://github.com/evanw/esbuild) | `0.25.3` | `0.25.5` |
+| [@esbuild/darwin-x64](https://github.com/evanw/esbuild) | `0.25.3` | `0.25.5` |
+| [@esbuild/freebsd-arm64](https://github.com/evanw/esbuild) | `0.25.3` | `0.25.5` |
+| [@esbuild/freebsd-x64](https://github.com/evanw/esbuild) | `0.25.3` | `0.25.5` |
+| [@esbuild/linux-arm](https://github.com/evanw/esbuild) | `0.25.3` | `0.25.5` |
+| [@esbuild/linux-arm64](https://github.com/evanw/esbuild) | `0.25.3` | `0.25.5` |
+| [@esbuild/linux-ia32](https://github.com/evanw/esbuild) | `0.25.3` | `0.25.5` |
+| [@esbuild/linux-loong64](https://github.com/evanw/esbuild) | `0.25.3` | `0.25.5` |
+| [@esbuild/linux-mips64el](https://github.com/evanw/esbuild) | `0.25.3` | `0.25.5` |
+| [@esbuild/linux-ppc64](https://github.com/evanw/esbuild) | `0.25.3` | `0.25.5` |
+| [@esbuild/linux-riscv64](https://github.com/evanw/esbuild) | `0.25.3` | `0.25.5` |
+| [@esbuild/linux-s390x](https://github.com/evanw/esbuild) | `0.25.3` | `0.25.5` |
+| [@esbuild/linux-x64](https://github.com/evanw/esbuild) | `0.25.3` | `0.25.5` |
+| [@esbuild/netbsd-arm64](https://github.com/evanw/esbuild) | `0.25.3` | `0.25.5` |
+| [@esbuild/netbsd-x64](https://github.com/evanw/esbuild) | `0.25.3` | `0.25.5` |
+| [@esbuild/openbsd-arm64](https://github.com/evanw/esbuild) | `0.25.3` | `0.25.5` |
+| [@esbuild/openbsd-x64](https://github.com/evanw/esbuild) | `0.25.3` | `0.25.5` |
+| [@esbuild/sunos-x64](https://github.com/evanw/esbuild) | `0.25.3` | `0.25.5` |
+| [@esbuild/win32-arm64](https://github.com/evanw/esbuild) | `0.25.3` | `0.25.5` |
+| [@esbuild/win32-ia32](https://github.com/evanw/esbuild) | `0.25.3` | `0.25.5` |
+| [@esbuild/win32-x64](https://github.com/evanw/esbuild) | `0.25.3` | `0.25.5` |
+| [@types/node](https://github.com/DefinitelyTyped/DefinitelyTyped/tree/HEAD/types/node) | `22.15.3` | `22.15.29` |
 
-- Merge pull request #79 from Nick2bad4u/dependabot/npm_and_yarn/electron-app/libs/zwiftmap-main/frontend/npm_and_yarn-0523d757ec
 
-Bump the npm_and_yarn group in /electron-app/libs/zwiftmap-main/frontend with 2 updates
+Updates `@types/chrome` from 0.0.318 to 0.0.326
+- [Release notes](https://github.com/DefinitelyTyped/DefinitelyTyped/releases)
+- [Commits](https://github.com/DefinitelyTyped/DefinitelyTyped/commits/HEAD/types/chrome)
 
+Updates `@types/leaflet` from 1.9.17 to 1.9.18
+- [Release notes](https://github.com/DefinitelyTyped/DefinitelyTyped/releases)
+- [Commits](https://github.com/DefinitelyTyped/DefinitelyTyped/commits/HEAD/types/leaflet)
 
-### 🛡️ Security
+Updates `esbuild` from 0.25.3 to 0.25.5
+- [Release notes](https://github.com/evanw/esbuild/releases)
+- [Changelog](https://github.com/evanw/esbuild/blob/main/CHANGELOG.md)
+- [Commits](https://github.com/evanw/esbuild/compare/v0.25.3...v0.25.5)
 
-- Bump the npm_and_yarn group
+Updates `@esbuild/aix-ppc64` from 0.25.3 to 0.25.5
+- [Release notes](https://github.com/evanw/esbuild/releases)
+- [Changelog](https://github.com/evanw/esbuild/blob/main/CHANGELOG.md)
+- [Commits](https://github.com/evanw/esbuild/compare/v0.25.3...v0.25.5)
 
-Bumps the npm_and_yarn group in /electron-app/libs/zwiftmap-main/frontend with 2 updates: [fastify](https://github.com/fastify/fastify) and [netlify-cli](https://github.com/netlify/cli).
+Updates `@esbuild/android-arm` from 0.25.3 to 0.25.5
+- [Release notes](https://github.com/evanw/esbuild/releases)
+- [Changelog](https://github.com/evanw/esbuild/blob/main/CHANGELOG.md)
+- [Commits](https://github.com/evanw/esbuild/compare/v0.25.3...v0.25.5)
 
+Updates `@esbuild/android-arm64` from 0.25.3 to 0.25.5
+- [Release notes](https://github.com/evanw/esbuild/releases)
+- [Changelog](https://github.com/evanw/esbuild/blob/main/CHANGELOG.md)
+- [Commits](https://github.com/evanw/esbuild/compare/v0.25.3...v0.25.5)
 
-Removes `fastify`
+Updates `@esbuild/android-x64` from 0.25.3 to 0.25.5
+- [Release notes](https://github.com/evanw/esbuild/releases)
+- [Changelog](https://github.com/evanw/esbuild/blob/main/CHANGELOG.md)
+- [Commits](https://github.com/evanw/esbuild/compare/v0.25.3...v0.25.5)
 
-Updates `netlify-cli` from 20.1.1 to 21.5.0
-- [Release notes](https://github.com/netlify/cli/releases)
-- [Changelog](https://github.com/netlify/cli/blob/main/CHANGELOG.md)
-- [Commits](https://github.com/netlify/cli/compare/v20.1.1...v21.5.0)
+Updates `@esbuild/darwin-arm64` from 0.25.3 to 0.25.5
+- [Release notes](https://github.com/evanw/esbuild/releases)
+- [Changelog](https://github.com/evanw/esbuild/blob/main/CHANGELOG.md)
+- [Commits](https://github.com/evanw/esbuild/compare/v0.25.3...v0.25.5)
+
+Updates `@esbuild/darwin-x64` from 0.25.3 to 0.25.5
+- [Release notes](https://github.com/evanw/esbuild/releases)
+- [Changelog](https://github.com/evanw/esbuild/blob/main/CHANGELOG.md)
+- [Commits](https://github.com/evanw/esbuild/compare/v0.25.3...v0.25.5)
+
+Updates `@esbuild/freebsd-arm64` from 0.25.3 to 0.25.5
+- [Release notes](https://github.com/evanw/esbuild/releases)
+- [Changelog](https://github.com/evanw/esbuild/blob/main/CHANGELOG.md)
+- [Commits](https://github.com/evanw/esbuild/compare/v0.25.3...v0.25.5)
+
+Updates `@esbuild/freebsd-x64` from 0.25.3 to 0.25.5
+- [Release notes](https://github.com/evanw/esbuild/releases)
+- [Changelog](https://github.com/evanw/esbuild/blob/main/CHANGELOG.md)
+- [Commits](https://github.com/evanw/esbuild/compare/v0.25.3...v0.25.5)
+
+Updates `@esbuild/linux-arm` from 0.25.3 to 0.25.5
+- [Release notes](https://github.com/evanw/esbuild/releases)
+- [Changelog](https://github.com/evanw/esbuild/blob/main/CHANGELOG.md)
+- [Commits](https://github.com/evanw/esbuild/compare/v0.25.3...v0.25.5)
+
+Updates `@esbuild/linux-arm64` from 0.25.3 to 0.25.5
+- [Release notes](https://github.com/evanw/esbuild/releases)
+- [Changelog](https://github.com/evanw/esbuild/blob/main/CHANGELOG.md)
+- [Commits](https://github.com/evanw/esbuild/compare/v0.25.3...v0.25.5)
+
+Updates `@esbuild/linux-ia32` from 0.25.3 to 0.25.5
+- [Release notes](https://github.com/evanw/esbuild/releases)
+- [Changelog](https://github.com/evanw/esbuild/blob/main/CHANGELOG.md)
+- [Commits](https://github.com/evanw/esbuild/compare/v0.25.3...v0.25.5)
+
+Updates `@esbuild/linux-loong64` from 0.25.3 to 0.25.5
+- [Release notes](https://github.com/evanw/esbuild/releases)
+- [Changelog](https://github.com/evanw/esbuild/blob/main/CHANGELOG.md)
+- [Commits](https://github.com/evanw/esbuild/compare/v0.25.3...v0.25.5)
+
+Updates `@esbuild/linux-mips64el` from 0.25.3 to 0.25.5
+- [Release notes](https://github.com/evanw/esbuild/releases)
+- [Changelog](https://github.com/evanw/esbuild/blob/main/CHANGELOG.md)
+- [Commits](https://github.com/evanw/esbuild/compare/v0.25.3...v0.25.5)
+
+Updates `@esbuild/linux-ppc64` from 0.25.3 to 0.25.5
+- [Release notes](https://github.com/evanw/esbuild/releases)
+- [Changelog](https://github.com/evanw/esbuild/blob/main/CHANGELOG.md)
+- [Commits](https://github.com/evanw/esbuild/compare/v0.25.3...v0.25.5)
+
+Updates `@esbuild/linux-riscv64` from 0.25.3 to 0.25.5
+- [Release notes](https://github.com/evanw/esbuild/releases)
+- [Changelog](https://github.com/evanw/esbuild/blob/main/CHANGELOG.md)
+- [Commits](https://github.com/evanw/esbuild/compare/v0.25.3...v0.25.5)
+
+Updates `@esbuild/linux-s390x` from 0.25.3 to 0.25.5
+- [Release notes](https://github.com/evanw/esbuild/releases)
+- [Changelog](https://github.com/evanw/esbuild/blob/main/CHANGELOG.md)
+- [Commits](https://github.com/evanw/esbuild/compare/v0.25.3...v0.25.5)
+
+Updates `@esbuild/linux-x64` from 0.25.3 to 0.25.5
+- [Release notes](https://github.com/evanw/esbuild/releases)
+- [Changelog](https://github.com/evanw/esbuild/blob/main/CHANGELOG.md)
+- [Commits](https://github.com/evanw/esbuild/compare/v0.25.3...v0.25.5)
+
+Updates `@esbuild/netbsd-arm64` from 0.25.3 to 0.25.5
+- [Release notes](https://github.com/evanw/esbuild/releases)
+- [Changelog](https://github.com/evanw/esbuild/blob/main/CHANGELOG.md)
+- [Commits](https://github.com/evanw/esbuild/compare/v0.25.3...v0.25.5)
+
+Updates `@esbuild/netbsd-x64` from 0.25.3 to 0.25.5
+- [Release notes](https://github.com/evanw/esbuild/releases)
+- [Changelog](https://github.com/evanw/esbuild/blob/main/CHANGELOG.md)
+- [Commits](https://github.com/evanw/esbuild/compare/v0.25.3...v0.25.5)
+
+Updates `@esbuild/openbsd-arm64` from 0.25.3 to 0.25.5
+- [Release notes](https://github.com/evanw/esbuild/releases)
+- [Changelog](https://github.com/evanw/esbuild/blob/main/CHANGELOG.md)
+- [Commits](https://github.com/evanw/esbuild/compare/v0.25.3...v0.25.5)
+
+Updates `@esbuild/openbsd-x64` from 0.25.3 to 0.25.5
+- [Release notes](https://github.com/evanw/esbuild/releases)
+- [Changelog](https://github.com/evanw/esbuild/blob/main/CHANGELOG.md)
+- [Commits](https://github.com/evanw/esbuild/compare/v0.25.3...v0.25.5)
+
+Updates `@esbuild/sunos-x64` from 0.25.3 to 0.25.5
+- [Release notes](https://github.com/evanw/esbuild/releases)
+- [Changelog](https://github.com/evanw/esbuild/blob/main/CHANGELOG.md)
+- [Commits](https://github.com/evanw/esbuild/compare/v0.25.3...v0.25.5)
+
+Updates `@esbuild/win32-arm64` from 0.25.3 to 0.25.5
+- [Release notes](https://github.com/evanw/esbuild/releases)
+- [Changelog](https://github.com/evanw/esbuild/blob/main/CHANGELOG.md)
+- [Commits](https://github.com/evanw/esbuild/compare/v0.25.3...v0.25.5)
+
+Updates `@esbuild/win32-ia32` from 0.25.3 to 0.25.5
+- [Release notes](https://github.com/evanw/esbuild/releases)
+- [Changelog](https://github.com/evanw/esbuild/blob/main/CHANGELOG.md)
+- [Commits](https://github.com/evanw/esbuild/compare/v0.25.3...v0.25.5)
+
+Updates `@esbuild/win32-x64` from 0.25.3 to 0.25.5
+- [Release notes](https://github.com/evanw/esbuild/releases)
+- [Changelog](https://github.com/evanw/esbuild/blob/main/CHANGELOG.md)
+- [Commits](https://github.com/evanw/esbuild/compare/v0.25.3...v0.25.5)
+
+Updates `@types/node` from 22.15.3 to 22.15.29
+- [Release notes](https://github.com/DefinitelyTyped/DefinitelyTyped/releases)
+- [Commits](https://github.com/DefinitelyTyped/DefinitelyTyped/commits/HEAD/types/node)
 
 ---
 updated-dependencies:
-- dependency-name: fastify
-  dependency-version: 
+- dependency-name: "@types/chrome"
+  dependency-version: 0.0.326
+  dependency-type: direct:development
+  update-type: version-update:semver-patch
+  dependency-group: npm-all
+- dependency-name: "@types/leaflet"
+  dependency-version: 1.9.18
+  dependency-type: direct:development
+  update-type: version-update:semver-patch
+  dependency-group: npm-all
+- dependency-name: esbuild
+  dependency-version: 0.25.5
+  dependency-type: direct:development
+  update-type: version-update:semver-patch
+  dependency-group: npm-all
+- dependency-name: "@esbuild/aix-ppc64"
+  dependency-version: 0.25.5
+  dependency-type: indirect
+  update-type: version-update:semver-patch
+  dependency-group: npm-all
+- dependency-name: "@esbuild/android-arm"
+  dependency-version: 0.25.5
+  dependency-type: indirect
+  update-type: version-update:semver-patch
+  dependency-group: npm-all
+- dependency-name: "@esbuild/android-arm64"
+  dependency-version: 0.25.5
+  dependency-type: indirect
+  update-type: version-update:semver-patch
+  dependency-group: npm-all
+- dependency-name: "@esbuild/android-x64"
+  dependency-version: 0.25.5
+  dependency-type: indirect
+  update-type: version-update:semver-patch
+  dependency-group: npm-all
+- dependency-name: "@esbuild/darwin-arm64"
+  dependency-version: 0.25.5
+  dependency-type: indirect
+  update-type: version-update:semver-patch
+  dependency-group: npm-all
+- dependency-name: "@esbuild/darwin-x64"
+  dependency-version: 0.25.5
+  dependency-type: indirect
+  update-type: version-update:semver-patch
+  dependency-group: npm-all
+- dependency-name: "@esbuild/freebsd-arm64"
+  dependency-version: 0.25.5
+  dependency-type: indirect
+  update-type: version-update:semver-patch
+  dependency-group: npm-all
+- dependency-name: "@esbuild/freebsd-x64"
+  dependency-version: 0.25.5
+  dependency-type: indirect
+  update-type: version-update:semver-patch
+  dependency-group: npm-all
+- dependency-name: "@esbuild/linux-arm"
+  dependency-version: 0.25.5
+  dependency-type: indirect
+  update-type: version-update:semver-patch
+  dependency-group: npm-all
+- dependency-name: "@esbuild/linux-arm64"
+  dependency-version: 0.25.5
+  dependency-type: indirect
+  update-type: version-update:semver-patch
+  dependency-group: npm-all
+- dependency-name: "@esbuild/linux-ia32"
+  dependency-version: 0.25.5
+  dependency-type: indirect
+  update-type: version-update:semver-patch
+  dependency-group: npm-all
+- dependency-name: "@esbuild/linux-loong64"
+  dependency-version: 0.25.5
+  dependency-type: indirect
+  update-type: version-update:semver-patch
+  dependency-group: npm-all
+- dependency-name: "@esbuild/linux-mips64el"
+  dependency-version: 0.25.5
+  dependency-type: indirect
+  update-type: version-update:semver-patch
+  dependency-group: npm-all
+- dependency-name: "@esbuild/linux-ppc64"
+  dependency-version: 0.25.5
+  dependency-type: indirect
+  update-type: version-update:semver-patch
+  dependency-group: npm-all
+- dependency-name: "@esbuild/linux-riscv64"
+  dependency-version: 0.25.5
+  dependency-type: indirect
+  update-type: version-update:semver-patch
+  dependency-group: npm-all
+- dependency-name: "@esbuild/linux-s390x"
+  dependency-version: 0.25.5
+  dependency-type: indirect
+  update-type: version-update:semver-patch
+  dependency-group: npm-all
+- dependency-name: "@esbuild/linux-x64"
+  dependency-version: 0.25.5
+  dependency-type: indirect
+  update-type: version-update:semver-patch
+  dependency-group: npm-all
+- dependency-name: "@esbuild/netbsd-arm64"
+  dependency-version: 0.25.5
+  dependency-type: indirect
+  update-type: version-update:semver-patch
+  dependency-group: npm-all
+- dependency-name: "@esbuild/netbsd-x64"
+  dependency-version: 0.25.5
+  dependency-type: indirect
+  update-type: version-update:semver-patch
+  dependency-group: npm-all
+- dependency-name: "@esbuild/openbsd-arm64"
+  dependency-version: 0.25.5
+  dependency-type: indirect
+  update-type: version-update:semver-patch
+  dependency-group: npm-all
+- dependency-name: "@esbuild/openbsd-x64"
+  dependency-version: 0.25.5
+  dependency-type: indirect
+  update-type: version-update:semver-patch
+  dependency-group: npm-all
+- dependency-name: "@esbuild/sunos-x64"
+  dependency-version: 0.25.5
+  dependency-type: indirect
+  update-type: version-update:semver-patch
+  dependency-group: npm-all
+- dependency-name: "@esbuild/win32-arm64"
+  dependency-version: 0.25.5
+  dependency-type: indirect
+  update-type: version-update:semver-patch
+  dependency-group: npm-all
+- dependency-name: "@esbuild/win32-ia32"
+  dependency-version: 0.25.5
+  dependency-type: indirect
+  update-type: version-update:semver-patch
+  dependency-group: npm-all
+- dependency-name: "@esbuild/win32-x64"
+  dependency-version: 0.25.5
+  dependency-type: indirect
+  update-type: version-update:semver-patch
+  dependency-group: npm-all
+- dependency-name: "@types/node"
+  dependency-version: 22.15.29
+  dependency-type: indirect
+  update-type: version-update:semver-patch
+  dependency-group: npm-all
+...
+
+Signed-off-by: dependabot[bot] <support@github.com>
+
+- Bump the npm_and_yarn group
+
+Bumps the npm_and_yarn group in /electron-app/libs/zwiftmap-main/frontend with 2 updates:  and [tar-fs](https://github.com/mafintosh/tar-fs).
+
+
+Updates `tar-fs` from 2.1.2 to 3.0.9
+- [Commits](https://github.com/mafintosh/tar-fs/compare/v2.1.2...v3.0.9)
+
+Updates `tar-fs` from 3.0.8 to 3.0.9
+- [Commits](https://github.com/mafintosh/tar-fs/compare/v2.1.2...v3.0.9)
+
+---
+updated-dependencies:
+- dependency-name: tar-fs
+  dependency-version: 3.0.9
   dependency-type: indirect
   dependency-group: npm_and_yarn
-- dependency-name: netlify-cli
-  dependency-version: 21.5.0
-  dependency-type: direct:development
+- dependency-name: tar-fs
+  dependency-version: 3.0.9
+  dependency-type: indirect
   dependency-group: npm_and_yarn
 ...
 
 Signed-off-by: dependabot[bot] <support@github.com>
 
 
-## [11.3.0] - 2025-05-15
-
-### 💼 Other
-
-- Refactor code structure and remove redundant sections for improved readability and maintainability
-
-- Enhances Charts and Libraries Integration
-
-Replaces outdated screenshots and descriptions in README
-Introduces new "Charts v2" tab with Chart.js support
-Adds Hammer.js for touch/pinch functionality in charts
-Updates dependencies, icons, and credits for improved clarity
-Refines tab visibility and loading behavior for better UX
-
-Enhances charts and updates documentation
-
-Introduces "Charts v2" tab with Chart.js and touch/pinch support
-Replaces outdated screenshots and descriptions in README
-Updates dependencies, icons, and credits for clarity
-Improves tab visibility and loading behavior for better UX
-
-Relates to #456
-
-
-## [8.9.0] - 2025-05-09
-
-### 💼 Other
-
-- Refactor GitHub Actions workflows and enhance application features
-
-- Updated ESLint workflow to remove unnecessary working directory specification.
-- Simplified Prettier workflow by removing SARIF conversion and upload steps, added continue-on-error option.
-- Cleaned up repo-stats workflow by removing redundant plugin configurations.
-- Enhanced README.md with additional visuals and badges for better project visibility.
-- Improved accessibility by adding title attributes to iframes in index.html.
-- Obfuscated API keys in index-CQWboq_8.js for security.
-- Added IPC handlers in main.js to retrieve app, Electron, Node.js, and Chrome versions.
-- Implemented tab button enabling/disabling functionality in main UI and utility functions.
-- Added hover effects and improved close button functionality in about modal.
-- Removed unnecessary tsconfig.json file.
-- Created enableTabButtons.js utility to manage tab button states.
-
-
-## [8.7.0] - 2025-05-08
-
-### ⚙️ Miscellaneous Tasks
-
-- Update GitHub Actions workflows and dependencies; fix badge link in README
-
-
-## [8.6.0] - 2025-05-08
-
-### 🚀 Features
-
-- Update GitHub workflows with concurrency settings and add new badges to README
-
-
-## [8.4.0] - 2025-05-08
-
-### 🚀 Features
-
-- Update GitHub workflows for improved linting and scanning processes
-
-
 ## [8.0.0] - 2025-05-07
-
-### 💼 Other
-
-- Refactor and enhance Electron app functionality
-
-- Added global variable declaration in renderTable.js for jQuery usage.
-- Simplified error handling in setupTheme.js by removing the error parameter.
-- Improved showFitData.js by refactoring file name handling and UI updates for better readability and performance.
-- Updated windowStateUtils.js to include global variable declarations for better compatibility.
-- Removed package-lock.json and package.json to streamline dependencies.
-- Introduced GitHub Actions workflows for automated greetings, security scanning with Sobelow, style linting, and code linting with Super Linter.
-- Added screenfull.min.js library for fullscreen functionality.
-- Implemented setupWindow.js to manage window load events and tab interactions more efficiently.
-
-- Add Vitest configuration and Stylelint configuration files
-
-- Created vitest.config.js to set up testing environment with jsdom and specified setup files.
-- Added stylelint.config.js to enforce standard stylelint rules, including preventing empty blocks.
-
-
-## [2.3.11] - 2025-05-03
-
-### 🚀 Features
-
-- Add listener for decoder options changes and update data table
-
-
-## [2.3.9] - 2025-05-03
 
 ### 🚀 Features
 
@@ -924,6 +840,8 @@ Relates to #456
 - Add core files for FIT File Viewer application
 
 - Unify file open logic and ensure both readers update from all sources
+
+- Add listener for decoder options changes and update data table
 
 
 ### 🐛 Bug Fixes
@@ -1113,6 +1031,22 @@ build(deps): bump the npm-all group in /electron-app/libs/zwiftmap-main/backend 
 - Merge pull request #56 from Nick2bad4u/dependabot/npm_and_yarn/electron-app/libs/zwiftmap-main/browser-extension/npm-all-ccf39fe968
 
 build(deps-dev): bump @types/chrome from 0.0.317 to 0.0.318 in /electron-app/libs/zwiftmap-main/browser-extension in the npm-all group
+
+- Refactor and enhance Electron app functionality
+
+- Added global variable declaration in renderTable.js for jQuery usage.
+- Simplified error handling in setupTheme.js by removing the error parameter.
+- Improved showFitData.js by refactoring file name handling and UI updates for better readability and performance.
+- Updated windowStateUtils.js to include global variable declarations for better compatibility.
+- Removed package-lock.json and package.json to streamline dependencies.
+- Introduced GitHub Actions workflows for automated greetings, security scanning with Sobelow, style linting, and code linting with Super Linter.
+- Added screenfull.min.js library for fullscreen functionality.
+- Implemented setupWindow.js to manage window load events and tab interactions more efficiently.
+
+- Add Vitest configuration and Stylelint configuration files
+
+- Created vitest.config.js to set up testing environment with jsdom and specified setup files.
+- Added stylelint.config.js to enforce standard stylelint rules, including preventing empty blocks.
 
 
 ### 🎨 Styling

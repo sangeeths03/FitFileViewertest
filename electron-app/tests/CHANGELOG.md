@@ -9,8 +9,8 @@ All notable changes to this project will be documented in this file.
 
 - Update changelogs and scripts: Add new version numbers, enhance GitHub Actions, and implement release cleanup script
 
+- Update changelogs and version numbers for releases 16.4.0, 16.5.0, and 16.6.0; enhance GitHub Actions and implement release cleanup script
 
-## [15.9.0] - 2025-06-05
 
 ### ⚙️ Miscellaneous Tasks
 

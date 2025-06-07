@@ -5,50 +5,14 @@ All notable changes to this project will be documented in this file.
 
 ## [unreleased]
 
-### 💼 Other
-
-- Update changelogs and scripts: Add new version numbers, enhance GitHub Actions, and implement release cleanup script
-
-
-## [15.9.0] - 2025-06-05
-
-### 💼 Other
-
-- Improves UI robustness and fullscreen handling
-
-Refactors UI utility functions for better error handling, DOM validation, and code clarity. Enhances fullscreen logic for reliability and accessibility, including robust event management and overlay cleanup. Updates map layer attributions and usage notes, improves notification display, and adds more defensive checks throughout tab and table-related utilities. Also updates version metadata and minor menu text.
-
-These improvements aim to make the app's interface more resilient to edge cases and DOM inconsistencies while streamlining the codebase for maintainability.
-
-- Improves event handling and security, streamlines startup
-
-Refines event listener options for better touch and scroll control, enhancing responsiveness and preventing unwanted behavior. Strengthens security by blocking navigation to untrusted URLs in new and existing windows. Simplifies tab setup logic and startup functions for maintainability. Excludes certain library files from automated workflows and linting to speed up CI. Small UI and code hygiene improvements.
-
-- Refactor build workflow and update artifact naming conventions; improve CSS stylelint rules and fix README formatting
-
-
-### ⚙️ Miscellaneous Tasks
-
-- Add changelog files for electron-app, tests, and utils
-
-
-## [12.8.0] - 2025-05-20
-
 ### 🚀 Features
+
+- Add support for uploading distributables to archive.org and enhance drag-and-drop functionality in the UI
 
 - Update workflows to download all release assets and improve chart rendering options
 
 - Enhance drag-and-drop functionality for Zwift iframe and improve tab management
 
-
-## [11.4.0] - 2025-05-16
-
-### 🚀 Features
-
-- Add support for uploading distributables to archive.org and enhance drag-and-drop functionality in the UI
-
-
-## [11.3.0] - 2025-05-15
 
 ### 💼 Other
 
@@ -69,17 +33,35 @@ Improves tab visibility and loading behavior for better UX
 
 Relates to #456
 
+- Improves UI robustness and fullscreen handling
 
-## [11.2.0] - 2025-05-15
+Refactors UI utility functions for better error handling, DOM validation, and code clarity. Enhances fullscreen logic for reliability and accessibility, including robust event management and overlay cleanup. Updates map layer attributions and usage notes, improves notification display, and adds more defensive checks throughout tab and table-related utilities. Also updates version metadata and minor menu text.
+
+These improvements aim to make the app's interface more resilient to edge cases and DOM inconsistencies while streamlining the codebase for maintainability.
+
+- Improves event handling and security, streamlines startup
+
+Refines event listener options for better touch and scroll control, enhancing responsiveness and preventing unwanted behavior. Strengthens security by blocking navigation to untrusted URLs in new and existing windows. Simplifies tab setup logic and startup functions for maintainability. Excludes certain library files from automated workflows and linting to speed up CI. Small UI and code hygiene improvements.
+
+- Refactor build workflow and update artifact naming conventions; improve CSS stylelint rules and fix README formatting
+
+- Update changelogs and scripts: Add new version numbers, enhance GitHub Actions, and implement release cleanup script
+
+- Update changelogs and version numbers for releases 16.4.0, 16.5.0, and 16.6.0; enhance GitHub Actions and implement release cleanup script
+
 
 ### ⚙️ Miscellaneous Tasks
 
 - Update dependencies and improve map rendering logic
 
+- Add changelog files for electron-app, tests, and utils
+
 
 ## [11.0.0] - 2025-05-14
 
 ### 🆕 New Version Number
+
+- Bump version to 10.1.0 and enhance overlay file management with accessibility checks and clear all functionality
 
 - Bump version to 10.9.0 and enhance overlay handling in map rendering
 
@@ -90,23 +72,13 @@ Improves map rendering by refining overlay management, ensuring precise zoom beh
 Relates to improved user experience in map visualization.
 
 
-## [10.9.0] - 2025-05-14
-
 ### 💼 Other
 
-- Refactors and optimizes codebase formatting and structure
+- Enhance elevation profile button and loading overlay functionality
 
-Applies consistent formatting across files to enhance readability
-Reduces nested conditions and simplifies logic for maintainability
-Improves performance by optimizing loops and reducing redundant calculations
-Updates Prettier configuration for ES5 trailing comma style
+- Enhance GPX export button validation and improve file loading error handling
 
-No functional changes introduced
-
-
-## [10.8.0] - 2025-05-13
-
-### 💼 Other
+- Enhance theme handling and improve map rendering performance; update version to 10.4.0
 
 - Refactor code structure and remove redundant sections for improved readability and maintainability
 
@@ -119,182 +91,17 @@ Introduces error handling for missing location data
 
 Fixes #123
 
+- Refactors and optimizes codebase formatting and structure
 
-## [10.5.0] - 2025-05-13
+Applies consistent formatting across files to enhance readability
+Reduces nested conditions and simplifies logic for maintainability
+Improves performance by optimizing loops and reducing redundant calculations
+Updates Prettier configuration for ES5 trailing comma style
 
-### 💼 Other
-
-- Enhance theme handling and improve map rendering performance; update version to 10.4.0
-
-
-## [10.4.0] - 2025-05-12
-
-### 💼 Other
-
-- Enhance GPX export button validation and improve file loading error handling
-
-
-## [10.3.0] - 2025-05-12
-
-### 💼 Other
-
-- Enhance elevation profile button and loading overlay functionality
-
-
-## [10.2.0] - 2025-05-11
-
-### 🆕 New Version Number
-
-- Bump version to 10.1.0 and enhance overlay file management with accessibility checks and clear all functionality
+No functional changes introduced
 
 
 ## [10.0.0] - 2025-05-11
-
-### 💼 Other
-
-- Enhances map overlay functionality and fixes workflow issues
-
-Refines map rendering with dynamic overlay highlights and improved color management. Updates tooltip display to include filenames and enhances UI accessibility. Exports color palette for consistency across components.
-
-Fixes unsupported input in repo-stats workflow and corrects artifact path in eslint workflow. Updates dependencies to version 9.9.0.
-
-
-## [9.9.0] - 2025-05-10
-
-### 💼 Other
-
-- Enhance map rendering functionality with fit file overlays and new controls
-
-- Integrated functionality to add fit files to the map, including a button for adding fit files and a list to display shown files.
-- Implemented overlay drawing for loaded fit files, allowing for visual representation on the map.
-- Updated marker count selector to refresh the shown files list when the marker count changes.
-- Improved map controls by adding a simple measurement tool and ensuring proper bounds fitting for overlays.
-- Added favicon.ico to the project.
-
-
-## [9.5.0] - 2025-05-09
-
-### 🚜 Refactor
-
-- Remove unused VS Code extension files and assets
-
-
-## [9.2.0] - 2025-05-09
-
-### 🚀 Features
-
-- Update Node.js version to 20 in workflows
-
-
-## [8.9.0] - 2025-05-09
-
-### 💼 Other
-
-- Refactor GitHub Actions workflows and enhance application features
-
-- Updated ESLint workflow to remove unnecessary working directory specification.
-- Simplified Prettier workflow by removing SARIF conversion and upload steps, added continue-on-error option.
-- Cleaned up repo-stats workflow by removing redundant plugin configurations.
-- Enhanced README.md with additional visuals and badges for better project visibility.
-- Improved accessibility by adding title attributes to iframes in index.html.
-- Obfuscated API keys in index-CQWboq_8.js for security.
-- Added IPC handlers in main.js to retrieve app, Electron, Node.js, and Chrome versions.
-- Implemented tab button enabling/disabling functionality in main UI and utility functions.
-- Added hover effects and improved close button functionality in about modal.
-- Removed unnecessary tsconfig.json file.
-- Created enableTabButtons.js utility to manage tab button states.
-
-
-## [8.7.0] - 2025-05-08
-
-### ⚙️ Miscellaneous Tasks
-
-- Update GitHub Actions workflows and dependencies; fix badge link in README
-
-
-## [8.1.0] - 2025-05-08
-
-### 🚀 Features
-
-- Enhance Electron app functionality and UI
-
-
-### 💼 Other
-
-- Refactor and enhance Electron app functionality
-
-- Added global variable declaration in renderTable.js for jQuery usage.
-- Simplified error handling in setupTheme.js by removing the error parameter.
-- Improved showFitData.js by refactoring file name handling and UI updates for better readability and performance.
-- Updated windowStateUtils.js to include global variable declarations for better compatibility.
-- Removed package-lock.json and package.json to streamline dependencies.
-- Introduced GitHub Actions workflows for automated greetings, security scanning with Sobelow, style linting, and code linting with Super Linter.
-- Added screenfull.min.js library for fullscreen functionality.
-- Implemented setupWindow.js to manage window load events and tab interactions more efficiently.
-
-
-## [7.7.0] - 2025-05-07
-
-### 🚀 Features
-
-- Refactor UI components and enhance fullscreen functionality with new utilities
-
-
-## [7.6.0] - 2025-05-06
-
-### 🚀 Features
-
-- Enhance UI and functionality with modern modal dialog and improved notifications
-
-
-## [7.2.0] - 2025-05-06
-
-### 🚀 Features
-
-- Update credits section in index.html and enhance accessibility features in the app menu
-
-
-## [7.0.0] - 2025-05-06
-
-### 🚀 Features
-
-- Enhance accessibility features with font size and high contrast options
-
-
-### 💼 Other
-
-- Implement fullscreen toggle functionality and update version to 6.8.0
-
-
-## [6.8.0] - 2025-05-06
-
-### 💼 Other
-
-- Update version to 6.3.0 and enhance artifact handling in package.json; modify buildAppMenu.js for menu item updates
-
-- Enhance application menu with About and Keyboard Shortcuts options, and enable restart after updates
-
-
-## [5.8.0] - 2025-05-05
-
-### 💼 Other
-
-- Add IPC handlers for file menu actions and enhance export functionality
-
-
-## [5.3.0] - 2025-05-05
-
-### 💼 Other
-
-- Refactor buildAppMenu function parameters for improved readability and update package version to 5.2.0
-
-
-### ⚙️ Miscellaneous Tasks
-
-- Update dependencies and version to 2.3.10
-
-
-## [2.3.9] - 2025-05-03
 
 ### 🚀 Features
 
@@ -333,6 +140,18 @@ Fixes unsupported input in repo-stats workflow and corrects artifact path in esl
 - Add mapping for unknown FIT messages and enhance label application logic
 
 - Unify file open logic and ensure both readers update from all sources
+
+- Enhance accessibility features with font size and high contrast options
+
+- Update credits section in index.html and enhance accessibility features in the app menu
+
+- Enhance UI and functionality with modern modal dialog and improved notifications
+
+- Refactor UI components and enhance fullscreen functionality with new utilities
+
+- Enhance Electron app functionality and UI
+
+- Update Node.js version to 20 in workflows
 
 
 ### 🐛 Bug Fixes
@@ -429,6 +248,55 @@ Enhances dark/light mode theme compatibility
 
 - Implement theme management and decoder options persistence using electron-store
 
+- Refactor buildAppMenu function parameters for improved readability and update package version to 5.2.0
+
+- Add IPC handlers for file menu actions and enhance export functionality
+
+- Update version to 6.3.0 and enhance artifact handling in package.json; modify buildAppMenu.js for menu item updates
+
+- Enhance application menu with About and Keyboard Shortcuts options, and enable restart after updates
+
+- Implement fullscreen toggle functionality and update version to 6.8.0
+
+- Refactor and enhance Electron app functionality
+
+- Added global variable declaration in renderTable.js for jQuery usage.
+- Simplified error handling in setupTheme.js by removing the error parameter.
+- Improved showFitData.js by refactoring file name handling and UI updates for better readability and performance.
+- Updated windowStateUtils.js to include global variable declarations for better compatibility.
+- Removed package-lock.json and package.json to streamline dependencies.
+- Introduced GitHub Actions workflows for automated greetings, security scanning with Sobelow, style linting, and code linting with Super Linter.
+- Added screenfull.min.js library for fullscreen functionality.
+- Implemented setupWindow.js to manage window load events and tab interactions more efficiently.
+
+- Refactor GitHub Actions workflows and enhance application features
+
+- Updated ESLint workflow to remove unnecessary working directory specification.
+- Simplified Prettier workflow by removing SARIF conversion and upload steps, added continue-on-error option.
+- Cleaned up repo-stats workflow by removing redundant plugin configurations.
+- Enhanced README.md with additional visuals and badges for better project visibility.
+- Improved accessibility by adding title attributes to iframes in index.html.
+- Obfuscated API keys in index-CQWboq_8.js for security.
+- Added IPC handlers in main.js to retrieve app, Electron, Node.js, and Chrome versions.
+- Implemented tab button enabling/disabling functionality in main UI and utility functions.
+- Added hover effects and improved close button functionality in about modal.
+- Removed unnecessary tsconfig.json file.
+- Created enableTabButtons.js utility to manage tab button states.
+
+- Enhance map rendering functionality with fit file overlays and new controls
+
+- Integrated functionality to add fit files to the map, including a button for adding fit files and a list to display shown files.
+- Implemented overlay drawing for loaded fit files, allowing for visual representation on the map.
+- Updated marker count selector to refresh the shown files list when the marker count changes.
+- Improved map controls by adding a simple measurement tool and ensuring proper bounds fitting for overlays.
+- Added favicon.ico to the project.
+
+- Enhances map overlay functionality and fixes workflow issues
+
+Refines map rendering with dynamic overlay highlights and improved color management. Updates tooltip display to include filenames and enhances UI accessibility. Exports color palette for consistency across components.
+
+Fixes unsupported input in repo-stats workflow and corrects artifact path in eslint workflow. Updates dependencies to version 9.9.0.
+
 
 ### 🚜 Refactor
 
@@ -460,6 +328,8 @@ fix: add logic to renderTable for destroying existing DataTable instances before
 
 - Change Dependabot update schedule from daily to monthly for all ecosystems; add lap selection UI logic to a new module
 
+- Remove unused VS Code extension files and assets
+
 
 ### 📚 Documentation
 
@@ -474,6 +344,13 @@ fix: add logic to renderTable for destroying existing DataTable instances before
 ### 🧪 Testing
 
 - Add unit tests for theme management functions
+
+
+### ⚙️ Miscellaneous Tasks
+
+- Update dependencies and version to 2.3.10
+
+- Update GitHub Actions workflows and dependencies; fix badge link in README
 
 
 <!-- generated by git-cliff -->

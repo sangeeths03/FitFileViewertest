@@ -195,55 +195,96 @@ For a detailed list of changes, bug fixes, and new features, please refer to the
 
 - The filenames follow a consistent naming convention to indicate the platform, architecture, format, and version. Replace `X.X.X` with the actual release version (e.g., `14.8.0`)
 
-- [➡️ **Go to the Latest Release**](https://github.com/Nick2bad4u/FitFileViewer/releases/latest)
+[➡️ **Go to the Latest Release**](https://github.com/Nick2bad4u/FitFileViewer/releases/latest)
 
 ### 🪟 Windows Builds
 
-| Platform | Architecture      | Format           | Filename Example                              |
-| :------- | :---------------- | :--------------- | :--------------------------------------------- |
-| Windows  | x64               | Installer EXE    | Fit-File-Viewer-nsis-x64-X.X.X.exe             |
-| Windows  | x64               | Installer Web    | Fit-File-Viewer-nsis-web-x64-X.X.X.exe         |
-| Windows  | x64               | Installer 7z     | fitfileviewer-X.X.X-x64.nsis.7z                |
-| Windows  | x64               | Squirrel EXE     | Fit-File-Viewer-squirrel-x64-X.X.X.exe         |
-| Windows  | x64               | MSI              | Fit-File-Viewer-msi-x64-X.X.X.msi              |
-| Windows  | x64               | MSI 7z           | Fit-File-Viewer-msi-x64-X.X.X.7z               |
-| Windows  | x64               | MSI TAR.BZ2      | Fit-File-Viewer-msi-x64-X.X.X.tar.bz2          |
-| Windows  | x64               | MSI TAR.GZ       | Fit-File-Viewer-msi-x64-X.X.X.tar.gz           |
-| Windows  | x64               | MSI TAR.XZ       | Fit-File-Viewer-msi-x64-X.X.X.tar.xz           |
-| Windows  | x64               | MSI ZIP          | Fit-File-Viewer-msi-x64-X.X.X.zip              |
-| Windows  | x64               | Portable         | Fit-File-Viewer-portable-x64-X.X.X.exe         |
-| Windows  | x64               | Blockmap         | Fit-File-Viewer-nsis-x64-X.X.X.exe.blockmap    |
-| Windows  | ia32 / win32      | Installer EXE    | Fit-File-Viewer-nsis-ia32-X.X.X.exe            |
-| Windows  | ia32 / win32      | Installer Web    | Fit-File-Viewer-nsis-web-ia32-X.X.X.exe        |
-| Windows  | ia32 / win32      | Installer 7z     | fitfileviewer-X.X.X-ia32.nsis.7z               |
-| Windows  | ia32 / win32      | Squirrel EXE     | Fit-File-Viewer-squirrel-ia32-X.X.X.exe        |
-| Windows  | ia32 / win32      | MSI              | Fit-File-Viewer-msi-ia32-X.X.X.msi             |
-| Windows  | ia32 / win32      | MSI 7z           | Fit-File-Viewer-msi-ia32-X.X.X.7z              |
-| Windows  | ia32 / win32      | MSI TAR.BZ2      | Fit-File-Viewer-msi-ia32-X.X.X.tar.bz2         |
-| Windows  | ia32 / win32      | MSI TAR.GZ       | Fit-File-Viewer-msi-ia32-X.X.X.tar.gz          |
-| Windows  | ia32 / win32      | MSI TAR.XZ       | Fit-File-Viewer-msi-ia32-X.X.X.tar.xz          |
-| Windows  | ia32 / win32      | MSI ZIP          | Fit-File-Viewer-msi-ia32-X.X.X.zip             |
-| Windows  | ia32 / win32      | Portable         | Fit-File-Viewer-portable-ia32-X.X.X.exe        |
-| Windows  | ia32 / win32      | Blockmap         | Fit-File-Viewer-nsis-ia32-X.X.X.exe.blockmap   |
+<sub> - Most Windows users should download the "Installer EXE", "MSI" or "Portable" versions  </sub>
+
+| Platform | Architecture    | Format             | Filename Example                              |
+| :------- | :-------------- | :----------------- | :---------------------------------------------|
+| Windows  | x64             | Installer EXE      | Fit-File-Viewer-nsis-x64-X.X.X.exe            |
+| Windows  | x64             | Installer Web      | Fit-File-Viewer-nsis-web-x64-X.X.X.exe        |
+| Windows  | x64             | Installer 7z       | fitfileviewer-X.X.X-x64.nsis.7z               |
+| Windows  | x64             | Squirrel EXE       | Fit-File-Viewer-squirrel-x64-X.X.X.exe        |
+| Windows  | x64             | MSI                | Fit-File-Viewer-msi-x64-X.X.X.msi             |
+| Windows  | x64             | MSI 7z             | Fit-File-Viewer-msi-x64-X.X.X.7z              |
+| Windows  | x64             | MSI TAR.BZ2        | Fit-File-Viewer-msi-x64-X.X.X.tar.bz2         |
+| Windows  | x64             | MSI TAR.GZ         | Fit-File-Viewer-msi-x64-X.X.X.tar.gz          |
+| Windows  | x64             | MSI TAR.XZ         | Fit-File-Viewer-msi-x64-X.X.X.tar.xz          |
+| Windows  | x64             | MSI ZIP            | Fit-File-Viewer-msi-x64-X.X.X.zip             |
+| Windows  | x64             | Portable           | Fit-File-Viewer-portable-x64-X.X.X.exe        |
+| Windows  | ia32 / win32    | Installer EXE      | Fit-File-Viewer-nsis-ia32-X.X.X.exe           |
+| Windows  | ia32 / win32    | Installer Web      | Fit-File-Viewer-nsis-web-ia32-X.X.X.exe       |
+| Windows  | ia32 / win32    | Installer 7z       | fitfileviewer-X.X.X-ia32.nsis.7z              |
+| Windows  | ia32 / win32    | Squirrel EXE       | Fit-File-Viewer-squirrel-ia32-X.X.X.exe       |
+| Windows  | ia32 / win32    | MSI                | Fit-File-Viewer-msi-ia32-X.X.X.msi            |
+| Windows  | ia32 / win32    | MSI 7z             | Fit-File-Viewer-msi-ia32-X.X.X.7z             |
+| Windows  | ia32 / win32    | MSI TAR.BZ2        | Fit-File-Viewer-msi-ia32-X.X.X.tar.bz2        |
+| Windows  | ia32 / win32    | MSI TAR.GZ         | Fit-File-Viewer-msi-ia32-X.X.X.tar.gz         |
+| Windows  | ia32 / win32    | MSI TAR.XZ         | Fit-File-Viewer-msi-ia32-X.X.X.tar.xz         |
+| Windows  | ia32 / win32    | MSI ZIP            | Fit-File-Viewer-msi-ia32-X.X.X.zip            |
+| Windows  | ia32 / win32    | Portable           | Fit-File-Viewer-portable-ia32-X.X.X.exe       |
+
+#### 🗂️ Update Files (Nupkg & Blockmap)
+
+| Platform | Architecture    | Format             | Filename Example                              |
+| :------- | :-------------- | :----------------- | :--------------------------------------------- |
+| Windows  | x64             | Blockmap           | Fit-File-Viewer-nsis-x64-X.X.X.exe.blockmap   |
+| Windows  | ia32 / win32    | Blockmap           | Fit-File-Viewer-nsis-ia32-X.X.X.exe.blockmap  |
+| Windows  | x64             | Squirrel Nupkg     | fitfileviewer-X.X.X-full.nupkg                |
+| Windows  | ia32 / win32    | Squirrel Nupkg     | fitfileviewer-X.X.X-win32-full.nupkg          |
+| Windows  | x64             | Squirrel RELEASES  | RELEASES                                      |
+| Windows  | ia32 / win32    | Squirrel RELEASES  | RELEASES-win32                                |
+
+**Note:**  
+
+- Most users should download the "Installer EXE", "MSI" or "Portable" for a standard installation experience.  
+- "Portable" builds do not require installation—just extract and run.  
+- "Squirrel Nupkg/RELEASES" and "Blockmap" files are used for automatic updates and are not intended for manual installation.  
+- Replace `X.X.X` with the actual release version (e.g., `16.3.0`).
 
 ### 🍏 Mac Builds
 
-| Platform | Architecture   | Format         | Filename Example                                 |
-| :------- | :------------- | :------------- | :----------------------------------------------- |
-| macOS    | x64            | DMG            | Fit-File-Viewer-dmg-x64-X.X.X.dmg                |
-| macOS    | x64            | DMG Blockmap   | Fit-File-Viewer-dmg-x64-X.X.X.dmg.blockmap       |
-| macOS    | x64            | PKG            | Fit-File-Viewer-pkg-x64-X.X.X.pkg                |
-| macOS    | x64            | TAR.BZ2        | Fit-File-Viewer-darwin-X.X.X.tar.bz2             |
-| macOS    | x64            | TAR.GZ         | Fit-File-Viewer-darwin-X.X.X.tar.gz              |
-| macOS    | x64            | TAR.XZ         | Fit-File-Viewer-darwin-X.X.X.tar.xz              |
-| macOS    | universal      | DMG            | Fit-File-Viewer-dmg-universal-X.X.X.dmg          |
-| macOS    | universal      | DMG Blockmap   | Fit-File-Viewer-dmg-universal-X.X.X.dmg.blockmap |
-| macOS    | universal      | PKG            | Fit-File-Viewer-pkg-universal-X.X.X.pkg          |
-| macOS    | universal      | ZIP            | Fit-File-Viewer-darwin-X.X.X.zip                 |
-| macOS    | universal      | ZIP Blockmap   | Fit-File-Viewer-darwin-X.X.X.zip.blockmap        |
-| macOS    | arm64          | DMG            | Fit-File-Viewer-dmg-arm64-X.X.X.dmg              |
-| macOS    | arm64          | DMG Blockmap   | Fit-File-Viewer-dmg-arm64-X.X.X.dmg.blockmap     |
-| macOS    | arm64          | PKG            | Fit-File-Viewer-pkg-arm64-X.X.X.pkg              |
+<sub> - Most Mac users should download the "DMG" or "PKG" versions  </sub>
+
+
+| Platform | Architecture | Format     | Filename Example                                 |
+| :------- | :----------- | :--------- | :----------------------------------------------- |
+| macOS    | x64          | DMG        | Fit-File-Viewer-dmg-x64-X.X.X.dmg                |
+| macOS    | x64          | PKG        | Fit-File-Viewer-pkg-x64-X.X.X.pkg                |
+| macOS    | x64          | TAR.BZ2    | Fit-File-Viewer-darwin-X.X.X.tar.bz2             |
+| macOS    | x64          | TAR.GZ     | Fit-File-Viewer-darwin-X.X.X.tar.gz              |
+| macOS    | x64          | TAR.XZ     | Fit-File-Viewer-darwin-X.X.X.tar.xz              |
+| macOS    | universal    | DMG        | Fit-File-Viewer-dmg-universal-X.X.X.dmg          |
+| macOS    | universal    | PKG        | Fit-File-Viewer-pkg-universal-X.X.X.pkg          |
+| macOS    | universal    | TAR.BZ2    | Fit-File-Viewer-darwin-universal-X.X.X.tar.bz2   |
+| macOS    | universal    | TAR.GZ     | Fit-File-Viewer-darwin-universal-X.X.X.tar.gz    |
+| macOS    | universal    | TAR.XZ     | Fit-File-Viewer-darwin-universal-X.X.X.tar.xz    |
+| macOS    | universal    | ZIP        | Fit-File-Viewer-darwin-universal-X.X.X.zip       |
+| macOS    | arm64        | DMG        | Fit-File-Viewer-dmg-arm64-X.X.X.dmg              |
+| macOS    | arm64        | PKG        | Fit-File-Viewer-pkg-arm64-X.X.X.pkg              |
+| macOS    | arm64        | TAR.BZ2    | Fit-File-Viewer-darwin-arm64-X.X.X.tar.bz2       |
+| macOS    | arm64        | TAR.GZ     | Fit-File-Viewer-darwin-arm64-X.X.X.tar.gz        |
+| macOS    | arm64        | TAR.XZ     | Fit-File-Viewer-darwin-arm64-X.X.X.tar.xz        |
+| macOS    | arm64        | ZIP        | Fit-File-Viewer-darwin-arm64-X.X.X.zip           |
+
+#### 🗂️ Update Files (Blockmap)
+
+| Platform | Architecture | Format         | Filename Example                                     |
+| :------- | :----------- | :------------- | :--------------------------------------------------- |
+| macOS    | x64          | DMG Blockmap   | Fit-File-Viewer-dmg-x64-X.X.X.dmg.blockmap           |
+| macOS    | universal    | DMG Blockmap   | Fit-File-Viewer-dmg-universal-X.X.X.dmg.blockmap     |
+| macOS    | arm64        | DMG Blockmap   | Fit-File-Viewer-dmg-arm64-X.X.X.dmg.blockmap         |
+| macOS    | universal    | ZIP Blockmap   | Fit-File-Viewer-darwin-universal-X.X.X.zip.blockmap  |
+| macOS    | arm64        | ZIP Blockmap   | Fit-File-Viewer-darwin-arm64-X.X.X.zip.blockmap      |
+
+**Note:**  
+
+- "Blockmap" files are used for differential updates and are not intended for manual installation.  
+- Replace `X.X.X` with the actual release version (e.g., `16.3.0`).
+- Most users should download the "DMG" or "PKG" for a standard installation experience.
+- "ZIP" and "TAR" archives are provided for advanced users or manual extraction.
 
 ### 🐧 Linux Builds
 
@@ -261,7 +302,9 @@ For a detailed list of changes, bug fixes, and new features, please refer to the
 | Linux    | x64          | APK (Alpine)   | Fit-File-Viewer-apk-x64-X.X.X.apk                  |
 | Linux    | x64          | FreeBSD        | Fit-File-Viewer-freebsd-x64-X.X.X.freebsd          |
 
-`<sub>`Replace `X.X.X` with the actual release version, e.g. 16.3.0.`</sub>`
+<sub> - Most Linux users should download the "AppImage", "DEB" or "RPM" versions  </sub>
+
+<sub>Replace <code>X.X.X</code> with the actual release version (e.g., <code>16.3.0</code>).</sub>
 
 [➡️ **Go to the Latest Release**](https://github.com/Nick2bad4u/FitFileViewer/releases/latest)
 

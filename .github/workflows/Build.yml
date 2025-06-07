@@ -622,14 +622,18 @@ jobs:
 
             ${{ github.event.head_commit.message }}
 
+            **[📄 View Full Changelog](https://github.com/${{ github.repository }}/blob/main/CHANGELOG.md)**
+
             ---
             ### 📦 Download FitFileViewer
+
+            <sub> - Most Windows users should download the "Installer EXE", "MSI" or "Portable" versions  </sub>
+
             | Windows  | Builds       | Format           | Download Link | 
             |----------|--------------|------------------|---------------|
             | Windows  | x64          | Installer EXE    | [Fit-File-Viewer-nsis-x64-${{ needs.bump-version.outputs.new_version }}.exe](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-nsis-x64-${{ needs.bump-version.outputs.new_version }}.exe) |
             | Windows  | x64          | Installer Web    | [Fit-File-Viewer-nsis-web-x64-${{ needs.bump-version.outputs.new_version }}.exe](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-nsis-web-x64-${{ needs.bump-version.outputs.new_version }}.exe) |
             | Windows  | x64          | Installer 7z     | [fitfileviewer-${{ needs.bump-version.outputs.new_version }}-x64.nsis.7z](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/fitfileviewer-${{ needs.bump-version.outputs.new_version }}-x64.nsis.7z) |
-            | Windows  | x64          | Squirrel EXE     | [Fit-File-Viewer-squirrel-x64-${{ needs.bump-version.outputs.new_version }}.exe](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-squirrel-x64-${{ needs.bump-version.outputs.new_version }}.exe) |
             | Windows  | x64          | MSI              | [Fit-File-Viewer-msi-x64-${{ needs.bump-version.outputs.new_version }}.msi](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-msi-x64-${{ needs.bump-version.outputs.new_version }}.msi) |
             | Windows  | x64          | MSI 7z           | [Fit-File-Viewer-msi-x64-${{ needs.bump-version.outputs.new_version }}.7z](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-msi-x64-${{ needs.bump-version.outputs.new_version }}.7z) |
             | Windows  | x64          | MSI TAR.BZ2      | [Fit-File-Viewer-msi-x64-${{ needs.bump-version.outputs.new_version }}.tar.bz2](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-msi-x64-${{ needs.bump-version.outputs.new_version }}.tar.bz2) |
@@ -637,11 +641,9 @@ jobs:
             | Windows  | x64          | MSI TAR.XZ       | [Fit-File-Viewer-msi-x64-${{ needs.bump-version.outputs.new_version }}.tar.xz](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-msi-x64-${{ needs.bump-version.outputs.new_version }}.tar.xz) |
             | Windows  | x64          | MSI ZIP          | [Fit-File-Viewer-msi-x64-${{ needs.bump-version.outputs.new_version }}.zip](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-msi-x64-${{ needs.bump-version.outputs.new_version }}.zip) |
             | Windows  | x64          | Portable         | [Fit-File-Viewer-portable-x64-${{ needs.bump-version.outputs.new_version }}.exe](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-portable-x64-${{ needs.bump-version.outputs.new_version }}.exe) |
-            | Windows  | x64          | Blockmap         | [Fit-File-Viewer-nsis-x64-${{ needs.bump-version.outputs.new_version }}.exe.blockmap](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-nsis-x64-${{ needs.bump-version.outputs.new_version }}.exe.blockmap) |
             | Windows  | ia32 / win32 | Installer EXE    | [Fit-File-Viewer-nsis-ia32-${{ needs.bump-version.outputs.new_version }}.exe](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-nsis-ia32-${{ needs.bump-version.outputs.new_version }}.exe) |
             | Windows  | ia32 / win32 | Installer Web    | [Fit-File-Viewer-nsis-web-ia32-${{ needs.bump-version.outputs.new_version }}.exe](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-nsis-web-ia32-${{ needs.bump-version.outputs.new_version }}.exe) |
             | Windows  | ia32 / win32 | Installer 7z     | [fitfileviewer-${{ needs.bump-version.outputs.new_version }}-ia32.nsis.7z](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/fitfileviewer-${{ needs.bump-version.outputs.new_version }}-ia32.nsis.7z) |
-            | Windows  | ia32 / win32 | Squirrel EXE     | [Fit-File-Viewer-squirrel-ia32-${{ needs.bump-version.outputs.new_version }}.exe](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-squirrel-ia32-${{ needs.bump-version.outputs.new_version }}.exe) |
             | Windows  | ia32 / win32 | MSI              | [Fit-File-Viewer-msi-ia32-${{ needs.bump-version.outputs.new_version }}.msi](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-msi-ia32-${{ needs.bump-version.outputs.new_version }}.msi) |
             | Windows  | ia32 / win32 | MSI 7z           | [Fit-File-Viewer-msi-ia32-${{ needs.bump-version.outputs.new_version }}.7z](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-msi-ia32-${{ needs.bump-version.outputs.new_version }}.7z) |
             | Windows  | ia32 / win32 | MSI TAR.BZ2      | [Fit-File-Viewer-msi-ia32-${{ needs.bump-version.outputs.new_version }}.tar.bz2](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-msi-ia32-${{ needs.bump-version.outputs.new_version }}.tar.bz2) |
@@ -649,24 +651,26 @@ jobs:
             | Windows  | ia32 / win32 | MSI TAR.XZ       | [Fit-File-Viewer-msi-ia32-${{ needs.bump-version.outputs.new_version }}.tar.xz](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-msi-ia32-${{ needs.bump-version.outputs.new_version }}.tar.xz) |
             | Windows  | ia32 / win32 | MSI ZIP          | [Fit-File-Viewer-msi-ia32-${{ needs.bump-version.outputs.new_version }}.zip](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-msi-ia32-${{ needs.bump-version.outputs.new_version }}.zip) |
             | Windows  | ia32 / win32 | Portable         | [Fit-File-Viewer-portable-ia32-${{ needs.bump-version.outputs.new_version }}.exe](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-portable-ia32-${{ needs.bump-version.outputs.new_version }}.exe) |
-            | Windows  | ia32 / win32 | Blockmap         | [Fit-File-Viewer-nsis-ia32-${{ needs.bump-version.outputs.new_version }}.exe.blockmap](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-nsis-ia32-${{ needs.bump-version.outputs.new_version }}.exe.blockmap) |
 
             | Mac      | Builds       | Format           | Download Link | 
             |----------|--------------|------------------|---------------|
             | macOS    | x64          | DMG              | [Fit-File-Viewer-dmg-x64-${{ needs.bump-version.outputs.new_version }}.dmg](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-dmg-x64-${{ needs.bump-version.outputs.new_version }}.dmg) |
-            | macOS    | x64          | DMG Blockmap     | [Fit-File-Viewer-dmg-x64-${{ needs.bump-version.outputs.new_version }}.dmg.blockmap](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-dmg-x64-${{ needs.bump-version.outputs.new_version }}.dmg.blockmap) |
             | macOS    | x64          | PKG              | [Fit-File-Viewer-pkg-x64-${{ needs.bump-version.outputs.new_version }}.pkg](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-pkg-x64-${{ needs.bump-version.outputs.new_version }}.pkg) |
             | macOS    | x64          | TAR.BZ2          | [Fit-File-Viewer-darwin-${{ needs.bump-version.outputs.new_version }}.tar.bz2](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-darwin-${{ needs.bump-version.outputs.new_version }}.tar.bz2) |
             | macOS    | x64          | TAR.GZ           | [Fit-File-Viewer-darwin-${{ needs.bump-version.outputs.new_version }}.tar.gz](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-darwin-${{ needs.bump-version.outputs.new_version }}.tar.gz) |
             | macOS    | x64          | TAR.XZ           | [Fit-File-Viewer-darwin-${{ needs.bump-version.outputs.new_version }}.tar.xz](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-darwin-${{ needs.bump-version.outputs.new_version }}.tar.xz) |
             | macOS    | universal    | DMG              | [Fit-File-Viewer-dmg-universal-${{ needs.bump-version.outputs.new_version }}.dmg](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-dmg-universal-${{ needs.bump-version.outputs.new_version }}.dmg) |
-            | macOS    | universal    | DMG Blockmap     | [Fit-File-Viewer-dmg-universal-${{ needs.bump-version.outputs.new_version }}.dmg.blockmap](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-dmg-universal-${{ needs.bump-version.outputs.new_version }}.dmg.blockmap) |
             | macOS    | universal    | PKG              | [Fit-File-Viewer-pkg-universal-${{ needs.bump-version.outputs.new_version }}.pkg](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-pkg-universal-${{ needs.bump-version.outputs.new_version }}.pkg) |
-            | macOS    | universal    | ZIP              | [Fit-File-Viewer-darwin-${{ needs.bump-version.outputs.new_version }}.zip](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-darwin-${{ needs.bump-version.outputs.new_version }}.zip) |
-            | macOS    | universal    | ZIP Blockmap     | [Fit-File-Viewer-darwin-${{ needs.bump-version.outputs.new_version }}.zip.blockmap](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-darwin-${{ needs.bump-version.outputs.new_version }}.zip.blockmap) |
+            | macOS    | universal    | TAR.BZ2          | [Fit-File-Viewer-darwin-universal-${{ needs.bump-version.outputs.new_version }}.tar.bz2](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-darwin-universal-${{ needs.bump-version.outputs.new_version }}.tar.bz2) |
+            | macOS    | universal    | TAR.GZ           | [Fit-File-Viewer-darwin-universal-${{ needs.bump-version.outputs.new_version }}.tar.gz](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-darwin-universal-${{ needs.bump-version.outputs.new_version }}.tar.gz) |
+            | macOS    | universal    | TAR.XZ           | [Fit-File-Viewer-darwin-universal-${{ needs.bump-version.outputs.new_version }}.tar.xz](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-darwin-universal-${{ needs.bump-version.outputs.new_version }}.tar.xz) |
+            | macOS    | universal    | ZIP              | [Fit-File-Viewer-darwin-universal-${{ needs.bump-version.outputs.new_version }}.zip](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-darwin-universal-${{ needs.bump-version.outputs.new_version }}.zip) |
             | macOS    | arm64        | DMG              | [Fit-File-Viewer-dmg-arm64-${{ needs.bump-version.outputs.new_version }}.dmg](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-dmg-arm64-${{ needs.bump-version.outputs.new_version }}.dmg) |
-            | macOS    | arm64        | DMG Blockmap     | [Fit-File-Viewer-dmg-arm64-${{ needs.bump-version.outputs.new_version }}.dmg.blockmap](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-dmg-arm64-${{ needs.bump-version.outputs.new_version }}.dmg.blockmap) |
             | macOS    | arm64        | PKG              | [Fit-File-Viewer-pkg-arm64-${{ needs.bump-version.outputs.new_version }}.pkg](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-pkg-arm64-${{ needs.bump-version.outputs.new_version }}.pkg) |
+            | macOS    | arm64        | TAR.BZ2          | [Fit-File-Viewer-darwin-arm64-${{ needs.bump-version.outputs.new_version }}.tar.bz2](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-darwin-arm64-${{ needs.bump-version.outputs.new_version }}.tar.bz2) |
+            | macOS    | arm64        | TAR.GZ           | [Fit-File-Viewer-darwin-arm64-${{ needs.bump-version.outputs.new_version }}.tar.gz](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-darwin-arm64-${{ needs.bump-version.outputs.new_version }}.tar.gz) |
+            | macOS    | arm64        | TAR.XZ           | [Fit-File-Viewer-darwin-arm64-${{ needs.bump-version.outputs.new_version }}.tar.xz](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-darwin-arm64-${{ needs.bump-version.outputs.new_version }}.tar.xz) |
+            | macOS    | arm64        | ZIP              | [Fit-File-Viewer-darwin-arm64-${{ needs.bump-version.outputs.new_version }}.zip](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-darwin-arm64-${{ needs.bump-version.outputs.new_version }}.zip) |
 
             | Linux    | Builds       | Format           | Download Link |
             |----------|--------------|------------------|---------------|
@@ -682,7 +686,48 @@ jobs:
             | Linux    | x64          | APK (Alpine)     | [Fit-File-Viewer-apk-x64-${{ needs.bump-version.outputs.new_version }}.apk](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-apk-x64-${{ needs.bump-version.outputs.new_version }}.apk) |
             | Linux    | x64          | FreeBSD          | [Fit-File-Viewer-freebsd-x64-${{ needs.bump-version.outputs.new_version }}.freebsd](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-freebsd-x64-${{ needs.bump-version.outputs.new_version }}.freebsd) |
 
-            _See below for full release notes and all available builds._
+            <details>
+              <summary><strong>🔍 Auto-Updater Files </strong></summary>
+
+            **Windows Update Files**
+
+            | Windows  | Builds       | Format           | Download Link | 
+            |----------|--------------|------------------|---------------|
+            | Windows  | x64          | Squirrel EXE     | [Fit-File-Viewer-squirrel-x64-${{ needs.bump-version.outputs.new_version }}.exe](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-squirrel-x64-${{ needs.bump-version.outputs.new_version }}.exe) |
+            | Windows  | x64          | Squirrel Nupkg   | [fitfileviewer-${{ needs.bump-version.outputs.new_version }}-full.nupkg](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/fitfileviewer-${{ needs.bump-version.outputs.new_version }}-full.nupkg) |
+            | Windows  | x64          | Squirrel RELEASES| [RELEASES](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/RELEASES) |
+            | Windows  | x64          | Blockmap         | [Fit-File-Viewer-nsis-x64-${{ needs.bump-version.outputs.new_version }}.exe.blockmap](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-nsis-x64-${{ needs.bump-version.outputs.new_version }}.exe.blockmap) |
+            | Windows  | ia32 / win32 | Squirrel EXE     | [Fit-File-Viewer-squirrel-ia32-${{ needs.bump-version.outputs.new_version }}.exe](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-squirrel-ia32-${{ needs.bump-version.outputs.new_version }}.exe) |
+            | Windows  | ia32 / win32 | Squirrel Nupkg   | [fitfileviewer-${{ needs.bump-version.outputs.new_version }}-win32-full.nupkg](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/fitfileviewer-${{ needs.bump-version.outputs.new_version }}-win32-full.nupkg) |
+            | Windows  | ia32 / win32 | Squirrel RELEASES| [RELEASES-win32](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/RELEASES-win32) |
+            | Windows  | ia32 / win32 | Blockmap         | [Fit-File-Viewer-nsis-ia32-${{ needs.bump-version.outputs.new_version }}.exe.blockmap](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-nsis-ia32-${{ needs.bump-version.outputs.new_version }}.exe.blockmap) |
+
+            **Mac Update Files**
+
+            | Mac      | Builds       | Format           | Download Link | 
+            |----------|--------------|------------------|---------------|
+            | macOS    | x64          | DMG Blockmap     | [Fit-File-Viewer-dmg-x64-${{ needs.bump-version.outputs.new_version }}.dmg.blockmap](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-dmg-x64-${{ needs.bump-version.outputs.new_version }}.dmg.blockmap) |
+            | macOS    | universal    | DMG Blockmap     | [Fit-File-Viewer-dmg-universal-${{ needs.bump-version.outputs.new_version }}.dmg.blockmap](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-dmg-universal-${{ needs.bump-version.outputs.new_version }}.dmg.blockmap) |
+            | macOS    | universal    | ZIP Blockmap     | [Fit-File-Viewer-darwin-universal-${{ needs.bump-version.outputs.new_version }}.zip.blockmap](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-darwin-universal-${{ needs.bump-version.outputs.new_version }}.zip.blockmap) |
+            | macOS    | arm64        | DMG Blockmap     | [Fit-File-Viewer-dmg-arm64-${{ needs.bump-version.outputs.new_version }}.dmg.blockmap](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-dmg-arm64-${{ needs.bump-version.outputs.new_version }}.dmg.blockmap) |
+
+            **Latest Update Metadata Files**
+
+            | Platform | Builds            | Format                           | Download Link |
+            |----------|-------------------|----------------------------------|---------------|
+            | Linux    | x64               | latest-linux.yml                 | [latest-linux.yml](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/latest-linux.yml) |
+            | Mac      | macos-13 x64      | latest-mac-macos-13-x64.yml      | [latest-mac-macos-13-x64.yml](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/latest-mac-macos-13-x64.yml) |
+            | Mac      | macos-15 arm64    | latest-mac-macos-15-arm64.yml    | [latest-mac-macos-15-arm64.yml](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/latest-mac-macos-15-arm64.yml) |
+            | Mac      | macos-latest x64  | latest-mac-macos-latest-x64.yml  | [latest-mac-macos-latest-x64.yml](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/latest-mac-macos-latest-x64.yml) |
+            | Windows  | ia32 / win32      | latest-win32.yml                 | [latest-win32.yml](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/latest-win32.yml) |
+            | Windows  | ia32 / win32      | latest-nsis-web-win32.yml        | [latest-nsis-web-win32.yml](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/latest-nsis-web-win32.yml) |
+            | Windows  | x64               | latest-nsis-web.yml              | [latest-nsis-web.yml](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/latest-nsis-web.yml) |
+            | Windows  | x64               | latest.yml                       | [latest.yml](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/latest.yml) |
+
+            </details>
+            ---
+
+            _See below for full release notes and all available assets._
 
             ---
 
