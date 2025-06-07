@@ -691,7 +691,7 @@ jobs:
             <details>
               <summary><strong>🔍 Auto-Updater Files </strong></summary>
 
-            #### Windows Update Files
+            Windows Update Files
 
             | Windows  | Builds       | Format           | Download Link |
             |----------|--------------|------------------|---------------|
@@ -704,7 +704,7 @@ jobs:
             | Windows  | ia32 / win32 | Squirrel RELEASES| [RELEASES-win32](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/RELEASES-win32) |
             | Windows  | ia32 / win32 | Blockmap         | [Fit-File-Viewer-nsis-ia32-${{ needs.bump-version.outputs.new_version }}.exe.blockmap](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-nsis-ia32-${{ needs.bump-version.outputs.new_version }}.exe.blockmap) |
 
-            #### Mac Update Files
+            Mac Update Files
 
             | Mac      | Builds       | Format           | Download Link |
             |----------|--------------|------------------|---------------|
@@ -713,7 +713,7 @@ jobs:
             | macOS    | universal    | ZIP Blockmap     | [Fit-File-Viewer-darwin-universal-${{ needs.bump-version.outputs.new_version }}.zip.blockmap](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-darwin-universal-${{ needs.bump-version.outputs.new_version }}.zip.blockmap) |
             | macOS    | arm64        | DMG Blockmap     | [Fit-File-Viewer-dmg-arm64-${{ needs.bump-version.outputs.new_version }}.dmg.blockmap](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-dmg-arm64-${{ needs.bump-version.outputs.new_version }}.dmg.blockmap) |
 
-            #### Latest Update Metadata Files
+            Latest Update Metadata Files
 
             | Platform | Builds            | Format                           | Download Link |
             |----------|-------------------|----------------------------------|---------------|
