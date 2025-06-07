@@ -47,6 +47,10 @@ jobs:
         run: |
           cd electron-app
           ls -l
+          # Create the dist repo if it doesn't exist
+          if [ ! -d dist ]; then
+            flatpak-builder --repo=dist --force-clean build-dir flatpak-build.yml
+          fi
           flatpak-builder --install --force-clean --user dist flatpak-build.yml
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
