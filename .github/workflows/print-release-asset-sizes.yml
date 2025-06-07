@@ -9,8 +9,7 @@ on:
     types:
       - edited
   workflow_run:
-    workflows:
-      - 'Build and Release Electron App'
+    workflows: ["Build and Release Electron App"]
     types:
       - completed
 concurrency:
