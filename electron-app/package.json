@@ -340,13 +340,6 @@
     "activity-review",
     "activity-metrics"
   ],
-  "directories": {
-    "lib": "./lib",
-    "utils": "./utils",
-    "icons": "./icons",
-    "tests": "./tests",
-    "screenshots": "./screenshots"
-  },
   "author": "Nick2bad4u <20943337+Nick2bad4u@users.noreply.github.com> (https://fitfileviewer.typpi.online)",
   "contributors": [
     {
