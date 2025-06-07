@@ -627,7 +627,7 @@ jobs:
             ---
             ### 📦 Download FitFileViewer
 
-            <sub> - Most Windows users should download the "Installer EXE", "MSI" or "Portable" versions  </sub>
+            -- Most Windows users should download the "Installer EXE", "MSI" or "Portable" versions
 
             | Windows  | Builds       | Format           | Download Link | 
             |----------|--------------|------------------|---------------|
@@ -671,7 +671,7 @@ jobs:
             | macOS    | arm64        | TAR.GZ           | [Fit-File-Viewer-darwin-arm64-${{ needs.bump-version.outputs.new_version }}.tar.gz](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-darwin-arm64-${{ needs.bump-version.outputs.new_version }}.tar.gz) |
             | macOS    | arm64        | TAR.XZ           | [Fit-File-Viewer-darwin-arm64-${{ needs.bump-version.outputs.new_version }}.tar.xz](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-darwin-arm64-${{ needs.bump-version.outputs.new_version }}.tar.xz) |
             | macOS    | arm64        | ZIP              | [Fit-File-Viewer-darwin-arm64-${{ needs.bump-version.outputs.new_version }}.zip](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-darwin-arm64-${{ needs.bump-version.outputs.new_version }}.zip) |
-            <sub> - Most Mac users should download the "DMG" or "PKG" versions  </sub>
+            -- Most Mac users should download the "DMG" or "PKG" versions
 
             | Linux    | Builds       | Format           | Download Link |
             |----------|--------------|------------------|---------------|
@@ -686,7 +686,7 @@ jobs:
             | Linux    | x64          | ZIP              | [Fit-File-Viewer-linux-${{ needs.bump-version.outputs.new_version }}.zip](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-linux-${{ needs.bump-version.outputs.new_version }}.zip) |
             | Linux    | x64          | APK (Alpine)     | [Fit-File-Viewer-apk-x64-${{ needs.bump-version.outputs.new_version }}.apk](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-apk-x64-${{ needs.bump-version.outputs.new_version }}.apk) |
             | Linux    | x64          | FreeBSD          | [Fit-File-Viewer-freebsd-x64-${{ needs.bump-version.outputs.new_version }}.freebsd](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-freebsd-x64-${{ needs.bump-version.outputs.new_version }}.freebsd) |
-            <sub> - Most Linux users should download the "AppImage", "DEB" or "RPM" versions  </sub>
+            -- Most Linux users should download the "AppImage", "DEB" or "RPM" versions
 
             <details>
               <summary><strong>🔍 Auto-Updater Files </strong></summary>
