@@ -17,17 +17,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Cache node modules (non-Windows)
-        id: cache_node_modules_non_windows
-        if: runner.os != 'Windows'
+      - name: Cache node modules
         uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
         with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          path: electron-app/node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('electron-app/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
-          enableCrossOsArchive: true
-        continue-on-error: true
 
       - name: Install Flatpak and flatpak-builder
         run: |
@@ -58,9 +54,14 @@ jobs:
           DEBUG: "@malept/flatpak-bundler"
         # Replace 'file.yml' with your actual FlatPak manifest file
 
+      - name: Create Flatpak bundle
+        run: |
+          cd electron-app
+          flatpak build-bundle dist FitFileViewer.flatpak com.nick2bad4u.fitfileviewer
+
       # Optionally, upload the FlatPak bundle as an artifact
       - name: Upload FlatPak bundle
         uses: actions/upload-artifact@v4
         with:
           name: flatpak-bundle
-          path: electron-app/dist/*.flatpak
+          path: electron-app/FitFileViewer.flatpak
