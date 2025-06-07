@@ -17,13 +17,19 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Cache node modules
+      - name: Cache node modules (non-Windows)
+        id: cache_node_modules_non_windows
+        if: runner.os != 'Windows'
         uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
         with:
-          path: electron-app/node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('electron-app/package-lock.json') }}
+          path: |
+            ~/.npm
+            electron-app/node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
+          enableCrossOsArchive: true
+        continue-on-error: true
 
       - name: Install Flatpak and flatpak-builder
         run: |
@@ -47,10 +53,8 @@ jobs:
         run: |
           cd electron-app
           ls -l
-          # Create the dist repo if it doesn't exist
-          if [ ! -d dist ]; then
-            flatpak-builder --repo=dist --force-clean build-dir flatpak-build.yml
-          fi
+          # Always build the dist repo to ensure it exists and is up-to-date
+          flatpak-builder --repo=dist --force-clean build-dir flatpak-build.yml
           flatpak-builder --install --force-clean --user dist flatpak-build.yml
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
