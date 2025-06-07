@@ -5,6 +5,107 @@ All notable changes to this project will be documented in this file.
 
 ## [unreleased]
 
+### 🆕 New Version Number
+
+- Bump version to 18.9.0
+
+
+### 💼 Other
+
+- Add Flatpak bundle creation step and update upload path in workflow
+
+- Merge branch 'main' of https://github.com/Nick2bad4u/FitFileViewer
+
+- Add GitHub Action workflow for building p5p Linux package using electron-builder
+
+- Add pkg-utils installation step in p5p build workflow
+
+- Add check to create dist repo if it doesn't exist in Flatpak build step
+
+- Fix package installation step in p5p build workflow
+
+- Improve caching for node modules and ensure dist repo is always built in Flatpak workflow
+
+- Fix package installation command in p5p build workflow
+
+- Remove obsolete p5p build workflow and clean up Flatpak build step
+
+- Add download notes for Mac and Linux build formats in release section
+
+- Refactor cache path in Flatpak build workflow to remove redundant npm cache directory
+
+- Enhance Flatpak build workflow by adding zip step for the Flatpak bundle and ensuring the dist repo is built and up-to-date before creating the bundle.
+
+- Fix cache path in Flatpak build workflow to ensure correct node modules directory is used
+
+
+## [18.9.0] - 2025-06-07
+
+### 🆕 New Version Number
+
+- Bump version to 18.7.0
+
+- Bump version to 18.8.0
+
+
+### 💼 Other
+
+- Fix path to Flatpak manifest in build step of GitHub Actions workflow
+
+- Merge branch 'main' of https://github.com/Nick2bad4u/FitFileViewer
+
+- Fix path to Flatpak manifest in build step of GitHub Actions workflow
+
+- Add caching for node modules in GitHub Actions workflow
+
+- Add Flatpak repository and installation steps to build process
+
+- Improve Flatpak installation commands in GitHub Actions workflow
+
+- Refactor Flatpak installation steps in GitHub Actions workflow for clarity and efficiency
+
+- Update app ID and refine build commands in Flatpak configuration
+
+- Reorganize caching step for node modules in Flatpak build workflow
+
+- Merge branch 'main' of https://github.com/Nick2bad4u/FitFileViewer
+
+- Refactor build commands in Flatpak configuration to improve clarity and organization
+
+
+## [18.7.0] - 2025-06-07
+
+### 🆕 New Version Number
+
+- Bump version to 18.6.0
+
+
+### 💼 Other
+
+- Merge branch 'main' of https://github.com/Nick2bad4u/FitFileViewer
+
+
+## [18.6.0] - 2025-06-07
+
+### 🆕 New Version Number
+
+- Bump version to 18.5.0
+
+
+## [18.5.0] - 2025-06-07
+
+### 🆕 New Version Number
+
+- Bump version to 18.4.0
+
+
+### 💼 Other
+
+- Update package.json
+
+
+## [18.4.0] - 2025-06-07
+
 ### 🐛 Bug Fixes
 
 - Update package.json for improved OS support and formatting consistency
@@ -14,6 +115,31 @@ All notable changes to this project will be documented in this file.
 
 - Bump version to 17.6.0
 
+- Bump version to 17.7.0
+
+- Bump version to 17.8.0
+
+- Bump version to 17.9.0
+
+- Bump version to 18.0.0
+
+- Bump version to 18.1.0
+
+- Bump version to 18.2.0
+
+- Bump version to 18.3.0
+
+
+### 🛠️ GitHub Actions
+
+- Update section headers in Build.yml for clarity
+
+- Remove outdated Windows and Mac update file sections from Build.yml
+
+- Add update file sections for Windows and Mac to Build.yml
+
+- Update Build.yml
+
 
 ### 💼 Other
 
@@ -21,57 +147,84 @@ All notable changes to this project will be documented in this file.
 
 - Merge branch 'main' of https://github.com/Nick2bad4u/FitFileViewer
 
+- Update metrics.repository.svg - [Skip GitHub Action]
+
+- Reformat
+
+- Cancel in progres
+
+- Df# Please enter the commit message for your changes. Lines starting
+
+- Merge branch 'main' of https://github.com/Nick2bad4u/FitFileViewer
+
+- Merge branch 'main' of https://github.com/Nick2bad4u/FitFileViewer
+
+- Fdsf
+
+- Merge branch 'main' of https://github.com/Nick2bad4u/FitFileViewer
+
+- Sadd
+
+- Merge branch 'main' of https://github.com/Nick2bad4u/FitFileViewer
+
+- Merge branch 'main' of https://github.com/Nick2bad4u/FitFileViewer
+
+- Merge branch 'main' of https://github.com/Nick2bad4u/FitFileViewer
+
+- Update package version to 18.3.0 and remove unused directories from package.json
+
+- Add Flatpak build workflow and manifest for Electron app
+
 
 ### 📚 Documentation
 
 - Add user guidance for downloading Mac and Linux versions in Build.yml
 
+- Add download links and update release notes for FitFileViewer
 
-## [17.6.0] - 2025-06-06
+- Update download instructions for Windows, macOS, and Linux in Build.yml
 
-### 🆕 New Version Number
+- Fix formatting in download instructions for Windows and Mac in Build.yml
 
-- Bump version to 17.5.0
+- Add auto-updater files section with download links for Windows and Mac
 
+- Enhance release notes with detailed merge commit information and changelog link
 
-## [17.5.0] - 2025-06-06
+- Update formatting for auto-updater files section in Build.yml
 
-### 🆕 New Version Number
+- Remove auto-updater files section from Build.yml
 
-- Bump version to 17.4.0
+- Add detailed auto-updater files section with download links for Windows and Mac
 
+- Update section headers for auto-updater files in Build.yml
 
-### 💼 Other
+- Add detailed auto-updater files section with download links for Windows and Mac
 
-- Update metrics.repository.svg - [Skip GitHub Action]
-
-
-## [17.4.0] - 2025-06-06
-
-### 🆕 New Version Number
-
-- Bump version to 17.3.0
-
-
-## [17.3.0] - 2025-06-05
-
-### 🆕 New Version Number
-
-- Bump version to 17.2.0
+- Remove detailed auto-updater files section from Build.yml
 
 
 ### ⚙️ Miscellaneous Tasks
 
 - Update changelogs and scripts for versioning and GitHub Actions enhancements
 
+- Remove outdated download links and update release notes formatting in Build.yml
 
-## [17.2.0] - 2025-06-05
+
+## [17.6.0] - 2025-06-06
 
 ### 🆕 New Version Number
 
 - Bump version to 17.0.0
 
 - Bump version to 17.1.0
+
+- Bump version to 17.2.0
+
+- Bump version to 17.3.0
+
+- Bump version to 17.4.0
+
+- Bump version to 17.5.0
 
 
 ### 🛠️ GitHub Actions
@@ -90,6 +243,13 @@ All notable changes to this project will be documented in this file.
 - Rename Squirrel win32 nupkg and RELEASES for release
 
 - Merge branch 'main' of https://github.com/Nick2bad4u/FitFileViewer
+
+- Update metrics.repository.svg - [Skip GitHub Action]
+
+
+### ⚙️ Miscellaneous Tasks
+
+- Update changelogs and scripts for versioning and GitHub Actions enhancements
 
 
 ## [17.0.0] - 2025-06-05

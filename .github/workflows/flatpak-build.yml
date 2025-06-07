@@ -5,6 +5,10 @@ name: Build Flatpak
 
 on:
   workflow_dispatch:
+  workflow_run:
+    workflows: ["Build and Release Electron App"]
+    types:
+      - completed
 
 concurrency:
   group: flatpak-build-${{ github.ref }}
@@ -81,6 +85,7 @@ jobs:
       - name: Zip Flatpak bundle
         run: |
           cd electron-app
+          ls -l
           zip FitFileViewer.flatpak.zip FitFileViewer.flatpak
       
       - name: Get latest release tag
@@ -98,9 +103,15 @@ jobs:
             return releases.data[0].tag_name;
           result-encoding: string
 
+      - name: Rename Flatpak and zip with version
+        run: |
+          cd electron-app
+          mv FitFileViewer.flatpak FitFileViewer-${{ steps.get_release.outputs.result }}.flatpak
+          mv FitFileViewer.flatpak.zip FitFileViewer-${{ steps.get_release.outputs.result }}.flatpak.zip
+
       - name: Upload .flatpak and .zip to latest release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           RELEASE_TAG: ${{ steps.get_release.outputs.result }}
         run: |
-          gh release upload "$RELEASE_TAG" electron-app/FitFileViewer.flatpak electron-app/FitFileViewer.flatpak.zip --clobber
+          gh release upload "$RELEASE_TAG" electron-app/FitFileViewer-${RELEASE_TAG}.flatpak electron-app/FitFileViewer-${RELEASE_TAG}.flatpak.zip --clobber

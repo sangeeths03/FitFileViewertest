@@ -295,6 +295,8 @@ For a detailed list of changes, bug fixes, and new features, please refer to the
 | Linux    | x64          | RPM            | Fit-File-Viewer-rpm-x86_64-X.X.X.rpm               |
 | Linux    | x64          | PACMAN         | Fit-File-Viewer-pacman-x64-X.X.X.pacman            |
 | Linux    | x64          | SNAP           | Fit-File-Viewer-snap-amd64-X.X.X.snap              |
+| Linux    | x64          | FLATPAK        | FitFileViewer-vX.X.X.flatpak                       |
+| Linux    | x64          | FLATPAK ZIP    | FitFileViewer-vX.X.X.flatpak.zip                   |
 | Linux    | x64          | TAR.BZ2        | Fit-File-Viewer-linux-X.X.X.tar.bz2                |
 | Linux    | x64          | TAR.GZ         | Fit-File-Viewer-linux-X.X.X.tar.gz                 |
 | Linux    | x64          | TAR.XZ         | Fit-File-Viewer-linux-X.X.X.tar.xz                 |
@@ -302,7 +304,7 @@ For a detailed list of changes, bug fixes, and new features, please refer to the
 | Linux    | x64          | APK (Alpine)   | Fit-File-Viewer-apk-x64-X.X.X.apk                  |
 | Linux    | x64          | FreeBSD        | Fit-File-Viewer-freebsd-x64-X.X.X.freebsd          |
 
-<sub> - Most Linux users should download the "AppImage", "DEB" or "RPM" versions  </sub>
+<sub> - Most Linux users should download the "AppImage", "DEB", "RPM" or "FLATPAK" versions  </sub>
 
 <sub>Replace <code>X.X.X</code> with the actual release version (e.g., <code>16.3.0</code>).</sub>
 

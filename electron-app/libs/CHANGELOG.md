@@ -81,6 +81,8 @@ Removed a ton of un-needed files.
 
 - Update changelogs and scripts for versioning and GitHub Actions enhancements
 
+- Update changelogs and scripts for versioning and GitHub Actions enhancements
+
 
 ### 🛡️ Security
 

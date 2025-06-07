@@ -626,6 +626,20 @@ jobs:
             **[📄 View Full Changelog](https://github.com/${{ github.repository }}/blob/main/CHANGELOG.md)**
 
             ---
+
+            <details>
+              <summary><strong>🔍 Merge Commit Details</strong></summary>
+
+            **Message:**
+            ```
+            ${{ steps.release_notes.outputs.notes }}
+            ```
+
+            **Commit SHA:** `${{ github.sha }}`
+            </details>
+
+            ---
+
             ### 📦 Download FitFileViewer
 
             <sub> - Most Windows users should download the "Installer EXE", "MSI" or "Portable" versions  </sub>
@@ -688,25 +702,14 @@ jobs:
             | Linux    | x64          | ZIP              | [Fit-File-Viewer-linux-${{ needs.bump-version.outputs.new_version }}.zip](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-linux-${{ needs.bump-version.outputs.new_version }}.zip) |
             | Linux    | x64          | APK (Alpine)     | [Fit-File-Viewer-apk-x64-${{ needs.bump-version.outputs.new_version }}.apk](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-apk-x64-${{ needs.bump-version.outputs.new_version }}.apk) |
             | Linux    | x64          | FreeBSD          | [Fit-File-Viewer-freebsd-x64-${{ needs.bump-version.outputs.new_version }}.freebsd](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/Fit-File-Viewer-freebsd-x64-${{ needs.bump-version.outputs.new_version }}.freebsd) |
+            | Linux    | x64          | Flatpak          | [FitFileViewer-v${{ needs.bump-version.outputs.new_version }}.flatpak](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/FitFileViewer-v${{ needs.bump-version.outputs.new_version }}.flatpak) |
+            | Linux    | x64          | Flatpak ZIP      | [FitFileViewer-v${{ needs.bump-version.outputs.new_version }}.flatpak.zip](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/FitFileViewer-v${{ needs.bump-version.outputs.new_version }}.flatpak.zip) |
 
             <sub> - Most Linux users should download the "AppImage", "DEB" or "RPM" versions  </sub>
 
             ---
 
             _See below for full release notes and all available assets._
-
-            ---
-
-            <details>
-              <summary><strong>🔍 Merge Commit Details</strong></summary>
-
-            **Message:**
-            ```
-            ${{ steps.release_notes.outputs.notes }}
-            ```
-
-            **Commit SHA:** `${{ github.sha }}`
-            </details>
 
             ---
 

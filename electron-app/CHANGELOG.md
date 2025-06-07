@@ -5,6 +5,57 @@ All notable changes to this project will be documented in this file.
 
 ## [unreleased]
 
+### 🆕 New Version Number
+
+- Bump version to 18.9.0
+
+
+### 💼 Other
+
+- Merge branch 'main' of https://github.com/Nick2bad4u/FitFileViewer
+
+
+## [18.9.0] - 2025-06-07
+
+### 🆕 New Version Number
+
+- Bump version to 18.7.0
+
+- Bump version to 18.8.0
+
+
+### 💼 Other
+
+- Merge branch 'main' of https://github.com/Nick2bad4u/FitFileViewer
+
+- Update app ID and refine build commands in Flatpak configuration
+
+- Merge branch 'main' of https://github.com/Nick2bad4u/FitFileViewer
+
+- Refactor build commands in Flatpak configuration to improve clarity and organization
+
+
+## [18.7.0] - 2025-06-07
+
+### 🆕 New Version Number
+
+- Bump version to 18.6.0
+
+
+### 💼 Other
+
+- Merge branch 'main' of https://github.com/Nick2bad4u/FitFileViewer
+
+
+## [18.6.0] - 2025-06-07
+
+### 🆕 New Version Number
+
+- Bump version to 18.5.0
+
+
+## [18.5.0] - 2025-06-07
+
 ### 🐛 Bug Fixes
 
 - Update package.json for improved OS support and formatting consistency
@@ -14,33 +65,44 @@ All notable changes to this project will be documented in this file.
 
 - Bump version to 17.6.0
 
+- Bump version to 17.7.0
+
+- Bump version to 17.8.0
+
+- Bump version to 17.9.0
+
+- Bump version to 18.0.0
+
+- Bump version to 18.1.0
+
+- Bump version to 18.2.0
+
+- Bump version to 18.3.0
+
+- Bump version to 18.4.0
+
 
 ### 💼 Other
 
 - Merge branch 'main' of https://github.com/Nick2bad4u/FitFileViewer
 
+- Merge branch 'main' of https://github.com/Nick2bad4u/FitFileViewer
 
-## [17.6.0] - 2025-06-06
+- Merge branch 'main' of https://github.com/Nick2bad4u/FitFileViewer
 
-### 🆕 New Version Number
+- Merge branch 'main' of https://github.com/Nick2bad4u/FitFileViewer
 
-- Bump version to 17.4.0
+- Merge branch 'main' of https://github.com/Nick2bad4u/FitFileViewer
 
-- Bump version to 17.5.0
+- Merge branch 'main' of https://github.com/Nick2bad4u/FitFileViewer
 
+- Merge branch 'main' of https://github.com/Nick2bad4u/FitFileViewer
 
-## [17.4.0] - 2025-06-06
+- Update package version to 18.3.0 and remove unused directories from package.json
 
-### 🆕 New Version Number
+- Add Flatpak build workflow and manifest for Electron app
 
-- Bump version to 17.3.0
-
-
-## [17.3.0] - 2025-06-05
-
-### 🆕 New Version Number
-
-- Bump version to 17.2.0
+- Update package.json
 
 
 ### ⚙️ Miscellaneous Tasks
@@ -48,7 +110,7 @@ All notable changes to this project will be documented in this file.
 - Update changelogs and scripts for versioning and GitHub Actions enhancements
 
 
-## [17.2.0] - 2025-06-05
+## [17.6.0] - 2025-06-06
 
 ### 🐛 Bug Fixes
 
@@ -101,6 +163,14 @@ All notable changes to this project will be documented in this file.
 
 - Bump version to 17.1.0
 
+- Bump version to 17.2.0
+
+- Bump version to 17.3.0
+
+- Bump version to 17.4.0
+
+- Bump version to 17.5.0
+
 
 ### 💼 Other
 
@@ -146,6 +216,8 @@ Enhances the release cleanup script with parameters to control the number of rel
 ### ⚙️ Miscellaneous Tasks
 
 - Add changelog files for electron-app, tests, and utils
+
+- Update changelogs and scripts for versioning and GitHub Actions enhancements
 
 
 ## [15.0.0] - 2025-06-04

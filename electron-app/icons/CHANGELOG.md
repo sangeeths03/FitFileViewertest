@@ -18,6 +18,8 @@ All notable changes to this project will be documented in this file.
 
 - Update changelogs and scripts for versioning and GitHub Actions enhancements
 
+- Update changelogs and scripts for versioning and GitHub Actions enhancements
+
 
 ## [3.0.0] - 2025-05-04
 
