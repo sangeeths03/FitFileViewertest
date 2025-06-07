@@ -1,4 +1,4 @@
-app-id: com.example.fitfileviewer
+app-id: com.nick2bad4u.fitfileviewer
 runtime: org.freedesktop.Platform
 runtime-version: '23.08'
 sdk: org.freedesktop.Sdk
@@ -14,8 +14,20 @@ modules:
 - name: app
   buildsystem: simple
   build-commands:
-  - npm ci
-  - npm run build || true
+  - install -Dm755 ./main.js /app/main.js
+  - install -Dm755 ./preload.js /app/preload.js
+  - install -Dm755 ./renderer.js /app/renderer.js
+  - install -Dm644 ./package.json /app/package.json
+  - cp -r ./node_modules /app/
+  - cp -r ./icons /app/
+  - cp -r ./libs /app/
+  - cp -r ./utils /app/
+  - cp -r ./index.html /app/
+  - cp -r ./style.css /app/
+  - cp -r ./favicon.ico /app/
+  - cp -r ./fitParser.js /app/
+  - cp -r ./main-ui.js /app/
+  - cp -r ./windowStateUtils.js /app/
   sources:
   - type: dir
     path: .
