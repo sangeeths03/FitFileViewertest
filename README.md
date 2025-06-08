@@ -89,7 +89,7 @@
 [![Upload Windows Distributables to Archive.org](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/upload-windows-ia.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/upload-windows-ia.yml) 🪟
 [![VSCode Version Matrix](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/vscode-version.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/vscode-version.yml) 📅
 [![npm audit](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/npm-audit.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/npm-audit.yml) 🔍
-[![pages-build-deployment](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/pages/pages-build-deployment) 🌐
+[![GitHub Pages Build & Deployment](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/pages/pages-build-deployment) 🌐
 [![GitLeaks Scan](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/gitleaks.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/gitleaks.yml) 🔑
 [![Automatic Rebase](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/rebase.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/rebase.yml) 🔄
 [![MegaLinter](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/mega-linter.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/mega-linter.yml) 🧹
