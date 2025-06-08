@@ -12,6 +12,8 @@ on:
         required: false
         default: 'false'
 
+permissions: write-all
+
 jobs:
   clean_releases:
     runs-on: ubuntu-latest
@@ -23,6 +25,9 @@ jobs:
       run: |
         git config --global user.name "github-actions"
         git config --global user.email "github-actions@github.com"
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
 
     - name: Clean old releases and tags
       env:
