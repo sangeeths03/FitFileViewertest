@@ -65,6 +65,7 @@
 [![Build and Release Electron App](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/Build.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/Build.yml) 🏗️
 [![Build Flatpak](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/flatpak-build.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/flatpak-build.yml) 📦
 [![Show Release Stats](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/release-stats.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/release-stats.yml) 📊
+[![Print Release Asset Sizes](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/print-release-asset-sizes.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/print-release-asset-sizes.yml) 📋
 [![Analyze Repo with git-sizer](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/git-sizer-dispatch.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/git-sizer-dispatch.yml)
 [![CodeQL-Advanced](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/codeql.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/codeql.yml) 🛡️
 [![Dependabot Updates](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/dependabot/dependabot-updates/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/dependabot/dependabot-updates) 🤖
