@@ -12,7 +12,7 @@
 
 <p align="center">
   <a href="https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/Build.yml">
-    <img alt="Badge: Electron Builds (dynamic status, flat-square style)" src="https://img.shields.io/github/actions/workflow/status/Nick2bad4u/FitFileViewer/Build.yml?branch=main&style=flat-square&logo=electron&logoColor=white&logoSize=auto&label=Electron%20Builds&cacheSeconds=3600&link=https%3A%2F%2Fgithub.com%2FNick2bad4u%2FFitFileViewer%2Factions%2Fworkflows%2FBuild.yml" title="Windows - Mac - Linux Builds">
+    <img alt="Badge: Electron Builds (dynamic status, flat-square style)" src="https://img.shields.io/github/actions/workflow/status/Nick2bad4u/FitFileViewer/Build.yml?branch=main&style=flat-square&logo=electron&logoColor=white&logoSize=auto&label=Cross-Platform%20Builds&cacheSeconds=3600&link=https%3A%2F%2Fgithub.com%2FNick2bad4u%2FFitFileViewer%2Factions%2Fworkflows%2FBuild.yml" title="Windows - Mac - Linux Builds">
   </a>
   <a href="https://github.com/nick2bad4u/fitfileviewer/pulls" title="View or submit pull requests">
     <img alt="Badge: PRs Welcome (green, flat-square style)" src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square&logo=github" title="PRs Welcome">
