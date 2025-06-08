@@ -63,6 +63,7 @@
 
 [![ActionLint](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/ActionLint.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/ActionLint.yml) 🧹
 [![Build and Release Electron App](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/Build.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/Build.yml) 🏗️
+[![Build Flatpak](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/flatpak-build.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/flatpak-build.yml) 📦
 [![Show Release Stats](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/release-stats.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/release-stats.yml) 📊
 [![Analyze Repo with git-sizer](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/git-sizer-dispatch.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/git-sizer-dispatch.yml)
 [![CodeQL-Advanced](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/codeql.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/codeql.yml) 🛡️
