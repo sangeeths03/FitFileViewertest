@@ -705,7 +705,7 @@ jobs:
             | Linux    | x64          | Flatpak          | [FitFileViewer-v${{ needs.bump-version.outputs.new_version }}.flatpak](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/FitFileViewer-v${{ needs.bump-version.outputs.new_version }}.flatpak) |
             | Linux    | x64          | Flatpak ZIP      | [FitFileViewer-v${{ needs.bump-version.outputs.new_version }}.flatpak.zip](https://github.com/${{ github.repository }}/releases/download/v${{ needs.bump-version.outputs.new_version }}/FitFileViewer-v${{ needs.bump-version.outputs.new_version }}.flatpak.zip) |
 
-            <sub> - Most Linux users should download the "AppImage", "DEB" or "RPM" versions  </sub>
+            <sub> - Most Linux users should download the "AppImage", "DEB", "FlatPak" or "RPM" versions  </sub>
 
             ---
 
