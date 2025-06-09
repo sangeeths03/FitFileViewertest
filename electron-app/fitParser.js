@@ -1,7 +1,7 @@
 /* eslint-env node */
 const { Buffer } = require('buffer');
-const Store = require('electron-store');
-const store = new Store.default({ name: 'settings' });
+const { Conf } = require('electron-conf');
+const conf = new Conf({ name: 'settings' });
 /**
  * Custom error for FIT file decoding issues.
  */
@@ -82,7 +82,7 @@ function getPersistedDecoderOptions() {
 		includeUnknownData: true,
 		mergeHeartRates: true,
 	};
-	return store.get('decoderOptions', defaults);
+	return conf.get('decoderOptions', defaults);
 }
 
 /**

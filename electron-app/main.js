@@ -246,17 +246,15 @@ app.whenReady().then(() => {
 
 	// Add IPC handler for getting the current theme
 	ipcMain.handle('theme:get', async () => {
-		// Use the same logic as buildAppMenu to get the theme from electron-store
-		const Store = require('electron-store').default;
-		const store = new Store({ name: 'settings' });
-		return store.get('theme', 'dark');
+		const { Conf } = require('electron-conf');
+		const conf = new Conf({ name: 'settings' });
+		return conf.get('theme', 'dark');
 	});
 
-	// Add IPC handler for getting the selected map tab
 	ipcMain.handle('map-tab:get', async () => {
-		const Store = require('electron-store').default;
-		const store = new Store({ name: 'settings' });
-		return store.get('selectedMapTab', 'map');
+		const { Conf } = require('electron-conf');
+		const conf = new Conf({ name: 'settings' });
+		return conf.get('selectedMapTab', 'map');
 	});
 
 	// Add IPC handler for getting the app version

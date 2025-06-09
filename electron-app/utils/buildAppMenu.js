@@ -1,8 +1,8 @@
 /* eslint-env node */
 const { loadRecentFiles, getShortRecentName } = require('./recentFiles');
 const { Menu, BrowserWindow, app } = require('electron');
-const Store = require('electron-store').default;
-const store = new Store({ name: 'settings' });
+const { Conf } = require('electron-conf');
+const conf = new Conf({ name: 'settings' });
 
 const decoderOptionDefaults = {
 	applyScaleAndOffset: true,
@@ -15,22 +15,22 @@ const decoderOptionDefaults = {
 };
 
 function getDecoderOptions() {
-	return store.get('decoderOptions', decoderOptionDefaults);
+	return conf.get('decoderOptions', decoderOptionDefaults);
 }
 
 function setDecoderOption(key, value) {
 	const options = getDecoderOptions();
 	options[key] = value;
-	store.set('decoderOptions', options);
+	conf.set('decoderOptions', options);
 	return options;
 }
 
 function getTheme() {
-	return store.get('theme', 'dark');
+	return conf.get('theme', 'dark');
 }
 
 function setTheme(theme) {
-	store.set('theme', theme);
+	conf.set('theme', theme);
 }
 
 // Add platform-specific (macOS) App menu for About, Preferences, and Quit
@@ -170,9 +170,7 @@ function buildAppMenu(mainWindow, currentTheme = null, loadedFitFilePath = null)
 							enabled: recentFiles.length > 0,
 							click: () => {
 								const win = BrowserWindow.getFocusedWindow() || mainWindow;
-								const Store = require('electron-store').default;
-								const store = new Store({ name: 'settings' });
-								store.set('recentFiles', []);
+								conf.set('recentFiles', []);
 								if (win && win.webContents) {
 									win.webContents.send('show-notification', 'Recent files cleared.', 'info');
 									win.webContents.send('unload-fit-file');
@@ -266,9 +264,9 @@ function buildAppMenu(mainWindow, currentTheme = null, loadedFitFilePath = null)
 								{
 									label: '🅰️ Extra Small',
 									type: 'radio',
-									checked: store.get('fontSize', 'medium') === 'xsmall',
+									checked: conf.get('fontSize', 'medium') === 'xsmall',
 									click: () => {
-										store.set('fontSize', 'xsmall');
+										conf.set('fontSize', 'xsmall');
 										const win = BrowserWindow.getFocusedWindow() || mainWindow;
 										if (win && win.webContents) win.webContents.send('set-font-size', 'xsmall');
 									},
@@ -276,9 +274,9 @@ function buildAppMenu(mainWindow, currentTheme = null, loadedFitFilePath = null)
 								{
 									label: '🔠 Small',
 									type: 'radio',
-									checked: store.get('fontSize', 'medium') === 'small',
+									checked: conf.get('fontSize', 'medium') === 'small',
 									click: () => {
-										store.set('fontSize', 'small');
+										conf.set('fontSize', 'small');
 										const win = BrowserWindow.getFocusedWindow() || mainWindow;
 										if (win && win.webContents) win.webContents.send('set-font-size', 'small');
 									},
@@ -286,9 +284,9 @@ function buildAppMenu(mainWindow, currentTheme = null, loadedFitFilePath = null)
 								{
 									label: '🔤 Medium',
 									type: 'radio',
-									checked: store.get('fontSize', 'medium') === 'medium',
+									checked: conf.get('fontSize', 'medium') === 'medium',
 									click: () => {
-										store.set('fontSize', 'medium');
+										conf.set('fontSize', 'medium');
 										const win = BrowserWindow.getFocusedWindow() || mainWindow;
 										if (win && win.webContents) win.webContents.send('set-font-size', 'medium');
 									},
@@ -296,9 +294,9 @@ function buildAppMenu(mainWindow, currentTheme = null, loadedFitFilePath = null)
 								{
 									label: '🔡 Large',
 									type: 'radio',
-									checked: store.get('fontSize', 'medium') === 'large',
+									checked: conf.get('fontSize', 'medium') === 'large',
 									click: () => {
-										store.set('fontSize', 'large');
+										conf.set('fontSize', 'large');
 										const win = BrowserWindow.getFocusedWindow() || mainWindow;
 										if (win && win.webContents) win.webContents.send('set-font-size', 'large');
 									},
@@ -306,9 +304,9 @@ function buildAppMenu(mainWindow, currentTheme = null, loadedFitFilePath = null)
 								{
 									label: '🅰️ Extra Large',
 									type: 'radio',
-									checked: store.get('fontSize', 'medium') === 'xlarge',
+									checked: conf.get('fontSize', 'medium') === 'xlarge',
 									click: () => {
-										store.set('fontSize', 'xlarge');
+										conf.set('fontSize', 'xlarge');
 										const win = BrowserWindow.getFocusedWindow() || mainWindow;
 										if (win && win.webContents) win.webContents.send('set-font-size', 'xlarge');
 									},
@@ -321,9 +319,9 @@ function buildAppMenu(mainWindow, currentTheme = null, loadedFitFilePath = null)
 								{
 									label: '⬛ Black (Default)',
 									type: 'radio',
-									checked: store.get('highContrast', 'black') === 'black',
+									checked: conf.get('highContrast', 'black') === 'black',
 									click: () => {
-										store.set('highContrast', 'black');
+										conf.set('highContrast', 'black');
 										const win = BrowserWindow.getFocusedWindow() || mainWindow;
 										if (win && win.webContents) win.webContents.send('set-high-contrast', 'black');
 									},
@@ -331,9 +329,9 @@ function buildAppMenu(mainWindow, currentTheme = null, loadedFitFilePath = null)
 								{
 									label: '⬜ White',
 									type: 'radio',
-									checked: store.get('highContrast', 'black') === 'white',
+									checked: conf.get('highContrast', 'black') === 'white',
 									click: () => {
-										store.set('highContrast', 'white');
+										conf.set('highContrast', 'white');
 										const win = BrowserWindow.getFocusedWindow() || mainWindow;
 										if (win && win.webContents) win.webContents.send('set-high-contrast', 'white');
 									},
@@ -341,9 +339,9 @@ function buildAppMenu(mainWindow, currentTheme = null, loadedFitFilePath = null)
 								{
 									label: '🟨 Yellow',
 									type: 'radio',
-									checked: store.get('highContrast', 'black') === 'yellow',
+									checked: conf.get('highContrast', 'black') === 'yellow',
 									click: () => {
-										store.set('highContrast', 'yellow');
+										conf.set('highContrast', 'yellow');
 										const win = BrowserWindow.getFocusedWindow() || mainWindow;
 										if (win && win.webContents) win.webContents.send('set-high-contrast', 'yellow');
 									},
@@ -351,9 +349,9 @@ function buildAppMenu(mainWindow, currentTheme = null, loadedFitFilePath = null)
 								{
 									label: '🚫 Off',
 									type: 'radio',
-									checked: !store.get('highContrast', false) || store.get('highContrast', 'black') === 'off',
+									checked: !conf.get('highContrast', false) || conf.get('highContrast', 'black') === 'off',
 									click: () => {
-										store.set('highContrast', 'off');
+										conf.set('highContrast', 'off');
 										const win = BrowserWindow.getFocusedWindow() || mainWindow;
 										if (win && win.webContents) win.webContents.send('set-high-contrast', 'off');
 									},
