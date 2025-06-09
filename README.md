@@ -12,7 +12,7 @@
 
 <p align="center">
   <a href="https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/Build.yml">
-    <img alt="Badge: Electron Builds (dynamic status, flat-square style)" src="https://img.shields.io/github/actions/workflow/status/Nick2bad4u/FitFileViewer/Build.yml?branch=main&style=flat-square&logo=electron&logoColor=white&logoSize=auto&label=Electron%20Builds&cacheSeconds=3600&link=https%3A%2F%2Fgithub.com%2FNick2bad4u%2FFitFileViewer%2Factions%2Fworkflows%2FBuild.yml" title="Electron Builds">
+    <img alt="Badge: Electron Builds (dynamic status, flat-square style)" src="https://img.shields.io/github/actions/workflow/status/Nick2bad4u/FitFileViewer/Build.yml?branch=main&style=flat-square&logo=electron&logoColor=white&logoSize=auto&label=Cross-Platform%20Builds&cacheSeconds=3600&link=https%3A%2F%2Fgithub.com%2FNick2bad4u%2FFitFileViewer%2Factions%2Fworkflows%2FBuild.yml" title="Windows - Mac - Linux Builds">
   </a>
   <a href="https://github.com/nick2bad4u/fitfileviewer/pulls" title="View or submit pull requests">
     <img alt="Badge: PRs Welcome (green, flat-square style)" src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square&logo=github" title="PRs Welcome">
@@ -63,7 +63,9 @@
 
 [![ActionLint](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/ActionLint.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/ActionLint.yml) 🧹
 [![Build and Release Electron App](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/Build.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/Build.yml) 🏗️
+[![Build Flatpak](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/flatpak-build.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/flatpak-build.yml) 📦
 [![Show Release Stats](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/release-stats.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/release-stats.yml) 📊
+[![Print Release Asset Sizes](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/print-release-asset-sizes.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/print-release-asset-sizes.yml) 📋
 [![Analyze Repo with git-sizer](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/git-sizer-dispatch.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/git-sizer-dispatch.yml)
 [![CodeQL-Advanced](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/codeql.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/codeql.yml) 🛡️
 [![Dependabot Updates](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/dependabot/dependabot-updates/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/dependabot/dependabot-updates) 🤖
@@ -87,7 +89,7 @@
 [![Upload Windows Distributables to Archive.org](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/upload-windows-ia.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/upload-windows-ia.yml) 🪟
 [![VSCode Version Matrix](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/vscode-version.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/vscode-version.yml) 📅
 [![npm audit](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/npm-audit.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/npm-audit.yml) 🔍
-[![pages-build-deployment](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/pages/pages-build-deployment) 🌐
+[![GitHub Pages Build & Deployment](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/pages/pages-build-deployment) 🌐
 [![GitLeaks Scan](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/gitleaks.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/gitleaks.yml) 🔑
 [![Automatic Rebase](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/rebase.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/rebase.yml) 🔄
 [![MegaLinter](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/mega-linter.yml/badge.svg)](https://github.com/Nick2bad4u/FitFileViewer/actions/workflows/mega-linter.yml) 🧹
