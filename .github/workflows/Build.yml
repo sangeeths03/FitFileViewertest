@@ -448,7 +448,7 @@ jobs:
             cp -v "$artifact_dir"/Fit-File-Viewer-* "$artifact_dir"/*.yml "release-dist/$platform_arch/" 2>/dev/null || true
             # Rename latest-mac.yml if it exists
             if [ -f "$artifact_dir/latest-mac.yml" ]; then
-              cp "$artifact_dir/latest-mac.yml" "release-dist/$platform_arch/latest-mac-$platform_arch.yml"
+              cp "$artifact_dir/latest-mac.yml" "release-dist/$platform_arch/latest-$platform_arch.yml"
               rm "$artifact_dir/latest-mac.yml"
             fi
             for subdir in nsis-web squirrel-windows squirrel-windows-ia32; do
